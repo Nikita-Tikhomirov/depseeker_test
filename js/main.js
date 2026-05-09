@@ -1,5 +1,5 @@
 /**
- * DigiMarket — Main JavaScript
+ * Цифра — Main JavaScript
  * Scroll reveal animations + FAQ accordion
  */
 (function () {
