@@ -71,6 +71,10 @@ Available DeepSeek tools:
 ## Quality
 
 - Keep changes minimal, readable, and consistent with the current project.
+- For small edits, use patch-style changes or exact search/replace instead of rewriting the whole file.
+- Before editing an existing file, read the surrounding function/section and preserve unrelated content.
+- Do not regenerate a complete file unless it is tiny, newly created, or the requested change affects most of it.
+- Prefer `apply_patch`, unified diff, or targeted edit tools when available.
 - Prefer stable fixes over hacks.
 - Remove unused imports and dead code when touching a file.
 - Add tests for new logic when the project has a test setup.
