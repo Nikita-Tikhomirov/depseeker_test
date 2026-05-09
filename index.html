@@ -1,0 +1,722 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <!-- ========== SEO META ========== -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Маркетплейс цифровых товаров — шаблоны документов, софт, 3D-модели, графика, курсы и музыка. Мгновенная доставка, безопасные платежи, 24/7 поддержка.">
+    <meta name="keywords" content="цифровые товары, шаблоны документов, софт, 3D модели, графика, онлайн курсы, музыка, купить цифровой товар, маркетплейс, лицензии">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://digimarket.example.com/">
+    <meta name="author" content="DigiMarket">
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="DigiMarket — Маркетплейс цифровых товаров">
+    <meta property="og:description" content="Шаблоны, софт, 3D-модели, графика и многое другое. Мгновенная доставка.">
+    <meta property="og:url" content="https://digimarket.example.com/">
+    <meta property="og:image" content="https://digimarket.example.com/og-image.jpg">
+    <meta property="og:locale" content="ru_RU">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="DigiMarket — Маркетплейс цифровых товаров">
+    <meta name="twitter:description" content="Шаблоны, софт, 3D-модели, графика и многое другое. Мгновенная доставка.">
+    <meta name="twitter:image" content="https://digimarket.example.com/og-image.jpg">
+
+    <title>DigiMarket — Маркетплейс цифровых товаров | Шаблоны, Софт, 3D-модели</title>
+
+    <!-- Schema.org Structured Data (JSON-LD) -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "name": "DigiMarket",
+        "url": "https://digimarket.example.com/",
+        "description": "Маркетплейс цифровых товаров — шаблоны, софт, 3D-модели, графика, курсы, музыка.",
+        "potentialAction": {
+            "@type": "SearchAction",
+            "target": "https://digimarket.example.com/search?q={search_term_string}",
+            "query-input": "required name=search_term_string"
+        }
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "Organization",
+        "name": "DigiMarket",
+        "url": "https://digimarket.example.com/",
+        "logo": "https://digimarket.example.com/logo.png",
+        "contactPoint": {
+            "@type": "ContactPoint",
+            "telephone": "+7-800-000-00-00",
+            "contactType": "customer service",
+            "availableLanguage": ["Russian"]
+        }
+    }
+    </script>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/layout.css">
+    <link rel="stylesheet" href="css/responsive.css">
+</head>
+<body>
+
+<!-- ==================== HEADER ==================== -->
+<header class="header">
+    <div class="container">
+        <a href="/" class="header-logo" aria-label="DigiMarket — на главную">
+            <span class="logo-icon">◆</span>
+            <span class="logo-text">DigiMarket</span>
+        </a>
+
+        <nav aria-label="Основная навигация">
+            <ul class="header-nav">
+                <li>
+                    <a href="#" class="mega-trigger">Каталог ▾</a>
+                    <div class="mega-dropdown">
+                        <div class="mega-content">
+                            <div class="mega-col">
+                                <h4>Документы</h4>
+                                <a href="#">Шаблоны договоров</a>
+                                <a href="#">Бизнес-планы</a>
+                                <a href="#">Резюме и CV</a>
+                                <a href="#">Презентации</a>
+                            </div>
+                            <div class="mega-col">
+                                <h4>Софт и IT</h4>
+                                <a href="#">Плагины</a>
+                                <a href="#">Скрипты</a>
+                                <a href="#">Темы и шаблоны</a>
+                                <a href="#">Мобильные приложения</a>
+                            </div>
+                            <div class="mega-col">
+                                <h4>Творчество</h4>
+                                <a href="#">3D-модели</a>
+                                <a href="#">Графика и иконки</a>
+                                <a href="#">Музыка и звуки</a>
+                                <a href="#">Видео и анимация</a>
+                            </div>
+                            <div class="mega-col">
+                                <h4>Обучение</h4>
+                                <a href="#">Онлайн-курсы</a>
+                                <a href="#">Книги и гайды</a>
+                                <a href="#">Чек-листы</a>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+                <li><a href="#popular">Популярное</a></li>
+                <li><a href="#new">Новинки</a></li>
+                <li><a href="#how">Как это работает</a></li>
+                <li><a href="#">Цены</a></li>
+            </ul>
+        </nav>
+
+        <div class="header-actions">
+            <div class="header-search" role="search">
+                <span class="search-icon">🔍</span>
+                <input type="search" placeholder="Поиск товаров..." aria-label="Поиск по сайту">
+            </div>
+            <button class="header-icon-btn" aria-label="Избранное">♡</button>
+            <button class="header-icon-btn" aria-label="Корзина">
+                🛒 <span class="cart-count">3</span>
+            </button>
+            <button class="btn btn-outline" style="padding:8px 18px; font-size:0.85rem;">Войти</button>
+        </div>
+
+        <button class="hamburger" aria-label="Меню" >
+            <span></span><span></span><span></span>
+        </button>
+    </div>
+</header>
+
+<main>
+<!-- ==================== HERO ==================== -->
+<section class="hero" aria-labelledby="hero-heading">
+    <div class="container">
+        <div class="hero-text">
+            <span class="hero-badge section-tag">🚀 Более 50 000 цифровых товаров</span>
+            <h1 id="hero-heading">Маркетплейс <span class="highlight">цифровых товаров</span> для бизнеса и творчества</h1>
+            <p class="hero-desc">
+                Шаблоны документов, софт, 3D-модели, графика, музыка и курсы —
+                всё в одном месте. Мгновенная доставка и безопасные платежи.
+            </p>
+            <div class="hero-buttons">
+                <a href="#" class="btn btn-primary">Перейти в каталог →</a>
+                <a href="#how" class="btn btn-outline">Как это работает</a>
+            </div>
+            <div class="hero-metrics">
+                <div class="met"><div class="met-num accent">50 000+</div><div class="met-label">Товаров</div></div>
+                <div class="met"><div class="met-num">120 000+</div><div class="met-label">Покупателей</div></div>
+                <div class="met"><div class="met-num">4.9 ★</div><div class="met-label">Рейтинг</div></div>
+                <div class="met"><div class="met-num">24/7</div><div class="met-label">Поддержка</div></div>
+            </div>
+        </div>
+        <div class="hero-visual" aria-hidden="true">
+            <div class="hero-tile">
+                <div class="hero-tile-icon">📄</div>
+                <span class="hero-tile-cat">Шаблоны</span>
+                <div class="hero-tile-title">Пакет договоров для бизнеса</div>
+                <div class="hero-tile-price">₽1 290</div>
+            </div>
+            <div class="hero-tile">
+                <div class="hero-tile-icon">🎨</div>
+                <span class="hero-tile-cat">Графика</span>
+                <div class="hero-tile-title">UI Kit для Figma — 500+ компонентов</div>
+                <div class="hero-tile-price">₽1 790</div>
+            </div>
+            <div class="hero-tile">
+                <div class="hero-tile-icon">🗿</div>
+                <span class="hero-tile-cat">3D-модели</span>
+                <div class="hero-tile-title">Коллекция 3D-моделей интерьера</div>
+                <div class="hero-tile-price">₽2 990</div>
+            </div>
+            <div class="hero-tile">
+                <div class="hero-tile-icon">🎓</div>
+                <span class="hero-tile-cat">Курсы</span>
+                <div class="hero-tile-title">Полный курс по Python (2026)</div>
+                <div class="hero-tile-price">₽3 490</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ==================== CATEGORIES ==================== -->
+<section class="categories" aria-labelledby="cat-heading">
+    <div class="container">
+        <div class="categories-header">
+            <span class="section-tag">Категории</span>
+            <h2 id="cat-heading" class="section-title">Всё, что вам нужно — в одном месте</h2>
+            <p class="section-sub">Выберите категорию и найдите идеальный цифровой продукт для ваших задач</p>
+        </div>
+        <div class="cat-grid">
+            <a href="#" class="cat-card">
+                <div class="cat-icon">📄</div>
+                <h3>Шаблоны документов</h3>
+                <span class="cat-count">12 400+ товаров</span>
+            </a>
+            <a href="#" class="cat-card">
+                <div class="cat-icon">💻</div>
+                <h3>Софт и плагины</h3>
+                <span class="cat-count">8 200+ товаров</span>
+            </a>
+            <a href="#" class="cat-card">
+                <div class="cat-icon">🗿</div>
+                <h3>3D-модели</h3>
+                <span class="cat-count">15 600+ товаров</span>
+            </a>
+            <a href="#" class="cat-card">
+                <div class="cat-icon">🎨</div>
+                <h3>Графика и дизайн</h3>
+                <span class="cat-count">9 800+ товаров</span>
+            </a>
+            <a href="#" class="cat-card">
+                <div class="cat-icon">🎓</div>
+                <h3>Курсы и обучение</h3>
+                <span class="cat-count">3 500+ товаров</span>
+            </a>
+            <a href="#" class="cat-card">
+                <div class="cat-icon">🎵</div>
+                <h3>Музыка и аудио</h3>
+                <span class="cat-count">6 700+ товаров</span>
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- ==================== POPULAR PRODUCTS ==================== -->
+<section class="products" id="popular" aria-labelledby="popular-heading">
+    <div class="container">
+        <div class="products-top">
+            <div>
+                <span class="section-tag">🔥 Популярное</span>
+                <h2 id="popular-heading" class="section-title">Топ продаж этой недели</h2>
+            </div>
+            <a href="#" class="btn btn-ghost">Смотреть все →</a>
+        </div>
+        <div class="product-grid">
+            <!-- Product 1 -->
+            <article class="product-card">
+                <div class="product-thumb">
+                    <span class="product-badge badge badge-hot">Хит</span>
+                    <button class="product-wishlist" aria-label="В избранное">♡</button>
+                    📑
+                </div>
+                <div class="product-info">
+                    <span class="product-category">Шаблоны документов</span>
+                    <h3 class="product-title">Пакет шаблонов договоров для бизнеса — 50+ документов</h3>
+                    <div class="product-rating">
+                        <span class="stars">★★★★★</span>
+                        <span class="revs">4.9 (2 340 отзывов)</span>
+                    </div>
+                    <div class="product-footer">
+                        <div class="product-price"><span class="old">₽2 490</span> ₽1 290</div>
+                        <button class="btn btn-primary btn-sm">В корзину</button>
+                    </div>
+                </div>
+            </article>
+
+            <!-- Product 2 -->
+            <article class="product-card">
+                <div class="product-thumb">
+                    <span class="product-badge badge badge-top">Топ</span>
+                    <button class="product-wishlist" aria-label="В избранное">♡</button>
+                    🖥️
+                </div>
+                <div class="product-info">
+                    <span class="product-category">Софт и плагины</span>
+                    <h3 class="product-title">WordPress SEO-плагин с AI-оптимизацией контента</h3>
+                    <div class="product-rating">
+                        <span class="stars">★★★★★</span>
+                        <span class="revs">4.8 (1 870 отзывов)</span>
+                    </div>
+                    <div class="product-footer">
+                        <div class="product-price">₽3 990</div>
+                        <button class="btn btn-primary btn-sm">В корзину</button>
+                    </div>
+                </div>
+            </article>
+
+            <!-- Product 3 -->
+            <article class="product-card">
+                <div class="product-thumb">
+                    <button class="product-wishlist" aria-label="В избранное">♡</button>
+                    🗿
+                </div>
+                <div class="product-info">
+                    <span class="product-category">3D-модели</span>
+                    <h3 class="product-title">Коллекция 3D-моделей мебели для интерьера — Blender/3ds Max</h3>
+                    <div class="product-rating">
+                        <span class="stars">★★★★☆</span>
+                        <span class="revs">4.7 (956 отзывов)</span>
+                    </div>
+                    <div class="product-footer">
+                        <div class="product-price"><span class="old">₽4 990</span> ₽2 990</div>
+                        <button class="btn btn-primary btn-sm">В корзину</button>
+                    </div>
+                </div>
+            </article>
+
+            <!-- Product 4 -->
+            <article class="product-card">
+                <div class="product-thumb">
+                    <button class="product-wishlist" aria-label="В избранное">♡</button>
+                    🎨
+                </div>
+                <div class="product-info">
+                    <span class="product-category">Графика и дизайн</span>
+                    <h3 class="product-title">UI Kit для Figma — 500+ компонентов и иконок</h3>
+                    <div class="product-rating">
+                        <span class="stars">★★★★★</span>
+                        <span class="revs">5.0 (3 120 отзывов)</span>
+                    </div>
+                    <div class="product-footer">
+                        <div class="product-price">₽1 790</div>
+                        <button class="btn btn-primary btn-sm">В корзину</button>
+                    </div>
+                </div>
+            </article>
+        </div>
+    </div>
+</section>
+
+<!-- ==================== NEW ARRIVALS ==================== -->
+<section class="products" id="new" aria-labelledby="new-heading">
+    <div class="container">
+        <div class="products-top">
+            <div>
+                <span class="section-tag">✨ Новинки</span>
+                <h2 id="new-heading" class="section-title">Свежие поступления</h2>
+            </div>
+            <a href="#" class="btn btn-ghost">Смотреть все →</a>
+        </div>
+        <div class="product-grid">
+            <!-- Product 5 -->
+            <article class="product-card">
+                <div class="product-thumb">
+                    <span class="product-badge badge badge-new">New</span>
+                    <button class="product-wishlist" aria-label="В избранное">♡</button>
+                    🎓
+                </div>
+                <div class="product-info">
+                    <span class="product-category">Курсы и обучение</span>
+                    <h3 class="product-title">Полный курс по Python — от новичка до профи (2026)</h3>
+                    <div class="product-rating">
+                        <span class="stars">★★★★★</span>
+                        <span class="revs">4.9 (420 отзывов)</span>
+                    </div>
+                    <div class="product-footer">
+                        <div class="product-price"><span class="old">₽5 990</span> ₽3 490</div>
+                        <button class="btn btn-primary btn-sm">В корзину</button>
+                    </div>
+                </div>
+            </article>
+
+            <!-- Product 6 -->
+            <article class="product-card">
+                <div class="product-thumb">
+                    <span class="product-badge badge badge-new">New</span>
+                    <button class="product-wishlist" aria-label="В избранное">♡</button>
+                    🎵
+                </div>
+                <div class="product-info">
+                    <span class="product-category">Музыка и аудио</span>
+                    <h3 class="product-title">Музыка для видео — 200 треков без лицензионных отчислений</h3>
+                    <div class="product-rating">
+                        <span class="stars">★★★★☆</span>
+                        <span class="revs">4.6 (188 отзывов)</span>
+                    </div>
+                    <div class="product-footer">
+                        <div class="product-price">₽1 990</div>
+                        <button class="btn btn-primary btn-sm">В корзину</button>
+                    </div>
+                </div>
+            </article>
+
+            <!-- Product 7 -->
+            <article class="product-card">
+                <div class="product-thumb">
+                    <button class="product-wishlist" aria-label="В избранное">♡</button>
+                    📊
+                </div>
+                <div class="product-info">
+                    <span class="product-category">Шаблоны документов</span>
+                    <h3 class="product-title">Бизнес-план на 2026 год — шаблон с финансовой моделью</h3>
+                    <div class="product-rating">
+                        <span class="stars">★★★★★</span>
+                        <span class="revs">4.8 (634 отзыва)</span>
+                    </div>
+                    <div class="product-footer">
+                        <div class="product-price">₽890</div>
+                        <button class="btn btn-primary btn-sm">В корзину</button>
+                    </div>
+                </div>
+            </article>
+
+            <!-- Product 8 -->
+            <article class="product-card">
+                <div class="product-thumb">
+                    <button class="product-wishlist" aria-label="В избранное">♡</button>
+                    🔌
+                </div>
+                <div class="product-info">
+                    <span class="product-category">Софт и плагины</span>
+                    <h3 class="product-title">Figma → HTML экспортёр — плагин для автоматической вёрстки</h3>
+                    <div class="product-rating">
+                        <span class="stars">★★★★☆</span>
+                        <span class="revs">4.5 (312 отзывов)</span>
+                    </div>
+                    <div class="product-footer">
+                        <div class="product-price">₽2 490</div>
+                        <button class="btn btn-primary btn-sm">В корзину</button>
+                    </div>
+                </div>
+            </article>
+        </div>
+    </div>
+</section>
+
+<!-- ==================== HOW IT WORKS ==================== -->
+<section class="how" id="how" aria-labelledby="how-heading">
+    <div class="container">
+        <div class="how-header">
+            <span class="section-tag">Как это работает</span>
+            <h2 id="how-heading" class="section-title">Четыре простых шага</h2>
+            <p class="section-sub">От выбора до использования — весь процесс занимает меньше минуты</p>
+        </div>
+        <div class="steps">
+            <div class="step reveal">
+                <div class="step-num">1</div>
+                <h3>Выберите товар</h3>
+                <p>Изучите каталог, читайте отзывы и выбирайте из 50 000+ цифровых продуктов</p>
+            </div>
+            <div class="step reveal">
+                <div class="step-num">2</div>
+                <h3>Оплатите</h3>
+                <p>Безопасная оплата через банковские карты, ЮMoney, QIWI или криптовалюту</p>
+            </div>
+            <div class="step reveal">
+                <div class="step-num">3</div>
+                <h3>Скачайте</h3>
+                <p>Мгновенная доставка — файл приходит сразу после оплаты в личный кабинет</p>
+            </div>
+            <div class="step reveal">
+                <div class="step-num">4</div>
+                <h3>Используйте</h3>
+                <p>Пожизненный доступ к скачиванию. Обновления товаров — бесплатно</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ==================== ADVANTAGES ==================== -->
+<section class="advantages" aria-labelledby="adv-heading">
+    <div class="container">
+        <div style="text-align:center; margin-bottom:52px;">
+            <span class="section-tag">Преимущества</span>
+            <h2 id="adv-heading" class="section-title">Почему покупают у нас</h2>
+            <p class="section-sub" style="margin:0 auto;">Мы создали платформу, которой доверяют тысячи продавцов и покупателей</p>
+        </div>
+        <div class="adv-grid">
+            <div class="adv-card reveal">
+                <div class="adv-icon">⚡</div>
+                <h3>Мгновенная доставка</h3>
+                <p>Файл приходит в личный кабинет сразу после оплаты. Никаких ожиданий — скачивайте и работайте.</p>
+            </div>
+            <div class="adv-card reveal">
+                <div class="adv-icon">🔒</div>
+                <h3>Безопасные платежи</h3>
+                <p>SSL-шифрование, 3D-Secure, PCI DSS. Ваши данные под защитой. Принимаем все популярные способы оплаты.</p>
+            </div>
+            <div class="adv-card reveal">
+                <div class="adv-icon">♻️</div>
+                <h3>14 дней на возврат</h3>
+                <p>Не подошёл товар? Вернём деньги в течение 14 дней. Без вопросов и бюрократии.</p>
+            </div>
+            <div class="adv-card reveal">
+                <div class="adv-icon">🎯</div>
+                <h3>Проверенные продавцы</h3>
+                <p>Каждый автор проходит модерацию. Рейтинг и отзывы помогают выбрать лучшее.</p>
+            </div>
+            <div class="adv-card reveal">
+                <div class="adv-icon">📜</div>
+                <h3>Лицензии и гарантии</h3>
+                <p>Все товары с лицензией на использование. Коммерческие и персональные права — выбирайте нужное.</p>
+            </div>
+            <div class="adv-card reveal">
+                <div class="adv-icon">💬</div>
+                <h3>Поддержка 24/7</h3>
+                <p>Техподдержка работает круглосуточно. Тикеты, чат, email — отвечаем в среднем за 7 минут.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ==================== REVIEWS ==================== -->
+<section class="reviews" aria-labelledby="rev-heading">
+    <div class="container">
+        <div class="reviews-header">
+            <span class="section-tag">Отзывы</span>
+            <h2 id="rev-heading" class="section-title">Что говорят покупатели</h2>
+            <p class="section-sub">Более 120 000 довольных клиентов по всему миру</p>
+        </div>
+        <div class="review-grid">
+            <div class="review-card reveal">
+                <div class="review-stars">★★★★★</div>
+                <p class="review-text">Купил пакет шаблонов договоров — сэкономил неделю работы юриста. Всё грамотно составлено, можно сразу использовать. Очень доволен!</p>
+                <div class="review-author">
+                    <div class="review-avatar">АК</div>
+                    <div>
+                        <div class="review-name">Алексей К.</div>
+                        <div class="review-date">2 дня назад</div>
+                    </div>
+                </div>
+            </div>
+            <div class="review-card reveal">
+                <div class="review-stars">★★★★★</div>
+                <p class="review-text">3D-модели отличного качества. Использовал для рендера интерьера — клиент в восторге. Буду заказывать ещё.</p>
+                <div class="review-author">
+                    <div class="review-avatar">МС</div>
+                    <div>
+                        <div class="review-name">Марина С.</div>
+                        <div class="review-date">5 дней назад</div>
+                    </div>
+                </div>
+            </div>
+            <div class="review-card reveal">
+                <div class="review-stars">★★★★★</div>
+                <p class="review-text">Курс по Python — лучший из тех, что я проходил. Подача материала на высоте, много практики. Уже нашёл работу!</p>
+                <div class="review-author">
+                    <div class="review-avatar">ДВ</div>
+                    <div>
+                        <div class="review-name">Дмитрий В.</div>
+                        <div class="review-date">1 неделю назад</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ==================== TRUST BLOCK ==================== -->
+<section class="trust" aria-labelledby="trust-heading">
+    <div class="container">
+        <div style="text-align:center; margin-bottom:40px;">
+            <h2 id="trust-heading" class="section-title">Нам доверяют</h2>
+        </div>
+        <div class="trust-grid">
+            <div class="trust-item">
+                <div class="trust-icon">🛡️</div>
+                <h4>Гарантия возврата</h4>
+                <p>14 дней без вопросов</p>
+            </div>
+            <div class="trust-item">
+                <div class="trust-icon">🔐</div>
+                <h4>SSL-шифрование</h4>
+                <p>Данные защищены</p>
+            </div>
+            <div class="trust-item">
+                <div class="trust-icon">📄</div>
+                <h4>Лицензия</h4>
+                <p>Права на использование</p>
+            </div>
+            <div class="trust-item">
+                <div class="trust-icon">⭐</div>
+                <h4>Рейтинг 4.9</h4>
+                <p>На основе 15 000+ отзывов</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ==================== FAQ ==================== -->
+<section class="faq" aria-labelledby="faq-heading">
+    <div class="container">
+        <div class="faq-header">
+            <span class="section-tag">FAQ</span>
+            <h2 id="faq-heading" class="section-title">Часто задаваемые вопросы</h2>
+            <p class="section-sub">Не нашли ответ? Напишите в поддержку — ответим за 7 минут</p>
+        </div>
+        <div class="faq-list" itemscope itemtype="https://schema.org/FAQPage">
+            <div class="faq-item" itemprop="mainEntity" itemscope itemtype="https://schema.org/Question">
+                <button class="faq-q"  aria-expanded="false">
+                    <span itemprop="name">Как быстро я получу товар после оплаты?</span>
+                    <span class="faq-arrow">▼</span>
+                </button>
+                <div class="faq-a" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+                    <span itemprop="text">Мгновенно. Сразу после успешной оплаты файл появляется в вашем личном кабинете в разделе «Мои покупки». Вы можете скачать его в любое время — доступ к скачиванию сохраняется навсегда.</span>
+                </div>
+            </div>
+            <div class="faq-item" itemprop="mainEntity" itemscope itemtype="https://schema.org/Question">
+                <button class="faq-q"  aria-expanded="false">
+                    <span itemprop="name">Какие способы оплаты вы принимаете?</span>
+                    <span class="faq-arrow">▼</span>
+                </button>
+                <div class="faq-a" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+                    <span itemprop="text">Мы принимаем банковские карты Visa, Mastercard, МИР, а также электронные кошельки ЮMoney, QIWI, WebMoney и криптовалюту (Bitcoin, Ethereum, USDT). Все платежи проходят через защищённые шлюзы.</span>
+                </div>
+            </div>
+            <div class="faq-item" itemprop="mainEntity" itemscope itemtype="https://schema.org/Question">
+                <button class="faq-q"  aria-expanded="false">
+                    <span itemprop="name">Можно ли вернуть деньги, если товар не подошёл?</span>
+                    <span class="faq-arrow">▼</span>
+                </button>
+                <div class="faq-a" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+                    <span itemprop="text">Да, у нас действует 14-дневная гарантия возврата. Если товар не соответствует описанию или не работает — напишите в поддержку, и мы вернём деньги без лишних вопросов.</span>
+                </div>
+            </div>
+            <div class="faq-item" itemprop="mainEntity" itemscope itemtype="https://schema.org/Question">
+                <button class="faq-q"  aria-expanded="false">
+                    <span itemprop="name">Могу ли я использовать купленный товар в коммерческих целях?</span>
+                    <span class="faq-arrow">▼</span>
+                </button>
+                <div class="faq-a" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+                    <span itemprop="text">Зависит от типа лицензии. У каждого товара указан тип лицензии: Personal (только личное использование) или Commercial (можно использовать в коммерческих проектах). Выбирайте подходящий вариант при покупке.</span>
+                </div>
+            </div>
+            <div class="faq-item" itemprop="mainEntity" itemscope itemtype="https://schema.org/Question">
+                <button class="faq-q"  aria-expanded="false">
+                    <span itemprop="name">Как стать продавцом на DigiMarket?</span>
+                    <span class="faq-arrow">▼</span>
+                </button>
+                <div class="faq-a" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+                    <span itemprop="text">Зарегистрируйтесь, заполните профиль автора и загрузите свой первый продукт. Все товары проходят модерацию в течение 24 часов. Комиссия платформы — от 10% в зависимости от категории.</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ==================== NEWSLETTER ==================== -->
+<section class="newsletter" aria-labelledby="nl-heading">
+    <div class="container">
+        <div class="newsletter-inner">
+            <span class="section-tag">Рассылка</span>
+            <h2 id="nl-heading">Узнавайте о новинках первыми</h2>
+            <p>Скидки, новинки и подборки лучших товаров — без спама, не чаще 2 раз в неделю.</p>
+            <form class="newsletter-form" onsubmit="event.preventDefault(); alert('Спасибо за подписку!');">
+                <input type="email" placeholder="Ваш email..." required aria-label="Email для подписки">
+                <button type="submit" class="btn btn-accent2">Подписаться</button>
+            </form>
+        </div>
+    </div>
+</section>
+
+</main>
+
+<!-- ==================== FOOTER ==================== -->
+<footer class="footer">
+    <div class="container">
+        <div class="footer-grid">
+            <div class="footer-brand">
+                <div class="logo-icon">◆</div>
+                <div class="logo-text">DigiMarket</div>
+                <p>Маркетплейс цифровых товаров №1 в России. Более 50 000 продуктов от проверенных авторов.</p>
+                <div class="footer-socials">
+                    <a href="#" aria-label="Telegram">✈</a>
+                    <a href="#" aria-label="VK">V</a>
+                    <a href="#" aria-label="YouTube">▶</a>
+                    <a href="#" aria-label="Twitter">𝕏</a>
+                </div>
+            </div>
+            <div class="footer-col">
+                <h4>Каталог</h4>
+                <ul>
+                    <li><a href="#">Шаблоны документов</a></li>
+                    <li><a href="#">Софт и плагины</a></li>
+                    <li><a href="#">3D-модели</a></li>
+                    <li><a href="#">Графика и дизайн</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Компания</h4>
+                <ul>
+                    <li><a href="#">О нас</a></li>
+                    <li><a href="#">Блог</a></li>
+                    <li><a href="#">Вакансии</a></li>
+                    <li><a href="#">Партнёрам</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Помощь</h4>
+                <ul>
+                    <li><a href="#">Поддержка</a></li>
+                    <li><a href="#">FAQ</a></li>
+                    <li><a href="#">Как купить</a></li>
+                    <li><a href="#">Возврат</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Правовая информация</h4>
+                <ul>
+                    <li><a href="#">Пользовательское соглашение</a></li>
+                    <li><a href="#">Политика конфиденциальности</a></li>
+                    <li><a href="#">Лицензии</a></li>
+                    <li><a href="#">Cookies</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <span>© 2026 DigiMarket. Все права защищены.</span>
+            <div class="footer-payments">
+                <span title="Visa">💳</span>
+                <span title="Mastercard">💳</span>
+                <span title="МИР">💳</span>
+                <span title="Bitcoin">₿</span>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<script src="js/main.js" defer></script>
+
+</body>
+</html>
