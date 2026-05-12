@@ -15,7 +15,7 @@
 /* ==================== ACCOUNT LAYOUT ==================== */
 .account-page {
     min-height: calc(100vh - 200px);
-    padding: 32px 0 64px;
+    padding: 100px 0 64px;
 }
 
 .account-layout {
