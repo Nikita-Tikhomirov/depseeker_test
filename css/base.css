@@ -58,6 +58,30 @@ body {
 /* ==================== UTILITY ==================== */
 .container { max-width: 1240px; margin: 0 auto; padding: 0 24px; }
 
+/* Screen reader only */
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
+}
+
+/* Inline old price */
+.old-inline {
+    text-decoration: line-through;
+    color: var(--text-dim);
+    margin-right: 4px;
+}
+
+/* Button modifiers */
+.btn-block { display: flex; width: 100%; justify-content: center; }
+.btn-lg { padding: 16px 32px; font-size: 1rem; border-radius: 999px; }
+
 .section-tag {
     display: inline-block; font-size: 0.75rem; font-weight: 700; letter-spacing: 0.08em;
     text-transform: uppercase; color: var(--accent-2);
