@@ -93,6 +93,6 @@ body {
     letter-spacing: -0.025em; line-height: 1.15; margin-bottom: 12px;
 }
 .section-sub {
-    color: var(--text-2); font-size: 1.05rem; max-width: 560px;
+    color: var(--text-2); font-size: 1.05rem;
     line-height: 1.65;
 }

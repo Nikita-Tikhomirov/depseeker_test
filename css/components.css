@@ -222,7 +222,7 @@
 .faq-item.open .faq-a { max-height: 200px; padding: 0 22px 18px; }
 
 /* ==================== NEWSLETTER FORM ==================== */
-.newsletter-form { display: flex; gap: 10px; max-width: 440px; margin: 0 auto; }
+.newsletter-form { display: flex; gap: 10px; margin: 0 auto; }
 .newsletter-form input {
     flex: 1; padding: 13px 18px; border-radius: 999px;
     border: 1px solid var(--border); background: var(--bg);
