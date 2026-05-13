@@ -216,30 +216,6 @@
 </head>
 <body>
 
-<!-- ====== MINI HEADER WITH THEME CONTROLS ====== -->
-<style>
-    .demo-header {
-        position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
-        height: 56px; display: flex; align-items: center;
-        background: var(--bg); border-bottom: 1px solid var(--border);
-        backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
-        padding: 0 24px;
-    }
-    .demo-header-inner {
-        max-width: 1240px; width: 100%; margin: 0 auto;
-        display: flex; justify-content: flex-end; align-items: center; gap: 8px;
-    }
-</style>
-<header class="demo-header">
-    <div class="demo-header-inner">
-        <div class="theme-switch" role="radiogroup" aria-label="Цветовая схема">
-            <button class="theme-dot indigo active" data-theme="indigo" role="radio" aria-checked="true" aria-label="Индиго" title="Индиго"></button>
-            <button class="theme-dot amber" data-theme="amber" role="radio" aria-checked="false" aria-label="Янтарь" title="Янтарь"></button>
-            <button class="theme-dot emerald" data-theme="emerald" role="radio" aria-checked="false" aria-label="Изумруд" title="Изумруд"></button>
-        </div>
-        <button class="mode-toggle" id="mode-toggle" aria-label="Переключить светлую/тёмную тему" title="Светлая / Тёмная тема">☀️</button>
-    </div>
-</header>
 
 <section class="hero-v4" aria-label="Промо-карусель">
     <!-- Track -->
@@ -385,7 +361,31 @@
 })();
 </script>
 
-<!-- ====== THEME SWITCHING JS ====== -->
+
+<!-- ==================== FLOATING SETTINGS WIDGET ==================== -->
+<aside class="settings-widget" id="settings-widget" aria-label="Настройки оформления">
+    <button class="settings-trigger" id="settings-trigger" aria-label="Открыть настройки" title="Настройки">
+        <span class="settings-icon">⚙️</span>
+    </button>
+    <div class="settings-panel" id="settings-panel">
+        <span class="settings-label">Цветовая схема</span>
+        <div class="theme-switch" role="radiogroup" aria-label="Цветовая схема">
+            <button class="theme-dot indigo active" data-theme="indigo" role="radio" aria-checked="true" aria-label="Индиго" title="Индиго"></button>
+            <button class="theme-dot amber" data-theme="amber" role="radio" aria-checked="false" aria-label="Янтарь" title="Янтарь"></button>
+            <button class="theme-dot emerald" data-theme="emerald" role="radio" aria-checked="false" aria-label="Изумруд" title="Изумруд"></button>
+        </div>
+        <span class="settings-label">Тема</span>
+        <button class="mode-toggle" id="mode-toggle" aria-label="Переключить светлую/тёмную тему" title="Светлая / Тёмная тема">☀️</button>
+    </div>
+</aside>
+
+<!-- ==================== SCROLL TO TOP ==================== -->
+<button class="scroll-top" id="scroll-top" aria-label="Наверх" title="Наверх">
+    <span class="scroll-top-icon">🚀</span>
+    <span class="scroll-top-ring"></span>
+</button>
+
+<!-- ==================== THEME SWITCHING JS ==================== -->
 <script>
 (function() {
     'use strict';
@@ -412,7 +412,7 @@
         localStorage.setItem(MODE_KEY, mode);
         var btn = document.getElementById('mode-toggle');
         if (btn) {
-            btn.innerHTML = mode === 'light' ? '\uD83C\uDF19' : '\u2600\uFE0F';
+            btn.innerHTML = mode === 'light' ? '🌙' : '☀️';
             btn.title = mode === 'light' ? 'Тёмная тема' : 'Светлая тема';
             btn.setAttribute('aria-label',
                 mode === 'light' ? 'Переключить на тёмную тему' : 'Переключить на светлую тему');
@@ -422,6 +422,40 @@
     function toggleMode() {
         var current = html.getAttribute('data-mode') || DEFAULT_MODE;
         applyMode(current === 'light' ? 'dark' : 'light');
+    }
+
+    var widget = document.getElementById('settings-widget');
+    var trigger = document.getElementById('settings-trigger');
+    if (widget && trigger) {
+        trigger.addEventListener('click', function(e) {
+            e.stopPropagation();
+            widget.classList.toggle('open');
+        });
+        document.addEventListener('click', function(e) {
+            if (widget.classList.contains('open') && !widget.contains(e.target)) {
+                widget.classList.remove('open');
+            }
+        });
+    }
+
+    var scrollBtn = document.getElementById('scroll-top');
+    var scrollThreshold = 400;
+
+    function updateScrollTopVisibility() {
+        if (!scrollBtn) return;
+        if (window.scrollY > scrollThreshold) {
+            scrollBtn.classList.add('visible');
+        } else {
+            scrollBtn.classList.remove('visible');
+        }
+    }
+
+    if (scrollBtn) {
+        window.addEventListener('scroll', updateScrollTopVisibility, { passive: true });
+        scrollBtn.addEventListener('click', function() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+        updateScrollTopVisibility();
     }
 
     applyTheme(localStorage.getItem(THEME_KEY) || DEFAULT_THEME);
