@@ -53,3 +53,41 @@
     .hero-metrics { gap: 20px; flex-wrap: wrap; }
     .hero-metrics .met-num { font-size: 1.4rem; }
 }
+
+/* ==================== SCROLL-TO-TOP + SETTINGS WIDGET (mobile) ==================== */
+@media (max-width: 768px) {
+    .scroll-top {
+        bottom: 20px;
+        right: 16px;
+        width: 44px;
+        height: 44px;
+    }
+    .scroll-top-icon { font-size: 1.1rem; }
+
+    .settings-widget {
+        top: auto;
+        bottom: 80px;
+        transform: none;
+    }
+    .settings-trigger {
+        width: 38px;
+        height: 38px;
+        border-radius: 10px 0 0 10px;
+    }
+    .settings-icon { font-size: 1rem; }
+    .settings-panel {
+        padding: 14px 12px;
+        gap: 10px;
+        min-width: 68px;
+    }
+    .settings-panel .theme-dot {
+        width: 18px;
+        height: 18px;
+    }
+    .settings-panel .mode-toggle {
+        width: 36px;
+        height: 36px;
+        font-size: 1rem;
+    }
+    .settings-label { font-size: 0.56rem; }
+}
