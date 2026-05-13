@@ -139,6 +139,46 @@
 </header>
 
 <main>
+
+<!-- ==================== HERO VARIANT SWITCHER ==================== -->
+<style>
+    .hero-switcher {
+        position: fixed;
+        top: 76px;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 999;
+        display: flex;
+        gap: 6px;
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 999px;
+        padding: 4px;
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+    }
+    .hero-switcher a {
+        text-decoration: none;
+        font-size: 0.72rem;
+        font-weight: 600;
+        padding: 6px 14px;
+        border-radius: 999px;
+        color: var(--text-2);
+        transition: all 0.2s;
+        white-space: nowrap;
+        font-family: var(--font);
+    }
+    .hero-switcher a:hover { color: var(--text); background: var(--surface-2); }
+    .hero-switcher a.active { background: var(--accent); color: #fff; }
+</style>
+<nav class="hero-switcher" aria-label="Варианты первого экрана">
+    <a href="index.html" class="active">Текущий</a>
+    <a href="hero-v1.html">V1 · Сплит</a>
+    <a href="hero-v2.html">V2 · Сетка</a>
+    <a href="hero-v3.html">V3 · Поиск</a>
+    <a href="hero-v4.html">V4 · Карусель</a>
+</nav>
+
 <!-- ==================== HERO ==================== -->
 <section class="hero" aria-labelledby="hero-heading">
     <div class="container">
