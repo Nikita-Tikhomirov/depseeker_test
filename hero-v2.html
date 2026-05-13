@@ -8,6 +8,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/themes.css">
 
     <style>
         /* ========== V2: CATEGORY GRID HERO ========== */
@@ -218,6 +219,31 @@
 </head>
 <body>
 
+<!-- ====== MINI HEADER WITH THEME CONTROLS ====== -->
+<style>
+    .demo-header {
+        position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+        height: 56px; display: flex; align-items: center;
+        background: var(--bg); border-bottom: 1px solid var(--border);
+        backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+        padding: 0 24px;
+    }
+    .demo-header-inner {
+        max-width: 1240px; width: 100%; margin: 0 auto;
+        display: flex; justify-content: flex-end; align-items: center; gap: 8px;
+    }
+</style>
+<header class="demo-header">
+    <div class="demo-header-inner">
+        <div class="theme-switch" role="radiogroup" aria-label="Цветовая схема">
+            <button class="theme-dot indigo active" data-theme="indigo" role="radio" aria-checked="true" aria-label="Индиго" title="Индиго"></button>
+            <button class="theme-dot amber" data-theme="amber" role="radio" aria-checked="false" aria-label="Янтарь" title="Янтарь"></button>
+            <button class="theme-dot emerald" data-theme="emerald" role="radio" aria-checked="false" aria-label="Изумруд" title="Изумруд"></button>
+        </div>
+        <button class="mode-toggle" id="mode-toggle" aria-label="Переключить светлую/тёмную тему" title="Светлая / Тёмная тема">☀️</button>
+    </div>
+</header>
+
 <section class="hero-v2" aria-labelledby="hero-v2-heading">
     <div class="hero-v2-top">
         <span class="hero-v2-badge">🚀 Более 50 000 цифровых товаров</span>
@@ -290,5 +316,63 @@
     </div>
 </section>
 
+<!-- ====== THEME SWITCHING JS ====== -->
+<script>
+(function() {
+    'use strict';
+    var THEME_KEY = 'zifra-theme';
+    var MODE_KEY  = 'zifra-mode';
+    var DEFAULT_THEME = 'indigo';
+    var DEFAULT_MODE  = 'dark';
+    var html = document.documentElement;
+
+    function applyTheme(name) {
+        html.setAttribute('data-theme', name);
+        localStorage.setItem(THEME_KEY, name);
+        var dots = document.querySelectorAll('.theme-dot');
+        for (var i = 0; i < dots.length; i++) {
+            var d = dots[i];
+            var match = d.getAttribute('data-theme') === name;
+            d.classList.toggle('active', match);
+            d.setAttribute('aria-checked', match ? 'true' : 'false');
+        }
+    }
+
+    function applyMode(mode) {
+        html.setAttribute('data-mode', mode);
+        localStorage.setItem(MODE_KEY, mode);
+        var btn = document.getElementById('mode-toggle');
+        if (btn) {
+            btn.innerHTML = mode === 'light' ? '\uD83C\uDF19' : '\u2600\uFE0F';
+            btn.title = mode === 'light' ? 'Тёмная тема' : 'Светлая тема';
+            btn.setAttribute('aria-label',
+                mode === 'light' ? 'Переключить на тёмную тему' : 'Переключить на светлую тему');
+        }
+    }
+
+    function toggleMode() {
+        var current = html.getAttribute('data-mode') || DEFAULT_MODE;
+        applyMode(current === 'light' ? 'dark' : 'light');
+    }
+
+    applyTheme(localStorage.getItem(THEME_KEY) || DEFAULT_THEME);
+    applyMode(localStorage.getItem(MODE_KEY) || DEFAULT_MODE);
+
+    document.addEventListener('click', function(e) {
+        var dot = e.target.closest('.theme-dot');
+        if (dot) {
+            var theme = dot.getAttribute('data-theme');
+            if (theme) applyTheme(theme);
+            return;
+        }
+        if (e.target.closest('#mode-toggle')) {
+            toggleMode();
+        }
+    });
+})();
+</script>
+
 </body>
 </html>
+
+
