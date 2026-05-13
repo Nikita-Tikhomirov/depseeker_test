@@ -76,6 +76,7 @@
     }
     .settings-icon { font-size: 1rem; }
     .settings-panel {
+        right: 38px;
         padding: 14px 12px;
         gap: 10px;
         min-width: 68px;
