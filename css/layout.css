@@ -285,23 +285,32 @@
     top: 50%;
     transform: translateY(-50%);
     z-index: 998;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
 }
 
 .settings-trigger {
-    position: relative;
-    z-index: 2;
+    flex-shrink: 0;
     width: 44px;
     height: 44px;
-    border-radius: 12px 0 0 12px;
+    border-radius: 12px;
     border: 1px solid var(--border);
-    border-right: none;
     background: var(--surface);
     color: var(--text-2);
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: all 0.25s var(--ease);
+    transition: border-radius 0.4s var(--ease-spring),
+                border-color 0.25s var(--ease),
+                background 0.25s var(--ease),
+                color 0.25s var(--ease);
+}
+
+.settings-widget.open .settings-trigger {
+    border-radius: 12px 0 0 12px;
+    border-right: none;
 }
 
 .settings-trigger:hover {
@@ -319,31 +328,42 @@
     transform: rotate(120deg);
 }
 
-/* Panel that slides out — absolute to the right of the trigger */
+/* Panel that slides out from the gear */
 .settings-panel {
-    position: absolute;
-    right: 44px;
-    top: 50%;
-    transform: translateY(-50%) translateX(16px);
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 14px 0 0 14px;
-    padding: 20px 18px;
+    flex-shrink: 0;
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 12px;
-    opacity: 0;
-    pointer-events: none;
-    transition: transform 0.4s var(--ease-spring), opacity 0.3s var(--ease);
-    min-width: 80px;
-    box-shadow: -4px 0 28px rgba(0,0,0,0.25);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-left: none;
+    border-radius: 0 14px 14px 0;
+    box-shadow: 4px 0 28px rgba(0,0,0,0.25);
     white-space: nowrap;
+    overflow: hidden;
+
+    /* Closed state */
+    max-width: 0;
+    opacity: 0;
+    padding: 20px 18px;
+    padding-left: 0;
+    padding-right: 0;
+    border-width: 0;
+    gap: 12px;
+    pointer-events: none;
+
+    transition: max-width 0.4s var(--ease-spring),
+                opacity 0.3s var(--ease),
+                padding-left 0.4s var(--ease-spring),
+                padding-right 0.4s var(--ease-spring);
 }
 
 .settings-widget.open .settings-panel {
-    transform: translateY(-50%) translateX(0);
+    max-width: 250px;
     opacity: 1;
+    padding-left: 18px;
+    padding-right: 18px;
+    border-width: 1px;
     pointer-events: all;
 }
 

@@ -72,14 +72,19 @@
     .settings-trigger {
         width: 38px;
         height: 38px;
+        border-radius: 10px;
+    }
+    .settings-widget.open .settings-trigger {
         border-radius: 10px 0 0 10px;
     }
     .settings-icon { font-size: 1rem; }
     .settings-panel {
-        right: 38px;
-        padding: 14px 12px;
         gap: 10px;
-        min-width: 68px;
+    }
+    .settings-widget.open .settings-panel {
+        max-width: 200px;
+        padding-left: 12px;
+        padding-right: 12px;
     }
     .settings-panel .theme-dot {
         width: 18px;
