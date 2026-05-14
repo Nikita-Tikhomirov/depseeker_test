@@ -1,0 +1,2194 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <!-- ========== SEO META ========== -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Генератор ACF для WordPress — создайте кастомные поля без кода. 15 типов полей: текст, редактор, повторитель, гибкий контент, галерея. Экспорт PHP и JSON. Бесплатный онлайн-инструмент.">
+    <meta name="keywords" content="генератор acf, advanced custom fields генератор, создать кастомные поля wordpress, acf php генератор, acf json генератор, конструктор полей acf, export acf fields, wp custom fields">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://zifra.example.com/tools/acf-generator">
+    <meta name="author" content="Цифра">
+
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Генератор ACF для WordPress — создайте кастомные поля онлайн | Цифра">
+    <meta property="og:description" content="Бесплатный генератор Advanced Custom Fields. 15 типов полей, живые превью PHP и JSON, готовые шаблоны: Hero, Team, Testimonials, SEO.">
+    <meta property="og:url" content="https://zifra.example.com/tools/acf-generator">
+    <meta property="og:image" content="https://zifra.example.com/images/tool-acf-generator-og.jpg">
+    <meta property="og:locale" content="ru_RU">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Генератор ACF для WordPress — создайте кастомные поля онлайн | Цифра">
+    <meta name="twitter:description" content="Создайте Advanced Custom Fields без кода. Превью PHP/JSON, шаблоны, экспорт.">
+    <meta name="twitter:image" content="https://zifra.example.com/images/tool-acf-generator-og.jpg">
+
+    <title>Генератор ACF для WordPress — создайте кастомные поля онлайн | Цифра</title>
+
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "SoftwareApplication",
+        "name": "Генератор ACF для WordPress",
+        "applicationCategory": "DeveloperApplication",
+        "operatingSystem": "Web",
+        "offers": {"@type": "Offer", "price": "0", "priceCurrency": "RUB"},
+        "description": "Бесплатный онлайн-генератор Advanced Custom Fields для WordPress. Создавайте кастомные поля с живым превью PHP и JSON кода."
+    }
+    </script>
+
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+            {"@type": "ListItem", "position": 1, "name": "Главная", "item": "https://zifra.example.com/"},
+            {"@type": "ListItem", "position": 2, "name": "Инструменты", "item": "https://zifra.example.com/tools"},
+            {"@type": "ListItem", "position": 3, "name": "Генератор ACF"}
+        ]
+    }
+    </script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/layout.css">
+    <link rel="stylesheet" href="css/responsive.css">
+    <link rel="stylesheet" href="css/themes.css">
+
+    <!-- ========== GENERATOR-SPECIFIC STYLES ========== -->
+    <style>
+        :root {
+            --font-mono: 'JetBrains Mono', 'Cascadia Code', 'Fira Code', monospace;
+        }
+
+        /* Tool Hero */
+        .tool-hero {
+            padding: 60px 0 40px;
+            text-align: center;
+            position: relative;
+        }
+        .tool-hero::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: var(--gradient-hero);
+            pointer-events: none;
+        }
+        .tool-hero .tool-icon {
+            font-size: 3.5rem;
+            margin-bottom: 16px;
+            display: inline-block;
+            background: var(--surface);
+            width: 90px; height: 90px; border-radius: var(--radius-xl);
+            display: flex; align-items: center; justify-content: center;
+            margin: 0 auto 20px;
+            border: 1px solid var(--border);
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+        }
+        .tool-hero h1 {
+            font-size: clamp(2rem, 4vw, 2.8rem);
+            font-weight: 800;
+            letter-spacing: -0.025em;
+            line-height: 1.15;
+            margin-bottom: 12px;
+        }
+        .tool-hero p {
+            color: var(--text-2);
+            font-size: 1.05rem;
+            max-width: 640px;
+            margin: 0 auto 28px;
+            line-height: 1.65;
+        }
+        .tool-stats {
+            display: flex; gap: 32px; justify-content: center; flex-wrap: wrap;
+            margin-top: 20px;
+        }
+        .tool-stat {
+            text-align: center;
+        }
+        .tool-stat .stat-num {
+            font-size: 2rem; font-weight: 800;
+            background: var(--gradient-1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .tool-stat .stat-label {
+            font-size: 0.78rem; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.05em;
+        }
+
+        /* Generator Workspace */
+        .generator-workspace {
+            padding: 0 0 80px;
+        }
+        .gen-grid {
+            display: grid;
+            grid-template-columns: 300px 1fr 380px;
+            gap: 20px;
+            align-items: start;
+        }
+
+        /* Panels */
+        .gen-panel {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+        }
+        .gen-panel-header {
+            padding: 16px 20px;
+            border-bottom: 1px solid var(--border);
+            font-weight: 700;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+        }
+        .gen-panel-body {
+            padding: 16px 20px;
+            max-height: 600px;
+            overflow-y: auto;
+        }
+        .gen-panel-body::-webkit-scrollbar {
+            width: 6px;
+        }
+        .gen-panel-body::-webkit-scrollbar-track {
+            background: var(--bg);
+            border-radius: 3px;
+        }
+        .gen-panel-body::-webkit-scrollbar-thumb {
+            background: var(--border-hover);
+            border-radius: 3px;
+        }
+
+        /* Form controls */
+        .gen-label {
+            display: block;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-dim);
+            margin-bottom: 6px;
+        }
+        .gen-input, .gen-select, .gen-textarea {
+            width: 100%;
+            padding: 10px 14px;
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            color: var(--text);
+            font-size: 0.85rem;
+            font-family: var(--font);
+            outline: none;
+            transition: border-color 0.2s;
+        }
+        .gen-input:focus, .gen-select:focus, .gen-textarea:focus {
+            border-color: var(--accent);
+        }
+        .gen-select {
+            -webkit-appearance: none;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%236e6e88' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 12px center;
+            padding-right: 36px;
+        }
+        .gen-textarea {
+            min-height: 70px;
+            resize: vertical;
+            font-size: 0.8rem;
+        }
+        .gen-row {
+            margin-bottom: 14px;
+        }
+        .gen-row:last-child { margin-bottom: 0; }
+        .gen-row-inline {
+            display: flex; gap: 10px; align-items: end;
+        }
+        .gen-row-inline > * { flex: 1; }
+        .gen-hint {
+            font-size: 0.7rem; color: var(--text-dim); margin-top: 4px;
+        }
+        .gen-divider {
+            border: none;
+            border-top: 1px solid var(--border);
+            margin: 16px 0;
+        }
+
+        /* Buttons inside generator */
+        .gen-btn {
+            display: inline-flex; align-items: center; gap: 6px;
+            padding: 8px 16px; border-radius: 999px;
+            font-size: 0.8rem; font-weight: 600; border: none; cursor: pointer;
+            transition: all 0.2s var(--ease); font-family: var(--font);
+            white-space: nowrap;
+        }
+        .gen-btn-primary {
+            background: var(--accent); color: #fff;
+        }
+        .gen-btn-primary:hover {
+            background: var(--accent-hover);
+        }
+        .gen-btn-accent {
+            background: var(--accent-2); color: #000;
+        }
+        .gen-btn-accent:hover {
+            opacity: 0.9;
+        }
+        .gen-btn-outline {
+            background: transparent; color: var(--text-2);
+            border: 1px solid var(--border);
+        }
+        .gen-btn-outline:hover {
+            border-color: var(--border-hover); color: var(--text); background: var(--surface-2);
+        }
+        .gen-btn-danger {
+            background: transparent; color: #f87171;
+            border: 1px solid rgba(248,113,113,0.2);
+        }
+        .gen-btn-danger:hover {
+            background: rgba(248,113,113,0.1); border-color: rgba(248,113,113,0.4);
+        }
+        .gen-btn-sm {
+            padding: 5px 12px; font-size: 0.72rem;
+        }
+        .gen-btn-icon {
+            width: 32px; height: 32px; border-radius: 50%;
+            background: transparent; border: 1px solid var(--border);
+            color: var(--text-dim); cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            transition: all 0.2s; font-size: 0.85rem;
+        }
+        .gen-btn-icon:hover {
+            border-color: var(--border-hover); color: var(--text);
+        }
+
+        /* Field Cards */
+        .field-card {
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            margin-bottom: 8px;
+            transition: border-color 0.2s;
+            cursor: pointer;
+        }
+        .field-card:hover {
+            border-color: var(--border-hover);
+        }
+        .field-card.active {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 1px var(--accent-glow);
+        }
+        .field-card-header {
+            display: flex; align-items: center; gap: 10px;
+            padding: 10px 14px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+        .field-card-header .field-type-icon {
+            font-size: 1rem;
+            flex-shrink: 0;
+        }
+        .field-card-header .field-label-text {
+            flex: 1;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        .field-card-header .field-actions {
+            display: flex; gap: 4px;
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+        .field-card:hover .field-actions {
+            opacity: 1;
+        }
+        .field-card-body {
+            display: none;
+            padding: 0 14px 14px;
+            border-top: 1px solid var(--border);
+            padding-top: 12px;
+        }
+        .field-card.active .field-card-body {
+            display: block;
+        }
+
+        /* Quick-add field buttons */
+        .field-type-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 6px;
+            margin-bottom: 12px;
+        }
+        .field-type-btn {
+            display: flex; align-items: center; gap: 6px;
+            padding: 8px 10px;
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            color: var(--text-2);
+            font-size: 0.75rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: var(--font);
+            text-align: left;
+        }
+        .field-type-btn:hover {
+            border-color: var(--accent);
+            color: var(--text);
+            background: var(--surface-2);
+        }
+        .field-type-btn .type-emoji {
+            font-size: 1rem;
+            flex-shrink: 0;
+        }
+
+        /* Empty state */
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--text-dim);
+        }
+        .empty-state .empty-icon {
+            font-size: 3rem;
+            margin-bottom: 12px;
+            opacity: 0.5;
+        }
+        .empty-state p {
+            font-size: 0.85rem;
+            margin-bottom: 8px;
+        }
+
+        /* Code Preview */
+        .code-preview {
+            background: #0a0a14;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            overflow: hidden;
+            font-family: var(--font-mono);
+            font-size: 0.78rem;
+            line-height: 1.55;
+        }
+        .code-preview-header {
+            display: flex; align-items: center; gap: 8px;
+            padding: 10px 16px;
+            background: var(--surface);
+            border-bottom: 1px solid var(--border);
+        }
+        .code-preview-header .code-tab {
+            padding: 5px 14px;
+            border-radius: 999px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            border: 1px solid transparent;
+            background: transparent;
+            color: var(--text-dim);
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: var(--font);
+        }
+        .code-preview-header .code-tab.active {
+            background: var(--accent);
+            color: #fff;
+            border-color: var(--accent);
+        }
+        .code-preview-header .code-actions {
+            margin-left: auto;
+            display: flex; gap: 6px;
+        }
+        .code-preview pre {
+            margin: 0;
+            padding: 16px;
+            overflow-x: auto;
+            max-height: 520px;
+            color: #c9d1d9;
+            tab-size: 4;
+        }
+        .code-preview pre::-webkit-scrollbar { height: 6px; }
+        .code-preview pre::-webkit-scrollbar-track { background: transparent; }
+        .code-preview pre::-webkit-scrollbar-thumb { background: var(--border-hover); border-radius: 3px; }
+
+        /* Syntax highlighting */
+        .code-preview .kw { color: #ff7b72; }
+        .code-preview .fn { color: #d2a8ff; }
+        .code-preview .str { color: #a5d6ff; }
+        .code-preview .num { color: #79c0ff; }
+        .code-preview .cmt { color: #8b949e; font-style: italic; }
+        .code-preview .tag { color: #7ee787; }
+
+        /* Templates section */
+        .templates-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 14px;
+        }
+        .template-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 20px;
+            cursor: pointer;
+            transition: all 0.3s var(--ease);
+            text-align: center;
+        }
+        .template-card:hover {
+            border-color: var(--accent);
+            transform: translateY(-3px);
+            box-shadow: 0 12px 32px rgba(0,0,0,0.3);
+        }
+        .template-card .template-icon {
+            font-size: 2.2rem;
+            margin-bottom: 12px;
+        }
+        .template-card h4 {
+            font-size: 0.9rem;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+        .template-card p {
+            font-size: 0.75rem;
+            color: var(--text-dim);
+            line-height: 1.5;
+        }
+
+        /* Toast notification */
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--accent);
+            color: #fff;
+            padding: 12px 24px;
+            border-radius: 999px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            z-index: 9999;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s var(--ease), transform 0.3s var(--ease);
+            box-shadow: 0 8px 32px var(--accent-glow);
+        }
+        .toast.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(-8px);
+        }
+        .toast.error {
+            background: #ef4444;
+            box-shadow: 0 8px 32px rgba(239,68,68,0.3);
+        }
+
+        /* Checkbox toggle */
+        .gen-toggle {
+            display: flex; align-items: center; gap: 10px;
+        }
+        .gen-toggle input[type="checkbox"] {
+            width: 40px; height: 22px;
+            -webkit-appearance: none;
+            appearance: none;
+            background: var(--border);
+            border-radius: 999px;
+            position: relative;
+            cursor: pointer;
+            transition: background 0.3s;
+            border: none;
+            outline: none;
+        }
+        .gen-toggle input[type="checkbox"]::after {
+            content: '';
+            position: absolute;
+            width: 18px; height: 18px;
+            border-radius: 50%;
+            background: #fff;
+            top: 2px; left: 2px;
+            transition: transform 0.3s var(--ease);
+        }
+        .gen-toggle input[type="checkbox"]:checked {
+            background: var(--accent-2);
+        }
+        .gen-toggle input[type="checkbox"]:checked::after {
+            transform: translateX(18px);
+        }
+
+        /* Location rule row */
+        .location-rule {
+            display: flex; gap: 6px; align-items: center; margin-bottom: 8px;
+        }
+        .location-rule select { flex: 1; }
+
+        /* Responsive */
+        @media (max-width: 1200px) {
+            .gen-grid {
+                grid-template-columns: 1fr 380px;
+            }
+            .gen-panel:first-child {
+                grid-column: 1 / -1;
+            }
+        }
+        @media (max-width: 860px) {
+            .gen-grid {
+                grid-template-columns: 1fr;
+            }
+            .gen-panel:first-child {
+                grid-column: auto;
+            }
+            .tool-stats { gap: 16px; }
+            .tool-stat .stat-num { font-size: 1.5rem; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- ==================== HEADER ==================== -->
+<header class="header">
+    <div class="container">
+        <a href="/" class="header-logo" aria-label="Цифра — на главную">
+            <span class="logo-icon">◆</span>
+            <span class="logo-text">Цифра</span>
+        </a>
+
+        <nav aria-label="Основная навигация">
+            <ul class="header-nav">
+                <li>
+                    <a href="#" class="mega-trigger">Каталог ▾</a>
+                    <div class="mega-dropdown">
+                        <div class="mega-content">
+                            <div class="mega-col">
+                                <h4>Документы</h4>
+                                <a href="documents.html">Шаблоны документов</a>
+                                <a href="#">Бизнес-планы</a>
+                                <a href="#">Резюме и CV</a>
+                                <a href="#">Презентации</a>
+                            </div>
+                            <div class="mega-col">
+                                <h4>Софт и IT</h4>
+                                <a href="#">Плагины</a>
+                                <a href="#">Скрипты</a>
+                                <a href="#">Темы и шаблоны</a>
+                                <a href="#">Мобильные приложения</a>
+                            </div>
+                            <div class="mega-col">
+                                <h4>Творчество</h4>
+                                <a href="#">3D-модели</a>
+                                <a href="#">Графика и иконки</a>
+                                <a href="#">Музыка и звуки</a>
+                                <a href="#">Видео и анимация</a>
+                            </div>
+                            <div class="mega-col">
+                                <h4>Обучение</h4>
+                                <a href="#">Онлайн-курсы</a>
+                                <a href="#">Книги и гайды</a>
+                                <a href="#">Чек-листы</a>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+                <li><a href="/#popular">Популярное</a></li>
+                <li><a href="/#new">Новинки</a></li>
+                <li><a href="/#how">Как это работает</a></li>
+                <li><a href="#">Цены</a></li>
+            </ul>
+        </nav>
+
+        <div class="header-actions">
+            <div class="header-search" role="search">
+                <span class="search-icon">🔍</span>
+                <input type="search" placeholder="Поиск товаров..." aria-label="Поиск по сайту">
+            </div>
+            <button class="header-icon-btn" aria-label="Избранное">♡</button>
+            <button class="header-icon-btn" aria-label="Корзина">
+                🛒 <span class="cart-count">3</span>
+            </button>
+            <button class="btn btn-outline" style="padding:8px 18px; font-size:0.85rem;">Войти</button>
+        </div>
+
+        <button class="hamburger" aria-label="Меню">
+            <span></span><span></span><span></span>
+        </button>
+    </div>
+</header>
+
+<main>
+
+<!-- ==================== BREADCRUMBS ==================== -->
+<nav class="breadcrumbs" aria-label="Хлебные крошки">
+    <div class="container">
+        <a href="/">Главная</a>
+        <span class="breadcrumb-sep">/</span>
+        <a href="#">Инструменты</a>
+        <span class="breadcrumb-sep">/</span>
+        <span>Генератор ACF для WordPress</span>
+    </div>
+</nav>
+
+<!-- ==================== TOOL HERO ==================== -->
+<section class="tool-hero">
+    <div class="container">
+        <div class="tool-icon">⚡</div>
+        <h1>Генератор ACF для WordPress</h1>
+        <p>
+            Создавайте кастомные поля Advanced Custom Fields без написания кода.
+            15 типов полей, живое превью PHP и JSON, готовые шаблоны и экспорт в один клик.
+        </p>
+        <div class="tool-stats">
+            <div class="tool-stat">
+                <div class="stat-num">15</div>
+                <div class="stat-label">типов полей</div>
+            </div>
+            <div class="tool-stat">
+                <div class="stat-num">5</div>
+                <div class="stat-label">готовых шаблонов</div>
+            </div>
+            <div class="tool-stat">
+                <div class="stat-num">PHP</div>
+                <div class="stat-label">+ JSON экспорт</div>
+            </div>
+            <div class="tool-stat">
+                <div class="stat-num">0 ₽</div>
+                <div class="stat-label">бесплатно</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ==================== GENERATOR WORKSPACE ==================== -->
+<section class="generator-workspace" aria-label="Рабочая область генератора">
+    <div class="container">
+        <div class="gen-grid">
+
+            <!-- ===== LEFT PANEL: Field Group Settings ===== -->
+            <div class="gen-panel" id="panel-group">
+                <div class="gen-panel-header">
+                    ⚙️ Группа полей
+                    <button class="gen-btn gen-btn-sm gen-btn-outline" onclick="resetAll()" title="Сбросить всё">↺ Сброс</button>
+                </div>
+                <div class="gen-panel-body">
+                    <div class="gen-row">
+                        <label class="gen-label" for="group-title">Название группы</label>
+                        <input type="text" class="gen-input" id="group-title" value="Hero Section" placeholder="Hero Section" oninput="liveUpdate()">
+                    </div>
+                    <div class="gen-row">
+                        <label class="gen-label" for="group-key">Ключ (group_xxx)</label>
+                        <input type="text" class="gen-input" id="group-key" value="group_hero_section" placeholder="group_hero_section" oninput="liveUpdate()" style="font-family:var(--font-mono); font-size:0.78rem;">
+                        <div class="gen-hint">Уникальный ключ группы. Автозаполняется из названия.</div>
+                    </div>
+                    <div class="gen-row">
+                        <label class="gen-label" for="group-desc">Описание</label>
+                        <textarea class="gen-textarea" id="group-desc" placeholder="Опциональное описание группы полей" oninput="liveUpdate()"></textarea>
+                    </div>
+
+                    <hr class="gen-divider">
+
+                    <label class="gen-label">Правила отображения (Location)</label>
+                    <div id="location-rules">
+                        <!-- Populated by JS -->
+                    </div>
+                    <button class="gen-btn gen-btn-sm gen-btn-outline" onclick="addLocationRule()" style="margin-top:8px;">+ Добавить правило</button>
+
+                    <hr class="gen-divider">
+
+                    <div class="gen-row">
+                        <label class="gen-label" for="group-style">Стиль отображения</label>
+                        <select class="gen-select" id="group-style" onchange="liveUpdate()">
+                            <option value="default">Standard (метабокс)</option>
+                            <option value="seamless">Seamless (без рамок)</option>
+                        </select>
+                    </div>
+                    <div class="gen-row">
+                        <label class="gen-label" for="group-menu-order">Позиция (menu_order)</label>
+                        <input type="number" class="gen-input" id="group-menu-order" value="0" min="0" oninput="liveUpdate()">
+                    </div>
+                    <div class="gen-row">
+                        <label class="gen-label">Параметры</label>
+                        <div class="gen-toggle" style="margin-bottom:8px;">
+                            <input type="checkbox" id="group-active" checked onchange="liveUpdate()">
+                            <span style="font-size:0.82rem;">Активна</span>
+                        </div>
+                    </div>
+
+                    <hr class="gen-divider">
+
+                    <div class="gen-row">
+                        <label class="gen-label">Скрыть на странице</label>
+                        <div style="display:flex;flex-direction:column;gap:6px;">
+                            <label style="font-size:0.8rem;display:flex;align-items:center;gap:8px;cursor:pointer;">
+                                <input type="checkbox" value="the_content" onchange="liveUpdate()"> the_content
+                            </label>
+                            <label style="font-size:0.8rem;display:flex;align-items:center;gap:8px;cursor:pointer;">
+                                <input type="checkbox" value="the_excerpt" onchange="liveUpdate()"> the_excerpt
+                            </label>
+                            <label style="font-size:0.8rem;display:flex;align-items:center;gap:8px;cursor:pointer;">
+                                <input type="checkbox" value="featured_image" onchange="liveUpdate()"> featured_image
+                            </label>
+                            <label style="font-size:0.8rem;display:flex;align-items:center;gap:8px;cursor:pointer;">
+                                <input type="checkbox" value="comments" onchange="liveUpdate()"> comments
+                            </label>
+                            <label style="font-size:0.8rem;display:flex;align-items:center;gap:8px;cursor:pointer;">
+                                <input type="checkbox" value="slug" onchange="liveUpdate()"> slug
+                            </label>
+                            <label style="font-size:0.8rem;display:flex;align-items:center;gap:8px;cursor:pointer;">
+                                <input type="checkbox" value="author" onchange="liveUpdate()"> author
+                            </label>
+                        </div>
+                    </div>
+
+                    <hr class="gen-divider">
+
+                    <button class="gen-btn gen-btn-accent" style="width:100%;justify-content:center;" onclick="document.getElementById('json-import-input').click()">
+                        📥 Импорт из JSON
+                    </button>
+                    <input type="file" id="json-import-input" accept=".json" style="display:none;" onchange="importFromJSON(event)">
+                </div>
+            </div>
+
+            <!-- ===== CENTER: Fields List ===== -->
+            <div class="gen-panel" id="panel-fields">
+                <div class="gen-panel-header">
+                    📋 Поля
+                    <span style="font-size:0.75rem;color:var(--text-dim);font-weight:400;" id="field-count-display">0 полей</span>
+                </div>
+                <div class="gen-panel-body" id="fields-container">
+                    <!-- Quick-add buttons -->
+                    <div class="field-type-grid" id="field-type-grid">
+                        <button class="field-type-btn" onclick="addField('text')"><span class="type-emoji">Aa</span> Text</button>
+                        <button class="field-type-btn" onclick="addField('textarea')"><span class="type-emoji">📝</span> Textarea</button>
+                        <button class="field-type-btn" onclick="addField('number')"><span class="type-emoji">🔢</span> Number</button>
+                        <button class="field-type-btn" onclick="addField('email')"><span class="type-emoji">📧</span> Email</button>
+                        <button class="field-type-btn" onclick="addField('url')"><span class="type-emoji">🔗</span> URL</button>
+                        <button class="field-type-btn" onclick="addField('wysiwyg')"><span class="type-emoji">✏️</span> WYSIWYG</button>
+                        <button class="field-type-btn" onclick="addField('image')"><span class="type-emoji">🖼️</span> Image</button>
+                        <button class="field-type-btn" onclick="addField('file')"><span class="type-emoji">📄</span> File</button>
+                        <button class="field-type-btn" onclick="addField('gallery')"><span class="type-emoji">🖼️🖼️</span> Gallery</button>
+                        <button class="field-type-btn" onclick="addField('select')"><span class="type-emoji">📋</span> Select</button>
+                        <button class="field-type-btn" onclick="addField('checkbox')"><span class="type-emoji">☑️</span> Checkbox</button>
+                        <button class="field-type-btn" onclick="addField('radio')"><span class="type-emoji">🔘</span> Radio</button>
+                        <button class="field-type-btn" onclick="addField('true_false')"><span class="type-emoji">🔛</span> True/False</button>
+                        <button class="field-type-btn" onclick="addField('date_picker')"><span class="type-emoji">📅</span> Date Picker</button>
+                        <button class="field-type-btn" onclick="addField('color_picker')"><span class="type-emoji">🎨</span> Color</button>
+                        <button class="field-type-btn" onclick="addField('repeater')"><span class="type-emoji">🔄</span> Repeater</button>
+                        <button class="field-type-btn" onclick="addField('flexible_content')"><span class="type-emoji">🧩</span> Flexible</button>
+                        <button class="field-type-btn" onclick="addField('group')"><span class="type-emoji">📦</span> Group</button>
+                        <button class="field-type-btn" onclick="addField('tab')"><span class="type-emoji">📑</span> Tab</button>
+                    </div>
+
+                    <!-- Fields list -->
+                    <div id="fields-list">
+                        <div class="empty-state" id="fields-empty">
+                            <div class="empty-icon">📭</div>
+                            <p>Нет добавленных полей</p>
+                            <p style="font-size:0.75rem;">Нажмите на тип поля выше, чтобы добавить</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== RIGHT PANEL: Code Preview ===== -->
+            <div class="gen-panel" id="panel-code">
+                <div class="gen-panel-header">
+                    💻 Код
+                </div>
+                <div class="code-preview">
+                    <div class="code-preview-header">
+                        <button class="code-tab active" data-tab="php" onclick="switchCodeTab('php')">PHP</button>
+                        <button class="code-tab" data-tab="json" onclick="switchCodeTab('json')">JSON</button>
+                        <div class="code-actions">
+                            <button class="gen-btn gen-btn-sm gen-btn-outline" onclick="copyCode()" title="Копировать">📋</button>
+                            <button class="gen-btn gen-btn-sm gen-btn-accent" onclick="downloadCode()" title="Скачать">⬇</button>
+                        </div>
+                    </div>
+                    <pre id="code-output"><span class="cmt">// Добавьте поля — код появится здесь</span></pre>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<!-- ==================== TEMPLATES ==================== -->
+<section class="products" aria-labelledby="templates-heading">
+    <div class="container">
+        <div class="products-top">
+            <div>
+                <span class="section-tag">Шаблоны</span>
+                <h2 id="templates-heading" class="section-title">Готовые конфигурации</h2>
+            </div>
+        </div>
+        <p style="color:var(--text-2); margin-bottom:28px; font-size:0.95rem;">
+            Начните с готового шаблона — загрузите, отредактируйте под себя и экспортируйте.
+        </p>
+        <div class="templates-grid">
+            <div class="template-card" onclick="loadTemplate('hero')">
+                <div class="template-icon">🦸</div>
+                <h4>Hero Section</h4>
+                <p>Заголовок, подзаголовок, изображение, кнопка — всё для главного экрана</p>
+            </div>
+            <div class="template-card" onclick="loadTemplate('team')">
+                <div class="template-icon">👥</div>
+                <h4>Team Members</h4>
+                <p>Repeater: фото, имя, должность, bio, ссылки на соцсети</p>
+            </div>
+            <div class="template-card" onclick="loadTemplate('testimonials')">
+                <div class="template-icon">💬</div>
+                <h4>Testimonials</h4>
+                <p>Repeater: цитата, автор, фото, должность, рейтинг</p>
+            </div>
+            <div class="template-card" onclick="loadTemplate('seo')">
+                <div class="template-icon">🔍</div>
+                <h4>SEO Fields</h4>
+                <p>Meta title, description, og:image, canonical URL, noindex</p>
+            </div>
+            <div class="template-card" onclick="loadTemplate('sidebar')">
+                <div class="template-icon">📌</div>
+                <h4>Custom Sidebar</h4>
+                <p>Flexible Content: текст, изображение, баннер, форма подписки</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ==================== FAQ ==================== -->
+<section class="faq" aria-labelledby="faq-heading">
+    <div class="container">
+        <div class="faq-header">
+            <span class="section-tag">FAQ</span>
+            <h2 id="faq-heading" class="section-title">Часто задаваемые вопросы</h2>
+        </div>
+        <div class="faq-list" itemscope itemtype="https://schema.org/FAQPage">
+            <div class="faq-item" itemprop="mainEntity" itemscope itemtype="https://schema.org/Question">
+                <button class="faq-q" aria-expanded="false">
+                    <span itemprop="name">Что такое ACF и зачем нужен генератор?</span>
+                    <span class="faq-arrow">▼</span>
+                </button>
+                <div class="faq-a" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+                    <span itemprop="text">ACF (Advanced Custom Fields) — самый популярный плагин для создания кастомных полей в WordPress. Генератор позволяет создать конфигурацию полей визуально, без написания PHP-кода. Вы получаете готовый код для вставки в functions.php или JSON для импорта в плагин.</span>
+                </div>
+            </div>
+            <div class="faq-item" itemprop="mainEntity" itemscope itemtype="https://schema.org/Question">
+                <button class="faq-q" aria-expanded="false">
+                    <span itemprop="name">Как использовать сгенерированный PHP-код?</span>
+                    <span class="faq-arrow">▼</span>
+                </button>
+                <div class="faq-a" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+                    <span itemprop="text">Скопируйте код в файл functions.php вашей темы (или в отдельный плагин). Функция `acf_add_local_field_group()` зарегистрирует группу полей, и она появится в админке WordPress на указанных страницах.</span>
+                </div>
+            </div>
+            <div class="faq-item" itemprop="mainEntity" itemscope itemtype="https://schema.org/Question">
+                <button class="faq-q" aria-expanded="false">
+                    <span itemprop="name">Поддерживается ли Repeater и Flexible Content?</span>
+                    <span class="faq-arrow">▼</span>
+                </button>
+                <div class="faq-a" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+                    <span itemprop="text">Да, генератор поддерживает Repeater, Flexible Content и Group поля. Вы можете добавлять в них подполя — они корректно экспортируются и в PHP, и в JSON. Учтите, что для работы Repeater и Flexible Content требуется ACF Pro.</span>
+                </div>
+            </div>
+            <div class="faq-item" itemprop="mainEntity" itemscope itemtype="https://schema.org/Question">
+                <button class="faq-q" aria-expanded="false">
+                    <span itemprop="name">Можно ли импортировать существующий JSON из ACF?</span>
+                    <span class="faq-arrow">▼</span>
+                </button>
+                <div class="faq-a" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+                    <span itemprop="text">Да. Нажмите «Импорт из JSON» в левой панели, выберите файл JSON, экспортированный из ACF. Генератор распарсит его и восстановит все поля и настройки группы для редактирования.</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ==================== FLOATING SETTINGS WIDGET ==================== -->
+<aside class="settings-widget" id="settings-widget" aria-label="Настройки оформления">
+    <button class="settings-trigger" id="settings-trigger" aria-label="Открыть настройки" title="Настройки">
+        <span class="settings-icon">⚙️</span>
+    </button>
+    <div class="settings-panel" id="settings-panel">
+        <span class="settings-label">Цветовая схема</span>
+        <div class="theme-switch" role="radiogroup" aria-label="Цветовая схема">
+            <button class="theme-dot indigo active" data-theme="indigo" role="radio" aria-checked="true" aria-label="Индиго" title="Индиго"></button>
+            <button class="theme-dot amber" data-theme="amber" role="radio" aria-checked="false" aria-label="Янтарь" title="Янтарь"></button>
+            <button class="theme-dot emerald" data-theme="emerald" role="radio" aria-checked="false" aria-label="Изумруд" title="Изумруд"></button>
+        </div>
+        <span class="settings-label">Тема</span>
+        <button class="mode-toggle" id="mode-toggle" aria-label="Переключить светлую/тёмную тему" title="Светлая / Тёмная тема">☀️</button>
+    </div>
+</aside>
+
+<!-- ==================== SCROLL TO TOP ==================== -->
+<button class="scroll-top" id="scroll-top" aria-label="Наверх" title="Наверх">
+    <span class="scroll-top-icon">🚀</span>
+    <span class="scroll-top-ring"></span>
+</button>
+
+</main>
+
+<!-- ==================== FOOTER ==================== -->
+<footer class="footer">
+    <div class="container">
+        <div class="footer-grid">
+            <div class="footer-brand">
+                <div class="logo-icon">◆</div>
+                <div class="logo-text">Цифра</div>
+                <p>Маркетплейс цифровых товаров №1 в России. Более 50 000 продуктов от проверенных авторов.</p>
+                <div class="footer-socials">
+                    <a href="#" aria-label="Telegram">✈</a>
+                    <a href="#" aria-label="VK">V</a>
+                    <a href="#" aria-label="YouTube">▶</a>
+                    <a href="#" aria-label="Twitter">𝕏</a>
+                </div>
+            </div>
+            <div class="footer-col">
+                <h4>Каталог</h4>
+                <ul>
+                    <li><a href="documents.html">Шаблоны документов</a></li>
+                    <li><a href="#">Софт и плагины</a></li>
+                    <li><a href="#">3D-модели</a></li>
+                    <li><a href="#">Графика и дизайн</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Компания</h4>
+                <ul>
+                    <li><a href="about.html">О нас</a></li>
+                    <li><a href="#">Блог</a></li>
+                    <li><a href="#">Вакансии</a></li>
+                    <li><a href="#">Партнёрам</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Помощь</h4>
+                <ul>
+                    <li><a href="#">Поддержка</a></li>
+                    <li><a href="#">FAQ</a></li>
+                    <li><a href="#">Как купить</a></li>
+                    <li><a href="#">Возврат</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Правовая информация</h4>
+                <ul>
+                    <li><a href="#">Пользовательское соглашение</a></li>
+                    <li><a href="privacy.html">Политика конфиденциальности</a></li>
+                    <li><a href="#">Лицензии</a></li>
+                    <li><a href="#">Cookies</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <span>© 2026 Цифра. Все права защищены.</span>
+            <div class="footer-payments">
+                <span title="Visa">💳</span>
+                <span title="Mastercard">💳</span>
+                <span title="МИР">💳</span>
+                <span title="Bitcoin">₿</span>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- ==================== TOAST ==================== -->
+<div class="toast" id="toast"></div>
+
+<script src="js/main.js" defer></script>
+
+<!-- ==================== GENERATOR LOGIC + THEME JS ==================== -->
+<script>
+(function() {
+    'use strict';
+
+    // ==================== STATE ====================
+    var fields = [];
+    var fieldIdCounter = 0;
+    var locationRules = [];
+    var activeFieldId = null;
+    var currentCodeTab = 'php';
+
+    var FIELD_TYPE_ICONS = {
+        text: 'Aa', textarea: '📝', number: '🔢', email: '📧', url: '🔗',
+        wysiwyg: '✏️', image: '🖼️', file: '📄', gallery: '🖼️🖼️',
+        select: '📋', checkbox: '☑️', radio: '🔘', true_false: '🔛',
+        date_picker: '📅', color_picker: '🎨', repeater: '🔄',
+        flexible_content: '🧩', group: '📦', tab: '📑'
+    };
+
+    var FIELD_TYPE_LABELS = {
+        text: 'Text', textarea: 'Textarea', number: 'Number', email: 'Email',
+        url: 'URL', wysiwyg: 'WYSIWYG Editor', image: 'Image', file: 'File',
+        gallery: 'Gallery', select: 'Select', checkbox: 'Checkbox', radio: 'Radio',
+        true_false: 'True / False', date_picker: 'Date Picker', color_picker: 'Color Picker',
+        repeater: 'Repeater', flexible_content: 'Flexible Content', group: 'Group', tab: 'Tab'
+    };
+
+    // ==================== LOCATION RULES ====================
+    function addLocationRule(param, operator, value) {
+        locationRules.push({
+            param: param || 'post_type',
+            operator: operator || '==',
+            value: value || 'page'
+        });
+        renderLocationRules();
+        liveUpdate();
+    }
+
+    function removeLocationRule(index) {
+        locationRules.splice(index, 1);
+        renderLocationRules();
+        liveUpdate();
+    }
+
+    function updateLocationRule(index, key, val) {
+        locationRules[index][key] = val;
+        liveUpdate();
+    }
+
+    function renderLocationRules() {
+        var container = document.getElementById('location-rules');
+        var opsByParam = {
+            post_type: ['==', '!='],
+            page_template: ['==', '!='],
+            post_taxonomy: ['==', '!='],
+            page_type: ['==', '!='],
+            post_status: ['==', '!='],
+            user_role: ['==', '!=']
+        };
+        var html = '';
+        for (var i = 0; i < locationRules.length; i++) {
+            var r = locationRules[i];
+            var ops = opsByParam[r.param] || ['==', '!='];
+            var valInput = '<input type="text" class="gen-input" value="' + escAttr(r.value) + '" onchange="updateLocationRule(' + i + ', \'value\', this.value)" style="flex:1;">';
+            if (r.param === 'page_type') {
+                valInput = '<select class="gen-select" onchange="updateLocationRule(' + i + ', \'value\', this.value)" style="flex:1;"><option value="front_page"' + (r.value === 'front_page' ? ' selected' : '') + '>Front Page</option><option value="posts_page"' + (r.value === 'posts_page' ? ' selected' : '') + '>Posts Page</option><option value="top_level"' + (r.value === 'top_level' ? ' selected' : '') + '>Top Level</option></select>';
+            }
+            html += '<div class="location-rule">' +
+                '<select class="gen-select" onchange="updateLocationRule(' + i + ', \'param\', this.value)" style="flex:1;">' +
+                '<option value="post_type"' + (r.param === 'post_type' ? ' selected' : '') + '>Post Type</option>' +
+                '<option value="page_template"' + (r.param === 'page_template' ? ' selected' : '') + '>Page Template</option>' +
+                '<option value="post_taxonomy"' + (r.param === 'post_taxonomy' ? ' selected' : '') + '>Post Taxonomy</option>' +
+                '<option value="page_type"' + (r.param === 'page_type' ? ' selected' : '') + '>Page Type</option>' +
+                '<option value="post_status"' + (r.param === 'post_status' ? ' selected' : '') + '>Post Status</option>' +
+                '<option value="user_role"' + (r.param === 'user_role' ? ' selected' : '') + '>User Role</option>' +
+                '</select>' +
+                '<select class="gen-select" onchange="updateLocationRule(' + i + ', \'operator\', this.value)" style="flex:0.5;">' +
+                ops.map(function(o) { return '<option value="' + o + '"' + (r.operator === o ? ' selected' : '') + '>' + o + '</option>'; }).join('') +
+                '</select>' +
+                valInput +
+                '<button class="gen-btn-icon" onclick="removeLocationRule(' + i + ')" title="Удалить" style="flex-shrink:0;color:#f87171;">✕</button>' +
+                '</div>';
+        }
+        if (locationRules.length === 0) {
+            html = '<div class="gen-hint" style="margin-bottom:8px;">Правила не заданы — группа будет отображаться везде.</div>';
+        }
+        container.innerHTML = html;
+    }
+
+    // ==================== FIELDS ====================
+    function addField(type) {
+        var id = ++fieldIdCounter;
+        var label = FIELD_TYPE_LABELS[type] || type;
+        var name = 'field_' + id;
+        var field = {
+            id: id,
+            type: type,
+            label: label,
+            name: name,
+            key: 'field_' + id,
+            instructions: '',
+            required: false,
+            default_value: '',
+            placeholder: '',
+            maxlength: '',
+            prepend: '',
+            append: '',
+            wrapper_width: '',
+            choices: (type === 'select' || type === 'checkbox' || type === 'radio') ? 'option_1 : Option 1\noption_2 : Option 2' : '',
+            sub_fields: (type === 'repeater' || type === 'flexible_content' || type === 'group') ? [] : [],
+            layouts: (type === 'flexible_content') ? [] : [],
+            button_label: (type === 'repeater') ? 'Добавить строку' : '',
+            min: (type === 'repeater') ? 0 : '',
+            max: (type === 'repeater') ? 0 : '',
+            new_lines: (type === 'textarea') ? 'br' : '',
+            return_format: (type === 'image' || type === 'file' || type === 'gallery') ? 'array' : '',
+            library: (type === 'image' || type === 'file' || type === 'gallery') ? 'all' : '',
+            display_format: (type === 'date_picker') ? 'd/m/Y' : '',
+            message: (type === 'true_false') ? '' : '',
+            tabs: (type === 'tab') ? 'top' : '',
+            endpoint: false
+        };
+        fields.push(field);
+        activeFieldId = id;
+        renderFields();
+        liveUpdate();
+    }
+
+    function removeField(id) {
+        fields = fields.filter(function(f) { return f.id !== id; });
+        if (activeFieldId === id) activeFieldId = null;
+        renderFields();
+        liveUpdate();
+    }
+
+    function duplicateField(id) {
+        var idx = fields.findIndex(function(f) { return f.id === id; });
+        if (idx === -1) return;
+        var copy = JSON.parse(JSON.stringify(fields[idx]));
+        copy.id = ++fieldIdCounter;
+        copy.name = 'field_' + copy.id;
+        copy.key = 'field_' + copy.id;
+        fields.splice(idx + 1, 0, copy);
+        activeFieldId = copy.id;
+        renderFields();
+        liveUpdate();
+    }
+
+    function moveField(id, direction) {
+        var idx = fields.findIndex(function(f) { return f.id === id; });
+        if (idx === -1) return;
+        var newIdx = idx + direction;
+        if (newIdx < 0 || newIdx >= fields.length) return;
+        var tmp = fields[idx];
+        fields[idx] = fields[newIdx];
+        fields[newIdx] = tmp;
+        renderFields();
+        liveUpdate();
+    }
+
+    function setActiveField(id) {
+        activeFieldId = (activeFieldId === id) ? null : id;
+        renderFields();
+    }
+
+    function updateField(id, key, value) {
+        var field = fields.find(function(f) { return f.id === id; });
+        if (!field) return;
+        if (typeof value === 'boolean') {
+            field[key] = value;
+        } else {
+            field[key] = value;
+        }
+        liveUpdate();
+    }
+
+    function addSubField(parentId, type) {
+        var field = fields.find(function(f) { return f.id === parentId; });
+        if (!field) return;
+        if (!field.sub_fields) field.sub_fields = [];
+        var subId = ++fieldIdCounter;
+        var subField = {
+            id: subId,
+            type: type,
+            label: FIELD_TYPE_LABELS[type] || type,
+            name: 'sub_field_' + subId,
+            key: 'field_' + subId,
+            instructions: '',
+            required: false,
+            default_value: '',
+            placeholder: '',
+            choices: (type === 'select' || type === 'checkbox' || type === 'radio') ? 'option_1 : Option 1\noption_2 : Option 2' : '',
+            sub_fields: (type === 'repeater' || type === 'flexible_content' || type === 'group') ? [] : [],
+            new_lines: (type === 'textarea') ? 'br' : '',
+            return_format: (type === 'image' || type === 'file') ? 'array' : ''
+        };
+        field.sub_fields.push(subField);
+        renderFields();
+        liveUpdate();
+    }
+
+    function removeSubField(parentId, subId) {
+        var field = fields.find(function(f) { return f.id === parentId; });
+        if (!field || !field.sub_fields) return;
+        field.sub_fields = field.sub_fields.filter(function(sf) { return sf.id !== subId; });
+        renderFields();
+        liveUpdate();
+    }
+
+    function updateSubField(parentId, subId, key, value) {
+        var field = fields.find(function(f) { return f.id === parentId; });
+        if (!field || !field.sub_fields) return;
+        var sf = field.sub_fields.find(function(s) { return s.id === subId; });
+        if (!sf) return;
+        sf[key] = value;
+        liveUpdate();
+    }
+
+    function addSubFieldToFlexibleLayout(parentId, layoutIdx, type) {
+        var field = fields.find(function(f) { return f.id === parentId; });
+        if (!field || !field.layouts) return;
+        var layout = field.layouts[layoutIdx];
+        if (!layout || !layout.sub_fields) layout.sub_fields = [];
+        var subId = ++fieldIdCounter;
+        var subField = {
+            id: subId, type: type,
+            label: FIELD_TYPE_LABELS[type] || type,
+            name: 'sub_field_' + subId, key: 'field_' + subId,
+            instructions: '', required: false, default_value: '', placeholder: '',
+            choices: (type === 'select' || type === 'checkbox' || type === 'radio') ? 'option_1 : Option 1\noption_2 : Option 2' : '',
+            sub_fields: (type === 'repeater' || type === 'flexible_content' || type === 'group') ? [] : [],
+            new_lines: (type === 'textarea') ? 'br' : '',
+            return_format: (type === 'image' || type === 'file') ? 'array' : ''
+        };
+        layout.sub_fields.push(subField);
+        renderFields();
+        liveUpdate();
+    }
+
+    function removeSubFieldFromFlexibleLayout(parentId, layoutIdx, subId) {
+        var field = fields.find(function(f) { return f.id === parentId; });
+        if (!field || !field.layouts) return;
+        var layout = field.layouts[layoutIdx];
+        if (!layout || !layout.sub_fields) return;
+        layout.sub_fields = layout.sub_fields.filter(function(sf) { return sf.id !== subId; });
+        renderFields();
+        liveUpdate();
+    }
+
+    function addFlexibleLayout(parentId) {
+        var field = fields.find(function(f) { return f.id === parentId; });
+        if (!field) return;
+        if (!field.layouts) field.layouts = [];
+        var layoutName = 'layout_' + (field.layouts.length + 1);
+        field.layouts.push({
+            name: layoutName,
+            label: layoutName.charAt(0).toUpperCase() + layoutName.slice(1).replace(/_/g, ' '),
+            sub_fields: []
+        });
+        renderFields();
+        liveUpdate();
+    }
+
+    function renderFields() {
+        var container = document.getElementById('fields-list');
+        var emptyEl = document.getElementById('fields-empty');
+        var countEl = document.getElementById('field-count-display');
+
+        countEl.textContent = fields.length + ' ' + plural(fields.length, ['поле', 'поля', 'полей']);
+
+        if (fields.length === 0) {
+            if (emptyEl) emptyEl.style.display = '';
+            container.innerHTML = '';
+            return;
+        }
+        if (emptyEl) emptyEl.style.display = 'none';
+
+        var html = '';
+        for (var i = 0; i < fields.length; i++) {
+            var f = fields[i];
+            var isActive = activeFieldId === f.id;
+            var icon = FIELD_TYPE_ICONS[f.type] || 'Aa';
+            var typeLabel = FIELD_TYPE_LABELS[f.type] || f.type;
+            html += '<div class="field-card' + (isActive ? ' active' : '') + '">';
+            html += '<div class="field-card-header" onclick="setActiveField(' + f.id + ')">';
+            html += '<span class="field-type-icon">' + icon + '</span>';
+            html += '<span class="field-label-text">' + escHtml(f.label || typeLabel) + ' <span style="color:var(--text-dim);font-weight:400;font-size:0.7rem;">[' + typeLabel + ']</span></span>';
+            html += '<div class="field-actions" onclick="event.stopPropagation();">';
+            if (i > 0) html += '<button class="gen-btn-icon" onclick="moveField(' + f.id + ', -1)" title="Вверх" style="font-size:0.7rem;">▲</button>';
+            if (i < fields.length - 1) html += '<button class="gen-btn-icon" onclick="moveField(' + f.id + ', 1)" title="Вниз" style="font-size:0.7rem;">▼</button>';
+            html += '<button class="gen-btn-icon" onclick="duplicateField(' + f.id + ')" title="Дублировать">⧉</button>';
+            html += '<button class="gen-btn-icon" onclick="removeField(' + f.id + ')" title="Удалить" style="color:#f87171;">✕</button>';
+            html += '</div></div>';
+
+            // Expanded body
+            html += '<div class="field-card-body">' + renderFieldForm(f) + '</div>';
+            html += '</div>';
+        }
+        container.innerHTML = html;
+    }
+
+    function renderFieldForm(f) {
+        var h = '';
+        h += '<div class="gen-row"><label class="gen-label">Тип поля</label><select class="gen-select" onchange="updateField(' + f.id + ', \'type\', this.value); renderFields();"><option value="' + f.type + '" selected>' + (FIELD_TYPE_LABELS[f.type] || f.type) + '</option>';
+        var types = Object.keys(FIELD_TYPE_LABELS);
+        for (var t = 0; t < types.length; t++) {
+            if (types[t] !== f.type) h += '<option value="' + types[t] + '">' + FIELD_TYPE_LABELS[types[t]] + '</option>';
+        }
+        h += '</select></div>';
+
+        h += '<div class="gen-row-inline"><div class="gen-row" style="flex:2;"><label class="gen-label">Label</label><input type="text" class="gen-input" value="' + escAttr(f.label || '') + '" oninput="updateField(' + f.id + ', \'label\', this.value)" placeholder="Заголовок поля"></div>';
+        h += '<div class="gen-row"><label class="gen-label">Name</label><input type="text" class="gen-input" value="' + escAttr(f.name || '') + '" oninput="updateField(' + f.id + ', \'name\', this.value)" placeholder="field_name" style="font-family:var(--font-mono);font-size:0.75rem;"></div></div>';
+
+        h += '<div class="gen-row"><label class="gen-label">Key</label><input type="text" class="gen-input" value="' + escAttr(f.key || '') + '" oninput="updateField(' + f.id + ', \'key\', this.value)" placeholder="field_xxx" style="font-family:var(--font-mono);font-size:0.75rem;"></div>';
+
+        h += '<div class="gen-row"><label class="gen-label">Instructions</label><textarea class="gen-textarea" oninput="updateField(' + f.id + ', \'instructions\', this.value)" placeholder="Подсказка под полем">' + escHtml(f.instructions || '') + '</textarea></div>';
+
+        h += '<div class="gen-row-inline">';
+        h += '<div class="gen-row"><label class="gen-label">Placeholder</label><input type="text" class="gen-input" value="' + escAttr(f.placeholder || '') + '" oninput="updateField(' + f.id + ', \'placeholder\', this.value)"></div>';
+        h += '<div class="gen-row"><label class="gen-label">Max Length</label><input type="number" class="gen-input" value="' + (f.maxlength || '') + '" oninput="updateField(' + f.id + ', \'maxlength\', this.value)" placeholder="Без ограничений" min="0"></div>';
+        h += '</div>';
+
+        h += '<div class="gen-row-inline">';
+        h += '<div class="gen-row"><label class="gen-label">Default Value</label><input type="text" class="gen-input" value="' + escAttr(f.default_value || '') + '" oninput="updateField(' + f.id + ', \'default_value\', this.value)"></div>';
+        h += '<div class="gen-row" style="display:flex;align-items:center;gap:10px;padding-top:20px;">';
+        h += '<label class="gen-toggle"><input type="checkbox"' + (f.required ? ' checked' : '') + ' onchange="updateField(' + f.id + ', \'required\', this.checked)"><span style="font-size:0.82rem;">Required</span></label>';
+        h += '</div></div>';
+
+        // Type-specific options
+        if (f.type === 'select' || f.type === 'checkbox' || f.type === 'radio') {
+            h += '<div class="gen-row"><label class="gen-label">Choices (value : Label, по одному на строке)</label><textarea class="gen-textarea" oninput="updateField(' + f.id + ', \'choices\', this.value)" rows="4">' + escHtml(f.choices || '') + '</textarea></div>';
+        }
+        if (f.type === 'textarea') {
+            h += '<div class="gen-row"><label class="gen-label">New Lines</label><select class="gen-select" onchange="updateField(' + f.id + ', \'new_lines\', this.value)"><option value="br"' + (f.new_lines === 'br' ? ' selected' : '') + '>br</option><option value="wpautop"' + (f.new_lines === 'wpautop' ? ' selected' : '') + '>wpautop</option></select></div>';
+        }
+        if (f.type === 'image' || f.type === 'file' || f.type === 'gallery') {
+            h += '<div class="gen-row-inline">';
+            h += '<div class="gen-row"><label class="gen-label">Return Format</label><select class="gen-select" onchange="updateField(' + f.id + ', \'return_format\', this.value)"><option value="array"' + (f.return_format === 'array' ? ' selected' : '') + '>Array</option><option value="url"' + (f.return_format === 'url' ? ' selected' : '') + '>URL</option><option value="id"' + (f.return_format === 'id' ? ' selected' : '') + '>ID</option></select></div>';
+            h += '<div class="gen-row"><label class="gen-label">Library</label><select class="gen-select" onchange="updateField(' + f.id + ', \'library\', this.value)"><option value="all"' + (f.library === 'all' ? ' selected' : '') + '>All</option><option value="uploadedTo"' + (f.library === 'uploadedTo' ? ' selected' : '') + '>Uploaded to post</option></select></div>';
+            h += '</div>';
+        }
+        if (f.type === 'date_picker') {
+            h += '<div class="gen-row"><label class="gen-label">Display Format</label><input type="text" class="gen-input" value="' + escAttr(f.display_format || 'd/m/Y') + '" oninput="updateField(' + f.id + ', \'display_format\', this.value)" placeholder="d/m/Y"></div>';
+        }
+        if (f.type === 'true_false') {
+            h += '<div class="gen-row"><label class="gen-label">Message</label><input type="text" class="gen-input" value="' + escAttr(f.message || '') + '" oninput="updateField(' + f.id + ', \'message\', this.value)" placeholder="Текст рядом с переключателем"></div>';
+        }
+        if (f.type === 'tab') {
+            h += '<div class="gen-row-inline">';
+            h += '<div class="gen-row"><label class="gen-label">Placement</label><select class="gen-select" onchange="updateField(' + f.id + ', \'tabs\', this.value)"><option value="top"' + (f.tabs === 'top' ? ' selected' : '') + '>Top</option><option value="left"' + (f.tabs === 'left' ? ' selected' : '') + '>Left</option></select></div>';
+            h += '<div class="gen-row" style="display:flex;align-items:center;gap:10px;padding-top:20px;">';
+            h += '<label class="gen-toggle"><input type="checkbox"' + (f.endpoint ? ' checked' : '') + ' onchange="updateField(' + f.id + ', \'endpoint\', this.checked)"><span style="font-size:0.82rem;">Endpoint</span></label>';
+            h += '</div></div>';
+        }
+        if (f.type === 'repeater') {
+            h += '<div class="gen-row-inline">';
+            h += '<div class="gen-row"><label class="gen-label">Button Label</label><input type="text" class="gen-input" value="' + escAttr(f.button_label || 'Добавить строку') + '" oninput="updateField(' + f.id + ', \'button_label\', this.value)"></div>';
+            h += '<div class="gen-row"><label class="gen-label">Min Rows</label><input type="number" class="gen-input" value="' + (f.min || 0) + '" oninput="updateField(' + f.id + ', \'min\', this.value)" min="0"></div>';
+            h += '<div class="gen-row"><label class="gen-label">Max Rows</label><input type="number" class="gen-input" value="' + (f.max || 0) + '" oninput="updateField(' + f.id + ', \'max\', this.value)" min="0"></div>';
+            h += '</div>';
+
+            // Sub-fields for repeater
+            h += '<hr class="gen-divider"><label class="gen-label">Sub Fields (' + (f.sub_fields ? f.sub_fields.length : 0) + ')</label>';
+            h += '<div style="display:flex;gap:4px;flex-wrap:wrap;margin-bottom:8px;">';
+            var subTypes = ['text', 'textarea', 'image', 'wysiwyg', 'number', 'email', 'url', 'select', 'true_false', 'date_picker', 'color_picker'];
+            for (var st = 0; st < subTypes.length; st++) {
+                h += '<button class="gen-btn gen-btn-sm gen-btn-outline" onclick="addSubField(' + f.id + ', \'' + subTypes[st] + '\')">+ ' + (FIELD_TYPE_LABELS[subTypes[st]] || subTypes[st]) + '</button>';
+            }
+            h += '</div>';
+            if (f.sub_fields) {
+                for (var si = 0; si < f.sub_fields.length; si++) {
+                    var sf = f.sub_fields[si];
+                    h += '<div style="background:var(--surface-2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:10px 12px;margin-bottom:6px;">';
+                    h += '<div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">';
+                    h += '<span>' + (FIELD_TYPE_ICONS[sf.type] || 'Aa') + '</span>';
+                    h += '<span style="font-weight:600;font-size:0.82rem;">' + escHtml(sf.label || sf.name) + '</span>';
+                    h += '<span style="font-size:0.7rem;color:var(--text-dim);">[' + (FIELD_TYPE_LABELS[sf.type] || sf.type) + ']</span>';
+                    h += '<button class="gen-btn-icon" onclick="removeSubField(' + f.id + ', ' + sf.id + ')" style="margin-left:auto;color:#f87171;width:24px;height:24px;font-size:0.65rem;">✕</button>';
+                    h += '</div>';
+                    h += '<div style="display:flex;gap:8px;flex-wrap:wrap;">';
+                    h += '<input type="text" class="gen-input" value="' + escAttr(sf.label || '') + '" oninput="updateSubField(' + f.id + ', ' + sf.id + ', \'label\', this.value)" placeholder="Label" style="flex:2;font-size:0.75rem;">';
+                    h += '<input type="text" class="gen-input" value="' + escAttr(sf.name || '') + '" oninput="updateSubField(' + f.id + ', ' + sf.id + ', \'name\', this.value)" placeholder="Name" style="flex:1;font-size:0.75rem;font-family:var(--font-mono);">';
+                    h += '</div>';
+                    h += '</div>';
+                }
+            }
+        }
+
+        if (f.type === 'flexible_content') {
+            if (!f.layouts) f.layouts = [];
+            h += '<hr class="gen-divider"><label class="gen-label">Layouts (' + f.layouts.length + ')</label>';
+            h += '<button class="gen-btn gen-btn-sm gen-btn-accent" onclick="addFlexibleLayout(' + f.id + ')" style="margin-bottom:10px;">+ Add Layout</button>';
+            for (var li = 0; li < f.layouts.length; li++) {
+                var layout = f.layouts[li];
+                h += '<div style="background:var(--surface-2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:10px 12px;margin-bottom:8px;">';
+                h += '<div style="display:flex;gap:6px;margin-bottom:8px;">';
+                h += '<input type="text" class="gen-input" value="' + escAttr(layout.name || '') + '" onchange="(function(lidx){var fld=fields.find(function(ff){return ff.id===' + f.id + '});if(fld&&fld.layouts)fld.layouts[lidx].name=this.value;renderFields();liveUpdate();})(' + li + ')" placeholder="layout_name" style="font-size:0.75rem;font-family:var(--font-mono);flex:1;">';
+                h += '<input type="text" class="gen-input" value="' + escAttr(layout.label || '') + '" onchange="(function(lidx){var fld=fields.find(function(ff){return ff.id===' + f.id + '});if(fld&&fld.layouts)fld.layouts[lidx].label=this.value;renderFields();liveUpdate();})(' + li + ')" placeholder="Layout Label" style="font-size:0.75rem;flex:1;">';
+                h += '</div>';
+                h += '<div style="display:flex;gap:4px;flex-wrap:wrap;margin-bottom:6px;">';
+                for (var sst = 0; sst < subTypes.length; sst++) {
+                    h += '<button class="gen-btn gen-btn-sm gen-btn-outline" onclick="addSubFieldToFlexibleLayout(' + f.id + ', ' + li + ', \'' + subTypes[sst] + '\')">+ ' + (FIELD_TYPE_LABELS[subTypes[sst]] || subTypes[sst]) + '</button>';
+                }
+                h += '</div>';
+                if (layout.sub_fields) {
+                    for (var sfi = 0; sfi < layout.sub_fields.length; sfi++) {
+                        var lsf = layout.sub_fields[sfi];
+                        h += '<div style="background:var(--bg);border:1px solid var(--border);border-radius:var(--radius-sm);padding:8px 10px;margin-bottom:4px;display:flex;align-items:center;gap:8px;">';
+                        h += '<span>' + (FIELD_TYPE_ICONS[lsf.type] || 'Aa') + '</span>';
+                        h += '<span style="font-weight:600;font-size:0.78rem;">' + escHtml(lsf.label || lsf.name) + '</span>';
+                        h += '<span style="font-size:0.7rem;color:var(--text-dim);">[' + (FIELD_TYPE_LABELS[lsf.type] || lsf.type) + ']</span>';
+                        h += '<button class="gen-btn-icon" onclick="removeSubFieldFromFlexibleLayout(' + f.id + ', ' + li + ', ' + lsf.id + ')" style="margin-left:auto;color:#f87171;width:24px;height:24px;font-size:0.65rem;">✕</button>';
+                        h += '</div>';
+                    }
+                }
+                h += '</div>';
+            }
+        }
+
+        if (f.type === 'group') {
+            h += '<hr class="gen-divider"><label class="gen-label">Sub Fields (' + (f.sub_fields ? f.sub_fields.length : 0) + ')</label>';
+            h += '<div style="display:flex;gap:4px;flex-wrap:wrap;margin-bottom:8px;">';
+            for (var st2 = 0; st2 < subTypes.length; st2++) {
+                h += '<button class="gen-btn gen-btn-sm gen-btn-outline" onclick="addSubField(' + f.id + ', \'' + subTypes[st2] + '\')">+ ' + (FIELD_TYPE_LABELS[subTypes[st2]] || subTypes[st2]) + '</button>';
+            }
+            h += '</div>';
+            if (f.sub_fields) {
+                for (var gi = 0; gi < f.sub_fields.length; gi++) {
+                    var gf = f.sub_fields[gi];
+                    h += '<div style="background:var(--surface-2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:8px 10px;margin-bottom:4px;display:flex;align-items:center;gap:8px;">';
+                    h += '<span>' + (FIELD_TYPE_ICONS[gf.type] || 'Aa') + '</span>';
+                    h += '<span style="font-weight:600;font-size:0.78rem;">' + escHtml(gf.label || gf.name) + '</span>';
+                    h += '<span style="font-size:0.7rem;color:var(--text-dim);">[' + (FIELD_TYPE_LABELS[gf.type] || gf.type) + ']</span>';
+                    h += '<button class="gen-btn-icon" onclick="removeSubField(' + f.id + ', ' + gf.id + ')" style="margin-left:auto;color:#f87171;width:24px;height:24px;font-size:0.65rem;">✕</button>';
+                    h += '</div>';
+                }
+            }
+        }
+
+        h += '<hr class="gen-divider"><div class="gen-row-inline">';
+        h += '<div class="gen-row"><label class="gen-label">Wrapper Width (%)</label><input type="number" class="gen-input" value="' + (f.wrapper_width || '') + '" oninput="updateField(' + f.id + ', \'wrapper_width\', this.value)" placeholder="100" min="0" max="100"></div>';
+        h += '<div class="gen-row"><label class="gen-label">Prepend</label><input type="text" class="gen-input" value="' + escAttr(f.prepend || '') + '" oninput="updateField(' + f.id + ', \'prepend\', this.value)"></div>';
+        h += '<div class="gen-row"><label class="gen-label">Append</label><input type="text" class="gen-input" value="' + escAttr(f.append || '') + '" oninput="updateField(' + f.id + ', \'append\', this.value)"></div>';
+        h += '</div>';
+
+        return h;
+    }
+
+    // ==================== CODE GENERATION ====================
+    function buildACFConfig() {
+        var title = document.getElementById('group-title').value || 'Field Group';
+        var key = document.getElementById('group-key').value || 'group_default';
+        var description = document.getElementById('group-desc').value || '';
+        var style = document.getElementById('group-style').value || 'default';
+        var menuOrder = parseInt(document.getElementById('group-menu-order').value) || 0;
+        var active = document.getElementById('group-active').checked;
+
+        // Hide on screen
+        var hideOnScreen = [];
+        var hideChecks = document.querySelectorAll('#panel-group input[type="checkbox"]:checked');
+        hideChecks.forEach(function(cb) {
+            if (cb.value && cb.value !== 'on') hideOnScreen.push(cb.value);
+        });
+
+        function buildFieldConfig(f) {
+            var fc = {
+                key: f.key || 'field_default',
+                label: f.label || '',
+                name: f.name || '',
+                type: f.type || 'text',
+                instructions: f.instructions || '',
+                required: !!f.required,
+                default_value: f.default_value || '',
+                placeholder: f.placeholder || '',
+                maxlength: f.maxlength || '',
+                prepend: f.prepend || '',
+                append: f.append || ''
+            };
+
+            if (f.wrapper_width) fc.wrapper = { width: f.wrapper_width + '%' };
+
+            if (f.type === 'select' || f.type === 'checkbox' || f.type === 'radio') {
+                fc.choices = {};
+                if (f.choices) {
+                    var lines = f.choices.split('\n');
+                    for (var l = 0; l < lines.length; l++) {
+                        var parts = lines[l].split(':');
+                        if (parts.length >= 2) {
+                            fc.choices[parts[0].trim()] = parts.slice(1).join(':').trim();
+                        }
+                    }
+                }
+            }
+            if (f.type === 'textarea' && f.new_lines) fc.new_lines = f.new_lines;
+            if (f.type === 'image' || f.type === 'file' || f.type === 'gallery') {
+                fc.return_format = f.return_format || 'array';
+                fc.library = f.library || 'all';
+            }
+            if (f.type === 'date_picker') fc.display_format = f.display_format || 'd/m/Y';
+            if (f.type === 'true_false' && f.message) fc.message = f.message;
+            if (f.type === 'tab') {
+                fc.placement = f.tabs || 'top';
+                if (f.endpoint) fc.endpoint = 1;
+            }
+
+            if (f.type === 'repeater') {
+                fc.button_label = f.button_label || 'Добавить строку';
+                if (f.min) fc.min = parseInt(f.min);
+                if (f.max) fc.max = parseInt(f.max);
+                fc.sub_fields = [];
+                if (f.sub_fields) {
+                    for (var si = 0; si < f.sub_fields.length; si++) {
+                        fc.sub_fields.push(buildFieldConfig(f.sub_fields[si]));
+                    }
+                }
+            }
+
+            if (f.type === 'flexible_content') {
+                fc.layouts = {};
+                if (f.layouts) {
+                    for (var li = 0; li < f.layouts.length; li++) {
+                        var layout = f.layouts[li];
+                        var lk = 'layout_' + (layout.name || 'default');
+                        fc.layouts[lk] = {
+                            name: layout.name || 'default',
+                            label: layout.label || 'Layout',
+                            sub_fields: []
+                        };
+                        if (layout.sub_fields) {
+                            for (var lsi = 0; lsi < layout.sub_fields.length; lsi++) {
+                                fc.layouts[lk].sub_fields.push(buildFieldConfig(layout.sub_fields[lsi]));
+                            }
+                        }
+                    }
+                }
+            }
+
+            if (f.type === 'group') {
+                fc.sub_fields = [];
+                if (f.sub_fields) {
+                    for (var gi = 0; gi < f.sub_fields.length; gi++) {
+                        fc.sub_fields.push(buildFieldConfig(f.sub_fields[gi]));
+                    }
+                }
+            }
+
+            return fc;
+        }
+
+        var configFields = [];
+        for (var i = 0; i < fields.length; i++) {
+            configFields.push(buildFieldConfig(fields[i]));
+        }
+
+        var config = {
+            key: key,
+            title: title,
+            fields: configFields,
+            location: [],
+            menu_order: menuOrder,
+            position: 'normal',
+            style: style,
+            label_placement: 'top',
+            instruction_placement: 'label',
+            hide_on_screen: hideOnScreen,
+            active: active,
+            description: description
+        };
+
+        // Build location from rules
+        if (locationRules.length > 0) {
+            for (var r = 0; r < locationRules.length; r++) {
+                var rule = locationRules[r];
+                config.location.push([{
+                    param: rule.param,
+                    operator: rule.operator,
+                    value: rule.value
+                }]);
+            }
+        } else {
+            config.location = [[{ param: 'post_type', operator: '==', value: 'post' }]];
+        }
+
+        return config;
+    }
+
+    function formatPHPValue(val, indent) {
+        indent = indent || '';
+        if (val === null || val === undefined) return 'null';
+        if (typeof val === 'boolean') return val ? 'true' : 'false';
+        if (typeof val === 'number') return String(val);
+        if (typeof val === 'string') {
+            if (val.match(/^['"].*['"]$/)) return val;
+            return "'" + val.replace(/\\/g, '\\\\').replace(/'/g, "\\'") + "'";
+        }
+        if (Array.isArray(val)) {
+            if (val.length === 0) return '[]';
+            var items = [];
+            for (var i = 0; i < val.length; i++) {
+                items.push(indent + '    ' + formatPHPValue(val[i], indent + '    '));
+            }
+            return "[\n" + items.join(",\n") + "\n" + indent + "]";
+        }
+        if (typeof val === 'object') {
+            var keys = Object.keys(val);
+            if (keys.length === 0) return '[]';
+            var pairs = [];
+            for (var k = 0; k < keys.length; k++) {
+                pairs.push(indent + "    '" + keys[k].replace(/'/g, "\\'") + "' => " + formatPHPValue(val[keys[k]], indent + '    '));
+            }
+            return "[\n" + pairs.join(",\n") + "\n" + indent + "]";
+        }
+        return String(val);
+    }
+
+    function generatePHP() {
+        var config = buildACFConfig();
+
+        function escPHPSingle(s) {
+            return s.replace(/\\/g, '\\\\').replace(/'/g, "\\'");
+        }
+
+        function buildFieldPHP(f, indent) {
+            indent = indent || '    ';
+            var lines = [];
+            lines.push(indent + "'key' => '" + escPHPSingle(f.key || '') + "',");
+            lines.push(indent + "'label' => '" + escPHPSingle(f.label || '') + "',");
+            lines.push(indent + "'name' => '" + escPHPSingle(f.name || '') + "',");
+            lines.push(indent + "'type' => '" + escPHPSingle(f.type || 'text') + "',");
+            if (f.instructions) lines.push(indent + "'instructions' => '" + escPHPSingle(f.instructions) + "',");
+            lines.push(indent + "'required' => " + (f.required ? '1' : '0') + ",");
+            if (f.default_value) lines.push(indent + "'default_value' => '" + escPHPSingle(f.default_value) + "',");
+            if (f.placeholder) lines.push(indent + "'placeholder' => '" + escPHPSingle(f.placeholder) + "',");
+            if (f.maxlength) lines.push(indent + "'maxlength' => '" + escPHPSingle(f.maxlength) + "',");
+            if (f.prepend) lines.push(indent + "'prepend' => '" + escPHPSingle(f.prepend) + "',");
+            if (f.append) lines.push(indent + "'append' => '" + escPHPSingle(f.append) + "',");
+
+            if (f.wrapper) {
+                lines.push(indent + "'wrapper' => [");
+                lines.push(indent + "    'width' => '" + escPHPSingle(f.wrapper.width || '100') + "',");
+                lines.push(indent + "],");
+            }
+
+            if (f.choices && Object.keys(f.choices).length > 0) {
+                lines.push(indent + "'choices' => [");
+                var cKeys = Object.keys(f.choices);
+                for (var c = 0; c < cKeys.length; c++) {
+                    lines.push(indent + "    '" + escPHPSingle(cKeys[c]) + "' => '" + escPHPSingle(f.choices[cKeys[c]]) + "',");
+                }
+                lines.push(indent + "],");
+            }
+
+            if (f.type === 'textarea' && f.new_lines) lines.push(indent + "'new_lines' => '" + escPHPSingle(f.new_lines) + "',");
+            if (f.type === 'image' || f.type === 'file' || f.type === 'gallery') {
+                if (f.return_format) lines.push(indent + "'return_format' => '" + escPHPSingle(f.return_format) + "',");
+                if (f.library) lines.push(indent + "'library' => '" + escPHPSingle(f.library) + "',");
+            }
+            if (f.type === 'date_picker' && f.display_format) lines.push(indent + "'display_format' => '" + escPHPSingle(f.display_format) + "',");
+            if (f.type === 'true_false' && f.message) lines.push(indent + "'message' => '" + escPHPSingle(f.message) + "',");
+            if (f.type === 'tab') {
+                lines.push(indent + "'placement' => '" + escPHPSingle(f.placement || 'top') + "',");
+                if (f.endpoint) lines.push(indent + "'endpoint' => 1,");
+            }
+
+            if (f.type === 'repeater') {
+                lines.push(indent + "'button_label' => '" + escPHPSingle(f.button_label || 'Добавить строку') + "',");
+                if (f.min) lines.push(indent + "'min' => " + f.min + ",");
+                if (f.max) lines.push(indent + "'max' => " + f.max + ",");
+                if (f.sub_fields && f.sub_fields.length > 0) {
+                    lines.push(indent + "'sub_fields' => [");
+                    for (var si = 0; si < f.sub_fields.length; si++) {
+                        lines.push(indent + "    [");
+                        lines.push(buildFieldPHP(f.sub_fields[si], indent + '        '));
+                        lines.push(indent + "    ],");
+                    }
+                    lines.push(indent + "],");
+                }
+            }
+
+            if (f.type === 'flexible_content') {
+                if (f.layouts) {
+                    var lKeys = Object.keys(f.layouts);
+                    if (lKeys.length > 0) {
+                        lines.push(indent + "'layouts' => [");
+                        for (var li = 0; li < lKeys.length; li++) {
+                            var layout = f.layouts[lKeys[li]];
+                            lines.push(indent + "    '" + escPHPSingle(lKeys[li]) + "' => [");
+                            lines.push(indent + "        'name' => '" + escPHPSingle(layout.name || '') + "',");
+                            lines.push(indent + "        'label' => '" + escPHPSingle(layout.label || '') + "',");
+                            if (layout.sub_fields && layout.sub_fields.length > 0) {
+                                lines.push(indent + "        'sub_fields' => [");
+                                for (var lsi = 0; lsi < layout.sub_fields.length; lsi++) {
+                                    lines.push(indent + "            [");
+                                    lines.push(buildFieldPHP(layout.sub_fields[lsi], indent + '                '));
+                                    lines.push(indent + "            ],");
+                                }
+                                lines.push(indent + "        ],");
+                            }
+                            lines.push(indent + "    ],");
+                        }
+                        lines.push(indent + "],");
+                    }
+                }
+            }
+
+            if (f.type === 'group') {
+                if (f.sub_fields && f.sub_fields.length > 0) {
+                    lines.push(indent + "'sub_fields' => [");
+                    for (var gi = 0; gi < f.sub_fields.length; gi++) {
+                        lines.push(indent + "    [");
+                        lines.push(buildFieldPHP(f.sub_fields[gi], indent + '        '));
+                        lines.push(indent + "    ],");
+                    }
+                    lines.push(indent + "],");
+                }
+            }
+
+            return lines.join('\n');
+        }
+
+        var out = [];
+        out.push("<?php");
+        out.push("/**");
+        out.push(" * Register ACF Field Group: " + config.title);
+        out.push(" * Generated by Цифра ACF Generator");
+        out.push(" * https://zifra.example.com/tools/acf-generator");
+        out.push(" */");
+        out.push("");
+        out.push("if ( function_exists( 'acf_add_local_field_group' ) ) :");
+        out.push("");
+        out.push("    acf_add_local_field_group( [");
+
+        // Group settings
+        out.push("        'key'    => '" + escPHPSingle(config.key) + "',");
+        out.push("        'title'  => '" + escPHPSingle(config.title) + "',");
+        if (config.description) out.push("        'description' => '" + escPHPSingle(config.description) + "',");
+        out.push("        'fields' => [");
+
+        // Fields
+        for (var i = 0; i < config.fields.length; i++) {
+            out.push("            [");
+            out.push(buildFieldPHP(config.fields[i], '                '));
+            out.push("            ],");
+        }
+
+        out.push("        ],");
+
+        // Location
+        out.push("        'location' => [");
+        for (var r = 0; r < config.location.length; r++) {
+            out.push("            [");
+            for (var ri = 0; ri < config.location[r].length; ri++) {
+                var loc = config.location[r][ri];
+                out.push("                [");
+                out.push("                    'param'    => '" + escPHPSingle(loc.param) + "',");
+                out.push("                    'operator' => '" + escPHPSingle(loc.operator) + "',");
+                out.push("                    'value'    => '" + escPHPSingle(loc.value) + "',");
+                out.push("                ],");
+            }
+            out.push("            ],");
+        }
+        out.push("        ],");
+
+        out.push("        'menu_order'            => " + config.menu_order + ",");
+        out.push("        'position'              => 'normal',");
+        out.push("        'style'                 => '" + escPHPSingle(config.style) + "',");
+        out.push("        'label_placement'       => 'top',");
+        out.push("        'instruction_placement' => 'label',");
+        out.push("        'hide_on_screen'        => '',");
+        out.push("        'active'                => " + (config.active ? 'true' : 'false') + ",");
+
+        out.push("    ] );");
+        out.push("");
+        out.push("endif;");
+
+        return out.join('\n');
+    }
+
+    function generateJSON() {
+        var config = buildACFConfig();
+
+        // Clean up for JSON: remove empty strings / arrays where not needed
+        function cleanField(f) {
+            var c = {};
+            for (var k in f) {
+                if (f[k] === '' || f[k] === null || f[k] === undefined) continue;
+                if (Array.isArray(f[k]) && f[k].length === 0) continue;
+                if (typeof f[k] === 'object' && Object.keys(f[k]).length === 0) continue;
+                c[k] = f[k];
+            }
+            return c;
+        }
+
+        config.fields = config.fields.map(cleanField);
+        return JSON.stringify(config, null, 2);
+    }
+
+    function liveUpdate() {
+        if (currentCodeTab === 'php') {
+            showPHP();
+        } else {
+            showJSON();
+        }
+    }
+
+    function showPHP() {
+        document.getElementById('code-output').textContent = generatePHP();
+    }
+
+    function showJSON() {
+        document.getElementById('code-output').textContent = generateJSON();
+    }
+
+    function switchCodeTab(tab) {
+        currentCodeTab = tab;
+        var tabs = document.querySelectorAll('.code-tab');
+        for (var i = 0; i < tabs.length; i++) {
+            tabs[i].classList.toggle('active', tabs[i].getAttribute('data-tab') === tab);
+        }
+        var label = tab === 'php' ? 'PHP' : 'JSON';
+        if (tab === 'php') showPHP();
+        else showJSON();
+    }
+
+    function copyCode() {
+        var code = document.getElementById('code-output').textContent;
+        if (!code || code.indexOf('Добавьте поля') !== -1) {
+            showToast('Нет кода для копирования — добавьте поля', true);
+            return;
+        }
+        if (navigator.clipboard) {
+            navigator.clipboard.writeText(code).then(function() {
+                showToast('Код скопирован в буфер обмена');
+            }).catch(function() {
+                fallbackCopy(code);
+            });
+        } else {
+            fallbackCopy(code);
+        }
+    }
+
+    function fallbackCopy(text) {
+        var ta = document.createElement('textarea');
+        ta.value = text;
+        ta.style.position = 'fixed';
+        ta.style.left = '-9999px';
+        document.body.appendChild(ta);
+        ta.select();
+        try { document.execCommand('copy'); showToast('Код скопирован!'); }
+        catch (e) { showToast('Не удалось скопировать', true); }
+        document.body.removeChild(ta);
+    }
+
+    function downloadCode() {
+        var code, filename, mime;
+        if (currentCodeTab === 'php') {
+            code = generatePHP();
+            filename = 'acf-fields.php';
+            mime = 'text/php';
+        } else {
+            code = generateJSON();
+            filename = 'acf-fields.json';
+            mime = 'application/json';
+        }
+        var blob = new Blob([code], { type: mime + ';charset=utf-8' });
+        var url = URL.createObjectURL(blob);
+        var a = document.createElement('a');
+        a.href = url;
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+        showToast('Файл ' + filename + ' скачан');
+    }
+
+    // ==================== TEMPLATES ====================
+    function loadTemplate(name) {
+        resetAll(true);
+
+        if (name === 'hero') {
+            document.getElementById('group-title').value = 'Hero Section';
+            document.getElementById('group-key').value = 'group_hero_section';
+            document.getElementById('group-desc').value = 'Поля для главного экрана страницы';
+            locationRules = [{ param: 'page_template', operator: '==', value: 'template-home.php' }];
+            fields = [
+                { id: ++fieldIdCounter, type: 'image', label: 'Фоновое изображение', name: 'hero_bg', key: 'field_hero_bg', instructions: 'Рекомендуемый размер: 1920×800', required: true, default_value: '', placeholder: '', maxlength: '', prepend: '', append: '', wrapper_width: '', choices: '', sub_fields: [], layouts: [], button_label: '', min: '', max: '', new_lines: '', return_format: 'url', library: 'all', display_format: '', message: '', tabs: 'top', endpoint: false },
+                { id: ++fieldIdCounter, type: 'text', label: 'Заголовок', name: 'hero_title', key: 'field_hero_title', instructions: 'Основной заголовок hero-секции', required: true, default_value: '', placeholder: 'Добро пожаловать', maxlength: '120', prepend: '', append: '', wrapper_width: '60', choices: '', sub_fields: [], layouts: [], button_label: '', min: '', max: '', new_lines: '', return_format: '', library: '', display_format: '', message: '', tabs: 'top', endpoint: false },
+                { id: ++fieldIdCounter, type: 'textarea', label: 'Подзаголовок', name: 'hero_subtitle', key: 'field_hero_subtitle', instructions: 'Краткое описание под заголовком', required: false, default_value: '', placeholder: '', maxlength: '300', prepend: '', append: '', wrapper_width: '60', choices: '', sub_fields: [], layouts: [], button_label: '', min: '', max: '', new_lines: 'wpautop', return_format: '', library: '', display_format: '', message: '', tabs: 'top', endpoint: false },
+                { id: ++fieldIdCounter, type: 'text', label: 'Текст кнопки', name: 'hero_btn_text', key: 'field_hero_btn_text', instructions: '', required: false, default_value: 'Подробнее', placeholder: '', maxlength: '', prepend: '', append: '', wrapper_width: '30', choices: '', sub_fields: [], layouts: [], button_label: '', min: '', max: '', new_lines: '', return_format: '', library: '', display_format: '', message: '', tabs: 'top', endpoint: false },
+                { id: ++fieldIdCounter, type: 'url', label: 'Ссылка кнопки', name: 'hero_btn_url', key: 'field_hero_btn_url', instructions: '', required: false, default_value: '', placeholder: 'https://', maxlength: '', prepend: '', append: '', wrapper_width: '30', choices: '', sub_fields: [], layouts: [], button_label: '', min: '', max: '', new_lines: '', return_format: '', library: '', display_format: '', message: '', tabs: 'top', endpoint: false }
+            ];
+        } else if (name === 'team') {
+            document.getElementById('group-title').value = 'Team Members';
+            document.getElementById('group-key').value = 'group_team_members';
+            document.getElementById('group-desc').value = 'Repeater с карточками сотрудников';
+            locationRules = [{ param: 'page_template', operator: '==', value: 'template-about.php' }];
+            var repeaterSubs = [
+                { id: ++fieldIdCounter, type: 'image', label: 'Фото', name: 'member_photo', key: 'field_member_photo', instructions: '', required: false, default_value: '', placeholder: '', maxlength: '', prepend: '', append: '', wrapper_width: '30', choices: '', sub_fields: [], new_lines: '', return_format: 'array', library: 'all' },
+                { id: ++fieldIdCounter, type: 'text', label: 'Имя', name: 'member_name', key: 'field_member_name', instructions: '', required: true, default_value: '', placeholder: 'Иван Иванов', maxlength: '', prepend: '', append: '', wrapper_width: '35', choices: '', sub_fields: [] },
+                { id: ++fieldIdCounter, type: 'text', label: 'Должность', name: 'member_role', key: 'field_member_role', instructions: '', required: false, default_value: '', placeholder: 'CEO', maxlength: '', prepend: '', append: '', wrapper_width: '35', choices: '', sub_fields: [] },
+                { id: ++fieldIdCounter, type: 'textarea', label: 'Биография', name: 'member_bio', key: 'field_member_bio', instructions: 'Краткая биография', required: false, default_value: '', placeholder: '', maxlength: '', prepend: '', append: '', wrapper_width: '100', choices: '', sub_fields: [], new_lines: 'br' },
+                { id: ++fieldIdCounter, type: 'url', label: 'LinkedIn', name: 'member_linkedin', key: 'field_member_linkedin', instructions: '', required: false, default_value: '', placeholder: 'https://linkedin.com/in/...', maxlength: '', prepend: '', append: '', wrapper_width: '50', choices: '', sub_fields: [] }
+            ];
+            fields = [
+                { id: ++fieldIdCounter, type: 'text', label: 'Заголовок секции', name: 'team_title', key: 'field_team_title', instructions: '', required: false, default_value: 'Наша команда', placeholder: '', maxlength: '', prepend: '', append: '', wrapper_width: '', choices: '', sub_fields: [], layouts: [], button_label: '', min: '', max: '', new_lines: '', return_format: '', library: '', display_format: '', message: '', tabs: 'top', endpoint: false },
+                { id: ++fieldIdCounter, type: 'repeater', label: 'Сотрудники', name: 'team_members', key: 'field_team_members', instructions: 'Добавьте карточки сотрудников', required: false, default_value: '', placeholder: '', maxlength: '', prepend: '', append: '', wrapper_width: '', choices: '', sub_fields: repeaterSubs, layouts: [], button_label: 'Добавить сотрудника', min: '0', max: '50', new_lines: '', return_format: '', library: '', display_format: '', message: '', tabs: 'top', endpoint: false }
+            ];
+        } else if (name === 'testimonials') {
+            document.getElementById('group-title').value = 'Testimonials';
+            document.getElementById('group-key').value = 'group_testimonials';
+            document.getElementById('group-desc').value = 'Repeater с отзывами клиентов';
+            locationRules = [{ param: 'post_type', operator: '==', value: 'page' }];
+            var testimonialSubs = [
+                { id: ++fieldIdCounter, type: 'textarea', label: 'Текст отзыва', name: 'quote', key: 'field_testimonial_quote', instructions: '', required: true, default_value: '', placeholder: '', maxlength: '', prepend: '', append: '', wrapper_width: '100', choices: '', sub_fields: [], new_lines: 'wpautop' },
+                { id: ++fieldIdCounter, type: 'text', label: 'Автор', name: 'author', key: 'field_testimonial_author', instructions: '', required: true, default_value: '', placeholder: 'Мария С.', maxlength: '', prepend: '', append: '', wrapper_width: '50', choices: '', sub_fields: [] },
+                { id: ++fieldIdCounter, type: 'image', label: 'Фото автора', name: 'photo', key: 'field_testimonial_photo', instructions: 'Опционально', required: false, default_value: '', placeholder: '', maxlength: '', prepend: '', append: '', wrapper_width: '50', choices: '', sub_fields: [], return_format: 'array', library: 'all' },
+                { id: ++fieldIdCounter, type: 'select', label: 'Рейтинг', name: 'rating', key: 'field_testimonial_rating', instructions: '', required: false, default_value: '5', placeholder: '', maxlength: '', prepend: '', append: '', wrapper_width: '33', choices: '5 : ★★★★★\n4 : ★★★★\n3 : ★★★\n2 : ★★\n1 : ★', sub_fields: [] }
+            ];
+            fields = [
+                { id: ++fieldIdCounter, type: 'text', label: 'Заголовок секции', name: 'testimonials_title', key: 'field_testimonials_title', instructions: '', required: false, default_value: 'Отзывы', placeholder: '', maxlength: '', prepend: '', append: '', wrapper_width: '', choices: '', sub_fields: [], layouts: [], button_label: '', min: '', max: '', new_lines: '', return_format: '', library: '', display_format: '', message: '', tabs: 'top', endpoint: false },
+                { id: ++fieldIdCounter, type: 'repeater', label: 'Отзывы', name: 'testimonials', key: 'field_testimonials', instructions: 'Добавьте отзывы клиентов', required: false, default_value: '', placeholder: '', maxlength: '', prepend: '', append: '', wrapper_width: '', choices: '', sub_fields: testimonialSubs, layouts: [], button_label: 'Добавить отзыв', min: '0', max: '100', new_lines: '', return_format: '', library: '', display_format: '', message: '', tabs: 'top', endpoint: false }
+            ];
+        } else if (name === 'seo') {
+            document.getElementById('group-title').value = 'SEO Fields';
+            document.getElementById('group-key').value = 'group_seo_fields';
+            document.getElementById('group-desc').value = 'Поля для SEO-оптимизации страниц';
+            locationRules = [{ param: 'post_type', operator: '==', value: 'page' }];
+            fields = [
+                { id: ++fieldIdCounter, type: 'tab', label: 'SEO', name: 'tab_seo', key: 'field_tab_seo', instructions: '', required: false, default_value: '', placeholder: '', maxlength: '', prepend: '', append: '', wrapper_width: '', choices: '', sub_fields: [], layouts: [], button_label: '', min: '', max: '', new_lines: '', return_format: '', library: '', display_format: '', message: '', tabs: 'top', endpoint: false },
+                { id: ++fieldIdCounter, type: 'text', label: 'Meta Title', name: 'meta_title', key: 'field_meta_title', instructions: 'SEO-заголовок страницы (60-70 символов)', required: false, default_value: '', placeholder: '', maxlength: '70', prepend: '', append: '', wrapper_width: '', choices: '', sub_fields: [], layouts: [], button_label: '', min: '', max: '', new_lines: '', return_format: '', library: '', display_format: '', message: '', tabs: 'top', endpoint: false },
+                { id: ++fieldIdCounter, type: 'textarea', label: 'Meta Description', name: 'meta_description', key: 'field_meta_description', instructions: 'SEO-описание (150-160 символов)', required: false, default_value: '', placeholder: '', maxlength: '160', prepend: '', append: '', wrapper_width: '', choices: '', sub_fields: [], layouts: [], button_label: '', min: '', max: '', new_lines: 'br', return_format: '', library: '', display_format: '', message: '', tabs: 'top', endpoint: false },
+                { id: ++fieldIdCounter, type: 'image', label: 'OG Image', name: 'og_image', key: 'field_og_image', instructions: 'Изображение для соцсетей (1200×630)', required: false, default_value: '', placeholder: '', maxlength: '', prepend: '', append: '', wrapper_width: '', choices: '', sub_fields: [], layouts: [], button_label: '', min: '', max: '', new_lines: '', return_format: 'url', library: 'all', display_format: '', message: '', tabs: 'top', endpoint: false },
+                { id: ++fieldIdCounter, type: 'true_false', label: 'Noindex', name: 'noindex', key: 'field_noindex', instructions: 'Закрыть страницу от индексации', required: false, default_value: '0', placeholder: '', maxlength: '', prepend: '', append: '', wrapper_width: '', choices: '', sub_fields: [], layouts: [], button_label: '', min: '', max: '', new_lines: '', return_format: '', library: '', display_format: '', message: 'Скрыть страницу от поисковиков', tabs: '', endpoint: false },
+                { id: ++fieldIdCounter, type: 'url', label: 'Canonical URL', name: 'canonical_url', key: 'field_canonical_url', instructions: 'Канонический URL страницы', required: false, default_value: '', placeholder: 'https://', maxlength: '', prepend: '', append: '', wrapper_width: '', choices: '', sub_fields: [], layouts: [], button_label: '', min: '', max: '', new_lines: '', return_format: '', library: '', display_format: '', message: '', tabs: 'top', endpoint: false },
+                { id: ++fieldIdCounter, type: 'tab', label: 'END', name: 'tab_end', key: 'field_tab_end', instructions: '', required: false, default_value: '', placeholder: '', maxlength: '', prepend: '', append: '', wrapper_width: '', choices: '', sub_fields: [], layouts: [], button_label: '', min: '', max: '', new_lines: '', return_format: '', library: '', display_format: '', message: '', tabs: 'top', endpoint: true }
+            ];
+        } else if (name === 'sidebar') {
+            document.getElementById('group-title').value = 'Custom Sidebar';
+            document.getElementById('group-key').value = 'group_custom_sidebar';
+            document.getElementById('group-desc').value = 'Flexible Content для боковой панели';
+            locationRules = [{ param: 'post_type', operator: '==', value: 'page' }];
+            var layout1Subs = [
+                { id: ++fieldIdCounter, type: 'text', label: 'Заголовок', name: 'text_title', key: 'field_text_title', instructions: '', required: false, default_value: '', placeholder: '', maxlength: '', prepend: '', append: '', wrapper_width: '', choices: '', sub_fields: [] },
+                { id: ++fieldIdCounter, type: 'wysiwyg', label: 'Содержимое', name: 'text_content', key: 'field_text_content', instructions: '', required: false, default_value: '', placeholder: '', maxlength: '', prepend: '', append: '', wrapper_width: '', choices: '', sub_fields: [] }
+            ];
+            var layout2Subs = [
+                { id: ++fieldIdCounter, type: 'image', label: 'Изображение', name: 'banner_image', key: 'field_banner_image', instructions: '', required: true, default_value: '', placeholder: '', maxlength: '', prepend: '', append: '', wrapper_width: '', choices: '', sub_fields: [], return_format: 'array', library: 'all' },
+                { id: ++fieldIdCounter, type: 'url', label: 'Ссылка', name: 'banner_url', key: 'field_banner_url', instructions: '', required: false, default_value: '', placeholder: 'https://', maxlength: '', prepend: '', append: '', wrapper_width: '', choices: '', sub_fields: [] }
+            ];
+            fields = [
+                { id: ++fieldIdCounter, type: 'flexible_content', label: 'Блоки сайдбара', name: 'sidebar_blocks', key: 'field_sidebar_blocks', instructions: 'Добавляйте и меняйте местами блоки', required: false, default_value: '', placeholder: '', maxlength: '', prepend: '', append: '', wrapper_width: '', choices: '', sub_fields: [], layouts: [
+                    { name: 'text_block', label: 'Текстовый блок', sub_fields: layout1Subs },
+                    { name: 'banner', label: 'Баннер', sub_fields: layout2Subs }
+                ], button_label: '', min: '', max: '', new_lines: '', return_format: '', library: '', display_format: '', message: '', tabs: 'top', endpoint: false }
+            ];
+        }
+        renderLocationRules();
+        renderFields();
+        liveUpdate();
+        showToast('Шаблон «' + document.getElementById('group-title').value + '» загружен');
+    }
+
+    // ==================== IMPORT / RESET ====================
+    function importFromJSON(event) {
+        var file = event.target.files[0];
+        if (!file) return;
+        var reader = new FileReader();
+        reader.onload = function(e) {
+            try {
+                var json = JSON.parse(e.target.result);
+                resetAll(true);
+
+                document.getElementById('group-title').value = json.title || '';
+                document.getElementById('group-key').value = json.key || '';
+                document.getElementById('group-desc').value = json.description || '';
+                document.getElementById('group-style').value = json.style || 'default';
+                document.getElementById('group-menu-order').value = json.menu_order || 0;
+                document.getElementById('group-active').checked = json.active !== false;
+
+                if (json.location) {
+                    locationRules = [];
+                    for (var r = 0; r < json.location.length; r++) {
+                        if (Array.isArray(json.location[r])) {
+                            for (var ri = 0; ri < json.location[r].length; ri++) {
+                                var loc = json.location[r][ri];
+                                locationRules.push({
+                                    param: loc.param || 'post_type',
+                                    operator: loc.operator || '==',
+                                    value: loc.value || ''
+                                });
+                            }
+                        }
+                    }
+                }
+
+                function importFields(arr) {
+                    var result = [];
+                    for (var i = 0; i < arr.length; i++) {
+                        var f = arr[i];
+                        var field = {
+                            id: ++fieldIdCounter,
+                            type: f.type || 'text',
+                            label: f.label || '',
+                            name: f.name || '',
+                            key: f.key || 'field_' + fieldIdCounter,
+                            instructions: f.instructions || '',
+                            required: !!f.required,
+                            default_value: f.default_value || '',
+                            placeholder: f.placeholder || '',
+                            maxlength: f.maxlength || '',
+                            prepend: f.prepend || '',
+                            append: f.append || '',
+                            wrapper_width: (f.wrapper && f.wrapper.width) ? f.wrapper.width.replace('%', '') : '',
+                            choices: '',
+                            sub_fields: [],
+                            layouts: [],
+                            button_label: f.button_label || '',
+                            min: f.min || '',
+                            max: f.max || '',
+                            new_lines: f.new_lines || '',
+                            return_format: f.return_format || '',
+                            library: f.library || '',
+                            display_format: f.display_format || '',
+                            message: f.message || '',
+                            tabs: f.placement || 'top',
+                            endpoint: !!f.endpoint
+                        };
+
+                        if (f.choices) {
+                            var choiceLines = [];
+                            for (var ck in f.choices) {
+                                choiceLines.push(ck + ' : ' + f.choices[ck]);
+                            }
+                            field.choices = choiceLines.join('\n');
+                        }
+
+                        if (f.sub_fields) {
+                            field.sub_fields = importFields(f.sub_fields);
+                        }
+
+                        if (f.layouts) {
+                            field.layouts = [];
+                            for (var lk in f.layouts) {
+                                var layout = f.layouts[lk];
+                                field.layouts.push({
+                                    name: layout.name || lk,
+                                    label: layout.label || lk,
+                                    sub_fields: layout.sub_fields ? importFields(layout.sub_fields) : []
+                                });
+                            }
+                        }
+
+                        result.push(field);
+                    }
+                    return result;
+                }
+
+                fields = json.fields ? importFields(json.fields) : [];
+
+                renderLocationRules();
+                renderFields();
+                liveUpdate();
+                showToast('JSON импортирован (' + fields.length + ' полей)');
+            } catch (err) {
+                showToast('Ошибка парсинга JSON: ' + err.message, true);
+            }
+        };
+        reader.readAsText(file);
+        event.target.value = '';
+    }
+
+    function resetAll(silent) {
+        fields = [];
+        fieldIdCounter = 0;
+        activeFieldId = null;
+        locationRules = [];
+        renderLocationRules();
+        renderFields();
+        if (!silent) {
+            document.getElementById('group-title').value = 'Field Group';
+            document.getElementById('group-key').value = 'group_default';
+            document.getElementById('group-desc').value = '';
+            document.getElementById('group-style').value = 'default';
+            document.getElementById('group-menu-order').value = '0';
+            document.getElementById('group-active').checked = true;
+        }
+        liveUpdate();
+    }
+
+    // ==================== TOAST ====================
+    var toastTimeout;
+    function showToast(msg, isError) {
+        var toast = document.getElementById('toast');
+        toast.textContent = msg;
+        toast.className = 'toast' + (isError ? ' error' : '') + ' show';
+        clearTimeout(toastTimeout);
+        toastTimeout = setTimeout(function() {
+            toast.classList.remove('show');
+        }, 2500);
+    }
+
+    // ==================== HELPERS ====================
+    function escHtml(s) { return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
+    function escAttr(s) { return String(s).replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
+    function plural(n, forms) { return forms[n % 10 === 1 && n % 100 !== 11 ? 0 : n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 10 || n % 100 >= 20) ? 1 : 2]; }
+
+    // ==================== INIT ====================
+    function init() {
+        renderLocationRules();
+        renderFields();
+        // Default: one location rule
+        if (locationRules.length === 0) {
+            addLocationRule('post_type', '==', 'page');
+        }
+        showPHP();
+        liveUpdate();
+    }
+
+    init();
+
+    // ==================== THEME SWITCHING ====================
+    var THEME_KEY = 'zifra-theme';
+    var MODE_KEY  = 'zifra-mode';
+    var DEFAULT_THEME = 'indigo';
+    var DEFAULT_MODE  = 'dark';
+    var html = document.documentElement;
+
+    function applyTheme(name) {
+        html.setAttribute('data-theme', name);
+        localStorage.setItem(THEME_KEY, name);
+        var dots = document.querySelectorAll('.theme-dot');
+        for (var i = 0; i < dots.length; i++) {
+            var d = dots[i];
+            var match = d.getAttribute('data-theme') === name;
+            d.classList.toggle('active', match);
+            d.setAttribute('aria-checked', match ? 'true' : 'false');
+        }
+    }
+
+    function applyMode(mode) {
+        html.setAttribute('data-mode', mode);
+        localStorage.setItem(MODE_KEY, mode);
+        var btn = document.getElementById('mode-toggle');
+        if (btn) {
+            btn.innerHTML = mode === 'light' ? '🌙' : '☀️';
+            btn.title = mode === 'light' ? 'Тёмная тема' : 'Светлая тема';
+            btn.setAttribute('aria-label', mode === 'light' ? 'Переключить на тёмную тему' : 'Переключить на светлую тему');
+        }
+    }
+
+    applyTheme(localStorage.getItem(THEME_KEY) || DEFAULT_THEME);
+    applyMode(localStorage.getItem(MODE_KEY) || DEFAULT_MODE);
+
+    document.addEventListener('click', function(e) {
+        var dot = e.target.closest('.theme-dot');
+        if (dot) {
+            var theme = dot.getAttribute('data-theme');
+            if (theme) applyTheme(theme);
+            return;
+        }
+        if (e.target.closest('#mode-toggle')) {
+            var current = html.getAttribute('data-mode') || DEFAULT_MODE;
+            applyMode(current === 'light' ? 'dark' : 'light');
+        }
+    });
+
+    // Settings widget
+    var widget = document.getElementById('settings-widget');
+    var trigger = document.getElementById('settings-trigger');
+    if (widget && trigger) {
+        trigger.addEventListener('click', function(e) {
+            e.stopPropagation();
+            widget.classList.toggle('open');
+        });
+        document.addEventListener('click', function(e) {
+            if (widget.classList.contains('open') && !widget.contains(e.target)) {
+                widget.classList.remove('open');
+            }
+        });
+    }
+
+    // Scroll to top
+    var scrollBtn = document.getElementById('scroll-top');
+    if (scrollBtn) {
+        window.addEventListener('scroll', function() {
+            scrollBtn.classList.toggle('visible', window.scrollY > 400);
+        }, { passive: true });
+        scrollBtn.addEventListener('click', function() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+    }
+
+})();
+</script>
+
+</body>
+</html>
