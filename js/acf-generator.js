@@ -708,7 +708,7 @@ function renderFieldForm(f) {
     }
 
     if (t === 'select' || t === 'checkbox' || t === 'radio') {
-        h += '<div class="gen-row"><label class="gen-label">Варианты выбора ('+t+')</label><textarea class="gen-textarea" data-action="update-choices" data-field-id="'+f.id+'" placeholder="key : Label&#10;key2 : Label 2">'+choicesToText(f.choices)+'</textarea><div class="gen-hint">Формат: ключ : Метка, каждая с новой строки</div></div>';
+        h += '<div class="gen-row"><label class="gen-label">Варианты выбора ('+t+')</label><textarea class="gen-textarea" data-action="update-choices" data-field-id="'+f.id+'" placeholder="ключ : Метка&#10;ключ2 : Метка 2">'+choicesToText(f.choices)+'</textarea><div class="gen-hint">Формат: ключ : Метка, каждая с новой строки</div></div>';
     }
 
     if (t === 'select') {
@@ -832,7 +832,7 @@ function renderSubFieldsSection(f, parentType) {
             var sf = f.sub_fields[si];
             h += '<div class="sub-field-row">';
             h += '<span class="sf-type">' + (FIELD_TYPES[sf.type] ? FIELD_TYPES[sf.type].icon : 'Aa') + '</span>';
-            h += '<input type="text" value="'+escAttr(sf.label||'')+'" data-action="update-sub-field" data-parent-id="'+f.id+'" data-sub-id="'+sf.id+'" data-key="label" placeholder="Label">';
+            h += '<input type="text" value="'+escAttr(sf.label||'')+'" data-action="update-sub-field" data-parent-id="'+f.id+'" data-sub-id="'+sf.id+'" data-key="label" placeholder="Название">';
             h += '<input type="text" class="sf-name-input" value="'+escAttr(sf.name||'')+'" data-action="update-sub-field" data-parent-id="'+f.id+'" data-sub-id="'+sf.id+'" data-key="name" placeholder="field_name">';
             h += '<button class="gen-btn-icon" data-action="remove-sub-field" data-parent-id="'+f.id+'" data-sub-id="'+sf.id+'" style="color:#f87171;width:28px;height:28px;font-size:0.75rem;">✕</button>';
             h += '</div>';
@@ -862,8 +862,8 @@ function renderFlexLayoutsSection(f) {
             h += '</div>';
             h += '<div class="layout-card-body">';
             h += '<div class="gen-row-inline" style="margin-bottom:10px;">';
-            h += '<div class="gen-row"><label class="gen-label">Label</label><input type="text" class="gen-input" value="'+escAttr(layout.label||'')+'" data-action="update-layout-field" data-parent-id="'+f.id+'" data-layout-idx="'+li+'" data-key="label"></div>';
-            h += '<div class="gen-row"><label class="gen-label">Name</label><input type="text" class="gen-input" value="'+escAttr(layout.name||'')+'" data-action="update-layout-field" data-parent-id="'+f.id+'" data-layout-idx="'+li+'" data-key="name" style="font-family:var(--font-mono);font-size:0.84rem;"></div>';
+            h += '<div class="gen-row"><label class="gen-label">Название</label><input type="text" class="gen-input" value="'+escAttr(layout.label||'')+'" data-action="update-layout-field" data-parent-id="'+f.id+'" data-layout-idx="'+li+'" data-key="label"></div>';
+            h += '<div class="gen-row"><label class="gen-label">Имя поля</label><input type="text" class="gen-input" value="'+escAttr(layout.name||'')+'" data-action="update-layout-field" data-parent-id="'+f.id+'" data-layout-idx="'+li+'" data-key="name" style="font-family:var(--font-mono);font-size:0.84rem;"></div>';
             h += '</div>';
             // Sub-fields inside layout
             if (layout.sub_fields && layout.sub_fields.length > 0) {
@@ -871,7 +871,7 @@ function renderFlexLayoutsSection(f) {
                     var lsf = layout.sub_fields[lsi];
                     h += '<div class="sub-field-row">';
                     h += '<span class="sf-type">' + (FIELD_TYPES[lsf.type] ? FIELD_TYPES[lsf.type].icon : 'Aa') + '</span>';
-                    h += '<input type="text" value="'+escAttr(lsf.label||'')+'" data-action="update-layout-sub-field" data-parent-id="'+f.id+'" data-layout-idx="'+li+'" data-sub-id="'+lsf.id+'" data-key="label" placeholder="Label">';
+                    h += '<input type="text" value="'+escAttr(lsf.label||'')+'" data-action="update-layout-sub-field" data-parent-id="'+f.id+'" data-layout-idx="'+li+'" data-sub-id="'+lsf.id+'" data-key="label" placeholder="Название">';
                     h += '<input type="text" class="sf-name-input" value="'+escAttr(lsf.name||'')+'" data-action="update-layout-sub-field" data-parent-id="'+f.id+'" data-layout-idx="'+li+'" data-sub-id="'+lsf.id+'" data-key="name" placeholder="field_name">';
                     h += '<button class="gen-btn-icon" data-action="remove-layout-sub-field" data-parent-id="'+f.id+'" data-layout-idx="'+li+'" data-sub-id="'+lsf.id+'" style="color:#f87171;width:28px;height:28px;font-size:0.75rem;">✕</button>';
                     h += '</div>';
