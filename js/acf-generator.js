@@ -227,31 +227,31 @@ var CustomSelect = (function() {
 
 // ==================== FIELD TYPES ====================
 var FIELD_TYPES = {
-    text: { label: 'Текст', icon: 'Aa' },
-    textarea: { label: 'Текстовая область', icon: '📝' },
-    number: { label: 'Число', icon: '🔢' },
-    email: { label: 'Email', icon: '📧' },
-    url: { label: 'URL', icon: '🔗' },
-    password: { label: 'Пароль', icon: '🔒' },
-    wysiwyg: { label: 'Редактор', icon: '✏️' },
-    image: { label: 'Изображение', icon: '🖼️' },
-    file: { label: 'Файл', icon: '📄' },
-    gallery: { label: 'Галерея', icon: '🖼️🖼️' },
-    oembed: { label: 'oEmbed', icon: '🎬' },
-    select: { label: 'Выпадающий список', icon: '📋' },
-    checkbox: { label: 'Чекбокс', icon: '☑️' },
-    radio: { label: 'Радио', icon: '🔘' },
-    true_false: { label: 'Да / Нет', icon: '🔛' },
-    link: { label: 'Ссылка', icon: '🔗' },
-    post_object: { label: 'Запись', icon: '📑' },
-    relationship: { label: 'Связь', icon: '↔️' },
-    date_picker: { label: 'Дата', icon: '📅' },
-    color_picker: { label: 'Цвет', icon: '🎨' },
-    tab: { label: 'Вкладка', icon: '📑' },
-    message: { label: 'Сообщение', icon: '💬' },
-    group: { label: 'Группа', icon: '📦' },
-    repeater: { label: 'Повторитель', icon: '🔁' },
-    flexible_content: { label: 'Гибкий контент', icon: '🧩' }
+    text: { label: 'Текст', icon: 'text_fields' },
+    textarea: { label: 'Текстовая область', icon: 'article' },
+    number: { label: 'Число', icon: 'pin' },
+    email: { label: 'Email', icon: 'mail' },
+    url: { label: 'URL', icon: 'link' },
+    password: { label: 'Пароль', icon: 'lock' },
+    wysiwyg: { label: 'Редактор', icon: 'edit' },
+    image: { label: 'Изображение', icon: 'image' },
+    file: { label: 'Файл', icon: 'draft' },
+    gallery: { label: 'Галерея', icon: 'collections' },
+    oembed: { label: 'oEmbed', icon: 'smart_display' },
+    select: { label: 'Выпадающий список', icon: 'arrow_drop_down_circle' },
+    checkbox: { label: 'Чекбокс', icon: 'check_box' },
+    radio: { label: 'Радио', icon: 'radio_button_checked' },
+    true_false: { label: 'Да / Нет', icon: 'toggle_on' },
+    link: { label: 'Ссылка', icon: 'link' },
+    post_object: { label: 'Запись', icon: 'feed' },
+    relationship: { label: 'Связь', icon: 'compare_arrows' },
+    date_picker: { label: 'Дата', icon: 'calendar_today' },
+    color_picker: { label: 'Цвет', icon: 'palette' },
+    tab: { label: 'Вкладка', icon: 'tab' },
+    message: { label: 'Сообщение', icon: 'chat' },
+    group: { label: 'Группа', icon: 'folder' },
+    repeater: { label: 'Повторитель', icon: 'repeat' },
+    flexible_content: { label: 'Гибкий контент', icon: 'dashboard' }
 };
 
 // ==================== STATE ====================
@@ -578,7 +578,7 @@ function renderLocationRules() {
         for (var o = 0; o < operators.length; o++) html += '<option value="'+operators[o]+'"'+(r.operator===operators[o]?' selected':'')+'>'+operators[o]+'</option>';
         html += '</select>';
         html += '<input type="text" class="gen-input" value="'+escAttr(r.value||'')+'" data-action="location-value" data-index="'+i+'" placeholder="value" style="font-size:1.1rem;">';
-        html += '<button class="gen-btn-icon" data-action="remove-location-rule" data-index="'+i+'" style="flex-shrink:0;color:#f87171;width:36px;height:36px;font-size:0.9rem;">✕</button>';
+        html += '<button class="gen-btn-icon" data-action="remove-location-rule" data-index="'+i+'" style="flex-shrink:0;color:#f87171;width:40px;height:40px;font-size:0.9rem;"><span class="material-symbols-outlined">close</span></button>';
         html += '</div>';
     }
     container.innerHTML = html;
@@ -610,15 +610,15 @@ function renderFields() {
 
         html += '<div class="field-card' + (isSel ? ' selected' : '') + '">';
         html += '<div class="field-card-header" data-action="select-field" data-field-id="' + f.id + '">';
-        html += '<span class="fc-drag">⋮⋮</span>';
-        html += '<span class="fc-type">' + icon + '</span>';
+        html += '<span class="fc-drag"><span class="material-symbols-outlined">drag_indicator</span></span>';
+        html += '<span class="fc-type"><span class="material-symbols-outlined">' + icon + '</span></span>';
         html += '<span class="fc-label">' + escHtml(f.label || tLabel) + '</span>';
         html += '<span class="fc-type-name">[' + tLabel + ']</span>';
         html += '<div class="fc-actions">';
-        if (i > 0) html += '<button class="gen-btn-icon" data-action="move-field" data-field-id="'+f.id+'" data-dir="-1" title="Вверх" style="font-size:1rem;">▲</button>';
-        if (i < fields.length-1) html += '<button class="gen-btn-icon" data-action="move-field" data-field-id="'+f.id+'" data-dir="1" title="Вниз" style="font-size:1rem;">▼</button>';
-        html += '<button class="gen-btn-icon" data-action="duplicate-field" data-field-id="'+f.id+'" title="Копировать">⧉</button>';
-        html += '<button class="gen-btn-icon" data-action="remove-field" data-field-id="'+f.id+'" title="Удалить" style="color:#f87171;">✕</button>';
+        if (i > 0) html += '<button class="gen-btn-icon" data-action="move-field" data-field-id="'+f.id+'" data-dir="-1" title="Вверх" style="font-size:1rem;"><span class="material-symbols-outlined">arrow_upward</span></button>';
+        if (i < fields.length-1) html += '<button class="gen-btn-icon" data-action="move-field" data-field-id="'+f.id+'" data-dir="1" title="Вниз" style="font-size:1rem;"><span class="material-symbols-outlined">arrow_downward</span></button>';
+        html += '<button class="gen-btn-icon" data-action="duplicate-field" data-field-id="'+f.id+'" title="Копировать"><span class="material-symbols-outlined">content_copy</span></button>';
+        html += '<button class="gen-btn-icon" data-action="remove-field" data-field-id="'+f.id+'" title="Удалить" style="color:#f87171;"><span class="material-symbols-outlined">close</span></button>';
         html += '</div></div>';
         html += '<div class="field-card-body">' + renderFieldForm(f) + '</div>';
         html += '</div>';
@@ -831,10 +831,10 @@ function renderSubFieldsSection(f, parentType) {
         for (var si = 0; si < f.sub_fields.length; si++) {
             var sf = f.sub_fields[si];
             h += '<div class="sub-field-row">';
-            h += '<span class="sf-type">' + (FIELD_TYPES[sf.type] ? FIELD_TYPES[sf.type].icon : 'Aa') + '</span>';
+            h += '<span class="sf-type"><span class="material-symbols-outlined">' + (FIELD_TYPES[sf.type] ? FIELD_TYPES[sf.type].icon : 'text_fields') + '</span></span>';
             h += '<input type="text" value="'+escAttr(sf.label||'')+'" data-action="update-sub-field" data-parent-id="'+f.id+'" data-sub-id="'+sf.id+'" data-key="label" placeholder="Название">';
             h += '<input type="text" class="sf-name-input" value="'+escAttr(sf.name||'')+'" data-action="update-sub-field" data-parent-id="'+f.id+'" data-sub-id="'+sf.id+'" data-key="name" placeholder="field_name">';
-            h += '<button class="gen-btn-icon" data-action="remove-sub-field" data-parent-id="'+f.id+'" data-sub-id="'+sf.id+'" style="color:#f87171;width:36px;height:36px;font-size:0.95rem;">✕</button>';
+            h += '<button class="gen-btn-icon" data-action="remove-sub-field" data-parent-id="'+f.id+'" data-sub-id="'+sf.id+'" style="color:#f87171;width:40px;height:40px;font-size:0.95rem;"><span class="material-symbols-outlined">close</span></button>';
             h += '</div>';
         }
     }
@@ -842,7 +842,7 @@ function renderSubFieldsSection(f, parentType) {
     var subTypes = ['text','textarea','number','email','url','image','wysiwyg','true_false','select','date_picker','color_picker'];
     for (var st = 0; st < subTypes.length; st++) {
         var stKey = subTypes[st];
-        h += '<button class="gen-btn gen-btn-sm gen-btn-outline" data-action="add-sub-field" data-parent-id="'+f.id+'" data-field-type="'+stKey+'" style="font-size:1.05rem;padding:8px 14px;">+' + (FIELD_TYPES[stKey] ? FIELD_TYPES[stKey].icon + ' ' + FIELD_TYPES[stKey].label : stKey) + '</button>';
+        h += '<button class="gen-btn gen-btn-sm gen-btn-outline" data-action="add-sub-field" data-parent-id="'+f.id+'" data-field-type="'+stKey+'" style="font-size:1.05rem;padding:8px 14px;">+<span class="material-symbols-outlined" style="font-size:1.4rem;">' + (FIELD_TYPES[stKey] ? FIELD_TYPES[stKey].icon : 'text_fields') + '</span> ' + (FIELD_TYPES[stKey] ? FIELD_TYPES[stKey].label : stKey) + '</button>';
     }
     h += '</div>';
     h += '</div>';
@@ -858,7 +858,7 @@ function renderFlexLayoutsSection(f) {
             h += '<div class="layout-card' + (layout._open ? ' open' : '') + '">';
             h += '<div class="layout-card-header" data-action="toggle-layout" data-parent-id="'+f.id+'" data-layout-idx="'+li+'">';
             h += '<span class="lay-name">' + escHtml(layout.label || layout.name) + '</span>';
-            h += '<button class="gen-btn-icon" data-action="remove-flex-layout" data-parent-id="'+f.id+'" data-layout-idx="'+li+'" style="color:#f87171;width:36px;height:36px;font-size:0.95rem;">✕</button>';
+            h += '<button class="gen-btn-icon" data-action="remove-flex-layout" data-parent-id="'+f.id+'" data-layout-idx="'+li+'" style="color:#f87171;width:40px;height:40px;font-size:0.95rem;"><span class="material-symbols-outlined">close</span></button>';
             h += '</div>';
             h += '<div class="layout-card-body">';
             h += '<div class="gen-row-inline" style="margin-bottom:14px;">';
@@ -870,10 +870,10 @@ function renderFlexLayoutsSection(f) {
                 for (var lsi = 0; lsi < layout.sub_fields.length; lsi++) {
                     var lsf = layout.sub_fields[lsi];
                     h += '<div class="sub-field-row">';
-                    h += '<span class="sf-type">' + (FIELD_TYPES[lsf.type] ? FIELD_TYPES[lsf.type].icon : 'Aa') + '</span>';
+                    h += '<span class="sf-type"><span class="material-symbols-outlined">' + (FIELD_TYPES[lsf.type] ? FIELD_TYPES[lsf.type].icon : 'text_fields') + '</span></span>';
                     h += '<input type="text" value="'+escAttr(lsf.label||'')+'" data-action="update-layout-sub-field" data-parent-id="'+f.id+'" data-layout-idx="'+li+'" data-sub-id="'+lsf.id+'" data-key="label" placeholder="Название">';
                     h += '<input type="text" class="sf-name-input" value="'+escAttr(lsf.name||'')+'" data-action="update-layout-sub-field" data-parent-id="'+f.id+'" data-layout-idx="'+li+'" data-sub-id="'+lsf.id+'" data-key="name" placeholder="field_name">';
-                    h += '<button class="gen-btn-icon" data-action="remove-layout-sub-field" data-parent-id="'+f.id+'" data-layout-idx="'+li+'" data-sub-id="'+lsf.id+'" style="color:#f87171;width:36px;height:36px;font-size:0.95rem;">✕</button>';
+                    h += '<button class="gen-btn-icon" data-action="remove-layout-sub-field" data-parent-id="'+f.id+'" data-layout-idx="'+li+'" data-sub-id="'+lsf.id+'" style="color:#f87171;width:40px;height:40px;font-size:0.95rem;"><span class="material-symbols-outlined">close</span></button>';
                     h += '</div>';
                 }
             }
@@ -881,7 +881,7 @@ function renderFlexLayoutsSection(f) {
             var subTypes2 = ['text','textarea','number','email','url','image','wysiwyg','true_false','select'];
             for (var st2 = 0; st2 < subTypes2.length; st2++) {
                 var stKey2 = subTypes2[st2];
-                h += '<button class="gen-btn gen-btn-sm gen-btn-outline" data-action="add-layout-sub-field" data-parent-id="'+f.id+'" data-layout-idx="'+li+'" data-field-type="'+stKey2+'" style="font-size:1.05rem;padding:8px 14px;">+' + (FIELD_TYPES[stKey2] ? FIELD_TYPES[stKey2].icon + ' ' + FIELD_TYPES[stKey2].label : stKey2) + '</button>';
+                h += '<button class="gen-btn gen-btn-sm gen-btn-outline" data-action="add-layout-sub-field" data-parent-id="'+f.id+'" data-layout-idx="'+li+'" data-field-type="'+stKey2+'" style="font-size:1.05rem;padding:8px 14px;">+<span class="material-symbols-outlined" style="font-size:1.4rem;">' + (FIELD_TYPES[stKey2] ? FIELD_TYPES[stKey2].icon : 'text_fields') + '</span> ' + (FIELD_TYPES[stKey2] ? FIELD_TYPES[stKey2].label : stKey2) + '</button>';
             }
             h += '</div>';
             h += '</div>';
