@@ -227,31 +227,31 @@ var CustomSelect = (function() {
 
 // ==================== FIELD TYPES ====================
 var FIELD_TYPES = {
-    text: { label: 'Text', icon: 'Aa' },
-    textarea: { label: 'Textarea', icon: '📝' },
-    number: { label: 'Number', icon: '🔢' },
+    text: { label: 'Текст', icon: 'Aa' },
+    textarea: { label: 'Текстовая область', icon: '📝' },
+    number: { label: 'Число', icon: '🔢' },
     email: { label: 'Email', icon: '📧' },
     url: { label: 'URL', icon: '🔗' },
-    password: { label: 'Password', icon: '🔒' },
-    wysiwyg: { label: 'WYSIWYG Editor', icon: '✏️' },
-    image: { label: 'Image', icon: '🖼️' },
-    file: { label: 'File', icon: '📄' },
-    gallery: { label: 'Gallery', icon: '🖼️🖼️' },
+    password: { label: 'Пароль', icon: '🔒' },
+    wysiwyg: { label: 'Редактор', icon: '✏️' },
+    image: { label: 'Изображение', icon: '🖼️' },
+    file: { label: 'Файл', icon: '📄' },
+    gallery: { label: 'Галерея', icon: '🖼️🖼️' },
     oembed: { label: 'oEmbed', icon: '🎬' },
-    select: { label: 'Select', icon: '📋' },
-    checkbox: { label: 'Checkbox', icon: '☑️' },
-    radio: { label: 'Radio', icon: '🔘' },
-    true_false: { label: 'True / False', icon: '🔛' },
-    link: { label: 'Link', icon: '🔗' },
-    post_object: { label: 'Post Object', icon: '📑' },
-    relationship: { label: 'Relationship', icon: '↔️' },
-    date_picker: { label: 'Date Picker', icon: '📅' },
-    color_picker: { label: 'Color Picker', icon: '🎨' },
-    tab: { label: 'Tab', icon: '📑' },
-    message: { label: 'Message', icon: '💬' },
-    group: { label: 'Group', icon: '📦' },
-    repeater: { label: 'Repeater', icon: '🔁' },
-    flexible_content: { label: 'Flexible Content', icon: '🧩' }
+    select: { label: 'Выпадающий список', icon: '📋' },
+    checkbox: { label: 'Чекбокс', icon: '☑️' },
+    radio: { label: 'Радио', icon: '🔘' },
+    true_false: { label: 'Да / Нет', icon: '🔛' },
+    link: { label: 'Ссылка', icon: '🔗' },
+    post_object: { label: 'Запись', icon: '📑' },
+    relationship: { label: 'Связь', icon: '↔️' },
+    date_picker: { label: 'Дата', icon: '📅' },
+    color_picker: { label: 'Цвет', icon: '🎨' },
+    tab: { label: 'Вкладка', icon: '📑' },
+    message: { label: 'Сообщение', icon: '💬' },
+    group: { label: 'Группа', icon: '📦' },
+    repeater: { label: 'Повторитель', icon: '🔁' },
+    flexible_content: { label: 'Гибкий контент', icon: '🧩' }
 };
 
 // ==================== STATE ====================
@@ -321,9 +321,9 @@ function fieldDefaults(type) {
         min_posts: '', max_posts: '',
         allow_null: 0, multiple: 0, ui: 0
     };
-    if (type === 'select') d.choices = { option_1: 'Option 1' };
-    if (type === 'checkbox') d.choices = { option_1: 'Option 1' };
-    if (type === 'radio') d.choices = { option_1: 'Option 1' };
+    if (type === 'select') d.choices = { option_1: 'Вариант 1' };
+    if (type === 'checkbox') d.choices = { option_1: 'Вариант 1' };
+    if (type === 'radio') d.choices = { option_1: 'Вариант 1' };
     return d;
 }
 
@@ -448,7 +448,7 @@ function subFieldDefaults(type) {
         post_type: ['post'],
         allow_null: 0, multiple: 0
     };
-    if (type === 'select' || type === 'checkbox' || type === 'radio') d.choices = { option_1: 'Option 1' };
+    if (type === 'select' || type === 'checkbox' || type === 'radio') d.choices = { option_1: 'Вариант 1' };
     return d;
 }
 
@@ -632,10 +632,10 @@ function renderFieldForm(f) {
     var h = '';
 
     // Basic properties
-    h += '<div class="gen-row-inline"><div class="gen-row" style="flex:2;"><label class="gen-label">Label</label><input type="text" class="gen-input" value="'+escAttr(f.label||'')+'" data-action="update-field-label" data-field-id="'+f.id+'" placeholder="Заголовок поля"></div>';
-    h += '<div class="gen-row"><label class="gen-label">Name</label><input type="text" class="gen-input" value="'+escAttr(f.name||'')+'" data-action="update-field" data-field-id="'+f.id+'" data-key="name" placeholder="field_name" style="font-family:var(--font-mono);font-size:0.84rem;"></div></div>';
+    h += '<div class="gen-row-inline"><div class="gen-row" style="flex:2;"><label class="gen-label">Название</label><input type="text" class="gen-input" value="'+escAttr(f.label||'')+'" data-action="update-field-label" data-field-id="'+f.id+'" placeholder="Заголовок поля"></div>';
+    h += '<div class="gen-row"><label class="gen-label">Имя поля</label><input type="text" class="gen-input" value="'+escAttr(f.name||'')+'" data-action="update-field" data-field-id="'+f.id+'" data-key="name" placeholder="field_name" style="font-family:var(--font-mono);font-size:0.84rem;"></div></div>';
 
-    h += '<div class="gen-row-inline"><div class="gen-row"><label class="gen-label">Key</label><input type="text" class="gen-input" value="'+escAttr(f.key||'')+'" data-action="update-field" data-field-id="'+f.id+'" data-key="key" style="font-family:var(--font-mono);font-size:0.84rem;"></div>';
+    h += '<div class="gen-row-inline"><div class="gen-row"><label class="gen-label">Ключ</label><input type="text" class="gen-input" value="'+escAttr(f.key||'')+'" data-action="update-field" data-field-id="'+f.id+'" data-key="key" style="font-family:var(--font-mono);font-size:0.84rem;"></div>';
     h += '<div class="gen-row"><label class="gen-label">Тип</label><select class="gen-select" data-action="change-field-type" data-field-id="'+f.id+'">';
     var tKeys = Object.keys(FIELD_TYPES);
     for (var tk = 0; tk < tKeys.length; tk++) {
@@ -643,11 +643,11 @@ function renderFieldForm(f) {
     }
     h += '</select></div></div>';
 
-    h += '<div class="gen-row"><label class="gen-label">Instructions</label><input type="text" class="gen-input" value="'+escAttr(f.instructions||'')+'" data-action="update-field" data-field-id="'+f.id+'" data-key="instructions" placeholder="Подсказка под полем"></div>';
+    h += '<div class="gen-row"><label class="gen-label">Инструкция</label><input type="text" class="gen-input" value="'+escAttr(f.instructions||'')+'" data-action="update-field" data-field-id="'+f.id+'" data-key="instructions" placeholder="Подсказка под полем"></div>';
 
     h += '<div class="gen-row-inline">';
-    h += '<div class="gen-row"><label class="gen-label">Wrapper Width (%)</label><input type="text" class="gen-input" value="'+escAttr((f.wrapper&&f.wrapper.width)||'')+'" data-action="update-wrapper-width" data-field-id="'+f.id+'" placeholder="100"></div>';
-    h += '<div class="gen-row" style="display:flex;align-items:center;padding-top:20px;"><label class="gen-toggle"><input type="checkbox"'+(f.required?' checked':'')+' data-action="update-field-checkbox" data-field-id="'+f.id+'" data-key="required"><span>Required</span></label></div>';
+    h += '<div class="gen-row"><label class="gen-label">Ширина (%)</label><input type="text" class="gen-input" value="'+escAttr((f.wrapper&&f.wrapper.width)||'')+'" data-action="update-wrapper-width" data-field-id="'+f.id+'" placeholder="100"></div>';
+    h += '<div class="gen-row" style="display:flex;align-items:center;padding-top:20px;"><label class="gen-toggle"><input type="checkbox"'+(f.required?' checked':'')+' data-action="update-field-checkbox" data-field-id="'+f.id+'" data-key="required"><span>Обязательное</span></label></div>';
     h += '</div>';
 
     // Type-specific fields
@@ -657,109 +657,109 @@ function renderFieldForm(f) {
     if (t === 'text' || t === 'number' || t === 'email' || t === 'url' || t === 'password') {
         h += '<div class="gen-row-inline">';
         h += '<div class="gen-row"><label class="gen-label">Placeholder</label><input type="text" class="gen-input" value="'+escAttr(f.placeholder||'')+'" data-action="update-field" data-field-id="'+f.id+'" data-key="placeholder"></div>';
-        h += '<div class="gen-row"><label class="gen-label">Max Length</label><input type="number" class="gen-input" value="'+(f.maxlength||'')+'" data-action="update-field" data-field-id="'+f.id+'" data-key="maxlength" min="0"></div>';
+        h += '<div class="gen-row"><label class="gen-label">Макс. длина</label><input type="number" class="gen-input" value="'+(f.maxlength||'')+'" data-action="update-field" data-field-id="'+f.id+'" data-key="maxlength" min="0"></div>';
         h += '</div>';
         h += '<div class="gen-row-inline">';
-        h += '<div class="gen-row"><label class="gen-label">Default Value</label><input type="text" class="gen-input" value="'+escAttr(f.default_value||'')+'" data-action="update-field" data-field-id="'+f.id+'" data-key="default_value"></div>';
-        h += '<div class="gen-row"><label class="gen-label">Prepend</label><input type="text" class="gen-input" value="'+escAttr(f.prepend||'')+'" data-action="update-field" data-field-id="'+f.id+'" data-key="prepend"></div>';
-        h += '<div class="gen-row"><label class="gen-label">Append</label><input type="text" class="gen-input" value="'+escAttr(f.append||'')+'" data-action="update-field" data-field-id="'+f.id+'" data-key="append"></div>';
+        h += '<div class="gen-row"><label class="gen-label">Значение по умолчанию</label><input type="text" class="gen-input" value="'+escAttr(f.default_value||'')+'" data-action="update-field" data-field-id="'+f.id+'" data-key="default_value"></div>';
+        h += '<div class="gen-row"><label class="gen-label">Префикс</label><input type="text" class="gen-input" value="'+escAttr(f.prepend||'')+'" data-action="update-field" data-field-id="'+f.id+'" data-key="prepend"></div>';
+        h += '<div class="gen-row"><label class="gen-label">Суффикс</label><input type="text" class="gen-input" value="'+escAttr(f.append||'')+'" data-action="update-field" data-field-id="'+f.id+'" data-key="append"></div>';
         h += '</div>';
     }
 
     if (t === 'number') {
         h += '<div class="gen-row-inline">';
-        h += '<div class="gen-row"><label class="gen-label">Min</label><input type="number" class="gen-input" value="'+(f.min||'')+'" data-action="update-field" data-field-id="'+f.id+'" data-key="min"></div>';
-        h += '<div class="gen-row"><label class="gen-label">Max</label><input type="number" class="gen-input" value="'+(f.max||'')+'" data-action="update-field" data-field-id="'+f.id+'" data-key="max"></div>';
-        h += '<div class="gen-row"><label class="gen-label">Step</label><input type="text" class="gen-input" value="'+escAttr(f.step||'')+'" data-action="update-field" data-field-id="'+f.id+'" data-key="step"></div>';
+        h += '<div class="gen-row"><label class="gen-label">Мин</label><input type="number" class="gen-input" value="'+(f.min||'')+'" data-action="update-field" data-field-id="'+f.id+'" data-key="min"></div>';
+        h += '<div class="gen-row"><label class="gen-label">Макс</label><input type="number" class="gen-input" value="'+(f.max||'')+'" data-action="update-field" data-field-id="'+f.id+'" data-key="max"></div>';
+        h += '<div class="gen-row"><label class="gen-label">Шаг</label><input type="text" class="gen-input" value="'+escAttr(f.step||'')+'" data-action="update-field" data-field-id="'+f.id+'" data-key="step"></div>';
         h += '</div>';
     }
 
     if (t === 'textarea') {
-        h += '<div class="gen-row"><label class="gen-label">New Lines</label><select class="gen-select" data-action="update-field" data-field-id="'+f.id+'" data-key="new_lines"><option value="br"'+(f.new_lines==='br'?' selected':'')+'>br</option><option value="wpautop"'+(f.new_lines==='wpautop'?' selected':'')+'>wpautop</option></select></div>';
+        h += '<div class="gen-row"><label class="gen-label">Перенос строк</label><select class="gen-select" data-action="update-field" data-field-id="'+f.id+'" data-key="new_lines"><option value="br"'+(f.new_lines==='br'?' selected':'')+'>br</option><option value="wpautop"'+(f.new_lines==='wpautop'?' selected':'')+'>wpautop</option></select></div>';
         h += '<div class="gen-row"><label class="gen-label">Placeholder</label><input type="text" class="gen-input" value="'+escAttr(f.placeholder||'')+'" data-action="update-field" data-field-id="'+f.id+'" data-key="placeholder"></div>';
-        h += '<div class="gen-row"><label class="gen-label">Default Value</label><textarea class="gen-textarea" data-action="update-field" data-field-id="'+f.id+'" data-key="default_value">'+escHtml(f.default_value||'')+'</textarea></div>';
+        h += '<div class="gen-row"><label class="gen-label">Значение по умолчанию</label><textarea class="gen-textarea" data-action="update-field" data-field-id="'+f.id+'" data-key="default_value">'+escHtml(f.default_value||'')+'</textarea></div>';
     }
 
     if (t === 'image' || t === 'file' || t === 'gallery') {
         h += '<div class="gen-row-inline">';
-        h += '<div class="gen-row"><label class="gen-label">Return Format</label><select class="gen-select" data-action="update-field" data-field-id="'+f.id+'" data-key="return_format"><option value="array"'+(f.return_format==='array'?' selected':'')+'>Array</option><option value="url"'+(f.return_format==='url'?' selected':'')+'>URL</option><option value="id"'+(f.return_format==='id'?' selected':'')+'>ID</option></select></div>';
-        h += '<div class="gen-row"><label class="gen-label">Library</label><select class="gen-select" data-action="update-field" data-field-id="'+f.id+'" data-key="library"><option value="all"'+(f.library==='all'?' selected':'')+'>All</option><option value="uploadedTo"'+(f.library==='uploadedTo'?' selected':'')+'>Uploaded to post</option></select></div>';
+        h += '<div class="gen-row"><label class="gen-label">Формат возврата</label><select class="gen-select" data-action="update-field" data-field-id="'+f.id+'" data-key="return_format"><option value="array"'+(f.return_format==='array'?' selected':'')+'>Массив</option><option value="url"'+(f.return_format==='url'?' selected':'')+'>URL</option><option value="id"'+(f.return_format==='id'?' selected':'')+'>ID</option></select></div>';
+        h += '<div class="gen-row"><label class="gen-label">Библиотека</label><select class="gen-select" data-action="update-field" data-field-id="'+f.id+'" data-key="library"><option value="all"'+(f.library==='all'?' selected':'')+'>Все</option><option value="uploadedTo"'+(f.library==='uploadedTo'?' selected':'')+'>К посту</option></select></div>';
         h += '</div>';
         if (t === 'file') {
-            h += '<div class="gen-row"><label class="gen-label">Mime Types</label><input type="text" class="gen-input" value="'+escAttr(f.mime_types||'')+'" data-action="update-field" data-field-id="'+f.id+'" data-key="mime_types" placeholder="pdf, doc, docx"></div>';
+            h += '<div class="gen-row"><label class="gen-label">MIME типы</label><input type="text" class="gen-input" value="'+escAttr(f.mime_types||'')+'" data-action="update-field" data-field-id="'+f.id+'" data-key="mime_types" placeholder="pdf, doc, docx"></div>';
         }
         if (t === 'image' || t === 'gallery') {
             h += '<div class="gen-row-inline">';
-            h += '<div class="gen-row"><label class="gen-label">Min Width</label><input type="number" class="gen-input" value="'+(f.min_width||'')+'" data-action="update-field" data-field-id="'+f.id+'" data-key="min_width"></div>';
-            h += '<div class="gen-row"><label class="gen-label">Min Height</label><input type="number" class="gen-input" value="'+(f.min_height||'')+'" data-action="update-field" data-field-id="'+f.id+'" data-key="min_height"></div>';
+            h += '<div class="gen-row"><label class="gen-label">Мин. ширина</label><input type="number" class="gen-input" value="'+(f.min_width||'')+'" data-action="update-field" data-field-id="'+f.id+'" data-key="min_width"></div>';
+            h += '<div class="gen-row"><label class="gen-label">Мин. высота</label><input type="number" class="gen-input" value="'+(f.min_height||'')+'" data-action="update-field" data-field-id="'+f.id+'" data-key="min_height"></div>';
             h += '</div>';
         }
     }
 
     if (t === 'wysiwyg') {
-        h += '<div class="gen-row"><label class="gen-label">Default Value</label><textarea class="gen-textarea" data-action="update-field" data-field-id="'+f.id+'" data-key="default_value">'+escHtml(f.default_value||'')+'</textarea></div>';
+        h += '<div class="gen-row"><label class="gen-label">Значение по умолчанию</label><textarea class="gen-textarea" data-action="update-field" data-field-id="'+f.id+'" data-key="default_value">'+escHtml(f.default_value||'')+'</textarea></div>';
     }
 
     if (t === 'oembed') {
         h += '<div class="gen-row-inline">';
-        h += '<div class="gen-row"><label class="gen-label">Width</label><input type="text" class="gen-input" value="'+escAttr(f.width||'')+'" data-action="update-field" data-field-id="'+f.id+'" data-key="width"></div>';
-        h += '<div class="gen-row"><label class="gen-label">Height</label><input type="text" class="gen-input" value="'+escAttr(f.height||'')+'" data-action="update-field" data-field-id="'+f.id+'" data-key="height"></div>';
+        h += '<div class="gen-row"><label class="gen-label">Ширина</label><input type="text" class="gen-input" value="'+escAttr(f.width||'')+'" data-action="update-field" data-field-id="'+f.id+'" data-key="width"></div>';
+        h += '<div class="gen-row"><label class="gen-label">Высота</label><input type="text" class="gen-input" value="'+escAttr(f.height||'')+'" data-action="update-field" data-field-id="'+f.id+'" data-key="height"></div>';
         h += '</div>';
     }
 
     if (t === 'select' || t === 'checkbox' || t === 'radio') {
-        h += '<div class="gen-row"><label class="gen-label">Choices ('+t+')</label><textarea class="gen-textarea" data-action="update-choices" data-field-id="'+f.id+'" placeholder="key : Label&#10;key2 : Label 2">'+choicesToText(f.choices)+'</textarea><div class="gen-hint">Формат: ключ : Метка, каждая с новой строки</div></div>';
+        h += '<div class="gen-row"><label class="gen-label">Варианты выбора ('+t+')</label><textarea class="gen-textarea" data-action="update-choices" data-field-id="'+f.id+'" placeholder="key : Label&#10;key2 : Label 2">'+choicesToText(f.choices)+'</textarea><div class="gen-hint">Формат: ключ : Метка, каждая с новой строки</div></div>';
     }
 
     if (t === 'select') {
         h += '<div class="gen-row-inline">';
-        h += '<div class="gen-row" style="display:flex;align-items:center;padding-top:0;"><label class="gen-toggle"><input type="checkbox"'+(f.allow_null?' checked':'')+' data-action="update-field-checkbox" data-field-id="'+f.id+'" data-key="allow_null"><span>Allow Null</span></label></div>';
-        h += '<div class="gen-row" style="display:flex;align-items:center;padding-top:0;"><label class="gen-toggle"><input type="checkbox"'+(f.multiple?' checked':'')+' data-action="update-field-checkbox" data-field-id="'+f.id+'" data-key="multiple"><span>Multiple</span></label></div>';
-        h += '<div class="gen-row" style="display:flex;align-items:center;padding-top:0;"><label class="gen-toggle"><input type="checkbox"'+(f.ui?' checked':'')+' data-action="update-field-checkbox" data-field-id="'+f.id+'" data-key="ui"><span>UI</span></label></div>';
+        h += '<div class="gen-row" style="display:flex;align-items:center;padding-top:0;"><label class="gen-toggle"><input type="checkbox"'+(f.allow_null?' checked':'')+' data-action="update-field-checkbox" data-field-id="'+f.id+'" data-key="allow_null"><span>Разрешить пустое</span></label></div>';
+        h += '<div class="gen-row" style="display:flex;align-items:center;padding-top:0;"><label class="gen-toggle"><input type="checkbox"'+(f.multiple?' checked':'')+' data-action="update-field-checkbox" data-field-id="'+f.id+'" data-key="multiple"><span>Множественный</span></label></div>';
+        h += '<div class="gen-row" style="display:flex;align-items:center;padding-top:0;"><label class="gen-toggle"><input type="checkbox"'+(f.ui?' checked':'')+' data-action="update-field-checkbox" data-field-id="'+f.id+'" data-key="ui"><span>Стилизованный</span></label></div>';
         h += '</div>';
     }
 
     if (t === 'true_false') {
-        h += '<div class="gen-row"><label class="gen-label">Message</label><input type="text" class="gen-input" value="'+escAttr(f.message||'')+'" data-action="update-field" data-field-id="'+f.id+'" data-key="message" placeholder="Сообщение рядом с переключателем"></div>';
-        h += '<div class="gen-row" style="display:flex;align-items:center;padding-top:0;"><label class="gen-toggle"><input type="checkbox"'+(f.ui?' checked':'')+' data-action="update-field-checkbox" data-field-id="'+f.id+'" data-key="ui"><span>UI (стилизованный переключатель)</span></label></div>';
+        h += '<div class="gen-row"><label class="gen-label">Сообщение</label><input type="text" class="gen-input" value="'+escAttr(f.message||'')+'" data-action="update-field" data-field-id="'+f.id+'" data-key="message" placeholder="Сообщение рядом с переключателем"></div>';
+        h += '<div class="gen-row" style="display:flex;align-items:center;padding-top:0;"><label class="gen-toggle"><input type="checkbox"'+(f.ui?' checked':'')+' data-action="update-field-checkbox" data-field-id="'+f.id+'" data-key="ui"><span>Стилизованный переключатель</span></label></div>';
     }
 
     if (t === 'date_picker') {
         h += '<div class="gen-row-inline">';
-        h += '<div class="gen-row"><label class="gen-label">Display Format</label><input type="text" class="gen-input" value="'+escAttr(f.display_format||'')+'" data-action="update-field" data-field-id="'+f.id+'" data-key="display_format"></div>';
-        h += '<div class="gen-row"><label class="gen-label">Return Format</label><input type="text" class="gen-input" value="'+escAttr(f.return_format_date||'')+'" data-action="update-field" data-field-id="'+f.id+'" data-key="return_format_date"></div>';
+        h += '<div class="gen-row"><label class="gen-label">Формат отображения</label><input type="text" class="gen-input" value="'+escAttr(f.display_format||'')+'" data-action="update-field" data-field-id="'+f.id+'" data-key="display_format"></div>';
+        h += '<div class="gen-row"><label class="gen-label">Формат возврата</label><input type="text" class="gen-input" value="'+escAttr(f.return_format_date||'')+'" data-action="update-field" data-field-id="'+f.id+'" data-key="return_format_date"></div>';
         h += '</div>';
     }
 
     if (t === 'color_picker') {
-        h += '<div class="gen-row"><label class="gen-label">Default Value</label><input type="color" style="width:100%;height:38px;border:1px solid var(--border);border-radius:6px;background:var(--bg);cursor:pointer;" value="'+(f.default_value||'#7c3aed')+'" data-action="update-field" data-field-id="'+f.id+'" data-key="default_value"></div>';
+        h += '<div class="gen-row"><label class="gen-label">Значение по умолчанию</label><input type="color" style="width:100%;height:38px;border:1px solid var(--border);border-radius:6px;background:var(--bg);cursor:pointer;" value="'+(f.default_value||'#7c3aed')+'" data-action="update-field" data-field-id="'+f.id+'" data-key="default_value"></div>';
     }
 
     if (t === 'message') {
-        h += '<div class="gen-row"><label class="gen-label">Message</label><textarea class="gen-textarea" data-action="update-field" data-field-id="'+f.id+'" data-key="message">'+escHtml(f.message||'')+'</textarea></div>';
+        h += '<div class="gen-row"><label class="gen-label">Сообщение</label><textarea class="gen-textarea" data-action="update-field" data-field-id="'+f.id+'" data-key="message">'+escHtml(f.message||'')+'</textarea></div>';
         h += '<div class="gen-row" style="display:flex;align-items:center;padding-top:0;"><label class="gen-toggle"><input type="checkbox"'+(f.new_lines==='wpautop'?' checked':'')+' data-action="update-field-checkbox-wpautop" data-field-id="'+f.id+'"><span>wpautop</span></label></div>';
     }
 
     if (t === 'tab') {
-        h += '<div class="gen-row"><label class="gen-label">Placement</label><select class="gen-select" data-action="update-field" data-field-id="'+f.id+'" data-key="placement"><option value="top"'+(f.placement==='top'?' selected':'')+'>Top</option><option value="left"'+(f.placement==='left'?' selected':'')+'>Left</option></select></div>';
-        h += '<div class="gen-row" style="display:flex;align-items:center;padding-top:0;"><label class="gen-toggle"><input type="checkbox"'+(f.endpoint?' checked':'')+' data-action="update-field-checkbox" data-field-id="'+f.id+'" data-key="endpoint"><span>Endpoint (закрыть табы)</span></label></div>';
+        h += '<div class="gen-row"><label class="gen-label">Расположение</label><select class="gen-select" data-action="update-field" data-field-id="'+f.id+'" data-key="placement"><option value="top"'+(f.placement==='top'?' selected':'')+'>Сверху</option><option value="left"'+(f.placement==='left'?' selected':'')+'>Слева</option></select></div>';
+        h += '<div class="gen-row" style="display:flex;align-items:center;padding-top:0;"><label class="gen-toggle"><input type="checkbox"'+(f.endpoint?' checked':'')+' data-action="update-field-checkbox" data-field-id="'+f.id+'" data-key="endpoint"><span>Конечная точка (закрыть табы)</span></label></div>';
     }
 
     if (t === 'link') {
-        h += '<div class="gen-row"><label class="gen-label">Return Format</label><select class="gen-select" data-action="update-field" data-field-id="'+f.id+'" data-key="return_format"><option value="array"'+(f.return_format==='array'?' selected':'')+'>Array</option><option value="url"'+(f.return_format==='url'?' selected':'')+'>URL</option></select></div>';
+        h += '<div class="gen-row"><label class="gen-label">Формат возврата</label><select class="gen-select" data-action="update-field" data-field-id="'+f.id+'" data-key="return_format"><option value="array"'+(f.return_format==='array'?' selected':'')+'>Массив</option><option value="url"'+(f.return_format==='url'?' selected':'')+'>URL</option></select></div>';
     }
 
     if (t === 'post_object' || t === 'relationship') {
-        h += '<div class="gen-row"><label class="gen-label">Post Type</label><input type="text" class="gen-input" value="'+escAttr(Array.isArray(f.post_type)?f.post_type.join(', '):f.post_type)+'" data-action="update-field-post-type" data-field-id="'+f.id+'" placeholder="post, page"></div>';
+        h += '<div class="gen-row"><label class="gen-label">Тип записи</label><input type="text" class="gen-input" value="'+escAttr(Array.isArray(f.post_type)?f.post_type.join(', '):f.post_type)+'" data-action="update-field-post-type" data-field-id="'+f.id+'" placeholder="post, page"></div>';
         if (t === 'relationship') {
             h += '<div class="gen-row-inline">';
-            h += '<div class="gen-row"><label class="gen-label">Min Posts</label><input type="number" class="gen-input" value="'+(f.min_posts||'')+'" data-action="update-field" data-field-id="'+f.id+'" data-key="min_posts"></div>';
-            h += '<div class="gen-row"><label class="gen-label">Max Posts</label><input type="number" class="gen-input" value="'+(f.max_posts||'')+'" data-action="update-field" data-field-id="'+f.id+'" data-key="max_posts"></div>';
+            h += '<div class="gen-row"><label class="gen-label">Мин. записей</label><input type="number" class="gen-input" value="'+(f.min_posts||'')+'" data-action="update-field" data-field-id="'+f.id+'" data-key="min_posts"></div>';
+            h += '<div class="gen-row"><label class="gen-label">Макс. записей</label><input type="number" class="gen-input" value="'+(f.max_posts||'')+'" data-action="update-field" data-field-id="'+f.id+'" data-key="max_posts"></div>';
             h += '</div>';
         }
         h += '<div class="gen-row-inline">';
-        h += '<div class="gen-row" style="display:flex;align-items:center;padding-top:0;"><label class="gen-toggle"><input type="checkbox"'+(f.allow_null?' checked':'')+' data-action="update-field-checkbox" data-field-id="'+f.id+'" data-key="allow_null"><span>Allow Null</span></label></div>';
-        h += '<div class="gen-row" style="display:flex;align-items:center;padding-top:0;"><label class="gen-toggle"><input type="checkbox"'+(f.multiple?' checked':'')+' data-action="update-field-checkbox" data-field-id="'+f.id+'" data-key="multiple"><span>Multiple</span></label></div>';
+        h += '<div class="gen-row" style="display:flex;align-items:center;padding-top:0;"><label class="gen-toggle"><input type="checkbox"'+(f.allow_null?' checked':'')+' data-action="update-field-checkbox" data-field-id="'+f.id+'" data-key="allow_null"><span>Разрешить пустое</span></label></div>';
+        h += '<div class="gen-row" style="display:flex;align-items:center;padding-top:0;"><label class="gen-toggle"><input type="checkbox"'+(f.multiple?' checked':'')+' data-action="update-field-checkbox" data-field-id="'+f.id+'" data-key="multiple"><span>Множественный</span></label></div>';
         h += '</div>';
     }
 
@@ -768,12 +768,12 @@ function renderFieldForm(f) {
         h += '<div class="gen-divider"></div>';
         h += '<div style="font-weight:600;margin-bottom:10px;">🔁 Настройки Repeater</div>';
         h += '<div class="gen-row-inline">';
-        h += '<div class="gen-row"><label class="gen-label">Button Label</label><input type="text" class="gen-input" value="'+escAttr(f.button_label||'')+'" data-action="update-field" data-field-id="'+f.id+'" data-key="button_label"></div>';
-        h += '<div class="gen-row"><label class="gen-label">Layout</label><select class="gen-select" data-action="update-field" data-field-id="'+f.id+'" data-key="layout"><option value="table"'+(f.layout==='table'?' selected':'')+'>Table</option><option value="block"'+(f.layout==='block'?' selected':'')+'>Block</option><option value="row"'+(f.layout==='row'?' selected':'')+'>Row</option></select></div>';
+        h += '<div class="gen-row"><label class="gen-label">Текст кнопки</label><input type="text" class="gen-input" value="'+escAttr(f.button_label||'')+'" data-action="update-field" data-field-id="'+f.id+'" data-key="button_label"></div>';
+        h += '<div class="gen-row"><label class="gen-label">Раскладка</label><select class="gen-select" data-action="update-field" data-field-id="'+f.id+'" data-key="layout"><option value="table"'+(f.layout==='table'?' selected':'')+'>Таблица</option><option value="block"'+(f.layout==='block'?' selected':'')+'>Блок</option><option value="row"'+(f.layout==='row'?' selected':'')+'>Строка</option></select></div>';
         h += '</div>';
         h += '<div class="gen-row-inline">';
-        h += '<div class="gen-row"><label class="gen-label">Min Rows</label><input type="number" class="gen-input" value="'+(f.min||'')+'" data-action="update-field" data-field-id="'+f.id+'" data-key="min"></div>';
-        h += '<div class="gen-row"><label class="gen-label">Max Rows</label><input type="number" class="gen-input" value="'+(f.max||'')+'" data-action="update-field" data-field-id="'+f.id+'" data-key="max"></div>';
+        h += '<div class="gen-row"><label class="gen-label">Мин. строк</label><input type="number" class="gen-input" value="'+(f.min||'')+'" data-action="update-field" data-field-id="'+f.id+'" data-key="min"></div>';
+        h += '<div class="gen-row"><label class="gen-label">Макс. строк</label><input type="number" class="gen-input" value="'+(f.max||'')+'" data-action="update-field" data-field-id="'+f.id+'" data-key="max"></div>';
         h += '</div>';
         h += renderSubFieldsSection(f, 'repeater');
     }
@@ -842,7 +842,7 @@ function renderSubFieldsSection(f, parentType) {
     var subTypes = ['text','textarea','number','email','url','image','wysiwyg','true_false','select','date_picker','color_picker'];
     for (var st = 0; st < subTypes.length; st++) {
         var stKey = subTypes[st];
-        h += '<button class="gen-btn gen-btn-sm gen-btn-outline" data-action="add-sub-field" data-parent-id="'+f.id+'" data-field-type="'+stKey+'" style="font-size:0.7rem;padding:4px 8px;">+' + (FIELD_TYPES[stKey] ? FIELD_TYPES[stKey].icon : stKey) + '</button>';
+        h += '<button class="gen-btn gen-btn-sm gen-btn-outline" data-action="add-sub-field" data-parent-id="'+f.id+'" data-field-type="'+stKey+'" style="font-size:0.85rem;padding:6px 10px;">+' + (FIELD_TYPES[stKey] ? FIELD_TYPES[stKey].icon + ' ' + FIELD_TYPES[stKey].label : stKey) + '</button>';
     }
     h += '</div>';
     h += '</div>';
@@ -881,7 +881,7 @@ function renderFlexLayoutsSection(f) {
             var subTypes2 = ['text','textarea','number','email','url','image','wysiwyg','true_false','select'];
             for (var st2 = 0; st2 < subTypes2.length; st2++) {
                 var stKey2 = subTypes2[st2];
-                h += '<button class="gen-btn gen-btn-sm gen-btn-outline" data-action="add-layout-sub-field" data-parent-id="'+f.id+'" data-layout-idx="'+li+'" data-field-type="'+stKey2+'" style="font-size:0.7rem;padding:4px 8px;">+' + (FIELD_TYPES[stKey2] ? FIELD_TYPES[stKey2].icon : stKey2) + '</button>';
+                h += '<button class="gen-btn gen-btn-sm gen-btn-outline" data-action="add-layout-sub-field" data-parent-id="'+f.id+'" data-layout-idx="'+li+'" data-field-type="'+stKey2+'" style="font-size:0.85rem;padding:6px 10px;">+' + (FIELD_TYPES[stKey2] ? FIELD_TYPES[stKey2].icon + ' ' + FIELD_TYPES[stKey2].label : stKey2) + '</button>';
             }
             h += '</div>';
             h += '</div>';
