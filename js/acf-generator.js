@@ -1845,6 +1845,9 @@ document.addEventListener('change', function(e) {
         case 'change-field-type':
             changeFieldType(parseInt(el.getAttribute('data-field-id')), el.value);
             break;
+        case 'add-field-select':
+            if (el.value) addField(el.value);
+            break;
         case 'update-field':
             // For <select> elements with data-key
             updateField(parseInt(el.getAttribute('data-field-id')), el.getAttribute('data-key'), el.value);
@@ -1929,6 +1932,15 @@ document.addEventListener('DOMContentLoaded', function() {
 
     renderAll();
     liveUpdate();
+
+    // Upgrade field-type-row selects to CustomSelect
+    var fieldTypeSelects = document.querySelectorAll('.field-type-row select[data-action="add-field-select"]');
+    for (var fts = 0; fts < fieldTypeSelects.length; fts++) {
+        if (!fieldTypeSelects[fts]._customSelect && !fieldTypeSelects[fts].closest('.cs-wrap')) {
+            fieldTypeSelects[fts]._customSelect = CustomSelect.create(fieldTypeSelects[fts], { searchable: true });
+        }
+        fieldTypeSelects[fts].setAttribute('data-custom-select', '1');
+    }
 
     // Upgrade native selects on page load
     setTimeout(function() {
