@@ -466,32 +466,7 @@ function updateWrapperWidth(id, value) {
 
 // Sub-fields (for repeater / group)
 function subFieldDefaults(type) {
-    var d = {
-        type: type,
-        label: FIELD_TYPES[type] ? FIELD_TYPES[type].label : type,
-        name: '',
-        key: '',
-        instructions: '',
-        required: 0,
-        wrapper: { width:'', class:'', id:'' },
-        default_value: '',
-        placeholder: '',
-        maxlength: '',
-        choices: {},
-        return_format: (type === 'image' || type === 'file') ? 'array' : '',
-        library: 'all',
-        new_lines: (type === 'textarea') ? 'br' : '',
-        message: '',
-        display_format: 'd/m/Y',
-        sub_fields: [],
-        layouts: [],
-        button_label: 'Добавить строку',
-        min: 0, max: 0, layout: 'table',
-        post_type: ['post'],
-        allow_null: 0, multiple: 0
-    };
-    if (type === 'select' || type === 'checkbox' || type === 'radio') d.choices = { option_1: 'Вариант 1' };
-    return d;
+    return fieldDefaults(type);
 }
 
 function addSubField(parentId, type) {
@@ -881,7 +856,7 @@ function renderSubFieldsSection(f, parentType) {
         }
     }
     h += '<div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:12px;">';
-    var subTypes = ['text','textarea','number','email','url','image','wysiwyg','true_false','select','date_picker','color_picker'];
+    var subTypes = Object.keys(FIELD_TYPES);
     for (var st = 0; st < subTypes.length; st++) {
         var stKey = subTypes[st];
         h += '<button class="gen-btn gen-btn-sm gen-btn-outline" data-action="add-sub-field" data-parent-id="'+f.id+'" data-field-type="'+stKey+'" style="font-size:1.05rem;padding:8px 14px;">+<span class="material-symbols-outlined" style="font-size:1.4rem;">' + (FIELD_TYPES[stKey] ? FIELD_TYPES[stKey].icon : 'text_fields') + '</span> ' + (FIELD_TYPES[stKey] ? FIELD_TYPES[stKey].label : stKey) + '</button>';
@@ -920,7 +895,7 @@ function renderFlexLayoutsSection(f) {
                 }
             }
             h += '<div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:12px;">';
-            var subTypes2 = ['text','textarea','number','email','url','image','wysiwyg','true_false','select'];
+            var subTypes2 = Object.keys(FIELD_TYPES);
             for (var st2 = 0; st2 < subTypes2.length; st2++) {
                 var stKey2 = subTypes2[st2];
                 h += '<button class="gen-btn gen-btn-sm gen-btn-outline" data-action="add-layout-sub-field" data-parent-id="'+f.id+'" data-layout-idx="'+li+'" data-field-type="'+stKey2+'" style="font-size:1.05rem;padding:8px 14px;">+<span class="material-symbols-outlined" style="font-size:1.4rem;">' + (FIELD_TYPES[stKey2] ? FIELD_TYPES[stKey2].icon : 'text_fields') + '</span> ' + (FIELD_TYPES[stKey2] ? FIELD_TYPES[stKey2].label : stKey2) + '</button>';
@@ -955,6 +930,8 @@ function upgradeLocationSelects() {
 function liveUpdate() {
     if (currentCodeTab === 'json') {
         generateJSON();
+    } else if (currentCodeTab === 'html') {
+        generateHTML();
     } else {
         generatePHP();
     }
@@ -1202,6 +1179,316 @@ function generatePHP() {
     out.push("");
     out.push("endif;");
 
+    document.getElementById('code-output').textContent = out.join('\n');
+}
+
+// ==================== GENERATE HTML TEMPLATE ====================
+function generateHTML() {
+    var config = buildACFConfig();
+    var out = [];
+
+    out.push('<?php');
+    out.push('/**');
+    out.push(' * HTML-шаблон для группы полей: ' + escPHPSingle(config.title));
+    out.push(' * Вставьте этот код в шаблон темы (page.php, single.php и т.д.)');
+    out.push(' */');
+    out.push('?>');
+    out.push('<section class="acf-section acf-' + escAttr(config.key) + '">');
+
+    function renderFieldHTML(f, indent, prefix) {
+        var inRepeater = !!prefix;
+        prefix = prefix || '';
+        var lines = [];
+        var name = f.name || '';
+        var label = f.label || name;
+        var t = f.type;
+        var getFn = inRepeater ? 'get_sub_field' : 'get_field';
+        var theFn = inRepeater ? 'the_sub_field' : 'the_field';
+        var haveFn = 'have_rows';
+
+        if (!name) return [];
+
+        if (t === 'tab') {
+            if (label) lines.push(indent + '<!-- ' + escHtml(label) + ' -->');
+            return lines;
+        }
+        if (t === 'message') {
+            lines.push(indent + '<?php if (' + getFn + '(\\'' + escPHPSingle(name) + '\\')): ?>');
+            lines.push(indent + '    <div class="acf-message">');
+            lines.push(indent + '        <?php ' + theFn + '(\\'' + escPHPSingle(name) + '\\'); ?>');
+            lines.push(indent + '    </div>');
+            lines.push(indent + '<?php endif; ?>');
+            return lines;
+        }
+
+        if (t === 'image') {
+            lines.push(indent + '<?php $img_' + escapeVar(name) + ' = ' + getFn + '(\\'' + escPHPSingle(name) + '\\'); ?>');
+            lines.push(indent + '<?php if ($img_' + escapeVar(name) + '): ?>');
+            lines.push(indent + '    <div class="acf-image">');
+            if (f.return_format !== 'url') {
+                lines.push(indent + '        <img src="<?php echo esc_url($img_' + escapeVar(name) + '[\\'url\\']); ?>" alt="<?php echo esc_attr($img_' + escapeVar(name) + '[\\'alt\\']); ?>">');
+            } else {
+                lines.push(indent + '        <img src="<?php echo esc_url($img_' + escapeVar(name) + '); ?>" alt="">');
+            }
+            lines.push(indent + '    </div>');
+            lines.push(indent + '<?php endif; ?>');
+            return lines;
+        }
+
+        if (t === 'file') {
+            lines.push(indent + '<?php $file_' + escapeVar(name) + ' = ' + getFn + '(\\'' + escPHPSingle(name) + '\\'); ?>');
+            lines.push(indent + '<?php if ($file_' + escapeVar(name) + '): ?>');
+            lines.push(indent + '    <a class="acf-file" href="<?php echo esc_url($file_' + escapeVar(name) + '[\\'url\\']); ?>" download>');
+            lines.push(indent + '        <?php echo esc_html($file_' + escapeVar(name) + '[\\'filename\\']); ?>');
+            lines.push(indent + '    </a>');
+            lines.push(indent + '<?php endif; ?>');
+            return lines;
+        }
+
+        if (t === 'gallery') {
+            lines.push(indent + '<?php $gallery_' + escapeVar(name) + ' = ' + getFn + '(\\'' + escPHPSingle(name) + '\\'); ?>');
+            lines.push(indent + '<?php if ($gallery_' + escapeVar(name) + '): ?>');
+            lines.push(indent + '    <div class="acf-gallery">');
+            lines.push(indent + '        <?php foreach ($gallery_' + escapeVar(name) + ' as $img): ?>');
+            lines.push(indent + '            <div class="acf-gallery-item">');
+            lines.push(indent + '                <img src="<?php echo esc_url($img[\\'sizes\\'][\\'medium\\'] ?? $img[\\'url\\']); ?>" alt="<?php echo esc_attr($img[\\'alt\\']); ?>">');
+            lines.push(indent + '            </div>');
+            lines.push(indent + '        <?php endforeach; ?>');
+            lines.push(indent + '    </div>');
+            lines.push(indent + '<?php endif; ?>');
+            return lines;
+        }
+
+        if (t === 'oembed') {
+            lines.push(indent + '<?php if (' + getFn + '(\\'' + escPHPSingle(name) + '\\')): ?>');
+            lines.push(indent + '    <div class="acf-oembed">');
+            lines.push(indent + '        <?php ' + theFn + '(\\'' + escPHPSingle(name) + '\\'); ?>');
+            lines.push(indent + '    </div>');
+            lines.push(indent + '<?php endif; ?>');
+            return lines;
+        }
+
+        if (t === 'true_false') {
+            lines.push(indent + '<?php if (' + getFn + '(\\'' + escPHPSingle(name) + '\\')): ?>');
+            lines.push(indent + '    <div class="acf-true-false acf-true-false--' + escAttr(name) + '">');
+            if (f.message) {
+                lines.push(indent + '        <span>' + escHtml(f.message) + '</span>');
+            }
+            lines.push(indent + '    </div>');
+            lines.push(indent + '<?php endif; ?>');
+            return lines;
+        }
+
+        if (t === 'link') {
+            lines.push(indent + '<?php $link_' + escapeVar(name) + ' = ' + getFn + '(\\'' + escPHPSingle(name) + '\\'); ?>');
+            lines.push(indent + '<?php if ($link_' + escapeVar(name) + '): ?>');
+            lines.push(indent + '    <a class="acf-link" href="<?php echo esc_url($link_' + escapeVar(name) + '[\\'url\\']); ?>"');
+            lines.push(indent + '       target="<?php echo esc_attr($link_' + escapeVar(name) + '[\\'target\\'] ?? \\'_self\\'); ?>">');
+            lines.push(indent + '        <?php echo esc_html($link_' + escapeVar(name) + '[\\'title\\']); ?>');
+            lines.push(indent + '    </a>');
+            lines.push(indent + '<?php endif; ?>');
+            return lines;
+        }
+
+        if (t === 'post_object') {
+            lines.push(indent + '<?php $post_' + escapeVar(name) + ' = ' + getFn + '(\\'' + escPHPSingle(name) + '\\'); ?>');
+            lines.push(indent + '<?php if ($post_' + escapeVar(name) + '): ?>');
+            if (f.multiple) {
+                lines.push(indent + '    <div class="acf-posts">');
+                lines.push(indent + '        <?php foreach ($post_' + escapeVar(name) + ' as $p): ?>');
+                lines.push(indent + '            <div class="acf-post-item">');
+                lines.push(indent + '                <?php if ($p): ?><a href="<?php echo get_permalink($p->ID); ?>"><?php echo esc_html(get_the_title($p->ID)); ?></a><?php endif; ?>');
+                lines.push(indent + '            </div>');
+                lines.push(indent + '        <?php endforeach; ?>');
+                lines.push(indent + '    </div>');
+            } else {
+                lines.push(indent + '    <div class="acf-post-item">');
+                lines.push(indent + '        <a href="<?php echo get_permalink($post_' + escapeVar(name) + '->ID); ?>"><?php echo esc_html(get_the_title($post_' + escapeVar(name) + '->ID)); ?></a>');
+                lines.push(indent + '    </div>');
+            }
+            lines.push(indent + '<?php endif; ?>');
+            return lines;
+        }
+
+        if (t === 'relationship') {
+            lines.push(indent + '<?php $rel_' + escapeVar(name) + ' = ' + getFn + '(\\'' + escPHPSingle(name) + '\\'); ?>');
+            lines.push(indent + '<?php if ($rel_' + escapeVar(name) + '): ?>');
+            lines.push(indent + '    <div class="acf-relationship">');
+            lines.push(indent + '        <?php foreach ($rel_' + escapeVar(name) + ' as $p): ?>');
+            lines.push(indent + '            <div class="acf-rel-item">');
+            lines.push(indent + '                <?php if ($p): ?><a href="<?php echo get_permalink($p->ID); ?>"><?php echo esc_html(get_the_title($p->ID)); ?></a><?php endif; ?>');
+            lines.push(indent + '            </div>');
+            lines.push(indent + '        <?php endforeach; ?>');
+            lines.push(indent + '    </div>');
+            lines.push(indent + '<?php endif; ?>');
+            return lines;
+        }
+
+        if (t === 'repeater') {
+            lines.push(indent + '<?php if (' + haveFn + '(\\'' + escPHPSingle(name) + '\\')): ?>');
+            lines.push(indent + '    <div class="acf-repeater acf-repeater--' + escAttr(name) + '">');
+            lines.push(indent + '        <?php while (' + haveFn + '(\\'' + escPHPSingle(name) + '\\')): the_row(); ?>');
+            lines.push(indent + '            <div class="acf-repeater-item">');
+            if (f.sub_fields && f.sub_fields.length > 0) {
+                for (var si = 0; si < f.sub_fields.length; si++) {
+                    var sf = f.sub_fields[si];
+                    var sfLines = renderFieldHTML(sf, indent + '                ', true);
+                    for (var sl = 0; sl < sfLines.length; sl++) {
+                        lines.push(sfLines[sl]);
+                    }
+                }
+            }
+            lines.push(indent + '            </div>');
+            lines.push(indent + '        <?php endwhile; ?>');
+            lines.push(indent + '    </div>');
+            lines.push(indent + '<?php endif; ?>');
+            return lines;
+        }
+
+        if (t === 'group') {
+            lines.push(indent + '<?php if (' + haveFn + '(\\'' + escPHPSingle(name) + '\\')): ?>');
+            lines.push(indent + '    <div class="acf-group acf-group--' + escAttr(name) + '">');
+            lines.push(indent + '        <?php while (' + haveFn + '(\\'' + escPHPSingle(name) + '\\')): the_row(); ?>');
+            if (f.sub_fields && f.sub_fields.length > 0) {
+                for (var gi = 0; gi < f.sub_fields.length; gi++) {
+                    var gf = f.sub_fields[gi];
+                    var gfLines = renderFieldHTML(gf, indent + '            ', true);
+                    for (var gl = 0; gl < gfLines.length; gl++) {
+                        lines.push(gfLines[gl]);
+                    }
+                }
+            }
+            lines.push(indent + '        <?php endwhile; ?>');
+            lines.push(indent + '    </div>');
+            lines.push(indent + '<?php endif; ?>');
+            return lines;
+        }
+
+        if (t === 'flexible_content') {
+            lines.push(indent + '<?php if (' + haveFn + '(\\'' + escPHPSingle(name) + '\\')): ?>');
+            lines.push(indent + '    <div class="acf-flexible">');
+            lines.push(indent + '        <?php while (' + haveFn + '(\\'' + escPHPSingle(name) + '\\')): the_row(); ?>');
+            if (f.layouts && f.layouts.length > 0) {
+                for (var li = 0; li < f.layouts.length; li++) {
+                    var lay = f.layouts[li];
+                    var layName = lay.name || '';
+                    if (!layName) continue;
+                    var isFirst = (li === 0);
+                    lines.push(indent + '            <?php ' + (isFirst ? 'if' : 'elseif') + ' (get_row_layout() === \\'' + escPHPSingle(layName) + '\\'): ?>');
+                    lines.push(indent + '                <div class="acf-layout acf-layout--' + escAttr(layName) + '">');
+                    if (lay.sub_fields && lay.sub_fields.length > 0) {
+                        for (var lsi = 0; lsi < lay.sub_fields.length; lsi++) {
+                            var lsf = lay.sub_fields[lsi];
+                            var lsfLines = renderFieldHTML(lsf, indent + '                    ', true);
+                            for (var lsl = 0; lsl < lsfLines.length; lsl++) {
+                                lines.push(lsfLines[lsl]);
+                            }
+                        }
+                    }
+                    lines.push(indent + '                </div>');
+                }
+                lines.push(indent + '            <?php endif; ?>');
+            }
+            lines.push(indent + '        <?php endwhile; ?>');
+            lines.push(indent + '    </div>');
+            lines.push(indent + '<?php endif; ?>');
+            return lines;
+        }
+
+        if (t === 'checkbox') {
+            lines.push(indent + '<?php $chk_' + escapeVar(name) + ' = ' + getFn + '(\\'' + escPHPSingle(name) + '\\'); ?>');
+            lines.push(indent + '<?php if ($chk_' + escapeVar(name) + '): ?>');
+            lines.push(indent + '    <div class="acf-field acf-field--' + escAttr(name) + '">');
+            if (label) lines.push(indent + '        <span class="acf-label">' + escHtml(label) + '</span>');
+            lines.push(indent + '        <ul class="acf-checkbox-values">');
+            lines.push(indent + '            <?php foreach ($chk_' + escapeVar(name) + ' as $val): ?>');
+            lines.push(indent + '                <li><?php echo esc_html($val); ?></li>');
+            lines.push(indent + '            <?php endforeach; ?>');
+            lines.push(indent + '        </ul>');
+            lines.push(indent + '    </div>');
+            lines.push(indent + '<?php endif; ?>');
+            return lines;
+        }
+
+        if (t === 'select') {
+            lines.push(indent + '<?php $sel_' + escapeVar(name) + ' = ' + getFn + '(\\'' + escPHPSingle(name) + '\\'); ?>');
+            lines.push(indent + '<?php if ($sel_' + escapeVar(name) + '): ?>');
+            lines.push(indent + '    <div class="acf-field acf-field--' + escAttr(name) + '">');
+            if (label) lines.push(indent + '        <span class="acf-label">' + escHtml(label) + '</span>');
+            if (f.multiple) {
+                lines.push(indent + '        <ul class="acf-select-values">');
+                lines.push(indent + '            <?php foreach ($sel_' + escapeVar(name) + ' as $v): ?>');
+                lines.push(indent + '                <li><?php echo esc_html(is_array($v) ? ($v[\\'label\\'] ?? $v[\\'value\\']) : $v); ?></li>');
+                lines.push(indent + '            <?php endforeach; ?>');
+                lines.push(indent + '        </ul>');
+            } else {
+                lines.push(indent + '        <div class="acf-value"><?php echo esc_html(is_array($sel_' + escapeVar(name) + ') ? ($sel_' + escapeVar(name) + '[\\'label\\'] ?? $sel_' + escapeVar(name) + '[\\'value\\']) : $sel_' + escapeVar(name) + '); ?></div>');
+            }
+            lines.push(indent + '    </div>');
+            lines.push(indent + '<?php endif; ?>');
+            return lines;
+        }
+
+        if (t === 'radio') {
+            lines.push(indent + '<?php $radio_' + escapeVar(name) + ' = ' + getFn + '(\\'' + escPHPSingle(name) + '\\'); ?>');
+            lines.push(indent + '<?php if ($radio_' + escapeVar(name) + '): ?>');
+            lines.push(indent + '    <div class="acf-field acf-field--' + escAttr(name) + '">');
+            if (label) lines.push(indent + '        <span class="acf-label">' + escHtml(label) + '</span>');
+            lines.push(indent + '        <div class="acf-value"><?php echo esc_html($radio_' + escapeVar(name) + '); ?></div>');
+            lines.push(indent + '    </div>');
+            lines.push(indent + '<?php endif; ?>');
+            return lines;
+        }
+
+        if (t === 'date_picker') {
+            lines.push(indent + '<?php $date_' + escapeVar(name) + ' = ' + getFn + '(\\'' + escPHPSingle(name) + '\\'); ?>');
+            lines.push(indent + '<?php if ($date_' + escapeVar(name) + '): ?>');
+            lines.push(indent + '    <time class="acf-date" datetime="<?php echo esc_attr($date_' + escapeVar(name) + '); ?>"><?php echo esc_html($date_' + escapeVar(name) + '); ?></time>');
+            lines.push(indent + '<?php endif; ?>');
+            return lines;
+        }
+
+        if (t === 'color_picker') {
+            lines.push(indent + '<?php $color_' + escapeVar(name) + ' = ' + getFn + '(\\'' + escPHPSingle(name) + '\\'); ?>');
+            lines.push(indent + '<?php if ($color_' + escapeVar(name) + '): ?>');
+            lines.push(indent + '    <div class="acf-color" style="background-color:<?php echo esc_attr($color_' + escapeVar(name) + '); ?>"><?php echo esc_html($color_' + escapeVar(name) + '); ?></div>');
+            lines.push(indent + '<?php endif; ?>');
+            return lines;
+        }
+
+        if (t === 'number') {
+            lines.push(indent + '<?php $num_' + escapeVar(name) + ' = ' + getFn + '(\\'' + escPHPSingle(name) + '\\'); ?>');
+            lines.push(indent + '<?php if ($num_' + escapeVar(name) + ' !== \\'\\' && $num_' + escapeVar(name) + ' !== null): ?>');
+            lines.push(indent + '    <div class="acf-field acf-field--' + escAttr(name) + '">');
+            if (label) lines.push(indent + '        <span class="acf-label">' + escHtml(label) + '</span>');
+            lines.push(indent + '        <div class="acf-value"><?php echo esc_html($num_' + escapeVar(name) + '); ?></div>');
+            lines.push(indent + '    </div>');
+            lines.push(indent + '<?php endif; ?>');
+            return lines;
+        }
+
+        lines.push(indent + '<?php if (' + getFn + '(\\'' + escPHPSingle(name) + '\\')): ?>');
+        lines.push(indent + '    <div class="acf-field acf-field--' + escAttr(name) + '">');
+        if (label) lines.push(indent + '        <span class="acf-label">' + escHtml(label) + '</span>');
+        lines.push(indent + '        <div class="acf-value"><?php ' + theFn + '(\\'' + escPHPSingle(name) + '\\'); ?></div>');
+        lines.push(indent + '    </div>');
+        lines.push(indent + '<?php endif; ?>');
+        return lines;
+    }
+
+    function escapeVar(name) {
+        return String(name).replace(/[^a-zA-Z0-9_]/g, '_');
+    }
+
+    for (var i = 0; i < config.fields.length; i++) {
+        var f = config.fields[i];
+        var fLines = renderFieldHTML(f, '    ');
+        for (var j = 0; j < fLines.length; j++) {
+            out.push(fLines[j]);
+        }
+    }
+
+    out.push('</section>');
     document.getElementById('code-output').textContent = out.join('\n');
 }
 
