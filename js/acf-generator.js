@@ -151,6 +151,13 @@ var CustomSelect = (function() {
         if (activeInstance && activeInstance !== this) {
             activeInstance._close();
         }
+        var rect = this._trigger.getBoundingClientRect();
+        document.body.appendChild(this._dropdown);
+        this._dropdown.style.position = 'fixed';
+        this._dropdown.style.top = (rect.bottom + 4) + 'px';
+        this._dropdown.style.left = rect.left + 'px';
+        this._dropdown.style.width = rect.width + 'px';
+        this._dropdown.style.zIndex = '10000';
         this._trigger.classList.add('open');
         this._dropdown.classList.add('open');
         activeInstance = this;
@@ -162,6 +169,14 @@ var CustomSelect = (function() {
     CustomSelectCtor.prototype._close = function() {
         this._trigger.classList.remove('open');
         this._dropdown.classList.remove('open');
+        if (this._dropdown.parentNode !== this._wrap) {
+            this._wrap.appendChild(this._dropdown);
+            this._dropdown.style.position = '';
+            this._dropdown.style.top = '';
+            this._dropdown.style.left = '';
+            this._dropdown.style.width = '';
+            this._dropdown.style.zIndex = '';
+        }
         if (this._searchInput) {
             this._searchInput.value = '';
             this._filter('');
@@ -219,6 +234,12 @@ var CustomSelect = (function() {
             if (!inside) activeInstance._close();
         }
     });
+
+    document.addEventListener('scroll', function(e) {
+        if (activeInstance && e.target && e.target.closest('.gen-panel-body')) {
+            activeInstance._close();
+        }
+    }, true);
 
     return {
         create: function(el, opts) { return new CustomSelectCtor(el, opts); }
@@ -300,15 +321,19 @@ function fieldDefaults(type) {
         maxlength: '',
         prepend: '',
         append: '',
+        readonly: 0,
+        disabled: 0,
         choices: {},
-        return_format: (type === 'image' || type === 'file' || type === 'gallery') ? 'array' : '',
+        return_format: (type === 'image' || type === 'file' || type === 'gallery') ? 'array' : (type === 'post_object' || type === 'relationship') ? 'object' : '',
         library: 'all',
         new_lines: (type === 'textarea') ? 'br' : '',
         min: 0, max: 0, step: '',
-        min_width: '', min_height: '',
+        min_width: '', min_height: '', max_width: '', max_height: '',
         mime_types: '',
+        min_size: '', max_size: '',
         width: '', height: '',
         message: '',
+        esc_html: 0,
         display_format: 'd/m/Y',
         return_format_date: 'd/m/Y',
         placement: 'top',
@@ -318,6 +343,9 @@ function fieldDefaults(type) {
         button_label: 'Добавить строку',
         layout: 'table',
         post_type: ['post'],
+        taxonomy: '',
+        filters: ['search', 'post_type', 'taxonomy'],
+        elements: [],
         min_posts: '', max_posts: '',
         allow_null: 0, multiple: 0, ui: 0
     };
@@ -404,7 +432,7 @@ function getFieldById(id) {
 function updateField(id, key, value) {
     var f = getFieldById(id);
     if (!f) return;
-    if (key === 'required' || key === 'endpoint' || key === 'allow_null' || key === 'multiple' || key === 'ui' || key === 'ajax') {
+    if (key === 'required' || key === 'endpoint' || key === 'allow_null' || key === 'multiple' || key === 'ui' || key === 'ajax' || key === 'readonly' || key === 'disabled' || key === 'media_upload' || key === 'pagination' || key === 'esc_html' || key === 'allow_custom' || key === 'toggle' || key === 'save_custom' || key === 'other_choice' || key === 'save_other_choice') {
         f[key] = value ? 1 : 0;
     } else if (key === 'min' || key === 'max' || key === 'min_posts' || key === 'max_posts') {
         f[key] = parseInt(value) || 0;
@@ -412,6 +440,20 @@ function updateField(id, key, value) {
         f[key] = value;
     }
     liveUpdate();
+}
+
+function toggleFieldArray(id, key, value, checked) {
+    var f = getFieldById(id);
+    if (!f) return;
+    if (!Array.isArray(f[key])) f[key] = [];
+    var idx = f[key].indexOf(value);
+    if (checked && idx === -1) {
+        f[key].push(value);
+    } else if (!checked && idx !== -1) {
+        f[key].splice(idx, 1);
+    }
+    liveUpdate();
+    debouncedPushUndo();
 }
 
 function updateWrapperWidth(id, value) {
@@ -1506,6 +1548,9 @@ document.addEventListener('change', function(e) {
     switch (action) {
         case 'update-field-checkbox':
             updateField(parseInt(el.getAttribute('data-field-id')), el.getAttribute('data-key'), el.checked);
+            break;
+        case 'update-field-checkbox-array':
+            toggleFieldArray(parseInt(el.getAttribute('data-field-id')), el.getAttribute('data-key'), el.getAttribute('data-value'), el.checked);
             break;
         case 'update-field-checkbox-wpautop':
             updateField(parseInt(el.getAttribute('data-field-id')), 'new_lines', el.checked ? 'wpautop' : '');
