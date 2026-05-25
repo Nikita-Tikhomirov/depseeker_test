@@ -236,7 +236,7 @@ var CustomSelect = (function() {
     });
 
     document.addEventListener('scroll', function(e) {
-        if (activeInstance && e.target && e.target.closest('.gen-panel-body')) {
+        if (activeInstance && e.target && e.target.closest && e.target.closest('.gen-panel-body')) {
             activeInstance._close();
         }
     }, true);
@@ -280,6 +280,20 @@ var fields = [];
 var fieldIdCounter = 0;
 var selectedFieldId = null;
 var locationRules = [{ param: 'post_type', operator: '==', value: 'page' }];
+
+// Style state (for preview + generated HTML)
+var blockStyles = {
+    bgColor: '#ffffff',
+    textColor: '#1a1a2e',
+    padding: '24',
+    gap: '16',
+    cardBg: '#f8f9fa',
+    cardPadding: '20',
+    cardRadius: '12',
+    borderColor: '#e0e0e0',
+    borderWidth: '1'
+};
+var styleEditorCollapsed = false;
 
 // ==================== HELPERS ====================
 function escHtml(s) {
@@ -429,6 +443,29 @@ function getFieldById(id) {
     return null;
 }
 
+function findFieldInTree(id) {
+    function search(arr) {
+        if (!arr) return null;
+        for (var i = 0; i < arr.length; i++) {
+            if (arr[i].id === id) return arr[i];
+            if (arr[i].sub_fields) {
+                var found = search(arr[i].sub_fields);
+                if (found) return found;
+            }
+            if (arr[i].layouts) {
+                for (var j = 0; j < arr[i].layouts.length; j++) {
+                    if (arr[i].layouts[j].sub_fields) {
+                        var found2 = search(arr[i].layouts[j].sub_fields);
+                        if (found2) return found2;
+                    }
+                }
+            }
+        }
+        return null;
+    }
+    return search(fields);
+}
+
 function updateField(id, key, value) {
     var f = getFieldById(id);
     if (!f) return;
@@ -470,7 +507,7 @@ function subFieldDefaults(type) {
 }
 
 function addSubField(parentId, type) {
-    var f = getFieldById(parentId);
+    var f = findFieldInTree(parentId);
     if (!f) return;
     if (!f.sub_fields) f.sub_fields = [];
     var subId = ++fieldIdCounter;
@@ -484,7 +521,7 @@ function addSubField(parentId, type) {
 }
 
 function removeSubField(parentId, subId) {
-    var f = getFieldById(parentId);
+    var f = findFieldInTree(parentId);
     if (!f || !f.sub_fields) return;
     f.sub_fields = f.sub_fields.filter(function(sf) { return sf.id !== subId; });
     renderAll();
@@ -492,7 +529,7 @@ function removeSubField(parentId, subId) {
 }
 
 function updateSubField(parentId, subId, key, value) {
-    var f = getFieldById(parentId);
+    var f = findFieldInTree(parentId);
     if (!f || !f.sub_fields) return;
     for (var i = 0; i < f.sub_fields.length; i++) {
         if (f.sub_fields[i].id === subId) { f.sub_fields[i][key] = value; break; }
@@ -500,9 +537,28 @@ function updateSubField(parentId, subId, key, value) {
     liveUpdate();
 }
 
+function toggleSubFieldExpand(parentId, subId) {
+    var sf = findFieldInTree(subId);
+    if (sf) { sf._expanded = !sf._expanded; renderAll(); }
+}
+
+function toggleLayoutSubFieldExpand(parentId, layoutIdx, subId) {
+    var f = findFieldInTree(parentId);
+    if (f && f.layouts && f.layouts[layoutIdx] && f.layouts[layoutIdx].sub_fields) {
+        var subs = f.layouts[layoutIdx].sub_fields;
+        for (var i = 0; i < subs.length; i++) {
+            if (subs[i].id === subId) {
+                subs[i]._expanded = !subs[i]._expanded;
+                renderAll();
+                break;
+            }
+        }
+    }
+}
+
 // Flexible Content Layouts
 function addFlexLayout(parentId) {
-    var f = getFieldById(parentId);
+    var f = findFieldInTree(parentId);
     if (!f) return;
     if (!f.layouts) f.layouts = [];
     var ln = 'layout_' + (f.layouts.length + 1);
@@ -512,7 +568,7 @@ function addFlexLayout(parentId) {
 }
 
 function removeFlexLayout(parentId, layoutIdx) {
-    var f = getFieldById(parentId);
+    var f = findFieldInTree(parentId);
     if (!f || !f.layouts) return;
     f.layouts.splice(layoutIdx, 1);
     renderAll();
@@ -520,14 +576,14 @@ function removeFlexLayout(parentId, layoutIdx) {
 }
 
 function updateFlexLayout(parentId, layoutIdx, key, value) {
-    var f = getFieldById(parentId);
+    var f = findFieldInTree(parentId);
     if (!f || !f.layouts || !f.layouts[layoutIdx]) return;
     f.layouts[layoutIdx][key] = value;
     liveUpdate();
 }
 
 function addSubFieldToLayout(parentId, layoutIdx, type) {
-    var f = getFieldById(parentId);
+    var f = findFieldInTree(parentId);
     if (!f || !f.layouts || !f.layouts[layoutIdx]) return;
     var layout = f.layouts[layoutIdx];
     if (!layout.sub_fields) layout.sub_fields = [];
@@ -542,7 +598,7 @@ function addSubFieldToLayout(parentId, layoutIdx, type) {
 }
 
 function removeSubFieldFromLayout(parentId, layoutIdx, subId) {
-    var f = getFieldById(parentId);
+    var f = findFieldInTree(parentId);
     if (!f || !f.layouts || !f.layouts[layoutIdx] || !f.layouts[layoutIdx].sub_fields) return;
     f.layouts[layoutIdx].sub_fields = f.layouts[layoutIdx].sub_fields.filter(function(sf) { return sf.id !== subId; });
     renderAll();
@@ -550,7 +606,7 @@ function removeSubFieldFromLayout(parentId, layoutIdx, subId) {
 }
 
 function updateSubFieldInLayout(parentId, layoutIdx, subId, key, value) {
-    var f = getFieldById(parentId);
+    var f = findFieldInTree(parentId);
     if (!f || !f.layouts || !f.layouts[layoutIdx] || !f.layouts[layoutIdx].sub_fields) return;
     var sfs = f.layouts[layoutIdx].sub_fields;
     for (var i = 0; i < sfs.length; i++) {
@@ -607,15 +663,21 @@ function renderFields() {
     var container = document.getElementById('fields-list');
     var emptyEl = document.getElementById('fields-empty');
     var countEl = document.getElementById('field-count-display');
+    var sectionEl = document.getElementById('fields-section');
+    var dividerEl = document.getElementById('fields-divider-top');
 
     countEl.textContent = fields.length + ' ' + plural(fields.length, ['поле','поля','полей']);
 
     if (fields.length === 0) {
         if (emptyEl) emptyEl.style.display = '';
+        if (sectionEl) sectionEl.style.display = 'none';
+        if (dividerEl) dividerEl.style.display = 'none';
         container.innerHTML = '';
         return;
     }
     if (emptyEl) emptyEl.style.display = 'none';
+    if (sectionEl) sectionEl.style.display = '';
+    if (dividerEl) dividerEl.style.display = '';
 
     var html = '';
     for (var i = 0; i < fields.length; i++) {
@@ -839,6 +901,146 @@ function updateChoices(id, text) {
     liveUpdate();
 }
 
+// Render full settings form for a sub-field (all types)
+function renderSubFieldSettings(sf, parentId) {
+    var h = '';
+    var pid = parentId;
+    var sid = sf.id;
+
+    h += '<div class="gen-row-inline">';
+    h += '<div class="gen-row" style="flex:2;"><label class="gen-label">Ключ</label><input type="text" class="gen-input" value="'+escAttr(sf.key||'')+'" data-action="update-sub-field" data-parent-id="'+pid+'" data-sub-id="'+sid+'" data-key="key" style="font-family:var(--font-mono);font-size:1.05rem;"></div>';
+    h += '<div class="gen-row" style="display:flex;align-items:center;padding-top:20px;"><label class="gen-toggle"><input type="checkbox"'+(sf.required?' checked':'')+' data-action="update-sub-field-checkbox" data-parent-id="'+pid+'" data-sub-id="'+sid+'" data-key="required"><span>Обязательное</span></label></div>';
+    h += '</div>';
+
+    h += '<div class="gen-row"><label class="gen-label">Инструкция</label><input type="text" class="gen-input" value="'+escAttr(sf.instructions||'')+'" data-action="update-sub-field" data-parent-id="'+pid+'" data-sub-id="'+sid+'" data-key="instructions" placeholder="Подсказка под полем"></div>';
+
+    var t = sf.type;
+
+    if (t === 'text' || t === 'number' || t === 'email' || t === 'url' || t === 'password') {
+        h += '<div class="gen-row-inline">';
+        h += '<div class="gen-row"><label class="gen-label">Placeholder</label><input type="text" class="gen-input" value="'+escAttr(sf.placeholder||'')+'" data-action="update-sub-field" data-parent-id="'+pid+'" data-sub-id="'+sid+'" data-key="placeholder"></div>';
+        h += '<div class="gen-row"><label class="gen-label">Макс. длина</label><input type="number" class="gen-input" value="'+(sf.maxlength||'')+'" data-action="update-sub-field" data-parent-id="'+pid+'" data-sub-id="'+sid+'" data-key="maxlength" min="0"></div>';
+        h += '</div>';
+        h += '<div class="gen-row-inline">';
+        h += '<div class="gen-row"><label class="gen-label">Значение по умолчанию</label><input type="text" class="gen-input" value="'+escAttr(sf.default_value||'')+'" data-action="update-sub-field" data-parent-id="'+pid+'" data-sub-id="'+sid+'" data-key="default_value"></div>';
+        h += '<div class="gen-row"><label class="gen-label">Префикс</label><input type="text" class="gen-input" value="'+escAttr(sf.prepend||'')+'" data-action="update-sub-field" data-parent-id="'+pid+'" data-sub-id="'+sid+'" data-key="prepend"></div>';
+        h += '<div class="gen-row"><label class="gen-label">Суффикс</label><input type="text" class="gen-input" value="'+escAttr(sf.append||'')+'" data-action="update-sub-field" data-parent-id="'+pid+'" data-sub-id="'+sid+'" data-key="append"></div>';
+        h += '</div>';
+    }
+
+    if (t === 'number') {
+        h += '<div class="gen-row-inline">';
+        h += '<div class="gen-row"><label class="gen-label">Мин</label><input type="number" class="gen-input" value="'+(sf.min||'')+'" data-action="update-sub-field" data-parent-id="'+pid+'" data-sub-id="'+sid+'" data-key="min"></div>';
+        h += '<div class="gen-row"><label class="gen-label">Макс</label><input type="number" class="gen-input" value="'+(sf.max||'')+'" data-action="update-sub-field" data-parent-id="'+pid+'" data-sub-id="'+sid+'" data-key="max"></div>';
+        h += '<div class="gen-row"><label class="gen-label">Шаг</label><input type="text" class="gen-input" value="'+escAttr(sf.step||'')+'" data-action="update-sub-field" data-parent-id="'+pid+'" data-sub-id="'+sid+'" data-key="step"></div>';
+        h += '</div>';
+    }
+
+    if (t === 'textarea') {
+        h += '<div class="gen-row"><label class="gen-label">Перенос строк</label><select class="gen-select" data-action="update-sub-field-select" data-parent-id="'+pid+'" data-sub-id="'+sid+'" data-key="new_lines"><option value="br"'+(sf.new_lines==='br'?' selected':'')+'>br</option><option value="wpautop"'+(sf.new_lines==='wpautop'?' selected':'')+'>wpautop</option></select></div>';
+        h += '<div class="gen-row"><label class="gen-label">Placeholder</label><input type="text" class="gen-input" value="'+escAttr(sf.placeholder||'')+'" data-action="update-sub-field" data-parent-id="'+pid+'" data-sub-id="'+sid+'" data-key="placeholder"></div>';
+        h += '<div class="gen-row"><label class="gen-label">Значение по умолчанию</label><textarea class="gen-textarea" data-action="update-sub-field" data-parent-id="'+pid+'" data-sub-id="'+sid+'" data-key="default_value">'+escHtml(sf.default_value||'')+'</textarea></div>';
+    }
+
+    if (t === 'image' || t === 'file' || t === 'gallery') {
+        h += '<div class="gen-row-inline">';
+        h += '<div class="gen-row"><label class="gen-label">Формат возврата</label><select class="gen-select" data-action="update-sub-field-select" data-parent-id="'+pid+'" data-sub-id="'+sid+'" data-key="return_format"><option value="array"'+(sf.return_format==='array'?' selected':'')+'>Массив</option><option value="url"'+(sf.return_format==='url'?' selected':'')+'>URL</option><option value="id"'+(sf.return_format==='id'?' selected':'')+'>ID</option></select></div>';
+        h += '<div class="gen-row"><label class="gen-label">Библиотека</label><select class="gen-select" data-action="update-sub-field-select" data-parent-id="'+pid+'" data-sub-id="'+sid+'" data-key="library"><option value="all"'+(sf.library==='all'?' selected':'')+'>Все</option><option value="uploadedTo"'+(sf.library==='uploadedTo'?' selected':'')+'>К посту</option></select></div>';
+        h += '</div>';
+        if (t === 'file') {
+            h += '<div class="gen-row"><label class="gen-label">MIME типы</label><input type="text" class="gen-input" value="'+escAttr(sf.mime_types||'')+'" data-action="update-sub-field" data-parent-id="'+pid+'" data-sub-id="'+sid+'" data-key="mime_types" placeholder="pdf, doc, docx"></div>';
+        }
+        if (t === 'image' || t === 'gallery') {
+            h += '<div class="gen-row-inline">';
+            h += '<div class="gen-row"><label class="gen-label">Мин. ширина</label><input type="number" class="gen-input" value="'+(sf.min_width||'')+'" data-action="update-sub-field" data-parent-id="'+pid+'" data-sub-id="'+sid+'" data-key="min_width"></div>';
+            h += '<div class="gen-row"><label class="gen-label">Мин. высота</label><input type="number" class="gen-input" value="'+(sf.min_height||'')+'" data-action="update-sub-field" data-parent-id="'+pid+'" data-sub-id="'+sid+'" data-key="min_height"></div>';
+            h += '</div>';
+        }
+    }
+
+    if (t === 'wysiwyg') {
+        h += '<div class="gen-row"><label class="gen-label">Значение по умолчанию</label><textarea class="gen-textarea" data-action="update-sub-field" data-parent-id="'+pid+'" data-sub-id="'+sid+'" data-key="default_value">'+escHtml(sf.default_value||'')+'</textarea></div>';
+    }
+
+    if (t === 'oembed') {
+        h += '<div class="gen-row-inline">';
+        h += '<div class="gen-row"><label class="gen-label">Ширина</label><input type="text" class="gen-input" value="'+escAttr(sf.width||'')+'" data-action="update-sub-field" data-parent-id="'+pid+'" data-sub-id="'+sid+'" data-key="width"></div>';
+        h += '<div class="gen-row"><label class="gen-label">Высота</label><input type="text" class="gen-input" value="'+escAttr(sf.height||'')+'" data-action="update-sub-field" data-parent-id="'+pid+'" data-sub-id="'+sid+'" data-key="height"></div>';
+        h += '</div>';
+    }
+
+    if (t === 'select' || t === 'checkbox' || t === 'radio') {
+        h += '<div class="gen-row"><label class="gen-label">Варианты выбора</label><textarea class="gen-textarea" data-action="update-sub-choices" data-parent-id="'+pid+'" data-sub-id="'+sid+'" placeholder="ключ : Метка">'+choicesToText(sf.choices)+'</textarea><div class="gen-hint">Формат: ключ : Метка, каждая с новой строки</div></div>';
+    }
+
+    if (t === 'select') {
+        h += '<div class="gen-row-inline">';
+        h += '<div class="gen-row" style="display:flex;align-items:center;padding-top:0;"><label class="gen-toggle"><input type="checkbox"'+(sf.allow_null?' checked':'')+' data-action="update-sub-field-checkbox" data-parent-id="'+pid+'" data-sub-id="'+sid+'" data-key="allow_null"><span>Разрешить пустое</span></label></div>';
+        h += '<div class="gen-row" style="display:flex;align-items:center;padding-top:0;"><label class="gen-toggle"><input type="checkbox"'+(sf.multiple?' checked':'')+' data-action="update-sub-field-checkbox" data-parent-id="'+pid+'" data-sub-id="'+sid+'" data-key="multiple"><span>Множественный</span></label></div>';
+        h += '<div class="gen-row" style="display:flex;align-items:center;padding-top:0;"><label class="gen-toggle"><input type="checkbox"'+(sf.ui?' checked':'')+' data-action="update-sub-field-checkbox" data-parent-id="'+pid+'" data-sub-id="'+sid+'" data-key="ui"><span>Стилизованный</span></label></div>';
+        h += '</div>';
+    }
+
+    if (t === 'true_false') {
+        h += '<div class="gen-row"><label class="gen-label">Сообщение</label><input type="text" class="gen-input" value="'+escAttr(sf.message||'')+'" data-action="update-sub-field" data-parent-id="'+pid+'" data-sub-id="'+sid+'" data-key="message"></div>';
+        h += '<div class="gen-row" style="display:flex;align-items:center;padding-top:0;"><label class="gen-toggle"><input type="checkbox"'+(sf.ui?' checked':'')+' data-action="update-sub-field-checkbox" data-parent-id="'+pid+'" data-sub-id="'+sid+'" data-key="ui"><span>Стилизованный переключатель</span></label></div>';
+    }
+
+    if (t === 'date_picker') {
+        h += '<div class="gen-row-inline">';
+        h += '<div class="gen-row"><label class="gen-label">Формат отображения</label><input type="text" class="gen-input" value="'+escAttr(sf.display_format||'')+'" data-action="update-sub-field" data-parent-id="'+pid+'" data-sub-id="'+sid+'" data-key="display_format"></div>';
+        h += '<div class="gen-row"><label class="gen-label">Формат возврата</label><input type="text" class="gen-input" value="'+escAttr(sf.return_format_date||'')+'" data-action="update-sub-field" data-parent-id="'+pid+'" data-sub-id="'+sid+'" data-key="return_format_date"></div>';
+        h += '</div>';
+    }
+
+    if (t === 'color_picker') {
+        h += '<div class="gen-row"><label class="gen-label">Значение по умолчанию</label><input type="color" style="width:100%;height:48px;border:1px solid var(--border);border-radius:6px;background:var(--bg);cursor:pointer;" value="'+(sf.default_value||'#7c3aed')+'" data-action="update-sub-field" data-parent-id="'+pid+'" data-sub-id="'+sid+'" data-key="default_value"></div>';
+    }
+
+    if (t === 'message') {
+        h += '<div class="gen-row"><label class="gen-label">Сообщение</label><textarea class="gen-textarea" data-action="update-sub-field" data-parent-id="'+pid+'" data-sub-id="'+sid+'" data-key="message">'+escHtml(sf.message||'')+'</textarea></div>';
+        h += '<div class="gen-row" style="display:flex;align-items:center;padding-top:0;"><label class="gen-toggle"><input type="checkbox"'+(sf.new_lines==='wpautop'?' checked':'')+' data-action="update-sub-field-checkbox-wpautop" data-parent-id="'+pid+'" data-sub-id="'+sid+'"><span>wpautop</span></label></div>';
+    }
+
+    if (t === 'tab') {
+        h += '<div class="gen-row"><label class="gen-label">Расположение</label><select class="gen-select" data-action="update-sub-field-select" data-parent-id="'+pid+'" data-sub-id="'+sid+'" data-key="placement"><option value="top"'+(sf.placement==='top'?' selected':'')+'>Сверху</option><option value="left"'+(sf.placement==='left'?' selected':'')+'>Слева</option></select></div>';
+        h += '<div class="gen-row" style="display:flex;align-items:center;padding-top:0;"><label class="gen-toggle"><input type="checkbox"'+(sf.endpoint?' checked':'')+' data-action="update-sub-field-checkbox" data-parent-id="'+pid+'" data-sub-id="'+sid+'" data-key="endpoint"><span>Конечная точка</span></label></div>';
+    }
+
+    if (t === 'link') {
+        h += '<div class="gen-row"><label class="gen-label">Формат возврата</label><select class="gen-select" data-action="update-sub-field-select" data-parent-id="'+pid+'" data-sub-id="'+sid+'" data-key="return_format"><option value="array"'+(sf.return_format==='array'?' selected':'')+'>Массив</option><option value="url"'+(sf.return_format==='url'?' selected':'')+'>URL</option></select></div>';
+    }
+
+    if (t === 'post_object' || t === 'relationship') {
+        h += '<div class="gen-row"><label class="gen-label">Тип записи</label><input type="text" class="gen-input" value="'+escAttr(Array.isArray(sf.post_type)?sf.post_type.join(', '):sf.post_type)+'" data-action="update-sub-field-post-type" data-parent-id="'+pid+'" data-sub-id="'+sid+'" placeholder="post, page"></div>';
+        if (t === 'relationship') {
+            h += '<div class="gen-row-inline">';
+            h += '<div class="gen-row"><label class="gen-label">Мин. записей</label><input type="number" class="gen-input" value="'+(sf.min_posts||'')+'" data-action="update-sub-field" data-parent-id="'+pid+'" data-sub-id="'+sid+'" data-key="min_posts"></div>';
+            h += '<div class="gen-row"><label class="gen-label">Макс. записей</label><input type="number" class="gen-input" value="'+(sf.max_posts||'')+'" data-action="update-sub-field" data-parent-id="'+pid+'" data-sub-id="'+sid+'" data-key="max_posts"></div>';
+            h += '</div>';
+        }
+        h += '<div class="gen-row-inline">';
+        h += '<div class="gen-row" style="display:flex;align-items:center;padding-top:0;"><label class="gen-toggle"><input type="checkbox"'+(sf.allow_null?' checked':'')+' data-action="update-sub-field-checkbox" data-parent-id="'+pid+'" data-sub-id="'+sid+'" data-key="allow_null"><span>Разрешить пустое</span></label></div>';
+        h += '<div class="gen-row" style="display:flex;align-items:center;padding-top:0;"><label class="gen-toggle"><input type="checkbox"'+(sf.multiple?' checked':'')+' data-action="update-sub-field-checkbox" data-parent-id="'+pid+'" data-sub-id="'+sid+'" data-key="multiple"><span>Множественный</span></label></div>';
+        h += '</div>';
+    }
+
+    if (t === 'repeater') {
+        h += '<div class="gen-divider"></div>';
+        h += '<div style="font-weight:600;margin-bottom:14px;">Настройки повторителя</div>';
+        h += '<div class="gen-row-inline">';
+        h += '<div class="gen-row"><label class="gen-label">Текст кнопки</label><input type="text" class="gen-input" value="'+escAttr(sf.button_label||'')+'" data-action="update-sub-field" data-parent-id="'+pid+'" data-sub-id="'+sid+'" data-key="button_label"></div>';
+        h += '<div class="gen-row"><label class="gen-label">Раскладка</label><select class="gen-select" data-action="update-sub-field-select" data-parent-id="'+pid+'" data-sub-id="'+sid+'" data-key="layout"><option value="table"'+(sf.layout==='table'?' selected':'')+'>Таблица</option><option value="block"'+(sf.layout==='block'?' selected':'')+'>Блок</option><option value="row"'+(sf.layout==='row'?' selected':'')+'>Строка</option></select></div>';
+        h += '</div>';
+        h += '<div class="gen-row-inline">';
+        h += '<div class="gen-row"><label class="gen-label">Мин. строк</label><input type="number" class="gen-input" value="'+(sf.min||'')+'" data-action="update-sub-field" data-parent-id="'+pid+'" data-sub-id="'+sid+'" data-key="min"></div>';
+        h += '<div class="gen-row"><label class="gen-label">Макс. строк</label><input type="number" class="gen-input" value="'+(sf.max||'')+'" data-action="update-sub-field" data-parent-id="'+pid+'" data-sub-id="'+sid+'" data-key="max"></div>';
+        h += '</div>';
+    }
+
+    return h;
+}
+
 // Sub-fields section renderer
 function renderSubFieldsSection(f, parentType) {
     var h = '';
@@ -847,13 +1049,32 @@ function renderSubFieldsSection(f, parentType) {
     if (f.sub_fields && f.sub_fields.length > 0) {
         for (var si = 0; si < f.sub_fields.length; si++) {
             var sf = f.sub_fields[si];
-            h += '<div class="sub-field-row">';
+            var isStruct = (sf.type === 'repeater' || sf.type === 'group' || sf.type === 'flexible_content');
+            var expIcon = sf._expanded ? 'expand_less' : 'expand_more';
+            h += '<div class="sub-field-row' + (isStruct ? ' sub-field-struct' : '') + (sf._expanded ? ' sub-field-expanded' : '') + '">';
+            h += '<button class="sf-expand" data-action="toggle-sub-field-expand" data-parent-id="' + f.id + '" data-sub-id="' + sf.id + '" title="Настроить"><span class="material-symbols-outlined">' + expIcon + '</span></button>';
             h += '<span class="sf-type"><span class="material-symbols-outlined">' + (FIELD_TYPES[sf.type] ? FIELD_TYPES[sf.type].icon : 'text_fields') + '</span></span>';
             h += '<input type="text" value="'+escAttr(sf.label||'')+'" data-action="update-sub-field" data-parent-id="'+f.id+'" data-sub-id="'+sf.id+'" data-key="label" placeholder="Название">';
             h += '<input type="text" class="sf-name-input" value="'+escAttr(sf.name||'')+'" data-action="update-sub-field" data-parent-id="'+f.id+'" data-sub-id="'+sf.id+'" data-key="name" placeholder="field_name">';
             h += '<button class="gen-btn-icon" data-action="remove-sub-field" data-parent-id="'+f.id+'" data-sub-id="'+sf.id+'" style="color:#f87171;width:40px;height:40px;font-size:0.95rem;"><span class="material-symbols-outlined">close</span></button>';
             h += '</div>';
+            // Expanded: full settings form + structure sub-fields
+            if (sf._expanded) {
+                h += '<div class="sub-field-nested">';
+                h += renderSubFieldSettings(sf, f.id);
+                if (isStruct) {
+                    h += '<div class="gen-divider"></div>';
+                    if (sf.type === 'flexible_content') {
+                        h += renderFlexLayoutsSection(sf);
+                    } else {
+                        h += renderSubFieldsSection(sf, sf.type);
+                    }
+                }
+                h += '</div>';
+            }
         }
+    } else {
+        h += '<div style="color:var(--text-dim);font-size:1.05rem;padding:8px 0;font-style:italic;">Нет подполей — добавьте ниже</div>';
     }
     h += '<div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:12px;">';
     var subTypes = Object.keys(FIELD_TYPES);
@@ -886,12 +1107,26 @@ function renderFlexLayoutsSection(f) {
             if (layout.sub_fields && layout.sub_fields.length > 0) {
                 for (var lsi = 0; lsi < layout.sub_fields.length; lsi++) {
                     var lsf = layout.sub_fields[lsi];
-                    h += '<div class="sub-field-row">';
+                    var lIsStruct = (lsf.type === 'repeater' || lsf.type === 'group' || lsf.type === 'flexible_content');
+                    var lExpIcon = lsf._expanded ? 'expand_less' : 'expand_more';
+                    h += '<div class="sub-field-row' + (lIsStruct ? ' sub-field-struct' : '') + (lsf._expanded ? ' sub-field-expanded' : '') + '">';
+                    h += '<button class="sf-expand" data-action="toggle-layout-sub-field-expand" data-parent-id="'+f.id+'" data-layout-idx="'+li+'" data-sub-id="'+lsf.id+'" title="Настроить"><span class="material-symbols-outlined">' + lExpIcon + '</span></button>';
                     h += '<span class="sf-type"><span class="material-symbols-outlined">' + (FIELD_TYPES[lsf.type] ? FIELD_TYPES[lsf.type].icon : 'text_fields') + '</span></span>';
                     h += '<input type="text" value="'+escAttr(lsf.label||'')+'" data-action="update-layout-sub-field" data-parent-id="'+f.id+'" data-layout-idx="'+li+'" data-sub-id="'+lsf.id+'" data-key="label" placeholder="Название">';
                     h += '<input type="text" class="sf-name-input" value="'+escAttr(lsf.name||'')+'" data-action="update-layout-sub-field" data-parent-id="'+f.id+'" data-layout-idx="'+li+'" data-sub-id="'+lsf.id+'" data-key="name" placeholder="field_name">';
                     h += '<button class="gen-btn-icon" data-action="remove-layout-sub-field" data-parent-id="'+f.id+'" data-layout-idx="'+li+'" data-sub-id="'+lsf.id+'" style="color:#f87171;width:40px;height:40px;font-size:0.95rem;"><span class="material-symbols-outlined">close</span></button>';
                     h += '</div>';
+                    if (lsf._expanded && lIsStruct) {
+                        h += '<div class="sub-field-nested">';
+                        h += renderSubFieldSettings(lsf, f.id);
+                        h += '<div class="gen-divider"></div>';
+                        if (lsf.type === 'flexible_content') {
+                            h += renderFlexLayoutsSection(lsf);
+                        } else {
+                            h += renderSubFieldsSection(lsf, lsf.type);
+                        }
+                        h += '</div>';
+                    }
                 }
             }
             h += '<div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:12px;">';
@@ -930,10 +1165,22 @@ function upgradeLocationSelects() {
 function liveUpdate() {
     if (currentCodeTab === 'json') {
         generateJSON();
+        document.getElementById('code-pre').style.display = '';
+        document.getElementById('preview-container').style.display = 'none';
+        document.getElementById('preview-synced-indicator').style.display = 'none';
     } else if (currentCodeTab === 'html') {
         generateHTML();
+        document.getElementById('code-pre').style.display = '';
+        document.getElementById('preview-container').style.display = 'none';
+        document.getElementById('preview-synced-indicator').style.display = 'none';
+    } else if (currentCodeTab === 'preview') {
+        updatePreview();
+        document.getElementById('code-pre').style.display = '';
     } else {
         generatePHP();
+        document.getElementById('code-pre').style.display = '';
+        document.getElementById('preview-container').style.display = 'none';
+        document.getElementById('preview-synced-indicator').style.display = 'none';
     }
 }
 
@@ -1191,6 +1438,12 @@ function generateHTML() {
     out.push('/**');
     out.push(' * HTML-шаблон для группы полей: ' + escPHPSingle(config.title));
     out.push(' * Вставьте этот код в шаблон темы (page.php, single.php и т.д.)');
+    out.push(' *');
+    out.push(' * Рекомендуемые стили — добавьте в style.css или в <style>:');
+    var cssOut = generatePreviewCSS().split('\n');
+    for (var ci = 0; ci < cssOut.length; ci++) {
+        out.push(' * ' + cssOut[ci]);
+    }
     out.push(' */');
     out.push('?>');
     out.push('<section class="acf-section acf-' + escAttr(config.key) + '">');
@@ -1213,20 +1466,20 @@ function generateHTML() {
             return lines;
         }
         if (t === 'message') {
-            lines.push(indent + '<?php if (' + getFn + '(\\'' + escPHPSingle(name) + '\\')): ?>');
+            lines.push(indent + '<?php if (' + getFn + '(\'' + escPHPSingle(name) + '\\\')): ?>');
             lines.push(indent + '    <div class="acf-message">');
-            lines.push(indent + '        <?php ' + theFn + '(\\'' + escPHPSingle(name) + '\\'); ?>');
+            lines.push(indent + '        <?php ' + theFn + '(\'' + escPHPSingle(name) + '\\\'); ?>');
             lines.push(indent + '    </div>');
             lines.push(indent + '<?php endif; ?>');
             return lines;
         }
 
         if (t === 'image') {
-            lines.push(indent + '<?php $img_' + escapeVar(name) + ' = ' + getFn + '(\\'' + escPHPSingle(name) + '\\'); ?>');
+            lines.push(indent + '<?php $img_' + escapeVar(name) + ' = ' + getFn + '(\'' + escPHPSingle(name) + '\\\'); ?>');
             lines.push(indent + '<?php if ($img_' + escapeVar(name) + '): ?>');
             lines.push(indent + '    <div class="acf-image">');
             if (f.return_format !== 'url') {
-                lines.push(indent + '        <img src="<?php echo esc_url($img_' + escapeVar(name) + '[\\'url\\']); ?>" alt="<?php echo esc_attr($img_' + escapeVar(name) + '[\\'alt\\']); ?>">');
+                lines.push(indent + '        <img src="<?php echo esc_url($img_' + escapeVar(name) + '[\\\'url\\\']); ?>" alt="<?php echo esc_attr($img_' + escapeVar(name) + '[\\\'alt\\\']); ?>">');
             } else {
                 lines.push(indent + '        <img src="<?php echo esc_url($img_' + escapeVar(name) + '); ?>" alt="">');
             }
@@ -1236,22 +1489,22 @@ function generateHTML() {
         }
 
         if (t === 'file') {
-            lines.push(indent + '<?php $file_' + escapeVar(name) + ' = ' + getFn + '(\\'' + escPHPSingle(name) + '\\'); ?>');
+            lines.push(indent + '<?php $file_' + escapeVar(name) + ' = ' + getFn + '(\'' + escPHPSingle(name) + '\\\'); ?>');
             lines.push(indent + '<?php if ($file_' + escapeVar(name) + '): ?>');
-            lines.push(indent + '    <a class="acf-file" href="<?php echo esc_url($file_' + escapeVar(name) + '[\\'url\\']); ?>" download>');
-            lines.push(indent + '        <?php echo esc_html($file_' + escapeVar(name) + '[\\'filename\\']); ?>');
+            lines.push(indent + '    <a class="acf-file" href="<?php echo esc_url($file_' + escapeVar(name) + '[\\\'url\\\']); ?>" download>');
+            lines.push(indent + '        <?php echo esc_html($file_' + escapeVar(name) + '[\\\'filename\\\']); ?>');
             lines.push(indent + '    </a>');
             lines.push(indent + '<?php endif; ?>');
             return lines;
         }
 
         if (t === 'gallery') {
-            lines.push(indent + '<?php $gallery_' + escapeVar(name) + ' = ' + getFn + '(\\'' + escPHPSingle(name) + '\\'); ?>');
+            lines.push(indent + '<?php $gallery_' + escapeVar(name) + ' = ' + getFn + '(\'' + escPHPSingle(name) + '\\\'); ?>');
             lines.push(indent + '<?php if ($gallery_' + escapeVar(name) + '): ?>');
             lines.push(indent + '    <div class="acf-gallery">');
             lines.push(indent + '        <?php foreach ($gallery_' + escapeVar(name) + ' as $img): ?>');
             lines.push(indent + '            <div class="acf-gallery-item">');
-            lines.push(indent + '                <img src="<?php echo esc_url($img[\\'sizes\\'][\\'medium\\'] ?? $img[\\'url\\']); ?>" alt="<?php echo esc_attr($img[\\'alt\\']); ?>">');
+            lines.push(indent + '                <img src="<?php echo esc_url($img[\\\'sizes\\\'][\\\'medium\\\'] ?? $img[\\\'url\\\']); ?>" alt="<?php echo esc_attr($img[\\\'alt\\\']); ?>">');
             lines.push(indent + '            </div>');
             lines.push(indent + '        <?php endforeach; ?>');
             lines.push(indent + '    </div>');
@@ -1260,16 +1513,16 @@ function generateHTML() {
         }
 
         if (t === 'oembed') {
-            lines.push(indent + '<?php if (' + getFn + '(\\'' + escPHPSingle(name) + '\\')): ?>');
+            lines.push(indent + '<?php if (' + getFn + '(\'' + escPHPSingle(name) + '\\\')): ?>');
             lines.push(indent + '    <div class="acf-oembed">');
-            lines.push(indent + '        <?php ' + theFn + '(\\'' + escPHPSingle(name) + '\\'); ?>');
+            lines.push(indent + '        <?php ' + theFn + '(\'' + escPHPSingle(name) + '\\\'); ?>');
             lines.push(indent + '    </div>');
             lines.push(indent + '<?php endif; ?>');
             return lines;
         }
 
         if (t === 'true_false') {
-            lines.push(indent + '<?php if (' + getFn + '(\\'' + escPHPSingle(name) + '\\')): ?>');
+            lines.push(indent + '<?php if (' + getFn + '(\'' + escPHPSingle(name) + '\\\')): ?>');
             lines.push(indent + '    <div class="acf-true-false acf-true-false--' + escAttr(name) + '">');
             if (f.message) {
                 lines.push(indent + '        <span>' + escHtml(f.message) + '</span>');
@@ -1280,18 +1533,18 @@ function generateHTML() {
         }
 
         if (t === 'link') {
-            lines.push(indent + '<?php $link_' + escapeVar(name) + ' = ' + getFn + '(\\'' + escPHPSingle(name) + '\\'); ?>');
+            lines.push(indent + '<?php $link_' + escapeVar(name) + ' = ' + getFn + '(\'' + escPHPSingle(name) + '\\\'); ?>');
             lines.push(indent + '<?php if ($link_' + escapeVar(name) + '): ?>');
-            lines.push(indent + '    <a class="acf-link" href="<?php echo esc_url($link_' + escapeVar(name) + '[\\'url\\']); ?>"');
-            lines.push(indent + '       target="<?php echo esc_attr($link_' + escapeVar(name) + '[\\'target\\'] ?? \\'_self\\'); ?>">');
-            lines.push(indent + '        <?php echo esc_html($link_' + escapeVar(name) + '[\\'title\\']); ?>');
+            lines.push(indent + '    <a class="acf-link" href="<?php echo esc_url($link_' + escapeVar(name) + '[\\\'url\\\']); ?>"');
+            lines.push(indent + '       target="<?php echo esc_attr($link_' + escapeVar(name) + '[\\\'target\\\'] ?? \\\'_self\\\'); ?>">');
+            lines.push(indent + '        <?php echo esc_html($link_' + escapeVar(name) + '[\\\'title\\\']); ?>');
             lines.push(indent + '    </a>');
             lines.push(indent + '<?php endif; ?>');
             return lines;
         }
 
         if (t === 'post_object') {
-            lines.push(indent + '<?php $post_' + escapeVar(name) + ' = ' + getFn + '(\\'' + escPHPSingle(name) + '\\'); ?>');
+            lines.push(indent + '<?php $post_' + escapeVar(name) + ' = ' + getFn + '(\'' + escPHPSingle(name) + '\\\'); ?>');
             lines.push(indent + '<?php if ($post_' + escapeVar(name) + '): ?>');
             if (f.multiple) {
                 lines.push(indent + '    <div class="acf-posts">');
@@ -1311,7 +1564,7 @@ function generateHTML() {
         }
 
         if (t === 'relationship') {
-            lines.push(indent + '<?php $rel_' + escapeVar(name) + ' = ' + getFn + '(\\'' + escPHPSingle(name) + '\\'); ?>');
+            lines.push(indent + '<?php $rel_' + escapeVar(name) + ' = ' + getFn + '(\'' + escPHPSingle(name) + '\\\'); ?>');
             lines.push(indent + '<?php if ($rel_' + escapeVar(name) + '): ?>');
             lines.push(indent + '    <div class="acf-relationship">');
             lines.push(indent + '        <?php foreach ($rel_' + escapeVar(name) + ' as $p): ?>');
@@ -1325,9 +1578,9 @@ function generateHTML() {
         }
 
         if (t === 'repeater') {
-            lines.push(indent + '<?php if (' + haveFn + '(\\'' + escPHPSingle(name) + '\\')): ?>');
+            lines.push(indent + '<?php if (' + haveFn + '(\'' + escPHPSingle(name) + '\\\')): ?>');
             lines.push(indent + '    <div class="acf-repeater acf-repeater--' + escAttr(name) + '">');
-            lines.push(indent + '        <?php while (' + haveFn + '(\\'' + escPHPSingle(name) + '\\')): the_row(); ?>');
+            lines.push(indent + '        <?php while (' + haveFn + '(\'' + escPHPSingle(name) + '\\\')): the_row(); ?>');
             lines.push(indent + '            <div class="acf-repeater-item">');
             if (f.sub_fields && f.sub_fields.length > 0) {
                 for (var si = 0; si < f.sub_fields.length; si++) {
@@ -1346,9 +1599,9 @@ function generateHTML() {
         }
 
         if (t === 'group') {
-            lines.push(indent + '<?php if (' + haveFn + '(\\'' + escPHPSingle(name) + '\\')): ?>');
+            lines.push(indent + '<?php if (' + haveFn + '(\'' + escPHPSingle(name) + '\\\')): ?>');
             lines.push(indent + '    <div class="acf-group acf-group--' + escAttr(name) + '">');
-            lines.push(indent + '        <?php while (' + haveFn + '(\\'' + escPHPSingle(name) + '\\')): the_row(); ?>');
+            lines.push(indent + '        <?php while (' + haveFn + '(\'' + escPHPSingle(name) + '\\\')): the_row(); ?>');
             if (f.sub_fields && f.sub_fields.length > 0) {
                 for (var gi = 0; gi < f.sub_fields.length; gi++) {
                     var gf = f.sub_fields[gi];
@@ -1365,16 +1618,16 @@ function generateHTML() {
         }
 
         if (t === 'flexible_content') {
-            lines.push(indent + '<?php if (' + haveFn + '(\\'' + escPHPSingle(name) + '\\')): ?>');
+            lines.push(indent + '<?php if (' + haveFn + '(\'' + escPHPSingle(name) + '\\\')): ?>');
             lines.push(indent + '    <div class="acf-flexible">');
-            lines.push(indent + '        <?php while (' + haveFn + '(\\'' + escPHPSingle(name) + '\\')): the_row(); ?>');
+            lines.push(indent + '        <?php while (' + haveFn + '(\'' + escPHPSingle(name) + '\\\')): the_row(); ?>');
             if (f.layouts && f.layouts.length > 0) {
                 for (var li = 0; li < f.layouts.length; li++) {
                     var lay = f.layouts[li];
                     var layName = lay.name || '';
                     if (!layName) continue;
                     var isFirst = (li === 0);
-                    lines.push(indent + '            <?php ' + (isFirst ? 'if' : 'elseif') + ' (get_row_layout() === \\'' + escPHPSingle(layName) + '\\'): ?>');
+                    lines.push(indent + '            <?php ' + (isFirst ? 'if' : 'elseif') + ' (get_row_layout() === \\\'' + escPHPSingle(layName) + '\\\'): ?>');
                     lines.push(indent + '                <div class="acf-layout acf-layout--' + escAttr(layName) + '">');
                     if (lay.sub_fields && lay.sub_fields.length > 0) {
                         for (var lsi = 0; lsi < lay.sub_fields.length; lsi++) {
@@ -1396,7 +1649,7 @@ function generateHTML() {
         }
 
         if (t === 'checkbox') {
-            lines.push(indent + '<?php $chk_' + escapeVar(name) + ' = ' + getFn + '(\\'' + escPHPSingle(name) + '\\'); ?>');
+            lines.push(indent + '<?php $chk_' + escapeVar(name) + ' = ' + getFn + '(\'' + escPHPSingle(name) + '\\\'); ?>');
             lines.push(indent + '<?php if ($chk_' + escapeVar(name) + '): ?>');
             lines.push(indent + '    <div class="acf-field acf-field--' + escAttr(name) + '">');
             if (label) lines.push(indent + '        <span class="acf-label">' + escHtml(label) + '</span>');
@@ -1411,18 +1664,18 @@ function generateHTML() {
         }
 
         if (t === 'select') {
-            lines.push(indent + '<?php $sel_' + escapeVar(name) + ' = ' + getFn + '(\\'' + escPHPSingle(name) + '\\'); ?>');
+            lines.push(indent + '<?php $sel_' + escapeVar(name) + ' = ' + getFn + '(\'' + escPHPSingle(name) + '\\\'); ?>');
             lines.push(indent + '<?php if ($sel_' + escapeVar(name) + '): ?>');
             lines.push(indent + '    <div class="acf-field acf-field--' + escAttr(name) + '">');
             if (label) lines.push(indent + '        <span class="acf-label">' + escHtml(label) + '</span>');
             if (f.multiple) {
                 lines.push(indent + '        <ul class="acf-select-values">');
                 lines.push(indent + '            <?php foreach ($sel_' + escapeVar(name) + ' as $v): ?>');
-                lines.push(indent + '                <li><?php echo esc_html(is_array($v) ? ($v[\\'label\\'] ?? $v[\\'value\\']) : $v); ?></li>');
+                lines.push(indent + '                <li><?php echo esc_html(is_array($v) ? ($v[\\\'label\\\'] ?? $v[\\\'value\\\']) : $v); ?></li>');
                 lines.push(indent + '            <?php endforeach; ?>');
                 lines.push(indent + '        </ul>');
             } else {
-                lines.push(indent + '        <div class="acf-value"><?php echo esc_html(is_array($sel_' + escapeVar(name) + ') ? ($sel_' + escapeVar(name) + '[\\'label\\'] ?? $sel_' + escapeVar(name) + '[\\'value\\']) : $sel_' + escapeVar(name) + '); ?></div>');
+                lines.push(indent + '        <div class="acf-value"><?php echo esc_html(is_array($sel_' + escapeVar(name) + ') ? ($sel_' + escapeVar(name) + '[\\\'label\\\'] ?? $sel_' + escapeVar(name) + '[\\\'value\\\']) : $sel_' + escapeVar(name) + '); ?></div>');
             }
             lines.push(indent + '    </div>');
             lines.push(indent + '<?php endif; ?>');
@@ -1430,7 +1683,7 @@ function generateHTML() {
         }
 
         if (t === 'radio') {
-            lines.push(indent + '<?php $radio_' + escapeVar(name) + ' = ' + getFn + '(\\'' + escPHPSingle(name) + '\\'); ?>');
+            lines.push(indent + '<?php $radio_' + escapeVar(name) + ' = ' + getFn + '(\'' + escPHPSingle(name) + '\\\'); ?>');
             lines.push(indent + '<?php if ($radio_' + escapeVar(name) + '): ?>');
             lines.push(indent + '    <div class="acf-field acf-field--' + escAttr(name) + '">');
             if (label) lines.push(indent + '        <span class="acf-label">' + escHtml(label) + '</span>');
@@ -1441,7 +1694,7 @@ function generateHTML() {
         }
 
         if (t === 'date_picker') {
-            lines.push(indent + '<?php $date_' + escapeVar(name) + ' = ' + getFn + '(\\'' + escPHPSingle(name) + '\\'); ?>');
+            lines.push(indent + '<?php $date_' + escapeVar(name) + ' = ' + getFn + '(\'' + escPHPSingle(name) + '\\\'); ?>');
             lines.push(indent + '<?php if ($date_' + escapeVar(name) + '): ?>');
             lines.push(indent + '    <time class="acf-date" datetime="<?php echo esc_attr($date_' + escapeVar(name) + '); ?>"><?php echo esc_html($date_' + escapeVar(name) + '); ?></time>');
             lines.push(indent + '<?php endif; ?>');
@@ -1449,7 +1702,7 @@ function generateHTML() {
         }
 
         if (t === 'color_picker') {
-            lines.push(indent + '<?php $color_' + escapeVar(name) + ' = ' + getFn + '(\\'' + escPHPSingle(name) + '\\'); ?>');
+            lines.push(indent + '<?php $color_' + escapeVar(name) + ' = ' + getFn + '(\'' + escPHPSingle(name) + '\\\'); ?>');
             lines.push(indent + '<?php if ($color_' + escapeVar(name) + '): ?>');
             lines.push(indent + '    <div class="acf-color" style="background-color:<?php echo esc_attr($color_' + escapeVar(name) + '); ?>"><?php echo esc_html($color_' + escapeVar(name) + '); ?></div>');
             lines.push(indent + '<?php endif; ?>');
@@ -1457,8 +1710,8 @@ function generateHTML() {
         }
 
         if (t === 'number') {
-            lines.push(indent + '<?php $num_' + escapeVar(name) + ' = ' + getFn + '(\\'' + escPHPSingle(name) + '\\'); ?>');
-            lines.push(indent + '<?php if ($num_' + escapeVar(name) + ' !== \\'\\' && $num_' + escapeVar(name) + ' !== null): ?>');
+            lines.push(indent + '<?php $num_' + escapeVar(name) + ' = ' + getFn + '(\'' + escPHPSingle(name) + '\\\'); ?>');
+            lines.push(indent + '<?php if ($num_' + escapeVar(name) + ' !== \'\' && $num_' + escapeVar(name) + ' !== null): ?>');
             lines.push(indent + '    <div class="acf-field acf-field--' + escAttr(name) + '">');
             if (label) lines.push(indent + '        <span class="acf-label">' + escHtml(label) + '</span>');
             lines.push(indent + '        <div class="acf-value"><?php echo esc_html($num_' + escapeVar(name) + '); ?></div>');
@@ -1467,10 +1720,10 @@ function generateHTML() {
             return lines;
         }
 
-        lines.push(indent + '<?php if (' + getFn + '(\\'' + escPHPSingle(name) + '\\')): ?>');
+        lines.push(indent + '<?php if (' + getFn + '(\'' + escPHPSingle(name) + '\\\')): ?>');
         lines.push(indent + '    <div class="acf-field acf-field--' + escAttr(name) + '">');
         if (label) lines.push(indent + '        <span class="acf-label">' + escHtml(label) + '</span>');
-        lines.push(indent + '        <div class="acf-value"><?php ' + theFn + '(\\'' + escPHPSingle(name) + '\\'); ?></div>');
+        lines.push(indent + '        <div class="acf-value"><?php ' + theFn + '(\'' + escPHPSingle(name) + '\\\'); ?></div>');
         lines.push(indent + '    </div>');
         lines.push(indent + '<?php endif; ?>');
         return lines;
@@ -1490,6 +1743,338 @@ function generateHTML() {
 
     out.push('</section>');
     document.getElementById('code-output').textContent = out.join('\n');
+}
+
+// ==================== PREVIEW HTML (browser-renderable) ====================
+function generatePreviewHTML() {
+    var styles = blockStyles;
+    var css = [
+        '.acf-preview-block {',
+        '  background: ' + styles.bgColor + ';',
+        '  color: ' + styles.textColor + ';',
+        '  padding: ' + styles.padding + 'px;',
+        '  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;',
+        '  line-height: 1.5;',
+        '  display: flex;',
+        '  flex-direction: column;',
+        '  gap: ' + styles.gap + 'px;',
+        '}',
+        '.acf-preview-card {',
+        '  background: ' + styles.cardBg + ';',
+        '  padding: ' + styles.cardPadding + 'px;',
+        '  border-radius: ' + styles.cardRadius + 'px;',
+        '  border: ' + styles.borderWidth + 'px solid ' + styles.borderColor + ';',
+        '}',
+        '.acf-preview-card-label {',
+        '  font-size: 0.75rem;',
+        '  text-transform: uppercase;',
+        '  letter-spacing: 0.05em;',
+        '  opacity: 0.6;',
+        '  margin-bottom: 4px;',
+        '}',
+        '.acf-preview-card-value {',
+        '  font-weight: 500;',
+        '}',
+        '.acf-preview-img {',
+        '  width: 100%;',
+        '  height: 120px;',
+        '  border-radius: 8px;',
+        '  background: linear-gradient(135deg, #e0e7ff 0%, #c7d2fe 100%);',
+        '  display: flex;',
+        '  align-items: center;',
+        '  justify-content: center;',
+        '  color: #6366f1;',
+        '  font-size: 1.5rem;',
+        '}',
+        '.acf-preview-gallery {',
+        '  display: flex;',
+        '  gap: 8px;',
+        '  flex-wrap: wrap;',
+        '}',
+        '.acf-preview-gallery-item {',
+        '  width: 70px;',
+        '  height: 70px;',
+        '  border-radius: 6px;',
+        '  background: linear-gradient(135deg, #e0e7ff 0%, #c7d2fe 100%);',
+        '}',
+        '.acf-preview-link {',
+        '  color: #6366f1;',
+        '  text-decoration: underline;',
+        '}',
+        '.acf-preview-true-false {',
+        '  display: inline-block;',
+        '  padding: 3px 10px;',
+        '  border-radius: 999px;',
+        '  background: #22c55e;',
+        '  color: #fff;',
+        '  font-size: 0.8rem;',
+        '  font-weight: 600;',
+        '}',
+        '.acf-preview-meta {',
+        '  font-size: 0.7rem;',
+        '  opacity: 0.5;',
+        '  margin-top: 8px;',
+        '  text-align: right;',
+        '}'
+    ].join('\n');
+
+    function getDummyValue(f) {
+        var t = f.type;
+        var label = f.label || f.name || 'Field';
+        if (t === 'text' || t === 'textarea' || t === 'wysiwyg') return '<span class="acf-preview-card-value">' + escHtml(label) + ': пример текста</span>';
+        if (t === 'number') return '<span class="acf-preview-card-value">42</span>';
+        if (t === 'email') return '<span class="acf-preview-card-value">example@domain.com</span>';
+        if (t === 'url' || t === 'link') return '<span class="acf-preview-link">https://example.com</span>';
+        if (t === 'image') return '<div class="acf-preview-img">&#128247;</div>';
+        if (t === 'file') return '<span class="acf-preview-card-value">&#128196; document.pdf</span>';
+        if (t === 'gallery') return '<div class="acf-preview-gallery"><div class="acf-preview-gallery-item"></div><div class="acf-preview-gallery-item"></div><div class="acf-preview-gallery-item"></div></div>';
+        if (t === 'true_false') return '<span class="acf-preview-true-false">✓ Да</span>';
+        if (t === 'select') return '<span class="acf-preview-card-value">Выбранный вариант</span>';
+        if (t === 'checkbox') return '<span class="acf-preview-card-value">☑ Вариант 1, ☑ Вариант 2</span>';
+        if (t === 'radio') return '<span class="acf-preview-card-value">◉ Вариант 1</span>';
+        if (t === 'date_picker') return '<span class="acf-preview-card-value">01.01.2024</span>';
+        if (t === 'color_picker') return '<span class="acf-preview-card-value" style="display:inline-block;width:24px;height:16px;background:#7c3aed;border-radius:2px;vertical-align:middle;"></span> #7c3aed';
+        if (t === 'oembed') return '<div style="background:#f0f0f0;height:100px;border-radius:8px;display:flex;align-items:center;justify-content:center;color:#999;">▶ Видео</div>';
+        if (t === 'post_object') return '<span class="acf-preview-card-value">📄 Название записи</span>';
+        if (t === 'relationship') return '<span class="acf-preview-card-value">📄 Запись 1, 📄 Запись 2</span>';
+        if (t === 'message') return '<div style="padding:12px;background:#fef3c7;border-radius:8px;font-size:0.85rem;">ℹ ' + escHtml(label) + '</div>';
+        if (t === 'password') return '<span class="acf-preview-card-value">••••••••</span>';
+        return '<span class="acf-preview-card-value">' + escHtml(label) + '</span>';
+    }
+
+    function renderPreviewField(f) {
+        var t = f.type;
+        if (t === 'tab' || t === 'message') return getDummyValue(f);
+
+        // Structural types
+        if (t === 'group' && f.sub_fields && f.sub_fields.length > 0) {
+            var inner = '';
+            for (var i = 0; i < f.sub_fields.length; i++) {
+                inner += '<div class="acf-preview-card" style="margin-top:' + (i > 0 ? styles.gap + 'px' : '0') + ';">';
+                inner += '<span class="acf-preview-card-label">' + escHtml(f.sub_fields[i].label || f.sub_fields[i].name) + '</span>';
+                inner += renderPreviewField(f.sub_fields[i]);
+                inner += '</div>';
+            }
+            return '<div style="border-left:2px solid ' + styles.borderColor + ';padding-left:12px;margin-top:6px;">' + inner + '</div>';
+        }
+
+        if (t === 'repeater' && f.sub_fields && f.sub_fields.length > 0) {
+            var items = '';
+            for (var r = 0; r < 2; r++) {
+                items += '<div class="acf-preview-card" style="margin-bottom:' + styles.gap + 'px;">';
+                items += '<span class="acf-preview-card-label" style="font-size:0.65rem;">Строка ' + (r+1) + '</span>';
+                for (var ri = 0; ri < f.sub_fields.length; ri++) {
+                    var sf = f.sub_fields[ri];
+                    if (sf.type === 'tab') continue;
+                    items += '<div style="margin-top:4px;">';
+                    items += '<span style="font-size:0.65rem;opacity:0.5;">' + escHtml(sf.label || sf.name) + ': </span>';
+                    items += renderPreviewField(sf);
+                    items += '</div>';
+                }
+                items += '</div>';
+            }
+            return '<div style="margin-top:6px;">' + items + '<div style="font-size:0.65rem;opacity:0.4;text-align:center;">+ Добавить строку</div></div>';
+        }
+
+        if (t === 'flexible_content' && f.layouts && f.layouts.length > 0) {
+            var lay = f.layouts[0];
+            var layHtml = '<div class="acf-preview-card">';
+            layHtml += '<span class="acf-preview-card-label">Макет: ' + escHtml(lay.label || lay.name) + '</span>';
+            if (lay.sub_fields) {
+                for (var li = 0; li < lay.sub_fields.length; li++) {
+                    var lsf = lay.sub_fields[li];
+                    if (lsf.type === 'tab') continue;
+                    layHtml += '<div style="margin-top:4px;">';
+                    layHtml += '<span style="font-size:0.65rem;opacity:0.5;">' + escHtml(lsf.label || lsf.name) + ': </span>';
+                    layHtml += renderPreviewField(lsf);
+                    layHtml += '</div>';
+                }
+            }
+            layHtml += '</div>';
+            if (f.layouts.length > 1) {
+                layHtml += '<div style="font-size:0.65rem;opacity:0.4;text-align:center;margin-top:4px;">+ ' + (f.layouts.length - 1) + ' макетов</div>';
+            }
+            return '<div style="margin-top:6px;">' + layHtml + '<div style="font-size:0.65rem;opacity:0.4;text-align:center;margin-top:4px;">+ Добавить блок</div></div>';
+        }
+
+        return getDummyValue(f);
+    }
+
+    if (fields.length === 0) {
+        return '<html><body style="margin:0;font-family:sans-serif;display:flex;align-items:center;justify-content:center;min-height:200px;color:#999;font-size:14px;">Нет полей для превью</body></html>';
+    }
+
+    var html = '<div class="acf-preview-block">';
+    for (var i = 0; i < fields.length; i++) {
+        var f = fields[i];
+        if (f.type === 'tab' || f.type === 'message') {
+            html += renderPreviewField(f);
+            continue;
+        }
+        html += '<div class="acf-preview-card">';
+        html += '<span class="acf-preview-card-label">' + escHtml(f.label || f.name) + '</span>';
+        html += renderPreviewField(f);
+        html += '</div>';
+    }
+    html += '<div class="acf-preview-meta">ACF Preview · ' + fields.length + ' fields</div>';
+    html += '</div>';
+
+    return '<!DOCTYPE html><html><head><meta charset="utf-8"><style>' + css + '</style></head><body style="margin:0;padding:0;">' + html + '</body></html>';
+}
+
+function updatePreview() {
+    var container = document.getElementById('preview-container');
+    var iframe = document.getElementById('preview-frame');
+    var indicator = document.getElementById('preview-synced-indicator');
+    if (!container || !iframe) return;
+
+    if (currentCodeTab === 'preview') {
+        container.style.display = '';
+        var previewDoc = generatePreviewHTML();
+        iframe.srcdoc = previewDoc;
+        if (indicator) indicator.style.display = '';
+        // Also update code output so copy/download works in preview tab
+        document.getElementById('code-output').textContent = generatePreviewCSS() + '\n\n' + previewHTMLPlain();
+    } else {
+        container.style.display = 'none';
+        if (indicator) indicator.style.display = 'none';
+    }
+}
+
+function previewHTMLPlain() {
+    // Generate a plain HTML representation of the preview block (without CSS, for copying)
+    if (fields.length === 0) return '<!-- No fields -->';
+    var html = [];
+    html.push('<section class="acf-section">');
+    for (var i = 0; i < fields.length; i++) {
+        var f = fields[i];
+        html.push('  <div class="acf-field acf-field--' + (f.name || 'field') + '">');
+        html.push('    <div class="acf-field__label">' + escHtml(f.label || f.name || 'Field') + '</div>');
+        html.push('    <div class="acf-field__value"><!-- ' + (f.type || 'text') + ' --></div>');
+        html.push('  </div>');
+    }
+    html.push('</section>');
+    return html.join('\n');
+}
+
+function generatePreviewCSS() {
+    var styles = blockStyles;
+    return [
+        '/* Preview Block Styles */',
+        '.acf-section {',
+        '  background: ' + styles.bgColor + ';',
+        '  color: ' + styles.textColor + ';',
+        '  padding: ' + styles.padding + 'px;',
+        '  display: flex;',
+        '  flex-direction: column;',
+        '  gap: ' + styles.gap + 'px;',
+        '}',
+        '.acf-field {',
+        '  background: ' + styles.cardBg + ';',
+        '  padding: ' + styles.cardPadding + 'px;',
+        '  border-radius: ' + styles.cardRadius + 'px;',
+        '  border: ' + styles.borderWidth + 'px solid ' + styles.borderColor + ';',
+        '}',
+        '.acf-field__label {',
+        '  font-size: 0.75rem;',
+        '  text-transform: uppercase;',
+        '  letter-spacing: 0.05em;',
+        '  opacity: 0.6;',
+        '  margin-bottom: 4px;',
+        '}',
+        '.acf-field__value {',
+        '  font-weight: 500;',
+        '}',
+        ''
+    ].join('\n');
+}
+
+// ==================== STYLE EDITOR ====================
+function applyStyleChange(id, value) {
+    var map = {
+        'se-bg-color': 'bgColor',
+        'se-text-color': 'textColor',
+        'se-padding': 'padding',
+        'se-gap': 'gap',
+        'se-card-bg': 'cardBg',
+        'se-card-padding': 'cardPadding',
+        'se-card-radius': 'cardRadius',
+        'se-border-color': 'borderColor',
+        'se-border-width': 'borderWidth'
+    };
+    var key = map[id];
+    if (key) {
+        blockStyles[key] = value;
+        syncStyleTextFields();
+        if (currentCodeTab === 'preview') updatePreview();
+    }
+}
+
+function applyStyleColor(id, value) {
+    var map = {
+        'se-bg-color': 'bgColor',
+        'se-text-color': 'textColor',
+        'se-card-bg': 'cardBg',
+        'se-border-color': 'borderColor'
+    };
+    var key = map[id];
+    var textId = id + '-text';
+    if (key) {
+        blockStyles[key] = value;
+        var textEl = document.getElementById(textId);
+        if (textEl) textEl.value = value;
+        if (currentCodeTab === 'preview') updatePreview();
+    }
+}
+
+function syncStyleTextFields() {
+    var map = [
+        ['se-bg-color-text', 'bgColor'],
+        ['se-text-color-text', 'textColor'],
+        ['se-card-bg-text', 'cardBg'],
+        ['se-border-color-text', 'borderColor']
+    ];
+    for (var i = 0; i < map.length; i++) {
+        var el = document.getElementById(map[i][0]);
+        if (el) el.value = blockStyles[map[i][1]];
+    }
+}
+
+function resetStyles() {
+    blockStyles = {
+        bgColor: '#ffffff',
+        textColor: '#1a1a2e',
+        padding: '24',
+        gap: '16',
+        cardBg: '#f8f9fa',
+        cardPadding: '20',
+        cardRadius: '12',
+        borderColor: '#e0e0e0',
+        borderWidth: '1'
+    };
+    // Reset UI
+    var defaults = {
+        'se-bg-color': '#ffffff', 'se-bg-color-text': '#ffffff',
+        'se-text-color': '#1a1a2e', 'se-text-color-text': '#1a1a2e',
+        'se-padding': '24', 'se-gap': '16',
+        'se-card-bg': '#f8f9fa', 'se-card-bg-text': '#f8f9fa',
+        'se-card-padding': '20', 'se-card-radius': '12',
+        'se-border-color': '#e0e0e0', 'se-border-color-text': '#e0e0e0',
+        'se-border-width': '1'
+    };
+    var keys = Object.keys(defaults);
+    for (var i = 0; i < keys.length; i++) {
+        var el = document.getElementById(keys[i]);
+        if (el) el.value = defaults[keys[i]];
+    }
+    if (currentCodeTab === 'preview') updatePreview();
+    showToast('Стили сброшены');
+}
+
+function toggleStyleEditor() {
+    var el = document.getElementById('style-editor');
+    if (!el) return;
+    el.classList.toggle('collapsed');
 }
 
 // ==================== COPY / DOWNLOAD ====================
@@ -1521,9 +2106,17 @@ function downloadCode() {
         showToast('Добавьте поля для генерации кода', true);
         return;
     }
-    var ext = currentCodeTab === 'json' ? 'json' : 'php';
+    var ext, mime;
+    if (currentCodeTab === 'json') {
+        ext = 'json'; mime = 'application/json';
+    } else if (currentCodeTab === 'preview') {
+        ext = 'html'; mime = 'text/html';
+        code = '<!DOCTYPE html>\n<html>\n<head>\n<meta charset="utf-8">\n<style>\n' + generatePreviewCSS() + '\n</style>\n</head>\n<body>\n' + previewHTMLPlain() + '\n</body>\n</html>';
+    } else {
+        ext = 'php'; mime = 'text/x-php';
+    }
     var filename = (document.getElementById('group-key').value || 'acf-export') + '.' + ext;
-    var blob = new Blob([code], { type: 'text/plain;charset=utf-8' });
+    var blob = new Blob([code], { type: mime + ';charset=utf-8' });
     var url = URL.createObjectURL(blob);
     var a = document.createElement('a');
     a.href = url;
@@ -1575,14 +2168,42 @@ function importFromJSON(event) {
     reader.onload = function(e) {
         try {
             var json = JSON.parse(e.target.result);
+
+            // Validate basic structure
+            if (!json || typeof json !== 'object') throw new Error('Невалидный JSON');
+            if (!json.key && !json.title && !json.fields) throw new Error('Не похоже на ACF JSON (нужны key/title/fields)');
+
             resetAll(true);
+
+            // Import group settings
             document.getElementById('group-title').value = json.title || '';
             document.getElementById('group-key').value = json.key || '';
             document.getElementById('group-desc').value = json.description || '';
             document.getElementById('group-style').value = json.style || 'default';
             document.getElementById('group-position').value = json.position || 'normal';
             document.getElementById('group-active').checked = json.active !== 0;
-            locationRules = (json.location && json.location[0]) ? json.location[0] : locationRules;
+
+            // Import location rules (all groups)
+            if (Array.isArray(json.location) && json.location.length > 0) {
+                locationRules = [];
+                for (var lg = 0; lg < json.location.length; lg++) {
+                    var group = json.location[lg];
+                    if (Array.isArray(group)) {
+                        for (var lr = 0; lr < group.length; lr++) {
+                            var rule = group[lr];
+                            locationRules.push({
+                                param: rule.param || 'post_type',
+                                operator: rule.operator || '==',
+                                value: rule.value || 'page'
+                            });
+                        }
+                    }
+                }
+                if (locationRules.length === 0) {
+                    locationRules = [{ param: 'post_type', operator: '==', value: 'page' }];
+                }
+            }
+
             fieldIdCounter = 0;
 
             function importFields(arr) {
@@ -1593,17 +2214,36 @@ function importFromJSON(event) {
                     var d = fieldDefaults(f.type || 'text');
                     d.id = id;
                     for (var k in f) {
-                        if (k !== 'id') d[k] = f[k];
+                        if (k === 'id') continue;
+                        if (k === 'sub_fields' || k === 'layouts') continue;
+                        d[k] = f[k];
                     }
                     d.key = d.key || 'field_' + id;
-                    if (f.sub_fields) d.sub_fields = importFields(f.sub_fields);
+                    d.name = d.name || 'field_' + id;
+                    if (Array.isArray(f.sub_fields) && f.sub_fields.length > 0) {
+                        d.sub_fields = importFields(f.sub_fields);
+                    }
                     if (f.layouts) {
                         d.layouts = [];
-                        var lk = Object.keys(f.layouts);
-                        for (var li = 0; li < lk.length; li++) {
-                            var lay = f.layouts[lk[li]];
-                            if (lay.sub_fields) lay.sub_fields = importFields(lay.sub_fields);
-                            d.layouts.push(lay);
+                        if (Array.isArray(f.layouts)) {
+                            for (var li = 0; li < f.layouts.length; li++) {
+                                var lay = f.layouts[li];
+                                d.layouts.push({
+                                    name: lay.name || ('layout_' + (li+1)),
+                                    label: lay.label || ('Layout ' + (li+1)),
+                                    sub_fields: lay.sub_fields ? importFields(lay.sub_fields) : []
+                                });
+                            }
+                        } else {
+                            var lk = Object.keys(f.layouts);
+                            for (var li2 = 0; li2 < lk.length; li2++) {
+                                var lay2 = f.layouts[lk[li2]];
+                                d.layouts.push({
+                                    name: lay2.name || lk[li2],
+                                    label: lay2.label || lk[li2],
+                                    sub_fields: lay2.sub_fields ? importFields(lay2.sub_fields) : []
+                                });
+                            }
                         }
                     }
                     result.push(d);
@@ -1611,7 +2251,20 @@ function importFromJSON(event) {
                 return result;
             }
 
-            if (json.fields) fields = importFields(json.fields);
+            if (Array.isArray(json.fields)) {
+                fields = importFields(json.fields);
+            }
+
+            setTimeout(function() {
+                ['group-style','group-position'].forEach(function(id) {
+                    var el2 = document.getElementById(id);
+                    if (el2 && el2._customSelect) {
+                        el2._customSelect._selectedValue = el2.value;
+                        el2._customSelect._updateTrigger();
+                        el2._customSelect._rebuildOptions();
+                    }
+                });
+            }, 50);
 
             renderAll();
             liveUpdate();
@@ -1818,11 +2471,30 @@ document.addEventListener('click', function(e) {
             break;
         case 'toggle-layout':
             var li = parseInt(el.getAttribute('data-layout-idx'));
-            var pf = getFieldById(parseInt(el.getAttribute('data-parent-id')));
+            var pf = findFieldInTree(parseInt(el.getAttribute('data-parent-id')));
             if (pf && pf.layouts && pf.layouts[li]) {
                 pf.layouts[li]._open = !pf.layouts[li]._open;
                 renderAll();
             }
+            break;
+        case 'toggle-sub-field-expand':
+            toggleSubFieldExpand(
+                parseInt(el.getAttribute('data-parent-id')),
+                parseInt(el.getAttribute('data-sub-id'))
+            );
+            break;
+        case 'toggle-layout-sub-field-expand':
+            toggleLayoutSubFieldExpand(
+                parseInt(el.getAttribute('data-parent-id')),
+                parseInt(el.getAttribute('data-layout-idx')),
+                parseInt(el.getAttribute('data-sub-id'))
+            );
+            break;
+        case 'toggle-style-editor':
+            toggleStyleEditor();
+            break;
+        case 'reset-styles':
+            resetStyles();
             break;
     }
 });
@@ -1842,15 +2514,33 @@ document.addEventListener('change', function(e) {
         case 'update-field-checkbox-wpautop':
             updateField(parseInt(el.getAttribute('data-field-id')), 'new_lines', el.checked ? 'wpautop' : '');
             break;
+        case 'update-sub-field-checkbox':
+            var sfCb = findFieldInTree(parseInt(el.getAttribute('data-sub-id')));
+            if (sfCb) {
+                sfCb[el.getAttribute('data-key')] = el.checked ? 1 : 0;
+                liveUpdate();
+            }
+            break;
+        case 'update-sub-field-checkbox-wpautop':
+            var sfWp = findFieldInTree(parseInt(el.getAttribute('data-sub-id')));
+            if (sfWp) {
+                sfWp['new_lines'] = el.checked ? 'wpautop' : '';
+                liveUpdate();
+            }
+            break;
         case 'change-field-type':
             changeFieldType(parseInt(el.getAttribute('data-field-id')), el.value);
-            break;
-        case 'add-field-select':
-            if (el.value) addField(el.value);
             break;
         case 'update-field':
             // For <select> elements with data-key
             updateField(parseInt(el.getAttribute('data-field-id')), el.getAttribute('data-key'), el.value);
+            break;
+        case 'update-sub-field-select':
+            var fSel = findFieldInTree(parseInt(el.getAttribute('data-sub-id')));
+            if (fSel) {
+                fSel[el.getAttribute('data-key')] = el.value;
+                liveUpdate();
+            }
             break;
         case 'location-param':
             var i = parseInt(el.getAttribute('data-index'));
@@ -1861,6 +2551,47 @@ document.addEventListener('change', function(e) {
             var i2 = parseInt(el.getAttribute('data-index'));
             locationRules[i2].operator = el.value;
             liveUpdate();
+            break;
+        case 'style-change':
+            applyStyleColor(el.id, el.value);
+            break;
+    }
+});
+
+// Style text field input handlers
+document.addEventListener('input', function(e) {
+    var el = e.target.closest('[data-action="style-change-text"]');
+    if (!el) return;
+    applyStyleChange(el.id, el.value);
+});
+
+// Style color picker change
+document.addEventListener('input', function(e) {
+    var el = e.target.closest('[data-action="style-change"]');
+    if (!el) return;
+    applyStyleColor(el.id, el.value);
+});
+
+document.addEventListener('change', function(e) {
+    var el = e.target.closest('[data-action]');
+    if (!el) return;
+    var action = el.getAttribute('data-action');
+    // Skip style-change as it's handled by input event
+    if (action === 'style-change') return;
+
+    switch (action) {
+        case 'add-field-select':
+            if (el.value) {
+                var cs = el._customSelect;
+                addField(el.value);
+                el.value = '';
+                if (cs) {
+                    cs._selectedValue = '';
+                    cs._updateTrigger();
+                    var csOpts = cs._optionsContainer.querySelectorAll('.cs-option');
+                    for (var ai = 0; ai < csOpts.length; ai++) csOpts[ai].classList.remove('selected');
+                }
+            }
             break;
         case 'live-update':
             liveUpdate();
@@ -1887,8 +2618,33 @@ document.addEventListener('input', function(e) {
         case 'update-choices':
             updateChoices(parseInt(el.getAttribute('data-field-id')), el.value);
             break;
+        case 'update-sub-choices':
+            var sfCh = findFieldInTree(parseInt(el.getAttribute('data-sub-id')));
+            if (sfCh) {
+                var choices = {};
+                var lines = el.value.split('\n');
+                for (var lci = 0; lci < lines.length; lci++) {
+                    var line = lines[lci].trim();
+                    if (!line) continue;
+                    var sep = line.indexOf(':');
+                    if (sep === -1) continue;
+                    var key = line.substring(0, sep).trim();
+                    var val = line.substring(sep + 1).trim();
+                    if (key) choices[key] = val;
+                }
+                sfCh.choices = choices;
+                liveUpdate();
+            }
+            break;
         case 'update-field-post-type':
             updateField(parseInt(el.getAttribute('data-field-id')), 'post_type', el.value.split(',').map(function(s){return s.trim();}));
+            break;
+        case 'update-sub-field-post-type':
+            var sfPt = findFieldInTree(parseInt(el.getAttribute('data-sub-id')));
+            if (sfPt) {
+                sfPt['post_type'] = el.value.split(',').map(function(s){return s.trim();});
+                liveUpdate();
+            }
             break;
         case 'update-sub-field':
             updateSubField(parseInt(el.getAttribute('data-parent-id')), parseInt(el.getAttribute('data-sub-id')), el.getAttribute('data-key'), el.value);
@@ -1903,6 +2659,19 @@ document.addEventListener('input', function(e) {
             var i = parseInt(el.getAttribute('data-index'));
             locationRules[i].value = el.value;
             liveUpdate();
+            break;
+        case 'add-field-select':
+            if (el.value) {
+                var cs2 = el._customSelect;
+                addField(el.value);
+                el.value = '';
+                if (cs2) {
+                    cs2._selectedValue = '';
+                    cs2._updateTrigger();
+                    var csOpts2 = cs2._optionsContainer.querySelectorAll('.cs-option');
+                    for (var ai2 = 0; ai2 < csOpts2.length; ai2++) csOpts2[ai2].classList.remove('selected');
+                }
+            }
             break;
         case 'live-update':
             liveUpdate();

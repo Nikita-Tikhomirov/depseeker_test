@@ -48,17 +48,15 @@
         
         /* === Material Symbols === */
         .material-symbols-outlined { font-variation-settings: "FILL" 0, "wght" 500, "GRAD" 0, "opsz" 48; vertical-align: middle; line-height: 1; }
-        .field-type-btn .material-symbols-outlined { font-size: 4.5rem; display: block; margin-bottom: 4px; }
-        .field-type-btn { flex-direction: column; align-items: center; text-align: center; padding: 16px 12px; min-height: 130px; }
-        .fc-type .material-symbols-outlined { font-size: 4.5rem; }
-        .sf-type .material-symbols-outlined { font-size: 3rem; }
-        .template-icon .material-symbols-outlined { font-size: 5rem; }
-        .gen-panel-header .material-symbols-outlined { font-size: 2.5rem; }
-        .gen-btn-icon .material-symbols-outlined { font-size: 1.8rem; }
-        .fc-actions .material-symbols-outlined { font-size: 1.8rem; }
+        .fc-type .material-symbols-outlined { font-size: 3rem; }
+        .sf-type .material-symbols-outlined { font-size: 2rem; }
+        .template-icon .material-symbols-outlined { font-size: 3.3rem; }
+        .gen-panel-header .material-symbols-outlined { font-size: 1.7rem; }
+        .gen-btn-icon .material-symbols-outlined { font-size: 1.2rem; }
+        .fc-actions .material-symbols-outlined { font-size: 1.2rem; }
         .tool-icon .material-symbols-outlined { font-size: inherit; }
         .empty-icon .material-symbols-outlined { font-size: inherit; }
-        .field-card-header .fc-drag .material-symbols-outlined { font-size: 2rem; }
+        .field-card-header .fc-drag .material-symbols-outlined { font-size: 1.3rem; }
 
         :root { --font-mono: 'JetBrains Mono', 'Cascadia Code', 'Fira Code', monospace; }
 
@@ -68,7 +66,7 @@
         /* Tool Hero */
         .tool-hero { padding: 100px 0 80px; text-align: center; position: relative; }
         .tool-hero::before { content:''; position:absolute; inset:0; background:var(--gradient-hero); pointer-events:none; }
-        .tool-hero .tool-icon { font-size: 6rem; margin-bottom: 20px; display: inline-block; background: var(--surface); width: 150px; height: 150px; border-radius: var(--radius-xl); display:flex; align-items:center; justify-content:center; margin: 0 auto 20px; border: 1px solid var(--border); box-shadow: 0 8px 32px rgba(0,0,0,0.3); }
+        .tool-hero .tool-icon { font-size: 4rem; margin-bottom: 13px; display: inline-block; background: var(--surface); width: 100px; height: 100px; border-radius: var(--radius-xl); display:flex; align-items:center; justify-content:center; margin: 0 auto 13px; border: 1px solid var(--border); box-shadow: 0 8px 32px rgba(0,0,0,0.3); }
         .tool-hero h1 { font-size: clamp(2rem, 4vw, 2.8rem); font-weight: 800; letter-spacing: -0.025em; line-height: 1.15; margin-bottom: 12px; }
         .tool-hero p { color: var(--text-2); font-size: 1.4rem; max-width: 780px; margin: 0 auto 28px; line-height: 1.65; }
         .tool-stats { display:flex; gap:32px; justify-content:center; flex-wrap:wrap; margin-top:20px; }
@@ -102,7 +100,7 @@
         .gen-divider { border:none; border-top:1px solid var(--border); margin:28px 0; }
 
         /* ============ BUTTONS ============ */
-        .gen-btn { display:inline-flex; align-items:center; gap:10px; padding:15px 26px; border-radius:10px; font-size:1.15rem; font-weight:600; border:none; cursor:pointer; transition:all 0.2s; font-family:var(--font); white-space:nowrap; }
+        .gen-btn { display:inline-flex; align-items:center; gap:7px; padding:10px 17px; border-radius:7px; font-size:0.8rem; font-weight:600; border:none; cursor:pointer; transition:all 0.2s; font-family:var(--font); white-space:nowrap; }
         .gen-btn-primary { background:var(--accent); color:#fff; }
         .gen-btn-primary:hover { background:var(--accent-hover); }
         .gen-btn-accent { background:var(--accent-2); color:#000; }
@@ -111,19 +109,21 @@
         .gen-btn-outline:hover { border-color:var(--border-hover); color:var(--text); background:var(--surface-2); }
         .gen-btn-danger { background:transparent; color:#f87171; border:1px solid rgba(248,113,113,0.2); }
         .gen-btn-danger:hover { background:rgba(248,113,113,0.1); border-color:rgba(248,113,113,0.4); }
-        .gen-btn-sm { padding:10px 18px; font-size:1.05rem; border-radius:8px; }
-        .gen-btn-icon { width:48px; height:48px; border-radius:8px; background:transparent; border:1px solid var(--border); color:var(--text-dim); cursor:pointer; display:flex; align-items:center; justify-content:center; transition:all 0.2s; font-size:1.15rem; }
+        .gen-btn-sm { padding:7px 12px; font-size:0.7rem; border-radius:5px; }
+        .gen-btn-icon { width:32px; height:32px; border-radius:5px; background:transparent; border:1px solid var(--border); color:var(--text-dim); cursor:pointer; display:flex; align-items:center; justify-content:center; transition:all 0.2s; font-size:0.8rem; }
         .gen-btn-icon:hover { border-color:var(--border-hover); color:var(--text); background:var(--surface-2); }
 
-        /* ============ FIELD TYPE GRID ============ */
-        .field-type-section { margin-bottom:18px; }
-        .field-type-section-title { font-size:1.1rem; font-weight:600; text-transform:uppercase; color:var(--text-dim); margin-bottom:14px; letter-spacing:0.05em; }
-        .field-type-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin-bottom:18px; }
-        .field-type-btn { display:flex; align-items:center; gap:10px; padding:15px 20px; background:var(--bg); border:1px solid var(--border); border-radius:9px; color:var(--text-2); font-size:1.15rem; cursor:pointer; transition:all 0.15s; font-family:var(--font); text-align:left; }
-        .field-type-btn:hover { border-color:var(--accent); color:var(--text); background:var(--surface-2); }
+        /* ============ FIELD TYPE SELECT ROW ============ */
+        .field-type-row { display:flex; gap:5px; margin-bottom:24px; }
+        .field-type-row > .cs-wrap { flex:1; min-width:0; }
+        .field-type-row .cs-trigger { padding:12px 14px; font-size:0.75rem; font-weight:500; text-transform:uppercase; letter-spacing:0.03em; justify-content:center; gap:4px; }
+        .field-type-row .cs-trigger .cs-arrow { font-size:0.65rem; }
+        .field-type-row .cs-dropdown { min-width:180px; }
+        .cs-option-icon { font-size:1.1rem; margin-right:4px; vertical-align:middle; color:var(--accent); }
+        .field-type-row .cs-option { padding:12px 16px; font-size:0.72rem; white-space:nowrap; }
 
         /* ============ FIELD CARDS ============ */
-        .field-card { background:var(--bg); border:1px solid var(--border); border-radius:var(--radius-sm); margin-bottom:14px; transition:border-color 0.2s; overflow:hidden; }
+        .field-card { background:var(--bg); border:1px solid var(--border); border-radius:var(--radius-sm); margin-bottom:14px; transition:border-color 0.2s; overflow:visible; }
         .field-card:hover { border-color:var(--border-hover); }
         .field-card.selected { border-color:var(--accent); box-shadow:0 0 0 1px var(--accent-glow); }
         .field-card-header { display:flex; align-items:center; gap:20px; padding:20px 28px; cursor:pointer; user-select:none; }
@@ -144,6 +144,14 @@
         .sub-field-row input { flex:1; background:transparent; border:none; color:var(--text); font-size:1.15rem; padding:4px 6px; outline:none; border-bottom:1px solid transparent; transition:border-color 0.2s; }
         .sub-field-row input:focus { border-bottom-color:var(--accent); }
         .sub-field-row .sf-name-input { font-family:var(--font-mono); font-size:1.1rem; color:var(--text-2); min-width:120px; }
+        .sub-field-struct { border-color: var(--accent); border-style: solid; }
+        .sf-expand { width:32px; height:32px; border-radius:6px; background:transparent; border:1px solid var(--border); color:var(--accent); cursor:pointer; display:flex; align-items:center; justify-content:center; flex-shrink:0; transition:all 0.2s; padding:0; font-size:0.9rem; }
+        .sf-expand:hover { background:var(--accent); color:#fff; border-color:var(--accent); }
+        .sf-expand .material-symbols-outlined { font-size:1.3rem; }
+        .sf-expand-spacer { width:32px; flex-shrink:0; }
+        .sub-field-nested { margin-left:0; margin-bottom:10px; padding:16px 16px 8px; border-left:3px solid var(--accent); background:var(--bg); border-radius:0 8px 8px 0; }
+        .nested-struct-settings { margin-bottom:12px; padding-bottom:12px; border-bottom:1px solid var(--border); }
+        .sub-field-nested .sub-fields-section { margin-top:0; background:var(--surface); }
 
         /* ============ LAYOUTS (FLEXIBLE CONTENT) ============ */
         .layout-card { background:var(--bg); border:1px solid var(--border); border-radius:10px; margin-bottom:14px; overflow:hidden; }
@@ -169,14 +177,14 @@
 
         /* Empty state */
         .empty-state { text-align:center; padding:80px 20px; color:var(--text-dim); }
-        .empty-state .empty-icon { font-size:5.5rem; margin-bottom:14px; opacity:0.5; }
-        .empty-state p { font-size:1.25rem; margin-bottom:8px; }
+        .empty-state .empty-icon { font-size:3.7rem; margin-bottom:9px; opacity:0.5; }
+        .empty-state p { font-size:0.85rem; margin-bottom:8px; }
 
         /* Templates */
         .templates-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(220px,1fr)); gap:18px; margin-top:24px; }
         .template-card { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:30px; cursor:pointer; transition:all 0.3s; text-align:center; }
         .template-card:hover { border-color:var(--accent); transform:translateY(-2px); box-shadow:0 8px 24px rgba(0,0,0,0.25); }
-        .template-card .template-icon { font-size:3.5rem; margin-bottom:10px; }
+        .template-card .template-icon { font-size:2.3rem; margin-bottom:7px; }
         .template-card h4 { font-size:1.2rem; font-weight:700; margin-bottom:4px; }
         .template-card p { font-size:1rem; color:var(--text-dim); line-height:1.4; }
 
@@ -192,6 +200,14 @@
         .gen-toggle input[type="checkbox"]:checked { background:var(--accent-2); }
         .gen-toggle input[type="checkbox"]:checked::after { transform:translateX(26px); }
         .gen-toggle span { font-size:1.15rem; }
+
+        /* ============ CONFIRM DIALOG ============ */
+        .confirm-overlay { position:fixed; inset:0; background:rgba(0,0,0,0.6); z-index:9999; display:flex; align-items:center; justify-content:center; opacity:0; pointer-events:none; transition:opacity 0.25s; }
+        .confirm-overlay.show { opacity:1; pointer-events:auto; }
+        .confirm-dialog { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius-lg); padding:40px; max-width:480px; width:90%; box-shadow:0 20px 60px rgba(0,0,0,0.5); text-align:center; }
+        .confirm-msg { font-size:1.3rem; font-weight:600; color:var(--text); margin-bottom:24px; line-height:1.5; }
+        .confirm-actions { display:flex; gap:12px; justify-content:center; }
+        .confirm-actions .gen-btn { min-width:100px; }
 
         /* ============ CUSTOM SELECT ============ */
         .cs-wrap { position:relative; font-family:var(--font); }
@@ -218,11 +234,43 @@
         .cs-option.no-results { color:var(--text-dim); cursor:default; text-align:center; font-style:italic; }
         .cs-option.no-results:hover { background:transparent; color:var(--text-dim); }
 
+        /* ============ HTML PREVIEW ============ */
+        .code-preview pre#code-pre { margin:0; padding:28px; overflow-x:auto; max-height:700px; color:#c9d1d9; tab-size:4; white-space:pre; }
+        .code-preview pre#code-pre::-webkit-scrollbar { height:5px; }
+        .code-preview pre#code-pre::-webkit-scrollbar-track { background:transparent; }
+        .code-preview pre#code-pre::-webkit-scrollbar-thumb { background:var(--border-hover); border-radius:3px; }
+
+        /* ============ STYLE EDITOR ============ */
+        .style-editor { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); overflow:hidden; }
+        .style-editor-header { display:flex; align-items:center; gap:8px; padding:18px 24px; border-bottom:1px solid var(--border); font-weight:600; font-size:1.1rem; cursor:pointer; user-select:none; }
+        .style-editor-header:hover { background:var(--surface-2); }
+        .style-editor-header .se-arrow { margin-left:auto; transition:transform 0.2s; font-size:0.8rem; color:var(--text-dim); }
+        .style-editor.collapsed .style-editor-body { display:none; }
+        .style-editor.collapsed .se-arrow { transform:rotate(-90deg); }
+        .style-editor-body { padding:20px 24px; }
+        .se-row { display:flex; gap:12px; align-items:center; margin-bottom:14px; }
+        .se-row:last-child { margin-bottom:0; }
+        .se-label { font-size:1.05rem; font-weight:500; color:var(--text-2); min-width:85px; flex-shrink:0; }
+        .se-input, .se-color { flex:1; padding:10px 14px; background:var(--bg); border:1px solid var(--border); border-radius:6px; color:var(--text); font-size:1.07rem; font-family:var(--font); outline:none; transition:border-color 0.2s; }
+        .se-input:focus, .se-color:focus { border-color:var(--accent); }
+        .se-color { padding:5px 8px; height:40px; flex:0 0 60px; cursor:pointer; }
+        .se-color::-webkit-color-swatch-wrapper { padding:0; }
+        .se-color::-webkit-color-swatch { border-radius:3px; border:none; }
+        .se-size { width:80px; flex:0 0 80px; }
+        .se-unit { font-size:1rem; color:var(--text-dim); flex-shrink:0; width:25px; }
+        .se-row-group { border:1px solid var(--border); border-radius:8px; padding:14px 16px; margin-bottom:14px; }
+        .se-row-group-title { font-size:1.05rem; font-weight:600; color:var(--text-2); margin-bottom:10px; }
+        .se-reset { font-size:0.9rem; color:var(--text-dim); cursor:pointer; background:none; border:none; text-decoration:underline; padding:0; font-family:var(--font); }
+        .se-reset:hover { color:var(--accent); }
+
+        /* Preview sync indicator */
+        .preview-synced { display:inline-flex; align-items:center; gap:4px; font-size:0.75rem; color:#22c55e; font-weight:500; }
+
         /* Responsive */
         @media (max-width:1400px) { .gen-grid { grid-template-columns:1fr 580px; } }
         @media (max-width:1100px) { .gen-grid { grid-template-columns:1fr; } }
-        @media (max-width:768px) { .gen-grid { gap:20px; } .field-type-grid { grid-template-columns:repeat(2,1fr); } .generator-workspace .container { padding: 0 16px; } }
-        @media (max-width:640px) { .gen-grid { gap:14px; } .field-type-grid { grid-template-columns:repeat(2,1fr); } .tool-stats { gap:14px; } .generator-workspace .container { max-width: 100%; padding: 0 12px; } }
+        @media (max-width:768px) { .gen-grid { gap:20px; } .field-type-row { flex-wrap:wrap; } .field-type-row > .cs-wrap { flex:0 1 calc(33.33% - 4px); } .generator-workspace .container { padding: 0 16px; } }
+        @media (max-width:640px) { .gen-grid { gap:14px; } .field-type-row > .cs-wrap { flex:0 1 calc(50% - 4px); } .tool-stats { gap:14px; } .generator-workspace .container { max-width: 100%; padding: 0 12px; } }
     </style>
 </head>
 <body>
@@ -294,79 +342,71 @@
                     </div>
                 </div>
                 <div class="gen-panel-body">
-                    <!-- === FIELD CONSTRUCTOR (MOVED UP) === -->
+                    <!-- === FIELD CONSTRUCTOR === -->
                     <label class="gen-label">Добавить поле</label>
-                    <div class="field-type-section">
-                        <div class="field-type-section-title">Текст</div>
-                        <div class="field-type-grid">
-                            <button class="field-type-btn" data-action="add-field" data-field-type="text"><span class="material-symbols-outlined">text_fields</span> Текст</button>
-                            <button class="field-type-btn" data-action="add-field" data-field-type="textarea"><span class="material-symbols-outlined">article</span> Область</button>
-                            <button class="field-type-btn" data-action="add-field" data-field-type="number"><span class="material-symbols-outlined">pin</span> Число</button>
-                            <button class="field-type-btn" data-action="add-field" data-field-type="email"><span class="material-symbols-outlined">mail</span> Email</button>
-                            <button class="field-type-btn" data-action="add-field" data-field-type="url"><span class="material-symbols-outlined">link</span> URL</button>
-                            <button class="field-type-btn" data-action="add-field" data-field-type="password"><span class="material-symbols-outlined">lock</span> Пароль</button>
-                        </div>
-                    </div>
-                    <div class="field-type-section">
-                        <div class="field-type-section-title">Контент</div>
-                        <div class="field-type-grid">
-                            <button class="field-type-btn" data-action="add-field" data-field-type="wysiwyg"><span class="material-symbols-outlined">edit</span> Редактор</button>
-                            <button class="field-type-btn" data-action="add-field" data-field-type="image"><span class="material-symbols-outlined">image</span> Картинка</button>
-                            <button class="field-type-btn" data-action="add-field" data-field-type="file"><span class="material-symbols-outlined">draft</span> Файл</button>
-                            <button class="field-type-btn" data-action="add-field" data-field-type="gallery"><span class="material-symbols-outlined">collections</span> Галерея</button>
-                            <button class="field-type-btn" data-action="add-field" data-field-type="oembed"><span class="material-symbols-outlined">smart_display</span> oEmbed</button>
-                        </div>
-                    </div>
-                    <div class="field-type-section">
-                        <div class="field-type-section-title">Выбор</div>
-                        <div class="field-type-grid">
-                            <button class="field-type-btn" data-action="add-field" data-field-type="select"><span class="material-symbols-outlined">arrow_drop_down_circle</span> Список</button>
-                            <button class="field-type-btn" data-action="add-field" data-field-type="checkbox"><span class="material-symbols-outlined">check_box</span> Чекбокс</button>
-                            <button class="field-type-btn" data-action="add-field" data-field-type="radio"><span class="material-symbols-outlined">radio_button_checked</span> Радио</button>
-                            <button class="field-type-btn" data-action="add-field" data-field-type="true_false"><span class="material-symbols-outlined">toggle_on</span> Да/Нет</button>
-                        </div>
-                    </div>
-                    <div class="field-type-section">
-                        <div class="field-type-section-title">Связи</div>
-                        <div class="field-type-grid">
-                            <button class="field-type-btn" data-action="add-field" data-field-type="link"><span class="material-symbols-outlined">link</span> Ссылка</button>
-                            <button class="field-type-btn" data-action="add-field" data-field-type="post_object"><span class="material-symbols-outlined">feed</span> Запись</button>
-                            <button class="field-type-btn" data-action="add-field" data-field-type="relationship"><span class="material-symbols-outlined">compare_arrows</span> Связь</button>
-                        </div>
-                    </div>
-                    <div class="field-type-section">
-                        <div class="field-type-section-title">Прочее</div>
-                        <div class="field-type-grid">
-                            <button class="field-type-btn" data-action="add-field" data-field-type="date_picker"><span class="material-symbols-outlined">calendar_today</span> Дата</button>
-                            <button class="field-type-btn" data-action="add-field" data-field-type="color_picker"><span class="material-symbols-outlined">palette</span> Цвет</button>
-                            <button class="field-type-btn" data-action="add-field" data-field-type="tab"><span class="material-symbols-outlined">tab</span> Вкладка</button>
-                            <button class="field-type-btn" data-action="add-field" data-field-type="message"><span class="material-symbols-outlined">chat</span> Сообщение</button>
-                        </div>
-                    </div>
-                    <div class="field-type-section">
-                        <div class="field-type-section-title">Структура</div>
-                        <div class="field-type-grid">
-                            <button class="field-type-btn" data-action="add-field" data-field-type="group" style="background:rgba(124,58,237,0.08);border-color:rgba(124,58,237,0.3);"><span class="material-symbols-outlined">folder</span> Группа</button>
-                            <button class="field-type-btn" data-action="add-field" data-field-type="repeater" style="background:rgba(16,185,129,0.08);border-color:rgba(16,185,129,0.3);"><span class="material-symbols-outlined">repeat</span> Повторитель</button>
-                            <button class="field-type-btn" data-action="add-field" data-field-type="flexible_content" style="background:rgba(245,158,11,0.08);border-color:rgba(245,158,11,0.3);"><span class="material-symbols-outlined">dashboard</span> Гибкий</button>
-                        </div>
+                    <div class="field-type-row">
+                        <select data-action="add-field-select" data-placeholder="Текст">
+                            <option value="" data-icon="text_fields">Текст</option>
+                            <option value="text" data-icon="text_fields">Текст</option>
+                            <option value="textarea" data-icon="article">Область</option>
+                            <option value="number" data-icon="pin">Число</option>
+                            <option value="email" data-icon="mail">Email</option>
+                            <option value="url" data-icon="link">URL</option>
+                            <option value="password" data-icon="lock">Пароль</option>
+                        </select>
+                        <select data-action="add-field-select" data-placeholder="Контент">
+                            <option value="" data-icon="edit">Контент</option>
+                            <option value="wysiwyg" data-icon="edit">Редактор</option>
+                            <option value="image" data-icon="image">Картинка</option>
+                            <option value="file" data-icon="draft">Файл</option>
+                            <option value="gallery" data-icon="collections">Галерея</option>
+                            <option value="oembed" data-icon="smart_display">oEmbed</option>
+                        </select>
+                        <select data-action="add-field-select" data-placeholder="Выбор">
+                            <option value="" data-icon="arrow_drop_down_circle">Выбор</option>
+                            <option value="select" data-icon="arrow_drop_down_circle">Список</option>
+                            <option value="checkbox" data-icon="check_box">Чекбокс</option>
+                            <option value="radio" data-icon="radio_button_checked">Радио</option>
+                            <option value="true_false" data-icon="toggle_on">Да / Нет</option>
+                        </select>
+                        <select data-action="add-field-select" data-placeholder="Связи">
+                            <option value="" data-icon="link">Связи</option>
+                            <option value="link" data-icon="link">Ссылка</option>
+                            <option value="post_object" data-icon="feed">Запись</option>
+                            <option value="relationship" data-icon="compare_arrows">Связь</option>
+                        </select>
+                        <select data-action="add-field-select" data-placeholder="Прочее">
+                            <option value="" data-icon="calendar_today">Прочее</option>
+                            <option value="date_picker" data-icon="calendar_today">Дата</option>
+                            <option value="color_picker" data-icon="palette">Цвет</option>
+                            <option value="tab" data-icon="tab">Вкладка</option>
+                            <option value="message" data-icon="chat">Сообщение</option>
+                        </select>
+                        <select data-action="add-field-select" data-placeholder="Структура">
+                            <option value="" data-icon="folder">Структура</option>
+                            <option value="group" data-icon="folder">Группа</option>
+                            <option value="repeater" data-icon="repeat">Повторитель</option>
+                            <option value="flexible_content" data-icon="dashboard">Гибкий</option>
+                        </select>
                     </div>
 
-                    <div class="gen-divider"></div>
+                    <div class="gen-divider" id="fields-divider-top" style="display:none;"></div>
 
-                    <!-- Fields List -->
-                    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;">
-                        <span style="font-weight:700;font-size:1.5rem;"><span class="material-symbols-outlined">list</span> Поля</span>
-                        <span style="font-size:1.05rem;color:var(--text-dim);" id="field-count-display">0 полей</span>
-                    </div>
-                    <div id="fields-list"></div>
-                    <div class="empty-state" id="fields-empty">
-                        <div class="empty-icon"><span class="material-symbols-outlined">inbox</span></div>
-                        <p>Нет полей</p>
-                        <p style="font-size:1.1rem;">Нажмите на кнопку выше, чтобы добавить поле</p>
-                    </div>
+                    <!-- Fields Section -->
+                    <div id="fields-section" style="display:none;">
+                        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;">
+                            <span style="font-weight:700;font-size:1.5rem;"><span class="material-symbols-outlined">list</span> Поля</span>
+                            <span style="font-size:1.05rem;color:var(--text-dim);" id="field-count-display">0 полей</span>
+                        </div>
+                        <div id="fields-list"></div>
+                        <div class="empty-state" id="fields-empty">
+                            <div class="empty-icon"><span class="material-symbols-outlined">inbox</span></div>
+                            <p>Нет полей</p>
+                            <p style="font-size:1.1rem;">Выберите тип поля в селектах выше</p>
+                        </div>
 
-                    <div class="gen-divider"></div>
+                        <div class="gen-divider"></div>
+                    </div>
 
                     <!-- === GROUP SETTINGS (MOVED DOWN) === -->
                     <details open style="margin-top:8px;">
@@ -401,14 +441,53 @@
             <div>
                 <div class="code-preview">
                     <div class="code-preview-header">
-                        <button class="code-tab active" data-tab="php" data-action="switch-tab">PHP (шаблон)</button>
-                        <button class="code-tab" data-tab="json" data-action="switch-tab">JSON (импорт)</button>
+                        <div class="code-tabs-wrap">
+                            <button class="code-tab active" data-tab="php" data-action="switch-tab">PHP</button>
+                            <button class="code-tab" data-tab="html" data-action="switch-tab">HTML</button>
+                            <button class="code-tab" data-tab="json" data-action="switch-tab">JSON</button>
+                            <button class="code-tab" data-tab="preview" data-action="switch-tab">Превью</button>
+                        </div>
                         <div class="code-actions">
-                            <button class="gen-btn gen-btn-sm gen-btn-primary" data-action="copy-code" title="Копировать"><span class="material-symbols-outlined">content_copy</span> Копировать</button>
+                            <span class="preview-synced" id="preview-synced-indicator" style="display:none;"><span class="material-symbols-outlined">check_circle</span> live</span>
+                            <button class="gen-btn gen-btn-sm gen-btn-primary" data-action="copy-code" title="Копировать код"><span class="material-symbols-outlined">content_copy</span></button>
                             <button class="gen-btn gen-btn-sm gen-btn-outline" data-action="download-code" title="Скачать"><span class="material-symbols-outlined">download</span></button>
                         </div>
                     </div>
-                    <pre><code id="code-output">Добавьте поля — код появится здесь</code></pre>
+                    <pre id="code-pre"><code id="code-output">Добавьте поля — код появится здесь</code></pre>
+                    <div id="preview-container" style="display:none; background:#f5f5f5; min-height:300px; padding:20px;">
+                        <iframe id="preview-frame" sandbox="allow-same-origin" style="width:100%; border:none; height:440px; background:#fff;"></iframe>
+                    </div>
+                </div>
+
+                <!-- Style Editor -->
+                <div class="style-editor" id="style-editor" style="margin-top:18px;">
+                    <div class="style-editor-header" data-action="toggle-style-editor">
+                        <span class="material-symbols-outlined">palette</span> Стили блока
+                        <span class="se-arrow">▼</span>
+                    </div>
+                    <div class="style-editor-body">
+                        <div class="se-row-group">
+                            <div class="se-row-group-title">Основные</div>
+                            <div class="se-row"><span class="se-label">Фон</span><input type="color" class="se-color" id="se-bg-color" value="#ffffff" data-action="style-change"><input type="text" class="se-input" id="se-bg-color-text" value="#ffffff" data-action="style-change-text" placeholder="#fff"></div>
+                            <div class="se-row"><span class="se-label">Цвет текста</span><input type="color" class="se-color" id="se-text-color" value="#1a1a2e" data-action="style-change"><input type="text" class="se-input" id="se-text-color-text" value="#1a1a2e" data-action="style-change-text" placeholder="#333"></div>
+                            <div class="se-row"><span class="se-label">Отступы</span><input type="text" class="se-input se-size" id="se-padding" value="24" data-action="style-change-text"><span class="se-unit">px</span></div>
+                            <div class="se-row"><span class="se-label">Промежуток</span><input type="text" class="se-input se-size" id="se-gap" value="16" data-action="style-change-text"><span class="se-unit">px</span></div>
+                        </div>
+                        <div class="se-row-group">
+                            <div class="se-row-group-title">Карточки полей</div>
+                            <div class="se-row"><span class="se-label">Фон</span><input type="color" class="se-color" id="se-card-bg" value="#f8f9fa" data-action="style-change"><input type="text" class="se-input" id="se-card-bg-text" value="#f8f9fa" data-action="style-change-text"></div>
+                            <div class="se-row"><span class="se-label">Отступы</span><input type="text" class="se-input se-size" id="se-card-padding" value="20" data-action="style-change-text"><span class="se-unit">px</span></div>
+                            <div class="se-row"><span class="se-label">Скругление</span><input type="text" class="se-input se-size" id="se-card-radius" value="12" data-action="style-change-text"><span class="se-unit">px</span></div>
+                        </div>
+                        <div class="se-row-group">
+                            <div class="se-row-group-title">Граница</div>
+                            <div class="se-row"><span class="se-label">Цвет</span><input type="color" class="se-color" id="se-border-color" value="#e0e0e0" data-action="style-change"><input type="text" class="se-input" id="se-border-color-text" value="#e0e0e0" data-action="style-change-text"></div>
+                            <div class="se-row"><span class="se-label">Толщина</span><input type="text" class="se-input se-size" id="se-border-width" value="1" data-action="style-change-text"><span class="se-unit">px</span></div>
+                        </div>
+                        <div style="margin-top:10px;display:flex;justify-content:flex-end;gap:8px;">
+                            <button class="se-reset" data-action="reset-styles">Сбросить стили</button>
+                        </div>
+                    </div>
                 </div>
 
                 <!-- Templates (moved below code preview) -->
