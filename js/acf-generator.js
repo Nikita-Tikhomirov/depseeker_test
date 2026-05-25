@@ -294,6 +294,7 @@ var blockStyles = {
     borderWidth: '1'
 };
 var styleEditorCollapsed = false;
+var previewModeActive = false;
 
 // ==================== HELPERS ====================
 function escHtml(s) {
@@ -1182,6 +1183,7 @@ function liveUpdate() {
         document.getElementById('preview-container').style.display = 'none';
         document.getElementById('preview-synced-indicator').style.display = 'none';
     }
+    updateVisualEditorIfActive();
 }
 
 // ==================== CODE GENERATION ====================
@@ -2257,6 +2259,270 @@ function toggleFullPreview() {
     }
 }
 
+// ==================== PREVIEW MODE (TOGGLE BUILDER + VISUAL EDITOR) ====================
+function togglePreviewMode() {
+    previewModeActive = !previewModeActive;
+    var ws = document.querySelector('.generator-workspace');
+    var btn = document.getElementById('toggle-preview-btn');
+
+    if (previewModeActive) {
+        ws.classList.add('preview-mode');
+        if (btn) {
+            btn.classList.add('active');
+            btn.innerHTML = '<span class="material-symbols-outlined">edit</span> Режим редактора';
+        }
+        renderVisualEditor();
+    } else {
+        ws.classList.remove('preview-mode');
+        if (btn) {
+            btn.classList.remove('active');
+            btn.innerHTML = '<span class="material-symbols-outlined">visibility</span> Режим превью';
+        }
+    }
+}
+
+// ==================== VISUAL EDITOR ====================
+function getPlaceholderSVG() {
+    return 'data:image/svg+xml,' + encodeURIComponent(
+        '<svg xmlns="http://www.w3.org/2000/svg" width="400" height="200" viewBox="0 0 400 200">' +
+        '<rect width="400" height="200" fill="#e8e8e8"/>' +
+        '<rect width="400" height="200" fill="url(#g)"/>' +
+        '<defs><pattern id="g" width="20" height="20" patternUnits="userSpaceOnUse">' +
+        '<rect x="10" y="0" width="2" height="20" fill="#dcdcdc" opacity="0.5"/>' +
+        '<rect x="0" y="10" width="20" height="2" fill="#dcdcdc" opacity="0.5"/>' +
+        '</pattern></defs>' +
+        '<g transform="translate(180,75)" fill="#aaa">' +
+        '<rect x="0" y="0" width="40" height="30" rx="3"/>' +
+        '<circle cx="10" cy="15" r="4" fill="#ccc"/>' +
+        '<rect x="24" y="8" width="16" height="3" rx="1.5" fill="#ccc"/>' +
+        '<rect x="24" y="14" width="12" height="3" rx="1.5" fill="#ccc"/>' +
+        '<rect x="24" y="20" width="14" height="3" rx="1.5" fill="#ccc"/>' +
+        '</g>' +
+        '<text x="200" y="165" text-anchor="middle" font-family="Inter, sans-serif" font-size="12" fill="#aaa">Placeholder</text>' +
+        '</svg>'
+    );
+}
+
+function generateVisualHTML() {
+    var config = buildACFConfig();
+    var groupTitle = document.getElementById('group-title').value || 'ACF Group';
+    var isFAQ = groupTitle.toLowerCase().indexOf('faq') !== -1 ||
+                (fields.length === 1 && fields[0].type === 'repeater' &&
+                 fields[0].sub_fields && fields[0].sub_fields.length === 2 &&
+                 fields[0].sub_fields[0].name && fields[0].sub_fields[0].name.indexOf('question') !== -1);
+
+    var out = [];
+    out.push('<!DOCTYPE html><html lang="ru"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Превью: ' + escHtml(groupTitle) + '</title>');
+    out.push('<style>');
+    out.push('*{box-sizing:border-box;margin:0;padding:0;}');
+    out.push('body{font-family:Inter,-apple-system,sans-serif;padding:20px;color:#1a1a2e;background:#fff;line-height:1.5;}');
+    out.push('.acf-section{max-width:800px;margin:0 auto;}');
+    out.push('.acf-section h2{font-size:1.5rem;margin-bottom:16px;font-weight:700;}');
+    out.push('.acf-field{margin-bottom:16px;}');
+    out.push('.acf-label{font-weight:600;font-size:0.85rem;color:#666;margin-bottom:6px;text-transform:uppercase;letter-spacing:0.04em;}');
+    out.push('.acf-text{background:#f8f9fa;padding:12px 16px;border-radius:8px;border:1px solid #e0e0e0;color:#333;}');
+    out.push('.acf-textarea{background:#f8f9fa;padding:12px 16px;border-radius:8px;border:1px solid #e0e0e0;min-height:60px;color:#333;white-space:pre-wrap;}');
+    out.push('.acf-image{display:flex;align-items:center;justify-content:center;}');
+    out.push('.acf-image .acf-placeholder-img{width:100%;max-width:400px;}');
+    out.push('.acf-gallery{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;}');
+    out.push('.acf-gallery .acf-placeholder-img{min-height:100px;}');
+    out.push('.acf-link a{display:inline-block;padding:10px 24px;background:#7c3aed;color:#fff;border-radius:8px;text-decoration:none;font-weight:600;font-size:0.9rem;}');
+    out.push('.acf-repeater-list{display:grid;gap:12px;}');
+    out.push('.acf-repeater-item{background:#fafafa;border:1px solid #e0e0e0;border-radius:10px;padding:16px;display:flex;gap:12px;align-items:center;}');
+    out.push('.acf-repeater-item .acf-avatar{width:48px;height:48px;border-radius:50%;flex-shrink:0;}');
+    out.push('.acf-repeater-item .acf-content{flex:1;}');
+    out.push('.acf-repeater-item .acf-name{font-weight:600;font-size:0.95rem;color:#1a1a2e;}');
+    out.push('.acf-repeater-item .acf-desc{font-size:0.85rem;color:#666;margin-top:2px;}');
+    // FAQ accordion styles
+    out.push('.acf-faq-item{border:1px solid #e0e0e0;border-radius:8px;margin-bottom:8px;overflow:hidden;background:#fff;}');
+    out.push('.acf-faq-question{padding:16px 20px;font-weight:600;cursor:pointer;display:flex;justify-content:space-between;align-items:center;user-select:none;transition:background 0.2s;background:#fafafa;border:none;width:100%;text-align:left;font-size:1rem;color:#1a1a2e;font-family:inherit;}');
+    out.push('.acf-faq-question:hover{background:#f0f0f0;}');
+    out.push('.acf-faq-question::after{content:"+";font-size:1.3rem;font-weight:400;color:#666;transition:transform 0.3s;flex-shrink:0;margin-left:12px;}');
+    out.push('.acf-faq-item.open .acf-faq-question::after{content:"\\2212";transform:rotate(180deg);}');
+    out.push('.acf-faq-answer{max-height:0;overflow:hidden;transition:max-height 0.35s ease;color:#444;line-height:1.6;font-size:0.95rem;padding:0 20px;}');
+    out.push('.acf-faq-item.open .acf-faq-answer{max-height:500px;padding:0 20px 16px;}');
+    out.push('.acf-true-false{display:inline-flex;align-items:center;gap:8px;padding:8px 16px;background:#f0fdf4;border:1px solid #86efac;border-radius:6px;color:#166534;font-weight:600;font-size:0.85rem;}');
+    out.push('@media(max-width:600px){body{padding:12px;}.acf-gallery{grid-template-columns:repeat(2,1fr);}.acf-repeater-item{flex-direction:column;align-items:flex-start;}}');
+    out.push('</style>');
+    out.push('</head><body>');
+    out.push('<div class="acf-section">');
+    out.push('<h2>' + escHtml(groupTitle) + '</h2>');
+
+    function renderVisualField(f, isSub) {
+        var t = f.type || 'text';
+        var label = f.label || f.name || t;
+        var name = f.name || '';
+        var h = '';
+        var isImage = (t === 'image' || t === 'file');
+        var isGallery = (t === 'gallery');
+        var isLink = (t === 'link');
+        var isRepeater = (t === 'repeater');
+        var isFlex = (t === 'flexible_content');
+        var isGroup = (t === 'group');
+        var isTrueFalse = (t === 'true_false');
+        var isTextarea = (t === 'textarea' || t === 'wysiwyg');
+        var isMessage = (t === 'message');
+        var isTab = (t === 'tab');
+        var isEmail = (t === 'email');
+        var isURL = (t === 'url');
+        var isSelect = (t === 'select' || t === 'checkbox' || t === 'radio');
+        var isDate = (t === 'date_picker');
+        var isNumber = (t === 'number');
+
+        if (isTab || isMessage) return '';
+
+        h += '<div class="acf-field">';
+        h += '<div class="acf-label">' + escHtml(label) + '</div>';
+
+        if (isImage) {
+            h += '<div class="acf-image"><div class="acf-placeholder-img"><svg width="48" height="48" viewBox="0 0 48 48" style="opacity:0.3"><rect x="6" y="10" width="36" height="28" rx="3" fill="none" stroke="#999" stroke-width="2"/><circle cx="18" cy="20" r="3" fill="none" stroke="#999" stroke-width="1.5"/><path d="M6 32l10-10 8 8 5-6 13 14" fill="none" stroke="#999" stroke-width="1.5"/></svg></div></div>';
+        } else if (isGallery) {
+            h += '<div class="acf-gallery">';
+            for (var g = 0; g < 3; g++) {
+                h += '<div class="acf-placeholder-img" style="min-height:80px;"><svg width="32" height="32" viewBox="0 0 48 48" style="opacity:0.25"><rect x="6" y="10" width="36" height="28" rx="3" fill="none" stroke="#999" stroke-width="2"/></svg></div>';
+            }
+            h += '</div>';
+        } else if (isLink) {
+            h += '<div class="acf-link"><a href="#">' + escHtml(name || 'Ссылка') + '</a></div>';
+        } else if (isRepeater && f.sub_fields) {
+            var isFAQ = (f.sub_fields.length === 2 &&
+                         f.sub_fields[0].name && f.sub_fields[0].name.indexOf('question') !== -1 &&
+                         f.sub_fields[1].name && f.sub_fields[1].name.indexOf('answer') !== -1);
+            if (isFAQ) {
+                var faqItems = [
+                    ['Как заказать услугу?', 'Чтобы заказать услугу, выберите нужный тариф и нажмите кнопку «Заказать». Наш менеджер свяжется с вами в течение 15 минут для подтверждения деталей.'],
+                    ['Какие сроки выполнения?', 'Стандартный срок выполнения заказа — от 1 до 5 рабочих дней в зависимости от сложности. Срочные заказы обрабатываются в приоритетном порядке — от 2 часов.'],
+                    ['Как происходит оплата?', 'Мы принимаем оплату банковскими картами Visa/Mastercard, через СБП, а также безналичным расчётом для юридических лиц. Все платежи защищены.'],
+                    ['Есть ли гарантия на услуги?', 'Да, мы предоставляем гарантию на все наши услуги. Если результат не соответствует заявленному качеству, мы бесплатно всё исправим или вернём деньги.']
+                ];
+                for (var fi = 0; fi < faqItems.length; fi++) {
+                    h += '<div class="acf-faq-item">';
+                    h += '<button class="acf-faq-question">' + escHtml(faqItems[fi][0]) + '</button>';
+                    h += '<div class="acf-faq-answer">' + escHtml(faqItems[fi][1]) + '</div>';
+                    h += '</div>';
+                }
+            } else {
+                h += '<div class="acf-repeater-list">';
+                for (var ri = 0; ri < 2; ri++) {
+                    var hasImage = false;
+                    for (var si = 0; si < f.sub_fields.length; si++) {
+                        if (f.sub_fields[si].type === 'image') hasImage = true;
+                    }
+                    h += '<div class="acf-repeater-item">';
+                    if (hasImage) {
+                        // Check which sub-field is the avatar (first image)
+                        for (var si2 = 0; si2 < f.sub_fields.length; si2++) {
+                            if (f.sub_fields[si2].type === 'image') {
+                                h += '<div class="acf-avatar acf-placeholder-img" style="width:48px;height:48px;min-height:48px;border-radius:50%;"><svg width="20" height="20" viewBox="0 0 48 48" style="opacity:0.3"><circle cx="24" cy="16" r="8" fill="none" stroke="#999" stroke-width="2"/><ellipse cx="24" cy="38" rx="14" ry="8" fill="none" stroke="#999" stroke-width="2"/></svg></div>';
+                                break;
+                            }
+                        }
+                    }
+                    h += '<div class="acf-content">';
+                    for (var si3 = 0; si3 < f.sub_fields.length; si3++) {
+                        var sf = f.sub_fields[si3];
+                        if (sf.type === 'image') continue;
+                        var contentClass = sf.type === 'textarea' || sf.type === 'wysiwyg' ? 'acf-desc' : 'acf-name';
+                        var sampleVal = '';
+                        if (sf.name && sf.name.indexOf('name') !== -1) sampleVal = 'Алексей Петров';
+                        else if (sf.name && sf.name.indexOf('title') !== -1) sampleVal = 'Специалист';
+                        else if (sf.name && sf.name.indexOf('role') !== -1) sampleVal = 'Директор';
+                        else if (sf.name && sf.name.indexOf('text') !== -1) sampleVal = 'Текст отзыва о работе компании...';
+                        else if (sf.name && sf.name.indexOf('bio') !== -1) sampleVal = 'Краткая информация о сотруднике...';
+                        else if (sf.name && sf.name.indexOf('company') !== -1) sampleVal = 'ООО «Компания»';
+                        else sampleVal = sf.label || sf.name || '';
+                        h += '<div class="' + contentClass + '">' + escHtml(sampleVal) + '</div>';
+                    }
+                    h += '</div>';
+                    h += '</div>';
+                }
+                h += '</div>';
+            }
+        } else if (isFlex && f.layouts) {
+            for (var li = 0; li < Math.min(f.layouts.length, 2); li++) {
+                var layout = f.layouts[li];
+                h += '<div class="acf-field" style="margin-bottom:12px;">';
+                h += '<div class="acf-label">' + escHtml(layout.label || layout.name) + '</div>';
+                if (layout.sub_fields) {
+                    for (var lsi = 0; lsi < layout.sub_fields.length; lsi++) {
+                        h += renderVisualField(layout.sub_fields[lsi], true);
+                    }
+                }
+                h += '</div>';
+            }
+        } else if (isGroup && f.sub_fields) {
+            h += '<div style="background:#fafafa;border:1px solid #e0e0e0;border-radius:10px;padding:16px;">';
+            for (var gsi = 0; gsi < f.sub_fields.length; gsi++) {
+                h += renderVisualField(f.sub_fields[gsi], true);
+            }
+            h += '</div>';
+        } else if (isTrueFalse) {
+            h += '<div class="acf-true-false"><span style="font-size:1.1rem;">&#10003;</span> ' + escHtml(f.message || 'Да') + '</div>';
+        } else if (isTextarea) {
+            var taVal = f.default_value || 'Текст для текстовой области с демонстрационным содержимым.';
+            h += '<div class="acf-textarea">' + escHtml(taVal) + '</div>';
+        } else if (isSelect) {
+            var choices = f.choices || {};
+            var choiceKeys = Object.keys(choices);
+            if (choiceKeys.length === 0) choiceKeys = ['option_1'];
+            h += '<div class="acf-text">' + escHtml(choices[choiceKeys[0]] || choiceKeys[0]) + '</div>';
+        } else if (isEmail) {
+            h += '<div class="acf-text" style="color:#7c3aed;">example@email.com</div>';
+        } else if (isURL) {
+            h += '<div class="acf-text" style="color:#7c3aed;">https://example.com</div>';
+        } else if (isDate) {
+            h += '<div class="acf-text">25.05.2026</div>';
+        } else if (isNumber) {
+            h += '<div class="acf-text" style="font-family:monospace;">' + (f.default_value || '42') + '</div>';
+        } else if (t === 'color_picker') {
+            h += '<div style="display:flex;align-items:center;gap:8px;"><div style="width:32px;height:32px;border-radius:6px;background:#7c3aed;border:1px solid #e0e0e0;"></div><span class="acf-text" style="flex:1;">#7C3AED</span></div>';
+        } else if (t === 'oembed') {
+            h += '<div class="acf-text" style="text-align:center;color:#666;">[Embedded content]</div>';
+        } else if (t === 'post_object' || t === 'relationship') {
+            h += '<div class="acf-text">Выбранная запись</div>';
+        } else if (t === 'password') {
+            h += '<div class="acf-text">••••••••</div>';
+        } else {
+            var defVal = f.default_value || (f.placeholder || 'Пример значения');
+            h += '<div class="acf-text">' + escHtml(defVal) + '</div>';
+        }
+        h += '</div>';
+        return h;
+    }
+
+    for (var i = 0; i < fields.length; i++) {
+        out.push(renderVisualField(fields[i], false));
+    }
+
+    out.push('</div>');
+    // FAQ accordion JS
+    if (isFAQ) {
+        out.push('<script>');
+        out.push('document.addEventListener("click",function(e){');
+        out.push('var q=e.target.closest(".acf-faq-question");');
+        out.push('if(!q)return;');
+        out.push('var item=q.parentElement;');
+        out.push('item.classList.toggle("open");');
+        out.push('});');
+        out.push('</script>');
+    }
+    out.push('</body></html>');
+    return out.join('\n');
+}
+
+function renderVisualEditor() {
+    var iframe = document.getElementById('visual-editor-iframe');
+    if (!iframe) return;
+    var html = generateVisualHTML();
+    iframe.srcdoc = html;
+}
+
+function updateVisualEditorIfActive() {
+    if (previewModeActive) {
+        renderVisualEditor();
+    }
+}
+
 // ==================== COPY / DOWNLOAD ====================
 function copyCode() {
     var code = document.getElementById('code-output').textContent;
@@ -2691,6 +2957,12 @@ document.addEventListener('click', function(e) {
         case 'toggle-full-preview':
             toggleFullPreview();
             break;
+        case 'toggle-preview-mode':
+            togglePreviewMode();
+            break;
+        case 'refresh-visual-editor':
+            renderVisualEditor();
+            break;
     }
 });
 
@@ -2915,4 +3187,24 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }
     }, 100);
+
+    // Visual editor toolbar — size switching
+    var toolbar = document.querySelector('.visual-editor-toolbar');
+    if (toolbar) {
+        toolbar.addEventListener('click', function(e) {
+            var btn = e.target.closest('button');
+            if (!btn) return;
+            var size = btn.getAttribute('data-size');
+            if (size) {
+                var frame = document.getElementById('visual-editor-frame');
+                if (frame) {
+                    frame.className = 'visual-editor-frame ' + size;
+                    // Update active state
+                    var buttons = toolbar.querySelectorAll('button[data-size]');
+                    for (var b = 0; b < buttons.length; b++) buttons[b].classList.remove('active');
+                    btn.classList.add('active');
+                }
+            }
+        });
+    }
 });
