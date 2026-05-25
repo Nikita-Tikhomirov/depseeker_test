@@ -1748,6 +1748,7 @@ function generateHTML() {
 // ==================== PREVIEW HTML (browser-renderable) ====================
 function generatePreviewHTML() {
     var styles = blockStyles;
+    var isFaq = fields.length === 1 && fields[0].type === 'repeater' && fields[0].name === 'faq_items';
     var css = [
         '.acf-preview-block {',
         '  background: ' + styles.bgColor + ';',
@@ -1815,6 +1816,85 @@ function generatePreviewHTML() {
         '  opacity: 0.5;',
         '  margin-top: 8px;',
         '  text-align: right;',
+        '}',
+        '/* FAQ Accordion */',
+        '.acf-faq-item {',
+        '  border: ' + styles.borderWidth + 'px solid ' + styles.borderColor + ';',
+        '  border-radius: ' + styles.cardRadius + 'px;',
+        '  overflow: hidden;',
+        '  background: ' + styles.cardBg + ';',
+        '}',
+        '.acf-faq-question {',
+        '  padding: ' + styles.cardPadding + 'px;',
+        '  font-weight: 600;',
+        '  cursor: pointer;',
+        '  display: flex;',
+        '  align-items: center;',
+        '  justify-content: space-between;',
+        '  user-select: none;',
+        '  transition: background 0.2s;',
+        '}',
+        '.acf-faq-question:hover { opacity: 0.8; }',
+        '.acf-faq-question::after {',
+        '  content: "+";',
+        '  font-size: 1.3rem;',
+        '  font-weight: 300;',
+        '  transition: transform 0.25s;',
+        '  color: ' + styles.textColor + ';',
+        '  opacity: 0.5;',
+        '}',
+        '.acf-faq-item.open .acf-faq-question::after {',
+        '  content: "\\2212";',
+        '}',
+        '.acf-faq-answer {',
+        '  max-height: 0;',
+        '  overflow: hidden;',
+        '  transition: max-height 0.3s ease, padding 0.3s ease;',
+        '  padding: 0 ' + styles.cardPadding + 'px;',
+        '  color: ' + styles.textColor + ';',
+        '  opacity: 0.8;',
+        '  font-size: 0.95rem;',
+        '}',
+        '.acf-faq-item.open .acf-faq-answer {',
+        '  max-height: 400px;',
+        '  padding: 0 ' + styles.cardPadding + 'px ' + styles.cardPadding + 'px;',
+        '}',
+        '/* SVG Placeholder */',
+        '.acf-placeholder-img {',
+        '  width: 100%;',
+        '  height: 120px;',
+        '  border-radius: 8px;',
+        '  background: #f0f0f5;',
+        '  display: flex;',
+        '  align-items: center;',
+        '  justify-content: center;',
+        '  overflow: hidden;',
+        '}',
+        '.acf-placeholder-img svg { width: 48px; height: 48px; opacity: 0.22; }',
+        '.acf-placeholder-gallery {',
+        '  display: flex;',
+        '  gap: 8px;',
+        '  flex-wrap: wrap;',
+        '}',
+        '.acf-placeholder-gallery-item {',
+        '  width: 70px;',
+        '  height: 70px;',
+        '  border-radius: 6px;',
+        '  background: #f0f0f5;',
+        '  display: flex;',
+        '  align-items: center;',
+        '  justify-content: center;',
+        '}',
+        '.acf-placeholder-gallery-item svg { width: 24px; height: 24px; opacity: 0.2; }',
+        '/* Responsive breakpoints */',
+        '@media (max-width: 768px) {',
+        '  .acf-preview-block { padding: ' + Math.max(parseInt(styles.padding) - 8, 8) + 'px; }',
+        '  .acf-preview-card { padding: ' + Math.max(parseInt(styles.cardPadding) - 6, 8) + 'px; }',
+        '}',
+        '@media (max-width: 480px) {',
+        '  .acf-preview-block { padding: 12px; gap: 10px; }',
+        '  .acf-preview-card { padding: 12px; border-radius: 8px; }',
+        '  .acf-placeholder-gallery-item { width: 56px; height: 56px; }',
         '}'
     ].join('\n');
 
@@ -1825,9 +1905,9 @@ function generatePreviewHTML() {
         if (t === 'number') return '<span class="acf-preview-card-value">42</span>';
         if (t === 'email') return '<span class="acf-preview-card-value">example@domain.com</span>';
         if (t === 'url' || t === 'link') return '<span class="acf-preview-link">https://example.com</span>';
-        if (t === 'image') return '<div class="acf-preview-img">&#128247;</div>';
+        if (t === 'image') return '<div class="acf-placeholder-img"><svg viewBox="0 0 48 48" fill="none"><rect x="4" y="8" width="40" height="32" rx="4" stroke="#999" stroke-width="2"/><circle cx="16" cy="18" r="4" stroke="#999" stroke-width="2"/><path d="M8 36l10-12 6 6 8-10 8 10" stroke="#999" stroke-width="2" fill="none"/></svg></div>';
         if (t === 'file') return '<span class="acf-preview-card-value">&#128196; document.pdf</span>';
-        if (t === 'gallery') return '<div class="acf-preview-gallery"><div class="acf-preview-gallery-item"></div><div class="acf-preview-gallery-item"></div><div class="acf-preview-gallery-item"></div></div>';
+        if (t === 'gallery') return '<div class="acf-placeholder-gallery"><div class="acf-placeholder-gallery-item"><svg viewBox="0 0 24 24" fill="none"><rect x="2" y="4" width="20" height="16" rx="2" stroke="#999" stroke-width="1.5"/><circle cx="9" cy="9" r="2" stroke="#999" stroke-width="1.5"/><path d="M4 18l6-7 3 3 5-6 4 6" stroke="#999" stroke-width="1.5" fill="none"/></svg></div><div class="acf-placeholder-gallery-item"><svg viewBox="0 0 24 24" fill="none"><rect x="2" y="4" width="20" height="16" rx="2" stroke="#999" stroke-width="1.5"/><circle cx="9" cy="9" r="2" stroke="#999" stroke-width="1.5"/><path d="M4 18l6-7 3 3 5-6 4 6" stroke="#999" stroke-width="1.5" fill="none"/></svg></div><div class="acf-placeholder-gallery-item"><svg viewBox="0 0 24 24" fill="none"><rect x="2" y="4" width="20" height="16" rx="2" stroke="#999" stroke-width="1.5"/><circle cx="9" cy="9" r="2" stroke="#999" stroke-width="1.5"/><path d="M4 18l6-7 3 3 5-6 4 6" stroke="#999" stroke-width="1.5" fill="none"/></svg></div></div>';
         if (t === 'true_false') return '<span class="acf-preview-true-false">✓ Да</span>';
         if (t === 'select') return '<span class="acf-preview-card-value">Выбранный вариант</span>';
         if (t === 'checkbox') return '<span class="acf-preview-card-value">☑ Вариант 1, ☑ Вариант 2</span>';
@@ -1859,6 +1939,25 @@ function generatePreviewHTML() {
         }
 
         if (t === 'repeater' && f.sub_fields && f.sub_fields.length > 0) {
+            // FAQ accordion mode
+            if (isFaq && f.name === 'faq_items' && f.sub_fields.length >= 2) {
+                var faqItems = '';
+                var questions = [
+                    ['Как это работает?', 'Наш сервис позволяет создать кастомные поля для WordPress без написания кода. Просто выберите типы полей, настройте параметры — и получите готовый PHP-код.'],
+                    ['Сколько это стоит?', 'Генератор полностью бесплатный. Вы можете создать неограниченное количество групп полей без каких-либо ограничений.'],
+                    ['Нужно ли знать PHP?', 'Нет. Генератор сам создаст весь необходимый код. Вам останется только скопировать его в файл темы. Но если вы знаете PHP — можете доработать шаблон под себя.']
+                ];
+                for (var qi = 0; qi < questions.length; qi++) {
+                    faqItems += '<div class="acf-faq-item' + (qi === 0 ? ' open' : '') + '">';
+                    faqItems += '<div class="acf-faq-question" onclick="this.parentElement.classList.toggle(\'open\')">';
+                    faqItems += escHtml(questions[qi][0]);
+                    faqItems += '</div>';
+                    faqItems += '<div class="acf-faq-answer"><div style="padding-top:6px;">' + escHtml(questions[qi][1]) + '</div></div>';
+                    faqItems += '</div>';
+                }
+                return '<div style="display:flex;flex-direction:column;gap:' + styles.gap + 'px;margin-top:6px;" class="acf-faq-list">' + faqItems + '</div>';
+            }
+            // Standard repeater
             var items = '';
             for (var r = 0; r < 2; r++) {
                 items += '<div class="acf-preview-card" style="margin-bottom:' + styles.gap + 'px;">';
@@ -1982,8 +2081,44 @@ function generatePreviewCSS() {
         '  opacity: 0.6;',
         '  margin-bottom: 4px;',
         '}',
-        '.acf-field__value {',
-        '  font-weight: 500;',
+        '.acf-field__value { font-weight: 500; }',
+        '/* FAQ Accordion */',
+        '.acf-faq-item {',
+        '  border: ' + styles.borderWidth + 'px solid ' + styles.borderColor + ';',
+        '  border-radius: ' + styles.cardRadius + 'px;',
+        '  overflow: hidden;',
+        '  background: ' + styles.cardBg + ';',
+        '}',
+        '.acf-faq-question {',
+        '  padding: ' + styles.cardPadding + 'px;',
+        '  font-weight: 600;',
+        '  cursor: pointer;',
+        '  display: flex;',
+        '  align-items: center;',
+        '  justify-content: space-between;',
+        '  user-select: none;',
+        '}',
+        '.acf-faq-question::after { content: "+"; font-size: 1.3rem; opacity: 0.4; transition: transform 0.25s; }',
+        '.acf-faq-item.open .acf-faq-question::after { content: "\\2212"; }',
+        '.acf-faq-answer {',
+        '  max-height: 0;',
+        '  overflow: hidden;',
+        '  transition: max-height 0.3s ease;',
+        '  padding: 0 ' + styles.cardPadding + 'px;',
+        '}',
+        '.acf-faq-item.open .acf-faq-answer {',
+        '  max-height: 500px;',
+        '  padding: 0 ' + styles.cardPadding + 'px ' + styles.cardPadding + 'px;',
+        '}',
+        '/* Responsive */',
+        '@media (max-width: 768px) {',
+        '  .acf-section { padding: ' + Math.max(parseInt(styles.padding) - 8, 8) + 'px; }',
+        '  .acf-field { padding: ' + Math.max(parseInt(styles.cardPadding) - 6, 8) + 'px; }',
+        '  .acf-faq-question { padding: ' + Math.max(parseInt(styles.cardPadding) - 4, 10) + 'px; }',
+        '}',
+        '@media (max-width: 480px) {',
+        '  .acf-section { padding: 12px; gap: 10px; }',
+        '  .acf-field { padding: 12px; border-radius: 8px; }',
         '}',
         ''
     ].join('\n');
@@ -2075,6 +2210,51 @@ function toggleStyleEditor() {
     var el = document.getElementById('style-editor');
     if (!el) return;
     el.classList.toggle('collapsed');
+}
+
+// ==================== FULL PREVIEW MODE ====================
+var fullPreviewActive = false;
+var _savedStyleEditorParent = null;
+var _savedStyleEditorNext = null;
+
+function toggleFullPreview() {
+    fullPreviewActive = !fullPreviewActive;
+    var grid = document.querySelector('.gen-grid');
+    var btn = document.getElementById('full-preview-btn');
+    var previewLayout = document.querySelector('.preview-layout');
+    var mainEditor = document.getElementById('style-editor');
+
+    if (fullPreviewActive) {
+        grid.classList.add('full-preview');
+        btn.classList.add('active');
+        btn.innerHTML = '<span class="material-symbols-outlined">close_fullscreen</span> Свернуть';
+        if (previewLayout && mainEditor) {
+            _savedStyleEditorParent = mainEditor.parentNode;
+            _savedStyleEditorNext = mainEditor.nextSibling;
+            previewLayout.appendChild(mainEditor);
+            mainEditor.style.marginTop = '0';
+            mainEditor.style.maxWidth = '360px';
+            mainEditor.style.flexShrink = '0';
+            mainEditor.classList.remove('collapsed');
+        }
+        if (currentCodeTab !== 'preview') {
+            switchCodeTab('preview');
+        }
+    } else {
+        grid.classList.remove('full-preview');
+        btn.classList.remove('active');
+        btn.innerHTML = '<span class="material-symbols-outlined">open_in_full</span> Развернуть';
+        if (mainEditor && _savedStyleEditorParent) {
+            mainEditor.style.marginTop = '18px';
+            mainEditor.style.maxWidth = '';
+            mainEditor.style.flexShrink = '';
+            if (_savedStyleEditorNext) {
+                _savedStyleEditorParent.insertBefore(mainEditor, _savedStyleEditorNext);
+            } else {
+                _savedStyleEditorParent.appendChild(mainEditor);
+            }
+        }
+    }
 }
 
 // ==================== COPY / DOWNLOAD ====================
@@ -2370,6 +2550,18 @@ function loadTemplate(name) {
             mkField('url','Canonical URL','canonical_url','',{placeholder:'https://'}),
             mkField('tab','END','tab_end','',{endpoint:1})
         ];
+    } else if (name === 'faq') {
+        document.getElementById('group-title').value = 'FAQ';
+        document.getElementById('group-key').value = 'group_faq';
+        document.getElementById('group-desc').value = 'Часто задаваемые вопросы';
+        locationRules = [{ param: 'post_type', operator: '==', value: 'page' }];
+        var faqSubs = [
+            mkSubField('text','Вопрос','faq_question',{placeholder:'Ваш вопрос?'}),
+            mkSubField('textarea','Ответ','faq_answer',{new_lines:'wpautop'})
+        ];
+        fields = [
+            mkStruct('repeater','Вопросы','faq_items','Добавьте вопросы и ответы',faqSubs,{button_label:'Добавить вопрос',min:0,max:100})
+        ];
     } else if (name === 'flexible_page') {
         document.getElementById('group-title').value = 'Page Builder';
         document.getElementById('group-key').value = 'group_page_builder';
@@ -2495,6 +2687,9 @@ document.addEventListener('click', function(e) {
             break;
         case 'reset-styles':
             resetStyles();
+            break;
+        case 'toggle-full-preview':
+            toggleFullPreview();
             break;
     }
 });

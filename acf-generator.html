@@ -266,6 +266,23 @@
         /* Preview sync indicator */
         .preview-synced { display:inline-flex; align-items:center; gap:4px; font-size:0.75rem; color:#22c55e; font-weight:500; }
 
+        /* ============ FULL PREVIEW MODE ============ */
+        .gen-grid.full-preview { grid-template-columns: 1fr; }
+        .gen-grid.full-preview #panel-builder { display: none; }
+        .gen-grid.full-preview .code-preview { max-width: 100%; }
+        .gen-grid.full-preview #preview-container { padding: 32px; }
+        .gen-grid.full-preview #preview-frame { height: 65vh; min-height: 520px; }
+        .gen-grid.full-preview .style-editor { max-width: 380px; flex-shrink: 0; }
+        .gen-grid.full-preview .preview-layout { display: flex; gap: 18px; }
+        .gen-grid.full-preview .preview-layout .code-preview { flex: 1; min-width: 0; }
+        .full-preview-btn { display: inline-flex; align-items: center; gap: 5px; padding: 6px 14px; border-radius: 6px; font-size: 0.75rem; font-weight: 600; background: rgba(34,197,94,0.12); color: #22c55e; border: 1px solid rgba(34,197,94,0.25); cursor: pointer; transition: all 0.2s; font-family: var(--font); white-space: nowrap; }
+        .full-preview-btn:hover { background: rgba(34,197,94,0.2); }
+        .full-preview-btn.active { background: #22c55e; color: #fff; border-color: #22c55e; }
+
+        /* ============ SVG PLACEHOLDER ============ */
+        .acf-placeholder-img { width: 100%; height: 120px; border-radius: 8px; background: #f0f0f5; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+        .acf-placeholder-img svg { width: 48px; height: 48px; opacity: 0.25; }
+
         /* Responsive */
         @media (max-width:1400px) { .gen-grid { grid-template-columns:1fr 580px; } }
         @media (max-width:1100px) { .gen-grid { grid-template-columns:1fr; } }
@@ -448,6 +465,7 @@
                             <button class="code-tab" data-tab="preview" data-action="switch-tab">Превью</button>
                         </div>
                         <div class="code-actions">
+                            <button class="full-preview-btn" data-action="toggle-full-preview" id="full-preview-btn"><span class="material-symbols-outlined">open_in_full</span> Развернуть</button>
                             <span class="preview-synced" id="preview-synced-indicator" style="display:none;"><span class="material-symbols-outlined">check_circle</span> live</span>
                             <button class="gen-btn gen-btn-sm gen-btn-primary" data-action="copy-code" title="Копировать код"><span class="material-symbols-outlined">content_copy</span></button>
                             <button class="gen-btn gen-btn-sm gen-btn-outline" data-action="download-code" title="Скачать"><span class="material-symbols-outlined">download</span></button>
@@ -455,7 +473,11 @@
                     </div>
                     <pre id="code-pre"><code id="code-output">Добавьте поля — код появится здесь</code></pre>
                     <div id="preview-container" style="display:none; background:#f5f5f5; min-height:300px; padding:20px;">
-                        <iframe id="preview-frame" sandbox="allow-same-origin" style="width:100%; border:none; height:440px; background:#fff;"></iframe>
+                        <div class="preview-layout">
+                            <div style="flex:1;min-width:0;">
+                                <iframe id="preview-frame" sandbox="allow-same-origin" style="width:100%; border:none; height:440px; background:#fff;"></iframe>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -510,6 +532,9 @@
                                 </div>
                                 <div class="template-card" data-action="load-template" data-template="flexible_page">
                                     <div class="template-icon"><span class="material-symbols-outlined">dashboard_customize</span></div><h4>Конструктор</h4><p>Гибкий контент: текст, баннер, галерея</p>
+                                </div>
+                                <div class="template-card" data-action="load-template" data-template="faq">
+                                    <div class="template-icon"><span class="material-symbols-outlined">quiz</span></div><h4>FAQ</h4><p>Аккордеон: вопрос-ответ, JS, стили</p>
                                 </div>
                             </div>
                         </div>
