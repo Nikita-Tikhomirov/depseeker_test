@@ -480,6 +480,10 @@ function updateField(id, key, value) {
     liveUpdate();
 }
 
+function debouncedPushUndo() {
+    // no-op: undo stack not implemented yet
+}
+
 function toggleFieldArray(id, key, value, checked) {
     var f = getFieldById(id);
     if (!f) return;
@@ -1166,22 +1170,12 @@ function upgradeLocationSelects() {
 function liveUpdate() {
     if (currentCodeTab === 'json') {
         generateJSON();
-        document.getElementById('code-pre').style.display = '';
-        document.getElementById('preview-container').style.display = 'none';
-        document.getElementById('preview-synced-indicator').style.display = 'none';
     } else if (currentCodeTab === 'html') {
         generateHTML();
-        document.getElementById('code-pre').style.display = '';
-        document.getElementById('preview-container').style.display = 'none';
-        document.getElementById('preview-synced-indicator').style.display = 'none';
     } else if (currentCodeTab === 'preview') {
         updatePreview();
-        document.getElementById('code-pre').style.display = '';
     } else {
         generatePHP();
-        document.getElementById('code-pre').style.display = '';
-        document.getElementById('preview-container').style.display = 'none';
-        document.getElementById('preview-synced-indicator').style.display = 'none';
     }
     updateVisualEditorIfActive();
 }

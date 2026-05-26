@@ -243,7 +243,8 @@
 
         /* ============ BUILDER HIDDEN STATE ============ */
         .generator-workspace.preview-mode #panel-builder { display:none; }
-        .generator-workspace.preview-mode .code-preview pre { max-height:500px; }
+        .generator-workspace.preview-mode .code-preview { display:none; }
+        .generator-workspace.preview-mode .preview-area > div:last-child { display:none; }
 
         /* ============ CONFIRM DIALOG ============ */
         .confirm-overlay { position:fixed; inset:0; background:rgba(0,0,0,0.6); z-index:9999; display:flex; align-items:center; justify-content:center; opacity:0; pointer-events:none; transition:opacity 0.25s; }
