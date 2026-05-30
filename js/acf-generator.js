@@ -1427,6 +1427,10 @@ function generatePHP() {
 
 // ==================== GENERATE HTML TEMPLATE ====================
 function generateHTML() {
+    document.getElementById('code-output').textContent = generateVisualHTML();
+}
+
+function generateWordPressTemplateHTML() {
     var config = buildACFConfig();
     var out = [];
 
@@ -1738,7 +1742,7 @@ function generateHTML() {
     }
 
     out.push('</section>');
-    document.getElementById('code-output').textContent = out.join('\n');
+    return out.join('\n');
 }
 
 // ==================== PREVIEW HTML (browser-renderable) ====================
@@ -2023,6 +2027,16 @@ function updatePreview() {
     var indicator = document.getElementById('preview-synced-indicator');
     if (!container || !iframe) return;
 
+    // In preview mode, CSS controls visibility — don't set inline display
+    if (previewModeActive) {
+        if (currentCodeTab === 'preview') {
+            var previewDoc = generatePreviewHTML();
+            iframe.srcdoc = previewDoc;
+            if (indicator) indicator.style.display = '';
+        }
+        return;
+    }
+
     if (currentCodeTab === 'preview') {
         container.style.display = '';
         var previewDoc = generatePreviewHTML();
@@ -2137,7 +2151,9 @@ function applyStyleChange(id, value) {
     if (key) {
         blockStyles[key] = value;
         syncStyleTextFields();
+        if (currentCodeTab === 'html') generateHTML();
         if (currentCodeTab === 'preview') updatePreview();
+        if (previewModeActive) renderVisualEditor();
     }
 }
 
@@ -2154,7 +2170,9 @@ function applyStyleColor(id, value) {
         blockStyles[key] = value;
         var textEl = document.getElementById(textId);
         if (textEl) textEl.value = value;
+        if (currentCodeTab === 'html') generateHTML();
         if (currentCodeTab === 'preview') updatePreview();
+        if (previewModeActive) renderVisualEditor();
     }
 }
 
@@ -2198,7 +2216,9 @@ function resetStyles() {
         var el = document.getElementById(keys[i]);
         if (el) el.value = defaults[keys[i]];
     }
+    if (currentCodeTab === 'html') generateHTML();
     if (currentCodeTab === 'preview') updatePreview();
+    if (previewModeActive) renderVisualEditor();
     showToast('Стили сброшены');
 }
 
@@ -2265,6 +2285,11 @@ function togglePreviewMode() {
             btn.classList.add('active');
             btn.innerHTML = '<span class="material-symbols-outlined">edit</span> Режим редактора';
         }
+        // Populate both preview frame (HTML render) and visual editor
+        var previewFrame = document.getElementById('preview-frame');
+        if (previewFrame) {
+            previewFrame.srcdoc = generatePreviewHTML();
+        }
         renderVisualEditor();
     } else {
         ws.classList.remove('preview-mode');
@@ -2298,210 +2323,249 @@ function getPlaceholderSVG() {
 }
 
 function generateVisualHTML() {
-    var config = buildACFConfig();
-    var groupTitle = document.getElementById('group-title').value || 'ACF Group';
-    var isFAQ = groupTitle.toLowerCase().indexOf('faq') !== -1 ||
-                (fields.length === 1 && fields[0].type === 'repeater' &&
-                 fields[0].sub_fields && fields[0].sub_fields.length === 2 &&
-                 fields[0].sub_fields[0].name && fields[0].sub_fields[0].name.indexOf('question') !== -1);
+    var styles = blockStyles;
+    var groupTitle = document.getElementById('group-title').value || '';
+    var isFAQ = fields.length === 1 && fields[0].type === 'repeater' &&
+                fields[0].sub_fields && fields[0].sub_fields.length === 2 &&
+                fields[0].sub_fields[0].name && fields[0].sub_fields[0].name.indexOf('question') !== -1;
 
-    var out = [];
-    out.push('<!DOCTYPE html><html lang="ru"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Превью: ' + escHtml(groupTitle) + '</title>');
-    out.push('<style>');
-    out.push('*{box-sizing:border-box;margin:0;padding:0;}');
-    out.push('body{font-family:Inter,-apple-system,sans-serif;padding:20px;color:#1a1a2e;background:#fff;line-height:1.5;}');
-    out.push('.acf-section{max-width:800px;margin:0 auto;}');
-    out.push('.acf-section h2{font-size:1.5rem;margin-bottom:16px;font-weight:700;}');
-    out.push('.acf-field{margin-bottom:16px;}');
-    out.push('.acf-label{font-weight:600;font-size:0.85rem;color:#666;margin-bottom:6px;text-transform:uppercase;letter-spacing:0.04em;}');
-    out.push('.acf-text{background:#f8f9fa;padding:12px 16px;border-radius:8px;border:1px solid #e0e0e0;color:#333;}');
-    out.push('.acf-textarea{background:#f8f9fa;padding:12px 16px;border-radius:8px;border:1px solid #e0e0e0;min-height:60px;color:#333;white-space:pre-wrap;}');
-    out.push('.acf-image{display:flex;align-items:center;justify-content:center;}');
-    out.push('.acf-image .acf-placeholder-img{width:100%;max-width:400px;}');
-    out.push('.acf-gallery{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;}');
-    out.push('.acf-gallery .acf-placeholder-img{min-height:100px;}');
-    out.push('.acf-link a{display:inline-block;padding:10px 24px;background:#7c3aed;color:#fff;border-radius:8px;text-decoration:none;font-weight:600;font-size:0.9rem;}');
-    out.push('.acf-repeater-list{display:grid;gap:12px;}');
-    out.push('.acf-repeater-item{background:#fafafa;border:1px solid #e0e0e0;border-radius:10px;padding:16px;display:flex;gap:12px;align-items:center;}');
-    out.push('.acf-repeater-item .acf-avatar{width:48px;height:48px;border-radius:50%;flex-shrink:0;}');
-    out.push('.acf-repeater-item .acf-content{flex:1;}');
-    out.push('.acf-repeater-item .acf-name{font-weight:600;font-size:0.95rem;color:#1a1a2e;}');
-    out.push('.acf-repeater-item .acf-desc{font-size:0.85rem;color:#666;margin-top:2px;}');
-    // FAQ accordion styles
-    out.push('.acf-faq-item{border:1px solid #e0e0e0;border-radius:8px;margin-bottom:8px;overflow:hidden;background:#fff;}');
-    out.push('.acf-faq-question{padding:16px 20px;font-weight:600;cursor:pointer;display:flex;justify-content:space-between;align-items:center;user-select:none;transition:background 0.2s;background:#fafafa;border:none;width:100%;text-align:left;font-size:1rem;color:#1a1a2e;font-family:inherit;}');
-    out.push('.acf-faq-question:hover{background:#f0f0f0;}');
-    out.push('.acf-faq-question::after{content:"+";font-size:1.3rem;font-weight:400;color:#666;transition:transform 0.3s;flex-shrink:0;margin-left:12px;}');
-    out.push('.acf-faq-item.open .acf-faq-question::after{content:"\\2212";transform:rotate(180deg);}');
-    out.push('.acf-faq-answer{max-height:0;overflow:hidden;transition:max-height 0.35s ease;color:#444;line-height:1.6;font-size:0.95rem;padding:0 20px;}');
-    out.push('.acf-faq-item.open .acf-faq-answer{max-height:500px;padding:0 20px 16px;}');
-    out.push('.acf-true-false{display:inline-flex;align-items:center;gap:8px;padding:8px 16px;background:#f0fdf4;border:1px solid #86efac;border-radius:6px;color:#166534;font-weight:600;font-size:0.85rem;}');
-    out.push('@media(max-width:600px){body{padding:12px;}.acf-gallery{grid-template-columns:repeat(2,1fr);}.acf-repeater-item{flex-direction:column;align-items:flex-start;}}');
-    out.push('</style>');
-    out.push('</head><body>');
-    out.push('<div class="acf-section">');
-    out.push('<h2>' + escHtml(groupTitle) + '</h2>');
+    var css = [
+        '*{box-sizing:border-box;margin:0;padding:0;}',
+        'body{font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;line-height:1.6;color:' + styles.textColor + ';background:' + styles.bgColor + ';padding:' + styles.padding + 'px;}',
+        '.acf-block{max-width:800px;margin:0 auto;}',
+        '.acf-block-title{font-size:1.35rem;font-weight:700;margin-bottom:24px;}',
+        '.acf-field{margin-bottom:' + styles.gap + 'px;}',
+        '.acf-field:last-child{margin-bottom:0;}',
+        '.acf-label{font-size:0.7rem;text-transform:uppercase;letter-spacing:0.07em;font-weight:600;opacity:0.5;margin-bottom:6px;}',
+        '.acf-value{background:' + styles.cardBg + ';padding:' + styles.cardPadding + 'px;border-radius:' + styles.cardRadius + 'px;border:' + styles.borderWidth + 'px solid ' + styles.borderColor + ';}',
+        '.acf-value--text{font-size:0.95rem;}',
+        '.acf-value--textarea{font-size:0.9rem;white-space:pre-wrap;min-height:60px;line-height:1.7;}',
+        '.acf-value--number{font-family:"JetBrains Mono","SF Mono",monospace;font-size:1.1rem;font-weight:600;}',
+        '.acf-value--email,.acf-value--url{color:#6366f1;text-decoration:underline;text-underline-offset:2px;cursor:pointer;}',
+        '.acf-img{width:100%;aspect-ratio:16/9;border-radius:8px;background:linear-gradient(135deg,#e0e7ff 0%,#c7d2fe 50%,#a5b4fc 100%);display:flex;align-items:center;justify-content:center;color:#6366f1;font-size:1.5rem;}',
+        '.acf-gallery{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;}',
+        '.acf-gallery-item{aspect-ratio:1;border-radius:6px;background:linear-gradient(135deg,#e0e7ff 0%,#c7d2fe 100%);}',
+        '.acf-btn{display:inline-block;padding:12px 28px;background:#6366f1;color:#fff;border-radius:8px;text-decoration:none;font-weight:600;font-size:0.9rem;}',
+        '.acf-badge{display:inline-block;padding:4px 12px;border-radius:999px;font-size:0.75rem;font-weight:600;}',
+        '.acf-badge--yes{background:#dcfce7;color:#166534;}',
+        '.acf-badge--no{background:#fee2e2;color:#991b1b;}',
+        '.acf-color{display:inline-flex;align-items:center;gap:8px;}',
+        '.acf-color span{width:24px;height:24px;border-radius:4px;border:1px solid rgba(0,0,0,0.1);flex-shrink:0;}',
+        '.acf-file-card{display:flex;align-items:center;gap:12px;padding:12px;border:1px dashed ' + styles.borderColor + ';border-radius:8px;}',
+        '.acf-file-card svg{flex-shrink:0;opacity:0.35;}',
+        '.acf-file-name{font-size:0.85rem;font-weight:500;}',
+        '.acf-file-size{font-size:0.75rem;opacity:0.45;}',
+        '.acf-map{height:180px;border-radius:8px;background:linear-gradient(135deg,#dbeafe 0%,#bfdbfe 50%,#93c5fd 100%);display:flex;align-items:center;justify-content:center;color:#3b82f6;font-size:0.85rem;gap:6px;}',
+        '.acf-oembed{aspect-ratio:16/9;border-radius:8px;background:#0f0f23;display:flex;align-items:center;justify-content:center;}',
+        '.acf-oembed svg{opacity:0.6;}',
+        '.acf-repeater{display:grid;gap:14px;}',
+        '.acf-repeater-item{display:flex;gap:14px;align-items:flex-start;}',
+        '.acf-avatar{width:48px;height:48px;border-radius:50%;flex-shrink:0;background:linear-gradient(135deg,#e0e7ff,#c7d2fe);display:flex;align-items:center;justify-content:center;color:#6366f1;font-weight:700;font-size:1rem;}',
+        '.acf-info{flex:1;min-width:0;}',
+        '.acf-name{font-weight:600;font-size:0.95rem;}',
+        '.acf-role{font-size:0.8rem;opacity:0.5;margin-top:2px;}',
+        '.acf-bio{font-size:0.85rem;opacity:0.7;margin-top:4px;line-height:1.55;}',
+        '.acf-company{font-size:0.8rem;font-weight:500;opacity:0.55;margin-top:2px;}',
+        '.acf-faq-item{border:' + styles.borderWidth + 'px solid ' + styles.borderColor + ';border-radius:' + styles.cardRadius + 'px;overflow:hidden;margin-bottom:8px;background:' + styles.cardBg + ';}',
+        '.acf-faq-item:last-child{margin-bottom:0;}',
+        '.acf-faq-question{padding:' + styles.cardPadding + 'px;font-weight:600;cursor:pointer;display:flex;justify-content:space-between;align-items:center;user-select:none;border:none;width:100%;text-align:left;font-size:0.95rem;color:' + styles.textColor + ';font-family:inherit;background:transparent;}',
+        '.acf-faq-question::after{content:"+";font-size:1.2rem;opacity:0.35;transition:transform 0.2s;}',
+        '.acf-faq-answer{padding:0 ' + styles.cardPadding + 'px;max-height:0;overflow:hidden;transition:all 0.3s;font-size:0.9rem;opacity:0.7;line-height:1.65;}',
+        '.acf-faq-item.open .acf-faq-question::after{content:"−";transform:rotate(180deg);}',
+        '.acf-faq-item.open .acf-faq-answer{max-height:200px;padding-bottom:' + styles.cardPadding + 'px;}',
+        '.acf-post-card{display:flex;gap:12px;align-items:center;padding:12px;border:1px solid ' + styles.borderColor + ';border-radius:8px;}',
+        '.acf-post-thumb{width:56px;height:56px;border-radius:6px;background:linear-gradient(135deg,#e0e7ff,#c7d2fe);flex-shrink:0;}',
+        '.acf-post-title{font-weight:600;font-size:0.9rem;}',
+        '.acf-post-meta{font-size:0.75rem;opacity:0.45;margin-top:2px;}',
+        '.acf-group{padding:16px;border:1px dashed ' + styles.borderColor + ';border-radius:8px;}',
+        '.acf-flex-layout{margin-bottom:12px;padding:12px 16px;border-left:3px solid #6366f1;background:rgba(99,102,241,0.04);border-radius:0 6px 6px 0;}',
+        '.acf-flex-layout:last-child{margin-bottom:0;}',
+        '.acf-flex-layout-title{font-size:0.7rem;text-transform:uppercase;letter-spacing:0.06em;opacity:0.4;margin-bottom:10px;font-weight:600;}',
+    ].join('\n');
 
-    function renderVisualField(f, isSub) {
+    function V(content, cls) {
+        return '<div class="acf-value' + (cls ? ' ' + cls : '') + '">' + (content || '') + '</div>';
+    }
+
+    function F(body) {
+        if (!body) return '';
+        return '<div class="acf-field">' + body + '</div>';
+    }
+
+    function L(text) {
+        return '<div class="acf-label">' + escHtml(text || '') + '</div>';
+    }
+
+    function iconImg() {
+        return '<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>';
+    }
+
+    function iconFile() {
+        return '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#999" stroke-width="1.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>';
+    }
+
+    function iconMap() {
+        return '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>';
+    }
+
+    function iconPlay() {
+        return '<svg width="40" height="40" viewBox="0 0 24 24" fill="white" opacity="0.7"><polygon points="6,3 20,12 6,21"/></svg>';
+    }
+
+    function renderField(f, nested) {
         var t = f.type || 'text';
-        var label = f.label || f.name || t;
+        var label = f.label || f.name || '';
         var name = f.name || '';
-        var h = '';
-        var isImage = (t === 'image' || t === 'file');
-        var isGallery = (t === 'gallery');
-        var isLink = (t === 'link');
-        var isRepeater = (t === 'repeater');
-        var isFlex = (t === 'flexible_content');
-        var isGroup = (t === 'group');
-        var isTrueFalse = (t === 'true_false');
-        var isTextarea = (t === 'textarea' || t === 'wysiwyg');
-        var isMessage = (t === 'message');
-        var isTab = (t === 'tab');
-        var isEmail = (t === 'email');
-        var isURL = (t === 'url');
-        var isSelect = (t === 'select' || t === 'checkbox' || t === 'radio');
-        var isDate = (t === 'date_picker');
-        var isNumber = (t === 'number');
+        nested = !!nested;
 
-        if (isTab || isMessage) return '';
+        if (t === 'tab') return '';
 
-        h += '<div class="acf-field">';
-        h += '<div class="acf-label">' + escHtml(label) + '</div>';
+        if (t === 'message') {
+            return F('<div style="padding:12px 16px;background:rgba(251,191,36,0.08);border-left:3px solid #f59e0b;border-radius:0 6px 6px 0;font-size:0.85rem;">' + escHtml(f.message || label) + '</div>');
+        }
 
-        if (isImage) {
-            h += '<div class="acf-image"><div class="acf-placeholder-img"><svg width="48" height="48" viewBox="0 0 48 48" style="opacity:0.3"><rect x="6" y="10" width="36" height="28" rx="3" fill="none" stroke="#999" stroke-width="2"/><circle cx="18" cy="20" r="3" fill="none" stroke="#999" stroke-width="1.5"/><path d="M6 32l10-10 8 8 5-6 13 14" fill="none" stroke="#999" stroke-width="1.5"/></svg></div></div>';
-        } else if (isGallery) {
-            h += '<div class="acf-gallery">';
-            for (var g = 0; g < 3; g++) {
-                h += '<div class="acf-placeholder-img" style="min-height:80px;"><svg width="32" height="32" viewBox="0 0 48 48" style="opacity:0.25"><rect x="6" y="10" width="36" height="28" rx="3" fill="none" stroke="#999" stroke-width="2"/></svg></div>';
+        var body = '';
+
+        if (t === 'image') {
+            body = '<div class="acf-img">' + iconImg() + '</div>';
+        } else if (t === 'gallery') {
+            var g = '<div class="acf-gallery">';
+            for (var gi = 0; gi < 3; gi++) g += '<div class="acf-gallery-item"></div>';
+            g += '</div>';
+            body = g;
+        } else if (t === 'link') {
+            body = V('<a class="acf-btn" href="#">' + escHtml(f.title || name || 'Перейти') + '</a>');
+        } else if (t === 'true_false') {
+            var tfVal = (f.default_value === 1 || f.default_value === '1');
+            body = V('<span class="acf-badge ' + (tfVal ? 'acf-badge--yes' : 'acf-badge--no') + '">' + (tfVal ? '✓ ' + escHtml(f.message || 'Да') : '✗ ' + escHtml(f.message || 'Нет')) + '</span>');
+        } else if (t === 'textarea' || t === 'wysiwyg') {
+            body = V(escHtml(f.default_value || 'Содержимое текстового блока. Несколько абзацев с форматированием, списками и другими элементами контента.'), 'acf-value--textarea');
+        } else if (t === 'number') {
+            body = V(f.default_value || '42', 'acf-value--number');
+        } else if (t === 'email') {
+            body = V('hello@example.com', 'acf-value--email');
+        } else if (t === 'url') {
+            body = V('https://example.com', 'acf-value--url');
+        } else if (t === 'select' || t === 'radio') {
+            var ch = f.choices || {};
+            var ck = Object.keys(ch);
+            body = V(escHtml(ch[ck[0]] || 'Выбранный вариант'));
+        } else if (t === 'checkbox') {
+            var cc = f.choices || {};
+            var ckeys = Object.keys(cc).slice(0, 2);
+            body = V(ckeys.map(function(k){return '☑ ' + escHtml(cc[k] || k);}).join('  '));
+        } else if (t === 'date_picker') {
+            body = V('15 июня 2026');
+        } else if (t === 'date_time_picker') {
+            body = V('15 июня 2026, 14:30');
+        } else if (t === 'time_picker') {
+            body = V('14:30');
+        } else if (t === 'color_picker') {
+            var clr = f.default_value || '#6366f1';
+            body = V('<span class="acf-color"><span style="background:' + clr + '"></span> ' + clr + '</span>');
+        } else if (t === 'password') {
+            body = V('••••••••');
+        } else if (t === 'oembed') {
+            body = '<div class="acf-oembed">' + iconPlay() + '</div>';
+        } else if (t === 'file') {
+            body = '<div class="acf-file-card">' + iconFile() + '<div><div class="acf-file-name">document.pdf</div><div class="acf-file-size">2.4 МБ</div></div></div>';
+        } else if (t === 'google_map') {
+            body = '<div class="acf-map">' + iconMap() + ' Карта</div>';
+        } else if (t === 'post_object' || t === 'relationship') {
+            body = '<div class="acf-post-card"><div class="acf-post-thumb"></div><div><div class="acf-post-title">Выбранная запись</div><div class="acf-post-meta">ID: 42</div></div></div>';
+        } else if (t === 'taxonomy') {
+            body = V('Категория 1, Метка 2');
+        } else if (t === 'user') {
+            body = '<div class="acf-repeater-item"><div class="acf-avatar">И</div><div class="acf-info"><div class="acf-name">Иван Петров</div><div class="acf-role">editor</div></div></div>';
+        } else if (t === 'group' && f.sub_fields && f.sub_fields.length) {
+            var gin = '';
+            for (var gsi = 0; gsi < f.sub_fields.length; gsi++) {
+                gin += renderField(f.sub_fields[gsi], true);
             }
-            h += '</div>';
-        } else if (isLink) {
-            h += '<div class="acf-link"><a href="#">' + escHtml(name || 'Ссылка') + '</a></div>';
-        } else if (isRepeater && f.sub_fields) {
-            var isFAQ = (f.sub_fields.length === 2 &&
-                         f.sub_fields[0].name && f.sub_fields[0].name.indexOf('question') !== -1 &&
-                         f.sub_fields[1].name && f.sub_fields[1].name.indexOf('answer') !== -1);
-            if (isFAQ) {
-                var faqItems = [
-                    ['Как заказать услугу?', 'Чтобы заказать услугу, выберите нужный тариф и нажмите кнопку «Заказать». Наш менеджер свяжется с вами в течение 15 минут для подтверждения деталей.'],
-                    ['Какие сроки выполнения?', 'Стандартный срок выполнения заказа — от 1 до 5 рабочих дней в зависимости от сложности. Срочные заказы обрабатываются в приоритетном порядке — от 2 часов.'],
-                    ['Как происходит оплата?', 'Мы принимаем оплату банковскими картами Visa/Mastercard, через СБП, а также безналичным расчётом для юридических лиц. Все платежи защищены.'],
-                    ['Есть ли гарантия на услуги?', 'Да, мы предоставляем гарантию на все наши услуги. Если результат не соответствует заявленному качеству, мы бесплатно всё исправим или вернём деньги.']
+            body = '<div class="acf-group">' + gin + '</div>';
+        } else if (t === 'repeater' && f.sub_fields && f.sub_fields.length) {
+            var sfAll = f.sub_fields.map(function(s){return (s.name||'').toLowerCase();});
+            var hasQ = sfAll.some(function(n){return n.indexOf('question')!==-1;});
+            var hasA = sfAll.some(function(n){return n.indexOf('answer')!==-1;});
+            var faqMode = f.sub_fields.length === 2 && hasQ && hasA;
+
+            if (faqMode) {
+                var faqs = [
+                    ['Как воспользоваться сервисом?', 'Выберите подходящий тариф, заполните форму заказа и наш менеджер свяжется с вами в течение 15 минут.'],
+                    ['Какие гарантии вы даёте?', 'Мы гарантируем качество всех услуг. Если результат вас не устроит, вернём деньги или переделаем бесплатно.'],
+                    ['Сколько времени занимает выполнение?', 'Стандартное время выполнения — от 1 до 3 рабочих дней. Срочные заказы обрабатываются за 2–4 часа.']
                 ];
-                for (var fi = 0; fi < faqItems.length; fi++) {
-                    h += '<div class="acf-faq-item">';
-                    h += '<button class="acf-faq-question">' + escHtml(faqItems[fi][0]) + '</button>';
-                    h += '<div class="acf-faq-answer">' + escHtml(faqItems[fi][1]) + '</div>';
-                    h += '</div>';
+                body = '';
+                for (var fi = 0; fi < faqs.length; fi++) {
+                    body += '<div class="acf-faq-item' + (fi === 0 ? ' open' : '') + '"><button class="acf-faq-question">' + escHtml(faqs[fi][0]) + '</button><div class="acf-faq-answer">' + escHtml(faqs[fi][1]) + '</div></div>';
                 }
             } else {
-                h += '<div class="acf-repeater-list">';
+                body = '<div class="acf-repeater">';
                 for (var ri = 0; ri < 2; ri++) {
-                    var hasImage = false;
+                    var hasImg = false;
+                    body += '<div class="acf-repeater-item">';
                     for (var si = 0; si < f.sub_fields.length; si++) {
-                        if (f.sub_fields[si].type === 'image') hasImage = true;
-                    }
-                    h += '<div class="acf-repeater-item">';
-                    if (hasImage) {
-                        // Check which sub-field is the avatar (first image)
-                        for (var si2 = 0; si2 < f.sub_fields.length; si2++) {
-                            if (f.sub_fields[si2].type === 'image') {
-                                h += '<div class="acf-avatar acf-placeholder-img" style="width:48px;height:48px;min-height:48px;border-radius:50%;"><svg width="20" height="20" viewBox="0 0 48 48" style="opacity:0.3"><circle cx="24" cy="16" r="8" fill="none" stroke="#999" stroke-width="2"/><ellipse cx="24" cy="38" rx="14" ry="8" fill="none" stroke="#999" stroke-width="2"/></svg></div>';
-                                break;
-                            }
+                        var sf = f.sub_fields[si];
+                        if (sf.type === 'image') {
+                            body += '<div class="acf-avatar">' + (ri === 0 ? 'А' : 'М') + '</div>';
+                            hasImg = true;
+                            break;
                         }
                     }
-                    h += '<div class="acf-content">';
-                    for (var si3 = 0; si3 < f.sub_fields.length; si3++) {
-                        var sf = f.sub_fields[si3];
-                        if (sf.type === 'image') continue;
-                        var contentClass = sf.type === 'textarea' || sf.type === 'wysiwyg' ? 'acf-desc' : 'acf-name';
-                        var sampleVal = '';
-                        if (sf.name && sf.name.indexOf('name') !== -1) sampleVal = 'Алексей Петров';
-                        else if (sf.name && sf.name.indexOf('title') !== -1) sampleVal = 'Специалист';
-                        else if (sf.name && sf.name.indexOf('role') !== -1) sampleVal = 'Директор';
-                        else if (sf.name && sf.name.indexOf('text') !== -1) sampleVal = 'Текст отзыва о работе компании...';
-                        else if (sf.name && sf.name.indexOf('bio') !== -1) sampleVal = 'Краткая информация о сотруднике...';
-                        else if (sf.name && sf.name.indexOf('company') !== -1) sampleVal = 'ООО «Компания»';
-                        else sampleVal = sf.label || sf.name || '';
-                        h += '<div class="' + contentClass + '">' + escHtml(sampleVal) + '</div>';
+                    body += '<div class="acf-info">';
+                    for (var sj = 0; sj < f.sub_fields.length; sj++) {
+                        var sf2 = f.sub_fields[sj];
+                        if (sf2.type === 'image') continue;
+                        var sn = (sf2.name || '').toLowerCase();
+                        var sv = sf2.default_value || '';
+                        if (!sv) {
+                            if (sn.indexOf('name') !== -1 || sn.indexOf('title') !== -1 || sn.indexOf('имя') !== -1 || sn.indexOf('заголовок') !== -1) sv = ri === 0 ? 'Алексей Смирнов' : 'Марина Волкова';
+                            else if (sn.indexOf('role') !== -1 || sn.indexOf('position') !== -1 || sn.indexOf('job') !== -1 || sn.indexOf('должн') !== -1) sv = ri === 0 ? 'Руководитель отдела' : 'Ведущий дизайнер';
+                            else if (sn.indexOf('text') !== -1 || sn.indexOf('review') !== -1 || sn.indexOf('message') !== -1 || sn.indexOf('comment') !== -1 || sn.indexOf('отзыв') !== -1 || sn.indexOf('текст') !== -1) sv = 'Отличный сервис! Всё сделали быстро и качественно.';
+                            else if (sn.indexOf('company') !== -1 || sn.indexOf('компан') !== -1) sv = 'ООО «Технологии»';
+                            else if (sn.indexOf('bio') !== -1 || sn.indexOf('desc') !== -1 || sn.indexOf('описан') !== -1) sv = 'Специалист с 10-летним опытом в области веб-разработки.';
+                            else sv = sf2.label || sf2.name || '';
+                        }
+                        var scls = (sn.indexOf('name') !== -1 || sn.indexOf('title') !== -1) ? 'acf-name' :
+                                   (sn.indexOf('role') !== -1 || sn.indexOf('position') !== -1 || sn.indexOf('job') !== -1) ? 'acf-role' :
+                                   (sn.indexOf('company') !== -1 || sn.indexOf('компан') !== -1) ? 'acf-company' : 'acf-bio';
+                        body += '<div class="' + scls + '">' + escHtml(sv) + '</div>';
                     }
-                    h += '</div>';
-                    h += '</div>';
+                    body += '</div></div>';
                 }
-                h += '</div>';
+                body += '</div>';
             }
-        } else if (isFlex && f.layouts) {
+        } else if (t === 'flexible_content' && f.layouts && f.layouts.length) {
+            body = '';
             for (var li = 0; li < Math.min(f.layouts.length, 2); li++) {
-                var layout = f.layouts[li];
-                h += '<div class="acf-field" style="margin-bottom:12px;">';
-                h += '<div class="acf-label">' + escHtml(layout.label || layout.name) + '</div>';
-                if (layout.sub_fields) {
-                    for (var lsi = 0; lsi < layout.sub_fields.length; lsi++) {
-                        h += renderVisualField(layout.sub_fields[lsi], true);
+                var lay = f.layouts[li];
+                body += '<div class="acf-flex-layout"><div class="acf-flex-layout-title">' + escHtml(lay.label || lay.name) + '</div>';
+                if (lay.sub_fields) {
+                    for (var lsi = 0; lsi < lay.sub_fields.length; lsi++) {
+                        body += renderField(lay.sub_fields[lsi], true);
                     }
                 }
-                h += '</div>';
+                body += '</div>';
             }
-        } else if (isGroup && f.sub_fields) {
-            h += '<div style="background:#fafafa;border:1px solid #e0e0e0;border-radius:10px;padding:16px;">';
-            for (var gsi = 0; gsi < f.sub_fields.length; gsi++) {
-                h += renderVisualField(f.sub_fields[gsi], true);
-            }
-            h += '</div>';
-        } else if (isTrueFalse) {
-            h += '<div class="acf-true-false"><span style="font-size:1.1rem;">&#10003;</span> ' + escHtml(f.message || 'Да') + '</div>';
-        } else if (isTextarea) {
-            var taVal = f.default_value || 'Текст для текстовой области с демонстрационным содержимым.';
-            h += '<div class="acf-textarea">' + escHtml(taVal) + '</div>';
-        } else if (isSelect) {
-            var choices = f.choices || {};
-            var choiceKeys = Object.keys(choices);
-            if (choiceKeys.length === 0) choiceKeys = ['option_1'];
-            h += '<div class="acf-text">' + escHtml(choices[choiceKeys[0]] || choiceKeys[0]) + '</div>';
-        } else if (isEmail) {
-            h += '<div class="acf-text" style="color:#7c3aed;">example@email.com</div>';
-        } else if (isURL) {
-            h += '<div class="acf-text" style="color:#7c3aed;">https://example.com</div>';
-        } else if (isDate) {
-            h += '<div class="acf-text">25.05.2026</div>';
-        } else if (isNumber) {
-            h += '<div class="acf-text" style="font-family:monospace;">' + (f.default_value || '42') + '</div>';
-        } else if (t === 'color_picker') {
-            h += '<div style="display:flex;align-items:center;gap:8px;"><div style="width:32px;height:32px;border-radius:6px;background:#7c3aed;border:1px solid #e0e0e0;"></div><span class="acf-text" style="flex:1;">#7C3AED</span></div>';
-        } else if (t === 'oembed') {
-            h += '<div class="acf-text" style="text-align:center;color:#666;">[Embedded content]</div>';
-        } else if (t === 'post_object' || t === 'relationship') {
-            h += '<div class="acf-text">Выбранная запись</div>';
-        } else if (t === 'password') {
-            h += '<div class="acf-text">••••••••</div>';
         } else {
-            var defVal = f.default_value || (f.placeholder || 'Пример значения');
-            h += '<div class="acf-text">' + escHtml(defVal) + '</div>';
+            body = V(escHtml(f.default_value || f.placeholder || 'Значение поля'), 'acf-value--text');
         }
-        h += '</div>';
-        return h;
+
+        if (nested) return L(label) + body;
+        return F(L(label) + body);
     }
 
+    var html = '<!DOCTYPE html><html lang="ru"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>' + escHtml(groupTitle) + '</title><style>' + css + '</style></head><body><div class="acf-block">';
+    if (groupTitle && !isFAQ) html += '<h2 class="acf-block-title">' + escHtml(groupTitle) + '</h2>';
     for (var i = 0; i < fields.length; i++) {
-        out.push(renderVisualField(fields[i], false));
+        html += renderField(fields[i], false);
     }
-
-    out.push('</div>');
-    // FAQ accordion JS
+    html += '</div>';
     if (isFAQ) {
-        out.push('<script>');
-        out.push('document.addEventListener("click",function(e){');
-        out.push('var q=e.target.closest(".acf-faq-question");');
-        out.push('if(!q)return;');
-        out.push('var item=q.parentElement;');
-        out.push('item.classList.toggle("open");');
-        out.push('});');
-        out.push('</script>');
+        html += '<script>document.addEventListener("click",function(e){var q=e.target.closest(".acf-faq-question");if(!q)return;q.parentElement.classList.toggle("open");});</' + 'script>';
     }
-    out.push('</body></html>');
-    return out.join('\n');
+    html += '</body></html>';
+    return html;
 }
 
 function renderVisualEditor() {
@@ -2549,9 +2613,12 @@ function downloadCode() {
     var ext, mime;
     if (currentCodeTab === 'json') {
         ext = 'json'; mime = 'application/json';
+    } else if (currentCodeTab === 'html') {
+        ext = 'html'; mime = 'text/html';
+        code = generateVisualHTML();
     } else if (currentCodeTab === 'preview') {
         ext = 'html'; mime = 'text/html';
-        code = '<!DOCTYPE html>\n<html>\n<head>\n<meta charset="utf-8">\n<style>\n' + generatePreviewCSS() + '\n</style>\n</head>\n<body>\n' + previewHTMLPlain() + '\n</body>\n</html>';
+        code = generateVisualHTML();
     } else {
         ext = 'php'; mime = 'text/x-php';
     }
