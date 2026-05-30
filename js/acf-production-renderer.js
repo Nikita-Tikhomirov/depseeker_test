@@ -439,9 +439,17 @@
         return out.join('\n');
     }
 
-    function productionCSS() {
-        var s = getStyles();
+    function previewEditorCSS() {
         return [
+            '[data-production-target], [data-production-field-target] { cursor: pointer; }',
+            '.zifra-production-selected { outline: 2px solid #7c3aed; outline-offset: 4px; }'
+        ].join('\n');
+    }
+
+    function productionCSS(options) {
+        options = options || {};
+        var s = getStyles();
+        var rules = [
             '/* Production ACF block. Move this CSS to your theme stylesheet. */',
             '.zifra-acf-block {',
             '  --acf-bg: ' + s.bgColor + ';',
@@ -489,8 +497,6 @@
             '.zifra-acf-list { display: grid; gap: 12px; }',
             '.zifra-acf-layout { margin-top: 20px; }',
             '.zifra-acf-layout:first-child { margin-top: 0; }',
-            '[data-production-target], [data-production-field-target] { cursor: pointer; }',
-            '.zifra-production-selected { outline: 2px solid #7c3aed; outline-offset: 4px; }',
             elementOverridesCSS(),
             fieldOverridesCSS(),
             '@supports not (color: color-mix(in srgb, #000 50%, transparent)) { .zifra-acf-block { --acf-muted: #64748b; } }',
@@ -504,7 +510,9 @@
             '  .zifra-acf-card { padding: 18px; }',
             '  .zifra-acf-actions .zifra-acf-btn { width: 100%; }',
             '}'
-        ].join('\n');
+        ];
+        if (options.includeEditorTools) rules.push(previewEditorCSS());
+        return rules.join('\n');
     }
 
     function phpGet(field, sub) {
@@ -797,7 +805,7 @@
 
     function fullPreviewDoc() {
         var script = '<script>(function(){function select(el){var prev=document.querySelector(".zifra-production-selected");if(prev)prev.classList.remove("zifra-production-selected");if(el)el.classList.add("zifra-production-selected");}document.addEventListener("click",function(e){var target=e.target.closest("[data-production-target]");var field=e.target.closest("[data-production-field-target]");if(target){select(target);parent.postMessage({source:"acf-production-target",styleKey:target.getAttribute("data-production-target")},"*");return;}if(field){select(field);parent.postMessage({source:"acf-production-target",fieldKey:field.getAttribute("data-production-field-target")},"*");}});})();</' + 'script>';
-        return '<!DOCTYPE html><html lang="ru"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><style>body{margin:0;background:#f8fafc;}' + productionCSS() + '</style></head><body>' + renderPreviewBlock() + script + '</body></html>';
+        return '<!DOCTYPE html><html lang="ru"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><style>body{margin:0;background:#f8fafc;}' + productionCSS({ includeEditorTools: true }) + '</style></head><body>' + renderPreviewBlock() + script + '</body></html>';
     }
 
     function activeStyleKeys() {
@@ -1025,6 +1033,53 @@
         refreshTimer = setTimeout(refreshProductionViews, 120);
     }
 
+    function activeCodeTab() {
+        var activeTab = document.querySelector('.code-tab.active');
+        return activeTab ? activeTab.getAttribute('data-tab') : (window.currentCodeTab || 'php');
+    }
+
+    function downloadTextFile(code, filename, mime) {
+        var blob = new Blob([code], { type: mime + ';charset=utf-8' });
+        var url = URL.createObjectURL(blob);
+        var a = document.createElement('a');
+        a.href = url;
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+    }
+
+    function downloadProductionCode() {
+        var output = document.getElementById('code-output');
+        var tab = activeCodeTab();
+        var code = '';
+        var ext = 'php';
+        var mime = 'text/x-php';
+        var group = getGroup();
+
+        if (tab === 'json') {
+            if (typeof window.generateJSON === 'function') window.generateJSON();
+            code = output ? output.textContent : '';
+            ext = 'json';
+            mime = 'application/json';
+        } else if (tab === 'html') {
+            code = renderProductionPHP();
+            if (output) output.textContent = code;
+        } else {
+            if (typeof window.generatePHP === 'function') window.generatePHP();
+            code = output ? output.textContent : '';
+        }
+
+        if (!code || code === 'Добавьте поля — код появится здесь') {
+            if (typeof window.showToast === 'function') window.showToast('Добавьте поля для генерации кода', true);
+            return;
+        }
+
+        downloadTextFile(code, attr(group.key || 'acf-export') + '.' + ext, mime);
+        if (typeof window.showToast === 'function') window.showToast('Файл ' + attr(group.key || 'acf-export') + '.' + ext + ' сохранен');
+    }
+
     window.generatePreviewCSS = productionCSS;
     window.previewHTMLPlain = renderPreviewBlock;
     window.generatePreviewHTML = fullPreviewDoc;
@@ -1041,6 +1096,9 @@
     };
     window.handleProductionTargetMessage = handleProductionTargetMessage;
     window.refreshProductionViews = refreshProductionViews;
+    window.generateProductionCSS = productionCSS;
+    window.renderProductionPHP = renderProductionPHP;
+    window.downloadCode = downloadProductionCode;
     window.generateHTML = function() {
         var output = document.getElementById('code-output');
         if (output) output.textContent = renderProductionPHP();
