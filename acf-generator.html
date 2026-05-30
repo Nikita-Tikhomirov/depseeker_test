@@ -308,6 +308,7 @@
         .se-size { width:80px; flex:0 0 80px; }
         .se-unit { font-size:1rem; color:var(--text-dim); flex-shrink:0; width:25px; }
         .se-row-group { border:1px solid var(--border); border-radius:8px; padding:14px 16px; margin-bottom:12px; }
+        .se-row-group.is-active { border-color:rgba(124,58,237,0.9); background:rgba(124,58,237,0.09); box-shadow:0 0 0 1px rgba(124,58,237,0.2) inset; }
         .se-row-group-title { display:flex; align-items:center; justify-content:space-between; gap:8px; font-size:0.98rem; font-weight:800; color:var(--text); margin-bottom:10px; }
         .se-row-group-title small { color:var(--text-dim); font-size:0.72rem; font-weight:650; }
         .se-control-pair { display:grid; grid-template-columns:56px minmax(0,1fr); gap:10px; flex:1; min-width:0; }
@@ -721,8 +722,8 @@
 <!-- Toast -->
 <div class="toast" id="toast"></div>
 
-<script src="js/acf-generator.js" defer></script>
-<script src="js/acf-production-renderer.js" defer></script>
+<script src="js/acf-generator.js?v=acf-ui-20260531-2" defer></script>
+<script src="js/acf-production-renderer.js?v=acf-ui-20260531-2" defer></script>
 <script src="js/acf-generator-audit.js" defer></script>
 
 </body>

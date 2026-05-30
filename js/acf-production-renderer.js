@@ -177,6 +177,8 @@
 
     var styleEditorSignature = '';
     var toggleHome = null;
+    var activeProductionTarget = null;
+    var activeProductionFieldTarget = null;
 
     function copyStyleObject(source) {
         var out = {};
@@ -487,6 +489,8 @@
             '.zifra-acf-list { display: grid; gap: 12px; }',
             '.zifra-acf-layout { margin-top: 20px; }',
             '.zifra-acf-layout:first-child { margin-top: 0; }',
+            '[data-production-target], [data-production-field-target] { cursor: pointer; }',
+            '.zifra-production-selected { outline: 2px solid #7c3aed; outline-offset: 4px; }',
             elementOverridesCSS(),
             fieldOverridesCSS(),
             '@supports not (color: color-mix(in srgb, #000 50%, transparent)) { .zifra-acf-block { --acf-muted: #64748b; } }',
@@ -711,12 +715,13 @@
     function renderSampleField(field) {
         if (!field || field.type === 'tab') return '';
         if (field.type === 'image' || field.type === 'gallery') {
-            return '<div class="zifra-acf-media" aria-hidden="true"></div>';
+            return '<div class="zifra-acf-media" data-production-target="media" aria-hidden="true"></div>';
         }
         if (field.type === 'link') {
-            return '<a class="zifra-acf-btn" href="#">' + h(sampleFor(field)) + '</a>';
+            return '<a class="zifra-acf-btn" data-production-target="button" href="#">' + h(sampleFor(field)) + '</a>';
         }
-        return '<div class="zifra-acf-field zifra-acf-field--' + attr(fieldName(field)) + '"><span class="zifra-acf-label">' + h(fieldLabel(field)) + '</span><div class="zifra-acf-value">' + h(sampleFor(field)) + '</div></div>';
+        var key = attr(fieldName(field));
+        return '<div class="zifra-acf-field zifra-acf-field--' + key + '" data-production-field-target="' + key + '"><span class="zifra-acf-label" data-production-target="fieldLabel">' + h(fieldLabel(field)) + '</span><div class="zifra-acf-value" data-production-target="fieldValue">' + h(sampleFor(field)) + '</div></div>';
     }
 
     function renderPreviewBlock() {
@@ -724,7 +729,7 @@
         var group = getGroup();
         var kind = inferBlock(fields);
         var html = [];
-        html.push('<section class="zifra-acf-block zifra-acf-block--' + attr(group.key) + '">');
+        html.push('<section class="zifra-acf-block zifra-acf-block--' + attr(group.key) + '" data-production-target="section">');
         html.push('  <div class="zifra-acf-wrap">');
         if (!fields.length) {
             html.push('    <div class="zifra-acf-card"><h3>Добавьте поля</h3><p>После добавления полей здесь появится production preview.</p></div>');
@@ -735,33 +740,33 @@
             var link = findFieldByIntent(fields, ['button', 'cta', 'link', 'ссылка', 'кнопка']);
             html.push('    <div class="zifra-acf-hero">');
             html.push('      <div>');
-            html.push('        <p class="zifra-acf-kicker">' + h(group.title) + '</p>');
-            html.push('        <h2 class="zifra-acf-title">' + h(sampleFor(title)) + '</h2>');
-            if (lead) html.push('        <p class="zifra-acf-lead">' + h(sampleFor(lead)) + '</p>');
+            html.push('        <p class="zifra-acf-kicker" data-production-target="kicker">' + h(group.title) + '</p>');
+            html.push('        <h2 class="zifra-acf-title" data-production-target="title">' + h(sampleFor(title)) + '</h2>');
+            if (lead) html.push('        <p class="zifra-acf-lead" data-production-target="lead">' + h(sampleFor(lead)) + '</p>');
             if (link) html.push('        <div class="zifra-acf-actions">' + renderSampleField(link) + '</div>');
             html.push('      </div>');
-            html.push('      ' + (image ? renderSampleField(image) : '<div class="zifra-acf-media" aria-hidden="true"></div>'));
+            html.push('      ' + (image ? renderSampleField(image) : '<div class="zifra-acf-media" data-production-target="media" aria-hidden="true"></div>'));
             html.push('    </div>');
         } else if (kind === 'faq') {
             var f = fields[0];
             var subs = f.sub_fields || [];
             var q = findFieldByIntent(subs, ['question', 'вопрос']) || subs[0] || {};
             var a = findFieldByIntent(subs, ['answer', 'ответ']) || subs[1] || {};
-            html.push('    <p class="zifra-acf-kicker">' + h(group.title) + '</p>');
-            html.push('    <div class="zifra-acf-faq">');
+            html.push('    <p class="zifra-acf-kicker" data-production-target="kicker">' + h(group.title) + '</p>');
+            html.push('    <div class="zifra-acf-faq" data-production-target="faqList">');
             for (var i = 0; i < 3; i++) {
-                html.push('      <details class="zifra-acf-card"' + (i === 0 ? ' open' : '') + '><summary>' + h(i === 0 ? sampleFor(q) : 'Можно ли менять стили блока?') + '</summary><div class="zifra-acf-faq-answer">' + h(i === 0 ? sampleFor(a) : 'Да, CSS scoped и его можно перенести в тему, изменить цвета, сетку и отступы.') + '</div></details>');
+                html.push('      <details class="zifra-acf-card" data-production-target="card"' + (i === 0 ? ' open' : '') + '><summary data-production-target="question">' + h(i === 0 ? sampleFor(q) : 'Можно ли менять стили блока?') + '</summary><div class="zifra-acf-faq-answer" data-production-target="answer">' + h(i === 0 ? sampleFor(a) : 'Да, CSS scoped и его можно перенести в тему, изменить цвета, сетку и отступы.') + '</div></details>');
             }
             html.push('    </div>');
         } else if (kind === 'team' || kind === 'testimonials' || kind === 'cards') {
             var rep = fields[0];
             var repSubs = rep.sub_fields || [];
-            html.push('    <p class="zifra-acf-kicker">' + h(group.title) + '</p>');
+            html.push('    <p class="zifra-acf-kicker" data-production-target="kicker">' + h(group.title) + '</p>');
             html.push('    <div class="zifra-acf-grid">');
             for (var ci = 0; ci < 3; ci++) {
-                html.push('      <article class="zifra-acf-card ' + (kind === 'team' ? 'zifra-acf-person' : 'zifra-acf-quote') + '">');
-                if (kind === 'team') html.push('        <div class="zifra-acf-avatar">' + (ci === 0 ? 'А' : ci === 1 ? 'М' : 'И') + '</div>');
-                if (kind === 'testimonials') html.push('        <div class="zifra-acf-rating">★★★★★</div>');
+                html.push('      <article class="zifra-acf-card ' + (kind === 'team' ? 'zifra-acf-person' : 'zifra-acf-quote') + '" data-production-target="card">');
+                if (kind === 'team') html.push('        <div class="zifra-acf-avatar" data-production-target="avatar">' + (ci === 0 ? 'А' : ci === 1 ? 'М' : 'И') + '</div>');
+                if (kind === 'testimonials') html.push('        <div class="zifra-acf-rating" data-production-target="rating">★★★★★</div>');
                 for (var si = 0; si < Math.min(repSubs.length, 4); si++) html.push('        ' + renderSampleField(repSubs[si]));
                 html.push('      </article>');
             }
@@ -772,7 +777,7 @@
                 if (fields[bi].type !== 'flexible_content') continue;
                 var layouts = fields[bi].layouts || [];
                 for (var li = 0; li < Math.min(layouts.length, 3); li++) {
-                    html.push('      <section class="zifra-acf-layout zifra-acf-card"><p class="zifra-acf-kicker">' + h(layouts[li].label || layouts[li].name) + '</p>');
+                    html.push('      <section class="zifra-acf-layout zifra-acf-card" data-production-target="layout"><p class="zifra-acf-kicker" data-production-target="kicker">' + h(layouts[li].label || layouts[li].name) + '</p>');
                     var lsubs = layouts[li].sub_fields || [];
                     for (var lsi = 0; lsi < Math.min(lsubs.length, 3); lsi++) html.push('        ' + renderSampleField(lsubs[lsi]));
                     html.push('      </section>');
@@ -780,9 +785,9 @@
             }
             html.push('    </div>');
         } else {
-            html.push('    <p class="zifra-acf-kicker">' + h(group.title) + '</p>');
+            html.push('    <p class="zifra-acf-kicker" data-production-target="kicker">' + h(group.title) + '</p>');
             html.push('    <div class="zifra-acf-grid">');
-            for (var gi = 0; gi < fields.length; gi++) html.push('      <article class="zifra-acf-card">' + renderSampleField(fields[gi]) + '</article>');
+            for (var gi = 0; gi < fields.length; gi++) html.push('      <article class="zifra-acf-card" data-production-target="card">' + renderSampleField(fields[gi]) + '</article>');
             html.push('    </div>');
         }
         html.push('  </div>');
@@ -791,7 +796,8 @@
     }
 
     function fullPreviewDoc() {
-        return '<!DOCTYPE html><html lang="ru"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><style>body{margin:0;background:#f8fafc;}' + productionCSS() + '</style></head><body>' + renderPreviewBlock() + '</body></html>';
+        var script = '<script>(function(){function select(el){var prev=document.querySelector(".zifra-production-selected");if(prev)prev.classList.remove("zifra-production-selected");if(el)el.classList.add("zifra-production-selected");}document.addEventListener("click",function(e){var target=e.target.closest("[data-production-target]");var field=e.target.closest("[data-production-field-target]");if(target){select(target);parent.postMessage({source:"acf-production-target",styleKey:target.getAttribute("data-production-target")},"*");return;}if(field){select(field);parent.postMessage({source:"acf-production-target",fieldKey:field.getAttribute("data-production-field-target")},"*");}});})();</' + 'script>';
+        return '<!DOCTYPE html><html lang="ru"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><style>body{margin:0;background:#f8fafc;}' + productionCSS() + '</style></head><body>' + renderPreviewBlock() + script + '</body></html>';
     }
 
     function activeStyleKeys() {
@@ -883,6 +889,30 @@
         }
         html.push('<div style="margin-top:10px;display:flex;justify-content:flex-end;gap:8px;"><button class="se-reset" data-action="reset-production-styles">Сбросить стили элементов</button></div>');
         body.innerHTML = html.join('');
+        activateProductionStylePanel(activeProductionTarget, activeProductionFieldTarget, false);
+    }
+
+    function activateProductionStylePanel(styleKey, fieldKey, shouldScroll) {
+        var panels = document.querySelectorAll('#style-editor .se-row-group');
+        for (var i = 0; i < panels.length; i++) panels[i].classList.remove('is-active');
+
+        var selector = '';
+        if (fieldKey) selector = '#style-editor [data-field-style-panel="' + fieldKey + '"]';
+        else if (styleKey) selector = '#style-editor [data-style-panel="' + styleKey + '"]';
+        if (!selector) return;
+
+        var target = document.querySelector(selector);
+        if (!target) return;
+        target.classList.add('is-active');
+        var editor = document.getElementById('style-editor');
+        if (editor && editor.classList.contains('collapsed')) editor.classList.remove('collapsed');
+        if (shouldScroll) target.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+    }
+
+    function handleProductionTargetMessage(data) {
+        activeProductionTarget = data.styleKey || null;
+        activeProductionFieldTarget = data.fieldKey || null;
+        activateProductionStylePanel(activeProductionTarget, activeProductionFieldTarget, true);
     }
 
     function resetProductionStyles() {
@@ -1009,6 +1039,7 @@
     window.togglePreviewMode = function() {
         setEditorMode(!window.previewModeActive);
     };
+    window.handleProductionTargetMessage = handleProductionTargetMessage;
     window.refreshProductionViews = refreshProductionViews;
     window.generateHTML = function() {
         var output = document.getElementById('code-output');
@@ -1028,6 +1059,11 @@
         var fieldTarget = e.target.closest('[data-field-style]');
         if (fieldTarget) handleFieldStyleInput(fieldTarget);
     }, true);
+    window.addEventListener('message', function(e) {
+        var data = e.data || {};
+        if (data.source !== 'acf-production-target') return;
+        handleProductionTargetMessage(data);
+    });
     document.addEventListener('click', function(e) {
         var reset = e.target.closest('[data-action="reset-production-styles"]');
         if (reset) resetProductionStyles();

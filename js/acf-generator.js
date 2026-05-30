@@ -309,6 +309,7 @@ var blockStyles = {
 };
 var styleEditorCollapsed = false;
 var previewModeActive = false;
+var selectedStyleTarget = null;
 
 // ==================== HELPERS ====================
 function escHtml(s) {
@@ -2264,6 +2265,11 @@ function renderDynamicStyleControls() {
 
     var types = collectFieldTypes(fields);
     var groups = [];
+    groups.push(renderElementStyleGroup('title', 'Заголовок блока', 'heading', [
+        renderElementStyleControl('title', 'color', 'Цвет', 'color'),
+        renderElementStyleControl('title', 'fontSize', 'Размер', 'text', 'px'),
+        renderElementStyleControl('title', 'marginBottom', 'Низ', 'text', 'px')
+    ]));
     groups.push(renderElementStyleGroup('label', 'Подписи полей', 'label', [
         renderElementStyleControl('label', 'color', 'Цвет', 'color'),
         renderElementStyleControl('label', 'fontSize', 'Размер', 'text', 'px'),
@@ -2310,6 +2316,7 @@ function renderDynamicStyleControls() {
     }
 
     container.innerHTML = '<p class="se-dynamic-note">Эти контролы собираются из текущих полей и меняют те же элементы, которые видны в превью и HTML+CSS экспорте.</p>' + groups.join('');
+    if (selectedStyleTarget) setActiveStyleGroup(selectedStyleTarget, false);
 }
 
 function refreshStyledOutputs() {
@@ -2331,6 +2338,27 @@ function applyElementStyleChange(el) {
         if (peers[i] !== el) peers[i].value = el.value;
     }
     refreshStyledOutputs();
+}
+
+function setActiveStyleGroup(styleKey, shouldScroll) {
+    var groups = document.querySelectorAll('#dynamic-style-controls .se-row-group');
+    for (var i = 0; i < groups.length; i++) {
+        groups[i].classList.toggle('is-active', groups[i].getAttribute('data-style-key') === styleKey);
+    }
+    var target = document.querySelector('#dynamic-style-controls .se-row-group[data-style-key="' + styleKey + '"]');
+    if (target && shouldScroll) {
+        target.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+    }
+}
+
+function handleVisualStyleTarget(styleKey) {
+    if (!styleKey) return;
+    selectedStyleTarget = styleKey;
+    setActiveStyleGroup(styleKey, true);
+    var editor = document.getElementById('style-editor');
+    if (editor && editor.classList.contains('collapsed')) {
+        editor.classList.remove('collapsed');
+    }
 }
 
 function resetStyles() {
@@ -2527,10 +2555,12 @@ function generateVisualHTML() {
         '.acf-flex-layout{margin-bottom:12px;padding:12px 16px;border-left:3px solid ' + e.flex.accentColor + ';background:' + e.flex.bgColor + ';border-radius:0 6px 6px 0;}',
         '.acf-flex-layout:last-child{margin-bottom:0;}',
         '.acf-flex-layout-title{font-size:0.7rem;text-transform:uppercase;letter-spacing:0.06em;opacity:0.4;margin-bottom:10px;font-weight:600;}',
+        '[data-style-target]{cursor:pointer;}',
+        '.acf-style-selected{outline:2px solid #7c3aed;outline-offset:3px;}',
     ].join('\n');
 
     function V(content, cls) {
-        return '<div class="acf-value' + (cls ? ' ' + cls : '') + '">' + (content || '') + '</div>';
+        return '<div class="acf-value' + (cls ? ' ' + cls : '') + '" data-style-target="value">' + (content || '') + '</div>';
     }
 
     function F(body) {
@@ -2539,7 +2569,7 @@ function generateVisualHTML() {
     }
 
     function L(text) {
-        return '<div class="acf-label">' + escHtml(text || '') + '</div>';
+        return '<div class="acf-label" data-style-target="label">' + escHtml(text || '') + '</div>';
     }
 
     function iconImg() {
@@ -2573,14 +2603,14 @@ function generateVisualHTML() {
         var body = '';
 
         if (t === 'image') {
-            body = '<div class="acf-img">' + iconImg() + '</div>';
+            body = '<div class="acf-img" data-style-target="media">' + iconImg() + '</div>';
         } else if (t === 'gallery') {
-            var g = '<div class="acf-gallery">';
-            for (var gi = 0; gi < 3; gi++) g += '<div class="acf-gallery-item"></div>';
+            var g = '<div class="acf-gallery" data-style-target="media">';
+            for (var gi = 0; gi < 3; gi++) g += '<div class="acf-gallery-item" data-style-target="media"></div>';
             g += '</div>';
             body = g;
         } else if (t === 'link') {
-            body = V('<a class="acf-btn" href="#">' + escHtml(f.title || name || 'Перейти') + '</a>');
+            body = V('<a class="acf-btn" href="#" data-style-target="button">' + escHtml(f.title || name || 'Перейти') + '</a>');
         } else if (t === 'true_false') {
             var tfVal = (f.default_value === 1 || f.default_value === '1');
             body = V('<span class="acf-badge ' + (tfVal ? 'acf-badge--yes' : 'acf-badge--no') + '">' + (tfVal ? '✓ ' + escHtml(f.message || 'Да') : '✗ ' + escHtml(f.message || 'Нет')) + '</span>');
@@ -2612,17 +2642,17 @@ function generateVisualHTML() {
         } else if (t === 'password') {
             body = V('••••••••');
         } else if (t === 'oembed') {
-            body = '<div class="acf-oembed">' + iconPlay() + '</div>';
+            body = '<div class="acf-oembed" data-style-target="media">' + iconPlay() + '</div>';
         } else if (t === 'file') {
-            body = '<div class="acf-file-card">' + iconFile() + '<div><div class="acf-file-name">document.pdf</div><div class="acf-file-size">2.4 МБ</div></div></div>';
+            body = '<div class="acf-file-card" data-style-target="media">' + iconFile() + '<div><div class="acf-file-name">document.pdf</div><div class="acf-file-size">2.4 МБ</div></div></div>';
         } else if (t === 'google_map') {
-            body = '<div class="acf-map">' + iconMap() + ' Карта</div>';
+            body = '<div class="acf-map" data-style-target="media">' + iconMap() + ' Карта</div>';
         } else if (t === 'post_object' || t === 'relationship') {
-            body = '<div class="acf-post-card"><div class="acf-post-thumb"></div><div><div class="acf-post-title">Выбранная запись</div><div class="acf-post-meta">ID: 42</div></div></div>';
+            body = '<div class="acf-post-card" data-style-target="media"><div class="acf-post-thumb"></div><div><div class="acf-post-title">Выбранная запись</div><div class="acf-post-meta">ID: 42</div></div></div>';
         } else if (t === 'taxonomy') {
             body = V('Категория 1, Метка 2');
         } else if (t === 'user') {
-            body = '<div class="acf-repeater-item"><div class="acf-avatar">И</div><div class="acf-info"><div class="acf-name">Иван Петров</div><div class="acf-role">editor</div></div></div>';
+            body = '<div class="acf-repeater-item" data-style-target="repeater"><div class="acf-avatar" data-style-target="repeater">И</div><div class="acf-info"><div class="acf-name">Иван Петров</div><div class="acf-role">editor</div></div></div>';
         } else if (t === 'group' && f.sub_fields && f.sub_fields.length) {
             var gin = '';
             for (var gsi = 0; gsi < f.sub_fields.length; gsi++) {
@@ -2643,17 +2673,17 @@ function generateVisualHTML() {
                 ];
                 body = '';
                 for (var fi = 0; fi < faqs.length; fi++) {
-                    body += '<div class="acf-faq-item' + (fi === 0 ? ' open' : '') + '"><button class="acf-faq-question">' + escHtml(faqs[fi][0]) + '</button><div class="acf-faq-answer">' + escHtml(faqs[fi][1]) + '</div></div>';
+                    body += '<div class="acf-faq-item' + (fi === 0 ? ' open' : '') + '" data-style-target="faq"><button class="acf-faq-question" data-style-target="faq">' + escHtml(faqs[fi][0]) + '</button><div class="acf-faq-answer" data-style-target="faq">' + escHtml(faqs[fi][1]) + '</div></div>';
                 }
             } else {
-                body = '<div class="acf-repeater">';
+                body = '<div class="acf-repeater" data-style-target="repeater">';
                 for (var ri = 0; ri < 2; ri++) {
                     var hasImg = false;
-                    body += '<div class="acf-repeater-item">';
+                    body += '<div class="acf-repeater-item" data-style-target="repeater">';
                     for (var si = 0; si < f.sub_fields.length; si++) {
                         var sf = f.sub_fields[si];
                         if (sf.type === 'image') {
-                            body += '<div class="acf-avatar">' + (ri === 0 ? 'А' : 'М') + '</div>';
+                            body += '<div class="acf-avatar" data-style-target="repeater">' + (ri === 0 ? 'А' : 'М') + '</div>';
                             hasImg = true;
                             break;
                         }
@@ -2685,7 +2715,7 @@ function generateVisualHTML() {
             body = '';
             for (var li = 0; li < Math.min(f.layouts.length, 2); li++) {
                 var lay = f.layouts[li];
-                body += '<div class="acf-flex-layout"><div class="acf-flex-layout-title">' + escHtml(lay.label || lay.name) + '</div>';
+                body += '<div class="acf-flex-layout" data-style-target="flex"><div class="acf-flex-layout-title" data-style-target="flex">' + escHtml(lay.label || lay.name) + '</div>';
                 if (lay.sub_fields) {
                     for (var lsi = 0; lsi < lay.sub_fields.length; lsi++) {
                         body += renderField(lay.sub_fields[lsi], true);
@@ -2702,14 +2732,12 @@ function generateVisualHTML() {
     }
 
     var html = '<!DOCTYPE html><html lang="ru"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>' + escHtml(groupTitle) + '</title><style>' + css + '</style></head><body><div class="acf-block">';
-    if (groupTitle && !isFAQ) html += '<h2 class="acf-block-title">' + escHtml(groupTitle) + '</h2>';
+    if (groupTitle && !isFAQ) html += '<h2 class="acf-block-title" data-style-target="title">' + escHtml(groupTitle) + '</h2>';
     for (var i = 0; i < fields.length; i++) {
         html += renderField(fields[i], false);
     }
     html += '</div>';
-    if (isFAQ) {
-        html += '<script>document.addEventListener("click",function(e){var q=e.target.closest(".acf-faq-question");if(!q)return;q.parentElement.classList.toggle("open");});</' + 'script>';
-    }
+    html += '<script>(function(){function selectTarget(el){var prev=document.querySelector(".acf-style-selected");if(prev)prev.classList.remove("acf-style-selected");if(el)el.classList.add("acf-style-selected");}document.addEventListener("click",function(e){var target=e.target.closest("[data-style-target]");if(target){selectTarget(target);parent.postMessage({source:"acf-style-target",styleKey:target.getAttribute("data-style-target")},"*");}var q=e.target.closest(".acf-faq-question");if(q)q.parentElement.classList.toggle("open");});})();</' + 'script>';
     html += '</body></html>';
     return html;
 }
@@ -3264,6 +3292,12 @@ document.addEventListener('input', function(e) {
     var el = e.target.closest('[data-action="style-change"]');
     if (!el) return;
     applyStyleColor(el.id, el.value);
+});
+
+window.addEventListener('message', function(e) {
+    var data = e.data || {};
+    if (data.source !== 'acf-style-target') return;
+    handleVisualStyleTarget(data.styleKey);
 });
 
 document.addEventListener('input', function(e) {
