@@ -268,9 +268,43 @@ def related_links(current_slug: str) -> str:
     )
 
 
-def render_page(page: dict[str, object]) -> str:
+def generator_url(page: dict[str, object]) -> str:
     preset = esc(str(page["preset"]))
     slug = esc(str(page["slug"]))
+    return f"acf-generator.html?preset={preset}&amp;source={slug}"
+
+
+def hub_chooser() -> str:
+    choices = [
+        ("Нужен код в тему", "PHP/JSON экспорт для Git, code review и локальной регистрации ACF.", "acf-php-generator.html", "PHP и JSON"),
+        ("Нужен повторяемый блок", "FAQ, отзывы, команда, преимущества и любые карточки через repeater.", "acf-repeater-generator.html", "Repeater"),
+        ("Нужна страница из секций", "Page builder на Flexible Content без тяжелого конструктора.", "acf-page-builder.html", "Flexible"),
+        ("Нужны готовые блоки", "Hero, SEO, FAQ, WooCommerce и другие типовые структуры.", "acf-hero-section.html", "Пресеты"),
+    ]
+    return "\n".join(
+        f"""<a class="acf-choice-card" href="{href}">
+            <span>{esc(tag)}</span>
+            <strong>{esc(title)}</strong>
+            <p>{esc(text)}</p>
+        </a>"""
+        for title, text, href, tag in choices
+    )
+
+
+def preset_strip(page: dict[str, object]) -> str:
+    items = "\n".join(f"<li>{esc(item)}</li>" for item in page["deliverables"])
+    return f"""<section class="acf-conversion-strip" aria-label="Быстрый переход в генератор">
+        <div class="acf-conversion-copy">
+            <span class="acf-section-label">Быстрый старт</span>
+            <h2>Откройте генератор уже с нужной структурой</h2>
+            <p>Предустановка под запрос «{esc(str(page["query"]))}» сразу подставит базовые поля, а дальше можно поправить названия, стили и экспорт.</p>
+        </div>
+        <ul>{items}</ul>
+        <a class="acf-btn acf-btn--primary" href="{generator_url(page)}">Открыть preset</a>
+    </section>"""
+
+
+def render_page(page: dict[str, object]) -> str:
     deliverables = "\n".join(f"<li>{esc(item)}</li>" for item in page["deliverables"])
     related = related_links(str(page["slug"]))
     return f"""<!DOCTYPE html>
@@ -295,7 +329,7 @@ def render_page(page: dict[str, object]) -> str:
                 <h1>{esc(page["h1"])}</h1>
                 <p>{esc(page["description"])}</p>
                 <div class="acf-actions">
-                    <a class="acf-btn acf-btn--primary" href="acf-generator.html?preset={preset}">Собрать поля</a>
+                    <a class="acf-btn acf-btn--primary" href="{generator_url(page)}">Собрать поля</a>
                     <a class="acf-btn acf-btn--ghost" href="#structure">Посмотреть структуру</a>
                 </div>
             </div>
@@ -304,6 +338,12 @@ def render_page(page: dict[str, object]) -> str:
                 <h2>{esc(page["intent"])}</h2>
                 <p>{esc(page["audience"])}</p>
             </aside>
+        </div>
+    </section>
+
+    <section class="acf-section acf-section--tight">
+        <div class="acf-container">
+            {preset_strip(page)}
         </div>
     </section>
 
@@ -383,7 +423,7 @@ def render_page(page: dict[str, object]) -> str:
         <div class="acf-container">
             <h2>Соберите структуру прямо сейчас</h2>
             <p>Откройте генератор, проверьте поля в визуальном превью и экспортируйте PHP или JSON.</p>
-            <a class="acf-btn acf-btn--primary" href="acf-generator.html?preset={preset}">Открыть предустановку</a>
+            <a class="acf-btn acf-btn--primary" href="{generator_url(page)}">Открыть предустановку</a>
         </div>
     </section>
 </main>
@@ -463,6 +503,19 @@ def render_hub() -> str:
             </div>
             <div class="acf-topic-grid">
                 {cards}
+            </div>
+        </div>
+    </section>
+
+    <section class="acf-section acf-section--muted">
+        <div class="acf-container">
+            <div class="acf-section-head">
+                <span class="acf-section-label">Маршруты</span>
+                <h2>Куда отправлять пользователя по интенту</h2>
+                <p>Категория работает как развилка: посетитель выбирает задачу, попадает на точную посадочную и оттуда открывает нужный preset генератора.</p>
+            </div>
+            <div class="acf-choice-grid">
+                {hub_chooser()}
             </div>
         </div>
     </section>
@@ -555,6 +608,19 @@ def render_css() -> str:
 .acf-faq p { margin: 10px 0 0; }
 .acf-related-card { display: block; min-height: 120px; }
 .acf-related-card strong { display: block; font-size: 1.05rem; line-height: 1.35; }
+.acf-section--tight { padding: 34px 0; }
+.acf-conversion-strip { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(240px, 0.75fr) auto; gap: 20px; align-items: center; border: 1px solid #cfe0dc; border-radius: 8px; background: linear-gradient(135deg, #ffffff, #effaf7); padding: 22px; box-shadow: 0 18px 50px rgba(15, 23, 42, 0.07); }
+.acf-conversion-copy h2 { margin: 8px 0 8px; font-size: clamp(1.35rem, 2.4vw, 2rem); line-height: 1.1; }
+.acf-conversion-copy p { margin: 0; }
+.acf-conversion-strip ul { margin: 0; padding: 0; list-style: none; display: grid; gap: 8px; color: #273444; font-weight: 800; }
+.acf-conversion-strip li { position: relative; padding-left: 24px; }
+.acf-conversion-strip li::before { content: ""; width: 12px; height: 12px; border-radius: 50%; background: #22d3a6; position: absolute; left: 0; top: 8px; }
+.acf-choice-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; }
+.acf-choice-card { display: grid; align-content: start; min-height: 190px; gap: 10px; padding: 20px; border: 1px solid #dce7e3; border-radius: 8px; background: #fff; color: #121821; text-decoration: none; transition: transform 0.18s, border-color 0.18s, box-shadow 0.18s; }
+.acf-choice-card:hover { transform: translateY(-2px); border-color: #22d3a6; box-shadow: 0 18px 44px rgba(15, 23, 42, 0.09); }
+.acf-choice-card span { color: #0f9f7e; font-size: 0.76rem; font-weight: 900; text-transform: uppercase; }
+.acf-choice-card strong { font-size: 1.12rem; line-height: 1.25; }
+.acf-choice-card p { margin: 0; font-size: 0.94rem; }
 .acf-roadmap ol { color: #273444; background: #fff; border: 1px solid #dce7e3; border-radius: 8px; padding: 22px 22px 22px 42px; }
 .acf-roadmap li { margin-bottom: 10px; }
 .acf-final-cta { color: #fff; background: #101820; padding: 58px 0; text-align: center; }
@@ -572,7 +638,7 @@ def render_css() -> str:
     .acf-nav { order: 3; width: 100%; overflow-x: auto; margin-left: 0; padding-bottom: 4px; }
     .acf-header-cta { margin-left: auto; }
     .acf-hero__grid, .acf-two-col, .acf-use-grid, .acf-roadmap { grid-template-columns: 1fr; }
-    .acf-topic-grid, .acf-benefit-grid, .acf-related-grid { grid-template-columns: 1fr; }
+    .acf-topic-grid, .acf-benefit-grid, .acf-related-grid, .acf-choice-grid, .acf-conversion-strip { grid-template-columns: 1fr; }
     .acf-hero { padding: 46px 0; }
     .acf-section { padding: 46px 0; }
 }
