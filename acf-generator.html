@@ -220,6 +220,23 @@
         .template-card h4 { font-size:0.95rem; font-weight:750; margin-bottom:4px; }
         .template-card p { font-size:0.78rem; color:var(--text-dim); line-height:1.45; }
 
+        /* Export audit */
+        .audit-panel { margin-top:16px; background:linear-gradient(180deg, rgba(17,17,34,0.98), rgba(12,12,24,0.98)); border:1px solid var(--border); border-radius:16px; overflow:hidden; }
+        .audit-head { display:flex; align-items:center; justify-content:space-between; gap:12px; padding:16px 18px; border-bottom:1px solid var(--border); }
+        .audit-title { display:flex; align-items:center; gap:10px; min-width:0; font-weight:800; color:var(--text); }
+        .audit-title .material-symbols-outlined { color:var(--accent-2); font-size:1.35rem; }
+        .audit-score { flex:0 0 auto; min-width:72px; text-align:center; padding:7px 10px; border-radius:999px; background:rgba(16,185,129,0.12); color:#34d399; font-weight:850; border:1px solid rgba(16,185,129,0.22); }
+        .audit-body { padding:16px 18px; display:grid; gap:12px; }
+        .audit-summary { color:var(--text-2); font-size:0.9rem; line-height:1.5; }
+        .audit-list { display:grid; gap:8px; margin:0; padding:0; list-style:none; }
+        .audit-item { display:flex; gap:9px; align-items:flex-start; color:var(--text-2); font-size:0.84rem; line-height:1.45; padding:10px 12px; border:1px solid rgba(255,255,255,0.06); border-radius:10px; background:rgba(255,255,255,0.025); }
+        .audit-item .material-symbols-outlined { font-size:1rem; margin-top:1px; flex:0 0 auto; }
+        .audit-item--error .material-symbols-outlined { color:#fb7185; }
+        .audit-item--warning .material-symbols-outlined { color:#fbbf24; }
+        .audit-item--ok .material-symbols-outlined { color:#34d399; }
+        .audit-actions { display:flex; flex-wrap:wrap; gap:8px; margin-top:2px; }
+        .audit-actions .gen-btn { min-height:38px; }
+
         /* Toast */
         .toast { position:fixed; bottom:30px; left:50%; transform:translateX(-50%); background:var(--accent); color:#fff; padding:22px 40px; border-radius:999px; font-weight:600; font-size:1.2rem; z-index:9999; opacity:0; pointer-events:none; transition:opacity 0.3s, transform 0.3s; box-shadow:0 8px 32px var(--accent-glow); }
         .toast.show { opacity:1; transform:translateX(-50%) translateY(-8px); }
@@ -343,7 +360,7 @@
         @media (max-width:1100px) { .tool-hero-grid { display:block; } .tool-demo-card { display:none; } .gen-grid { grid-template-columns:1fr; } .quickstart { grid-template-columns:1fr; } }
         @media (max-width:900px) { .quickstart-presets { grid-template-columns:repeat(3,minmax(0,1fr)); } }
         @media (max-width:768px) { .tool-hero { padding:42px 0 28px; } .tool-hero h1 { font-size:2.4rem; } .tool-hero p { max-width:100%; } .gen-grid { gap:20px; } .field-type-row { flex-wrap:wrap; } .field-type-row > .cs-wrap { flex:0 1 calc(33.33% - 6px); } .generator-workspace .container { padding: 0 16px; } .gen-panel-body { padding:18px; } }
-        @media (max-width:640px) { .tool-hero .container, .generator-workspace .container { max-width:100%; } .tool-hero-copy, .tool-hero h1, .tool-hero p, .hero-actions, .hero-proof { max-width:min(330px, calc(100vw - 48px)); } .tool-hero p { width:min(330px, calc(100vw - 48px)); } .hero-actions .gen-btn { width:100%; justify-content:center; } .quickstart { width:100%; min-width:0; padding:18px; } .quickstart > * { min-width:0; max-width:100%; } .quickstart-sub { width:min(300px, 100%); } .quickstart-presets { grid-template-columns:repeat(2,minmax(0,1fr)); } .preset-chip { font-size:0.74rem; } .gen-grid { gap:14px; } .gen-panel-header { flex-wrap:wrap; align-items:flex-start; } .gen-panel-header > div { width:100%; justify-content:flex-start; flex-wrap:wrap; } .panel-title { width:100%; } .field-type-row > .cs-wrap { flex:0 1 calc(50% - 4px); } .tool-stats { grid-template-columns:repeat(2,minmax(0,1fr)); } .generator-workspace .container { max-width: 100%; padding: 0 12px; } .code-preview-header { flex-wrap:wrap; } .code-preview-header .code-actions { width:100%; margin-left:0; justify-content:flex-end; } }
+        @media (max-width:640px) { .tool-hero .container, .generator-workspace .container { max-width:100%; } .tool-hero-copy, .tool-hero h1, .tool-hero p, .hero-actions, .hero-proof { max-width:min(330px, calc(100vw - 48px)); } .tool-hero p { width:min(330px, calc(100vw - 48px)); } .hero-actions .gen-btn { width:100%; justify-content:center; } .quickstart { width:100%; min-width:0; padding:18px; } .quickstart > * { min-width:0; max-width:100%; } .quickstart-sub { width:min(300px, 100%); } .quickstart-presets { grid-template-columns:repeat(2,minmax(0,1fr)); } .preset-chip { font-size:0.74rem; } .gen-grid { gap:14px; } .gen-panel-header { flex-wrap:wrap; align-items:flex-start; } .gen-panel-header > div { width:100%; justify-content:flex-start; flex-wrap:wrap; } .panel-title { width:100%; } .field-type-row > .cs-wrap { flex:0 1 calc(50% - 4px); } .tool-stats { grid-template-columns:repeat(2,minmax(0,1fr)); } .generator-workspace .container { max-width: 100%; padding: 0 12px; } .code-preview-header { flex-wrap:wrap; } .code-preview-header .code-actions { width:100%; margin-left:0; justify-content:flex-end; } .audit-head { align-items:flex-start; flex-direction:column; } .audit-score { text-align:left; } .audit-actions .gen-btn { width:100%; justify-content:center; } }
     </style>
 </head>
 <body>
@@ -611,6 +628,16 @@
                     <pre id="code-pre"><code id="code-output">Добавьте поля — код появится здесь</code></pre>
                 </div>
 
+                <div class="audit-panel" id="acf-audit-panel" aria-live="polite">
+                    <div class="audit-head">
+                        <div class="audit-title"><span class="material-symbols-outlined">fact_check</span> Готовность к экспорту</div>
+                        <div class="audit-score" id="acf-audit-score">0%</div>
+                    </div>
+                    <div class="audit-body" id="acf-audit-status">
+                        <div class="audit-summary">Аудит обновится после загрузки генератора.</div>
+                    </div>
+                </div>
+
                 <!-- Visual Editor (visible in preview mode) -->
                 <div class="visual-editor-panel" id="visual-editor">
                     <div class="visual-editor-header">
@@ -671,6 +698,7 @@
 <div class="toast" id="toast"></div>
 
 <script src="js/acf-generator.js" defer></script>
+<script src="js/acf-generator-audit.js" defer></script>
 
 </body>
 </html>
