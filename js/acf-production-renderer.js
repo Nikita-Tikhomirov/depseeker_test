@@ -54,6 +54,46 @@
         };
     }
 
+    var STYLE_CONTROL_MAP = {
+        'se-bg-color': 'bgColor',
+        'se-bg-color-text': 'bgColor',
+        'se-text-color': 'textColor',
+        'se-text-color-text': 'textColor',
+        'se-padding': 'padding',
+        'se-gap': 'gap',
+        'se-card-bg': 'cardBg',
+        'se-card-bg-text': 'cardBg',
+        'se-card-padding': 'cardPadding',
+        'se-card-radius': 'cardRadius',
+        'se-border-color': 'borderColor',
+        'se-border-color-text': 'borderColor',
+        'se-border-width': 'borderWidth'
+    };
+
+    function isHexColor(value) {
+        return /^#([0-9a-f]{3}|[0-9a-f]{6})$/i.test(String(value || '').trim());
+    }
+
+    function syncPairedStyleInputs(id, value) {
+        var textId = id.indexOf('-text') === -1 ? id + '-text' : id;
+        var colorId = id.replace('-text', '');
+        var textEl = document.getElementById(textId);
+        var colorEl = document.getElementById(colorId);
+        if (textEl && textEl.value !== value) textEl.value = value;
+        if (colorEl && colorEl.type === 'color' && isHexColor(value) && colorEl.value !== value) {
+            colorEl.value = value;
+        }
+    }
+
+    function applyProductionStyle(id, value) {
+        var key = STYLE_CONTROL_MAP[id];
+        if (!key) return;
+        window.blockStyles = window.blockStyles || {};
+        window.blockStyles[key] = String(value == null ? '' : value).trim();
+        syncPairedStyleInputs(id, window.blockStyles[key]);
+        refreshProductionViews();
+    }
+
     function getFields() {
         return Array.isArray(window.fields) ? window.fields : [];
     }
@@ -470,12 +510,40 @@
 
     function refreshProductionViews() {
         var iframe = document.getElementById('visual-editor-iframe');
+        var legacyFrame = document.getElementById('preview-frame');
         var workspace = document.querySelector('.generator-workspace');
         if (iframe && workspace && workspace.classList.contains('preview-mode')) {
             iframe.srcdoc = fullPreviewDoc();
         }
-        if (window.currentCodeTab === 'html') {
+        if (legacyFrame) legacyFrame.removeAttribute('srcdoc');
+        var activeTab = document.querySelector('.code-tab.active');
+        if (activeTab && activeTab.getAttribute('data-tab') === 'html') {
             window.generateHTML();
+        }
+    }
+
+    function setEditorMode(active) {
+        var workspace = document.querySelector('.generator-workspace');
+        var btn = document.getElementById('toggle-preview-btn');
+        if (!workspace) return;
+
+        window.previewModeActive = !!active;
+        workspace.classList.toggle('preview-mode', !!active);
+        if (btn) {
+            btn.classList.toggle('active', !!active);
+            btn.setAttribute('aria-pressed', active ? 'true' : 'false');
+            btn.innerHTML = active
+                ? '<span class="material-symbols-outlined">edit</span> Вернуться к полям'
+                : '<span class="material-symbols-outlined">visibility</span> Открыть live preview';
+        }
+        refreshProductionViews();
+        if (active) {
+            window.requestAnimationFrame(function() {
+                var grid = document.querySelector('.gen-grid');
+                if (!grid) return;
+                var y = grid.getBoundingClientRect().top + window.pageYOffset - 96;
+                window.scrollTo({ top: Math.max(0, y), behavior: 'auto' });
+            });
         }
     }
 
@@ -488,13 +556,27 @@
     window.previewHTMLPlain = renderPreviewBlock;
     window.generatePreviewHTML = fullPreviewDoc;
     window.generateVisualHTML = fullPreviewDoc;
+    window.renderVisualEditor = refreshProductionViews;
+    window.applyStyleChange = applyProductionStyle;
+    window.applyStyleColor = applyProductionStyle;
+    window.updateVisualEditorIfActive = function() {
+        if (window.previewModeActive) refreshProductionViews();
+    };
+    window.updatePreview = refreshProductionViews;
+    window.togglePreviewMode = function() {
+        setEditorMode(!window.previewModeActive);
+    };
+    window.refreshProductionViews = refreshProductionViews;
     window.generateHTML = function() {
         var output = document.getElementById('code-output');
         if (output) output.textContent = renderProductionPHP();
     };
 
     document.addEventListener('DOMContentLoaded', function() {
-        if (window.currentCodeTab === 'html') window.generateHTML();
+        var label = document.querySelector('.visual-editor-label');
+        if (label) label.textContent = 'Единый live preview';
+        var activeTab = document.querySelector('.code-tab.active');
+        if (activeTab && activeTab.getAttribute('data-tab') === 'html') window.generateHTML();
     });
     document.addEventListener('click', scheduleRefresh, true);
     document.addEventListener('input', scheduleRefresh, true);
