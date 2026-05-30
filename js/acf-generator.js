@@ -2852,6 +2852,26 @@ function loadTemplate(name) {
     showToast('Шаблон «' + document.getElementById('group-title').value + '» загружен');
 }
 
+function loadTemplateFromURL() {
+    var params = new URLSearchParams(window.location.search);
+    var preset = params.get('preset') || params.get('template');
+    if (!preset) return;
+
+    var aliases = {
+        field_group: 'hero',
+        php: 'hero',
+        json: 'hero',
+        repeater: 'faq',
+        flexible: 'flexible_page',
+        page_builder: 'flexible_page'
+    };
+    var template = aliases[preset] || preset;
+    var allowed = ['hero', 'team', 'testimonials', 'seo', 'faq', 'flexible_page'];
+    if (allowed.indexOf(template) === -1) return;
+
+    loadTemplate(template);
+}
+
 // ==================== EVENT DELEGATION ====================
 document.addEventListener('click', function(e) {
     var el = e.target.closest('[data-action]');
@@ -3181,6 +3201,8 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }
     }, 100);
+
+    loadTemplateFromURL();
 
     // Visual editor toolbar — size switching
     var toolbar = document.querySelector('.visual-editor-toolbar');
