@@ -282,6 +282,19 @@ var selectedFieldId = null;
 var locationRules = [{ param: 'post_type', operator: '==', value: 'page' }];
 
 // Style state (for preview + generated HTML)
+function getDefaultElementStyles() {
+    return {
+        title: { color: '#1a1a2e', fontSize: '22', marginBottom: '24' },
+        label: { color: '#6b7280', fontSize: '11', marginBottom: '6' },
+        value: { color: '#1f2937', bgColor: '#f8f9fa', padding: '20', radius: '12' },
+        button: { color: '#ffffff', bgColor: '#6366f1', padding: '12', radius: '8' },
+        media: { bgColor: '#c7d2fe', radius: '8' },
+        repeater: { gap: '14', avatarBg: '#c7d2fe' },
+        faq: { questionBg: '#f8f9fa', answerColor: '#4b5563' },
+        flex: { accentColor: '#6366f1', bgColor: 'rgba(99,102,241,0.04)' }
+    };
+}
+
 var blockStyles = {
     bgColor: '#ffffff',
     textColor: '#1a1a2e',
@@ -291,7 +304,8 @@ var blockStyles = {
     cardPadding: '20',
     cardRadius: '12',
     borderColor: '#e0e0e0',
-    borderWidth: '1'
+    borderWidth: '1',
+    elements: getDefaultElementStyles()
 };
 var styleEditorCollapsed = false;
 var previewModeActive = false;
@@ -638,6 +652,7 @@ function removeLocationRule(idx) {
 function renderAll() {
     renderLocationRules();
     renderFields();
+    renderDynamicStyleControls();
     document.getElementById('stat-count').textContent = fields.length;
 }
 
@@ -2189,6 +2204,135 @@ function syncStyleTextFields() {
     }
 }
 
+function ensureElementStyles() {
+    var defaults = getDefaultElementStyles();
+    if (!blockStyles.elements) blockStyles.elements = {};
+    Object.keys(defaults).forEach(function(key) {
+        if (!blockStyles.elements[key]) blockStyles.elements[key] = {};
+        Object.keys(defaults[key]).forEach(function(prop) {
+            if (blockStyles.elements[key][prop] === undefined) {
+                blockStyles.elements[key][prop] = defaults[key][prop];
+            }
+        });
+    });
+    return blockStyles.elements;
+}
+
+function collectFieldTypes(list, out) {
+    out = out || {};
+    for (var i = 0; i < list.length; i++) {
+        var f = list[i];
+        if (!f || !f.type) continue;
+        out[f.type] = true;
+        if (f.sub_fields) collectFieldTypes(f.sub_fields, out);
+        if (f.layouts) {
+            for (var li = 0; li < f.layouts.length; li++) {
+                collectFieldTypes(f.layouts[li].sub_fields || [], out);
+            }
+        }
+    }
+    return out;
+}
+
+function renderElementStyleControl(styleKey, prop, label, type, unit) {
+    var styles = ensureElementStyles();
+    var value = styles[styleKey][prop] || '';
+    var isColor = type === 'color';
+    return '<div class="se-mini-row">' +
+        '<span class="se-label">' + escHtml(label) + '</span>' +
+        (isColor ? '<input type="color" class="se-color" value="' + escAttr(value) + '" data-action="element-style-change" data-style-key="' + escAttr(styleKey) + '" data-style-prop="' + escAttr(prop) + '">' : '<span></span>') +
+        '<input type="text" class="se-input" value="' + escAttr(value) + '" data-action="element-style-change" data-style-key="' + escAttr(styleKey) + '" data-style-prop="' + escAttr(prop) + '">' +
+        '<span class="se-unit">' + escHtml(unit || '') + '</span>' +
+    '</div>';
+}
+
+function renderElementStyleGroup(styleKey, title, subtitle, controls) {
+    return '<div class="se-row-group" data-style-key="' + escAttr(styleKey) + '">' +
+        '<div class="se-row-group-title">' + escHtml(title) + (subtitle ? '<small>' + escHtml(subtitle) + '</small>' : '') + '</div>' +
+        '<div class="se-dynamic-grid">' + controls.join('') + '</div>' +
+    '</div>';
+}
+
+function renderDynamicStyleControls() {
+    var container = document.getElementById('dynamic-style-controls');
+    if (!container) return;
+    ensureElementStyles();
+    if (!fields.length) {
+        container.innerHTML = '<p class="se-dynamic-note">Добавьте поля, и здесь появятся настройки конкретных элементов превью.</p>';
+        return;
+    }
+
+    var types = collectFieldTypes(fields);
+    var groups = [];
+    groups.push(renderElementStyleGroup('label', 'Подписи полей', 'label', [
+        renderElementStyleControl('label', 'color', 'Цвет', 'color'),
+        renderElementStyleControl('label', 'fontSize', 'Размер', 'text', 'px'),
+        renderElementStyleControl('label', 'marginBottom', 'Низ', 'text', 'px')
+    ]));
+    groups.push(renderElementStyleGroup('value', 'Значение поля', 'value/card', [
+        renderElementStyleControl('value', 'color', 'Текст', 'color'),
+        renderElementStyleControl('value', 'bgColor', 'Фон', 'color'),
+        renderElementStyleControl('value', 'padding', 'Отступ', 'text', 'px'),
+        renderElementStyleControl('value', 'radius', 'Радиус', 'text', 'px')
+    ]));
+
+    if (types.link) {
+        groups.push(renderElementStyleGroup('button', 'Кнопка / ссылка', 'link field', [
+            renderElementStyleControl('button', 'color', 'Текст', 'color'),
+            renderElementStyleControl('button', 'bgColor', 'Фон', 'color'),
+            renderElementStyleControl('button', 'padding', 'Отступ', 'text', 'px'),
+            renderElementStyleControl('button', 'radius', 'Радиус', 'text', 'px')
+        ]));
+    }
+    if (types.image || types.gallery || types.file || types.oembed || types.google_map || types.post_object || types.relationship || types.user) {
+        groups.push(renderElementStyleGroup('media', 'Медиа и плейсхолдеры', 'image/gallery/file', [
+            renderElementStyleControl('media', 'bgColor', 'Фон', 'color'),
+            renderElementStyleControl('media', 'radius', 'Радиус', 'text', 'px')
+        ]));
+    }
+    if (types.repeater) {
+        groups.push(renderElementStyleGroup('repeater', 'Повторители', 'repeater rows', [
+            renderElementStyleControl('repeater', 'gap', 'Промежуток', 'text', 'px'),
+            renderElementStyleControl('repeater', 'avatarBg', 'Аватар', 'color')
+        ]));
+    }
+    if (types.flexible_content) {
+        groups.push(renderElementStyleGroup('flex', 'Flexible layout', 'sections', [
+            renderElementStyleControl('flex', 'accentColor', 'Акцент', 'color'),
+            renderElementStyleControl('flex', 'bgColor', 'Фон', 'text')
+        ]));
+    }
+    if (types.repeater && fields.length === 1 && fields[0].sub_fields && fields[0].sub_fields.length === 2) {
+        groups.push(renderElementStyleGroup('faq', 'FAQ элементы', 'accordion', [
+            renderElementStyleControl('faq', 'questionBg', 'Вопрос', 'color'),
+            renderElementStyleControl('faq', 'answerColor', 'Ответ', 'color')
+        ]));
+    }
+
+    container.innerHTML = '<p class="se-dynamic-note">Эти контролы собираются из текущих полей и меняют те же элементы, которые видны в превью и HTML+CSS экспорте.</p>' + groups.join('');
+}
+
+function refreshStyledOutputs() {
+    if (currentCodeTab === 'html') generateHTML();
+    if (currentCodeTab === 'preview') updatePreview();
+    if (previewModeActive) renderVisualEditor();
+}
+
+function applyElementStyleChange(el) {
+    var styleKey = el.getAttribute('data-style-key');
+    var prop = el.getAttribute('data-style-prop');
+    if (!styleKey || !prop) return;
+    var styles = ensureElementStyles();
+    if (!styles[styleKey]) styles[styleKey] = {};
+    styles[styleKey][prop] = el.value;
+
+    var peers = document.querySelectorAll('[data-action="element-style-change"][data-style-key="' + styleKey + '"][data-style-prop="' + prop + '"]');
+    for (var i = 0; i < peers.length; i++) {
+        if (peers[i] !== el) peers[i].value = el.value;
+    }
+    refreshStyledOutputs();
+}
+
 function resetStyles() {
     blockStyles = {
         bgColor: '#ffffff',
@@ -2199,7 +2343,8 @@ function resetStyles() {
         cardPadding: '20',
         cardRadius: '12',
         borderColor: '#e0e0e0',
-        borderWidth: '1'
+        borderWidth: '1',
+        elements: getDefaultElementStyles()
     };
     // Reset UI
     var defaults = {
@@ -2216,9 +2361,8 @@ function resetStyles() {
         var el = document.getElementById(keys[i]);
         if (el) el.value = defaults[keys[i]];
     }
-    if (currentCodeTab === 'html') generateHTML();
-    if (currentCodeTab === 'preview') updatePreview();
-    if (previewModeActive) renderVisualEditor();
+    renderDynamicStyleControls();
+    refreshStyledOutputs();
     showToast('Стили сброшены');
 }
 
@@ -2324,6 +2468,8 @@ function getPlaceholderSVG() {
 
 function generateVisualHTML() {
     var styles = blockStyles;
+    var elementStyles = styles.elements || ensureElementStyles();
+    var e = elementStyles;
     var groupTitle = document.getElementById('group-title').value || '';
     var isFAQ = fields.length === 1 && fields[0].type === 'repeater' &&
                 fields[0].sub_fields && fields[0].sub_fields.length === 2 &&
@@ -2333,19 +2479,19 @@ function generateVisualHTML() {
         '*{box-sizing:border-box;margin:0;padding:0;}',
         'body{font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;line-height:1.6;color:' + styles.textColor + ';background:' + styles.bgColor + ';padding:' + styles.padding + 'px;}',
         '.acf-block{max-width:800px;margin:0 auto;}',
-        '.acf-block-title{font-size:1.35rem;font-weight:700;margin-bottom:24px;}',
+        '.acf-block-title{font-size:' + e.title.fontSize + 'px;font-weight:700;margin-bottom:' + e.title.marginBottom + 'px;color:' + e.title.color + ';}',
         '.acf-field{margin-bottom:' + styles.gap + 'px;}',
         '.acf-field:last-child{margin-bottom:0;}',
-        '.acf-label{font-size:0.7rem;text-transform:uppercase;letter-spacing:0.07em;font-weight:600;opacity:0.5;margin-bottom:6px;}',
-        '.acf-value{background:' + styles.cardBg + ';padding:' + styles.cardPadding + 'px;border-radius:' + styles.cardRadius + 'px;border:' + styles.borderWidth + 'px solid ' + styles.borderColor + ';}',
+        '.acf-label{font-size:' + e.label.fontSize + 'px;text-transform:uppercase;letter-spacing:0.07em;font-weight:600;color:' + e.label.color + ';margin-bottom:' + e.label.marginBottom + 'px;}',
+        '.acf-value{color:' + e.value.color + ';background:' + e.value.bgColor + ';padding:' + e.value.padding + 'px;border-radius:' + e.value.radius + 'px;border:' + styles.borderWidth + 'px solid ' + styles.borderColor + ';}',
         '.acf-value--text{font-size:0.95rem;}',
         '.acf-value--textarea{font-size:0.9rem;white-space:pre-wrap;min-height:60px;line-height:1.7;}',
         '.acf-value--number{font-family:"JetBrains Mono","SF Mono",monospace;font-size:1.1rem;font-weight:600;}',
         '.acf-value--email,.acf-value--url{color:#6366f1;text-decoration:underline;text-underline-offset:2px;cursor:pointer;}',
-        '.acf-img{width:100%;aspect-ratio:16/9;border-radius:8px;background:linear-gradient(135deg,#e0e7ff 0%,#c7d2fe 50%,#a5b4fc 100%);display:flex;align-items:center;justify-content:center;color:#6366f1;font-size:1.5rem;}',
+        '.acf-img{width:100%;aspect-ratio:16/9;border-radius:' + e.media.radius + 'px;background:' + e.media.bgColor + ';display:flex;align-items:center;justify-content:center;color:#6366f1;font-size:1.5rem;}',
         '.acf-gallery{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;}',
-        '.acf-gallery-item{aspect-ratio:1;border-radius:6px;background:linear-gradient(135deg,#e0e7ff 0%,#c7d2fe 100%);}',
-        '.acf-btn{display:inline-block;padding:12px 28px;background:#6366f1;color:#fff;border-radius:8px;text-decoration:none;font-weight:600;font-size:0.9rem;}',
+        '.acf-gallery-item{aspect-ratio:1;border-radius:' + e.media.radius + 'px;background:' + e.media.bgColor + ';}',
+        '.acf-btn{display:inline-block;padding:' + e.button.padding + 'px 28px;background:' + e.button.bgColor + ';color:' + e.button.color + ';border-radius:' + e.button.radius + 'px;text-decoration:none;font-weight:600;font-size:0.9rem;}',
         '.acf-badge{display:inline-block;padding:4px 12px;border-radius:999px;font-size:0.75rem;font-weight:600;}',
         '.acf-badge--yes{background:#dcfce7;color:#166534;}',
         '.acf-badge--no{background:#fee2e2;color:#991b1b;}',
@@ -2355,12 +2501,12 @@ function generateVisualHTML() {
         '.acf-file-card svg{flex-shrink:0;opacity:0.35;}',
         '.acf-file-name{font-size:0.85rem;font-weight:500;}',
         '.acf-file-size{font-size:0.75rem;opacity:0.45;}',
-        '.acf-map{height:180px;border-radius:8px;background:linear-gradient(135deg,#dbeafe 0%,#bfdbfe 50%,#93c5fd 100%);display:flex;align-items:center;justify-content:center;color:#3b82f6;font-size:0.85rem;gap:6px;}',
-        '.acf-oembed{aspect-ratio:16/9;border-radius:8px;background:#0f0f23;display:flex;align-items:center;justify-content:center;}',
+        '.acf-map{height:180px;border-radius:' + e.media.radius + 'px;background:' + e.media.bgColor + ';display:flex;align-items:center;justify-content:center;color:#3b82f6;font-size:0.85rem;gap:6px;}',
+        '.acf-oembed{aspect-ratio:16/9;border-radius:' + e.media.radius + 'px;background:#0f0f23;display:flex;align-items:center;justify-content:center;}',
         '.acf-oembed svg{opacity:0.6;}',
-        '.acf-repeater{display:grid;gap:14px;}',
+        '.acf-repeater{display:grid;gap:' + e.repeater.gap + 'px;}',
         '.acf-repeater-item{display:flex;gap:14px;align-items:flex-start;}',
-        '.acf-avatar{width:48px;height:48px;border-radius:50%;flex-shrink:0;background:linear-gradient(135deg,#e0e7ff,#c7d2fe);display:flex;align-items:center;justify-content:center;color:#6366f1;font-weight:700;font-size:1rem;}',
+        '.acf-avatar{width:48px;height:48px;border-radius:50%;flex-shrink:0;background:' + e.repeater.avatarBg + ';display:flex;align-items:center;justify-content:center;color:#6366f1;font-weight:700;font-size:1rem;}',
         '.acf-info{flex:1;min-width:0;}',
         '.acf-name{font-weight:600;font-size:0.95rem;}',
         '.acf-role{font-size:0.8rem;opacity:0.5;margin-top:2px;}',
@@ -2368,17 +2514,17 @@ function generateVisualHTML() {
         '.acf-company{font-size:0.8rem;font-weight:500;opacity:0.55;margin-top:2px;}',
         '.acf-faq-item{border:' + styles.borderWidth + 'px solid ' + styles.borderColor + ';border-radius:' + styles.cardRadius + 'px;overflow:hidden;margin-bottom:8px;background:' + styles.cardBg + ';}',
         '.acf-faq-item:last-child{margin-bottom:0;}',
-        '.acf-faq-question{padding:' + styles.cardPadding + 'px;font-weight:600;cursor:pointer;display:flex;justify-content:space-between;align-items:center;user-select:none;border:none;width:100%;text-align:left;font-size:0.95rem;color:' + styles.textColor + ';font-family:inherit;background:transparent;}',
+        '.acf-faq-question{padding:' + styles.cardPadding + 'px;font-weight:600;cursor:pointer;display:flex;justify-content:space-between;align-items:center;user-select:none;border:none;width:100%;text-align:left;font-size:0.95rem;color:' + styles.textColor + ';font-family:inherit;background:' + e.faq.questionBg + ';}',
         '.acf-faq-question::after{content:"+";font-size:1.2rem;opacity:0.35;transition:transform 0.2s;}',
-        '.acf-faq-answer{padding:0 ' + styles.cardPadding + 'px;max-height:0;overflow:hidden;transition:all 0.3s;font-size:0.9rem;opacity:0.7;line-height:1.65;}',
+        '.acf-faq-answer{padding:0 ' + styles.cardPadding + 'px;max-height:0;overflow:hidden;transition:all 0.3s;font-size:0.9rem;color:' + e.faq.answerColor + ';line-height:1.65;}',
         '.acf-faq-item.open .acf-faq-question::after{content:"−";transform:rotate(180deg);}',
         '.acf-faq-item.open .acf-faq-answer{max-height:200px;padding-bottom:' + styles.cardPadding + 'px;}',
         '.acf-post-card{display:flex;gap:12px;align-items:center;padding:12px;border:1px solid ' + styles.borderColor + ';border-radius:8px;}',
-        '.acf-post-thumb{width:56px;height:56px;border-radius:6px;background:linear-gradient(135deg,#e0e7ff,#c7d2fe);flex-shrink:0;}',
+        '.acf-post-thumb{width:56px;height:56px;border-radius:' + e.media.radius + 'px;background:' + e.media.bgColor + ';flex-shrink:0;}',
         '.acf-post-title{font-weight:600;font-size:0.9rem;}',
         '.acf-post-meta{font-size:0.75rem;opacity:0.45;margin-top:2px;}',
         '.acf-group{padding:16px;border:1px dashed ' + styles.borderColor + ';border-radius:8px;}',
-        '.acf-flex-layout{margin-bottom:12px;padding:12px 16px;border-left:3px solid #6366f1;background:rgba(99,102,241,0.04);border-radius:0 6px 6px 0;}',
+        '.acf-flex-layout{margin-bottom:12px;padding:12px 16px;border-left:3px solid ' + e.flex.accentColor + ';background:' + e.flex.bgColor + ';border-radius:0 6px 6px 0;}',
         '.acf-flex-layout:last-child{margin-bottom:0;}',
         '.acf-flex-layout-title{font-size:0.7rem;text-transform:uppercase;letter-spacing:0.06em;opacity:0.4;margin-bottom:10px;font-weight:600;}',
     ].join('\n');
@@ -3120,12 +3266,18 @@ document.addEventListener('input', function(e) {
     applyStyleColor(el.id, el.value);
 });
 
+document.addEventListener('input', function(e) {
+    var el = e.target.closest('[data-action="element-style-change"]');
+    if (!el) return;
+    applyElementStyleChange(el);
+});
+
 document.addEventListener('change', function(e) {
     var el = e.target.closest('[data-action]');
     if (!el) return;
     var action = el.getAttribute('data-action');
     // Skip style-change as it's handled by input event
-    if (action === 'style-change') return;
+    if (action === 'style-change' || action === 'element-style-change') return;
 
     switch (action) {
         case 'add-field-select':

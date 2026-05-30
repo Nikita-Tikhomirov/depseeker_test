@@ -313,6 +313,11 @@
         .se-control-pair { display:grid; grid-template-columns:56px minmax(0,1fr); gap:10px; flex:1; min-width:0; }
         .se-control-pair .se-input { min-width:0; }
         .se-dynamic-note { color:var(--text-dim); font-size:0.78rem; line-height:1.45; margin:0 0 12px; }
+        .se-dynamic-grid { display:grid; gap:10px; }
+        .se-mini-row { display:grid; grid-template-columns:minmax(78px,0.8fr) 54px minmax(0,1fr) 70px; align-items:center; gap:8px; }
+        .se-mini-row .se-label { min-width:0; font-size:0.78rem; }
+        .se-mini-row .se-input { padding:8px 10px; font-size:0.9rem; }
+        .se-mini-row .se-color { width:54px; height:34px; flex:0 0 54px; padding:4px; }
         .se-reset { font-size:0.9rem; color:var(--text-dim); cursor:pointer; background:none; border:none; text-decoration:underline; padding:0; font-family:var(--font); }
         .se-reset:hover { color:var(--accent); }
 
@@ -607,6 +612,7 @@
                             <div class="se-row"><span class="se-label">Цвет</span><input type="color" class="se-color" id="se-border-color" value="#e0e0e0" data-action="style-change"><input type="text" class="se-input" id="se-border-color-text" value="#e0e0e0" data-action="style-change-text"></div>
                             <div class="se-row"><span class="se-label">Толщина</span><input type="text" class="se-input se-size" id="se-border-width" value="1" data-action="style-change-text"><span class="se-unit">px</span></div>
                         </div>
+                        <div id="dynamic-style-controls"></div>
                         <div style="margin-top:10px;display:flex;justify-content:flex-end;gap:8px;">
                             <button class="se-reset" data-action="reset-styles">Сбросить стили</button>
                         </div>
