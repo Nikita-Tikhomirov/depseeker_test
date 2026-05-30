@@ -478,7 +478,7 @@ def render_hub() -> str:
                 <li><strong>URL-предустановки.</strong> Каждая посадочная открывает генератор с нужным шаблоном.</li>
                 <li><strong>Экспорт проекта.</strong> Скачать PHP/JSON файлом и сохранить набор полей локально.</li>
                 <li><strong>Production HTML/CSS.</strong> Генерировать scoped верстку, которую не стыдно вставить в тему: hero, FAQ, команда, отзывы, flexible layouts и generic cards.</li>
-                <li><strong>Единый live editor.</strong> Убрать конкурирующие превью: CSS-панель, iframe preview, visual editor и HTML-export должны работать от одного production renderer.</li>
+                <li><strong>Динамические стили элементов.</strong> Панель стилей должна генерироваться из текущего блока и редактировать конкретные элементы превью: секцию, заголовок, текст, кнопку, медиа, карточки, FAQ-вопросы и ответы.</li>
                 <li><strong>Проверка ошибок.</strong> Подсветка дублирующихся names, пустых keys и плохих location rules.</li>
                 <li><strong>Библиотека пресетов.</strong> Фильтр шаблонов по типу сайта: SaaS, услуги, магазин, блог.</li>
             </ol>

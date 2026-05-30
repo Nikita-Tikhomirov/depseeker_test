@@ -54,6 +54,221 @@
         };
     }
 
+    var ELEMENT_STYLE_DEFAULTS = {
+        section: { bgColor: '#ffffff', textColor: '#111827', paddingY: '72', maxWidth: '1120', gap: '18' },
+        kicker: { color: '#14b8a6', fontSize: '12', fontWeight: '800', marginBottom: '10' },
+        title: { color: '#111827', fontSize: '72', fontWeight: '850', lineHeight: '98', marginBottom: '0' },
+        lead: { color: '#475569', fontSize: '19', lineHeight: '165', marginTop: '18' },
+        button: { bgColor: '#111827', textColor: '#ffffff', radius: '10', paddingX: '20', height: '46', fontSize: '15' },
+        media: { bgColor: '#ccfbf1', radius: '16', minHeight: '320' },
+        card: { bgColor: '#ffffff', textColor: '#111827', padding: '22', radius: '16', borderColor: '#e5e7eb', borderWidth: '1' },
+        fieldLabel: { color: '#64748b', fontSize: '12', fontWeight: '800' },
+        fieldValue: { color: '#111827', fontSize: '16', fontWeight: '400' },
+        faqList: { gap: '12', maxWidth: '860' },
+        question: { bgColor: '#ffffff', textColor: '#111827', paddingY: '18', paddingX: '20', fontSize: '16', fontWeight: '800' },
+        answer: { textColor: '#475569', fontSize: '15', paddingX: '20', paddingBottom: '18' },
+        layout: { bgColor: '#ffffff', padding: '22', radius: '16', borderColor: '#e5e7eb' },
+        avatar: { size: '64', bgColor: '#14b8a6', textColor: '#ffffff', radius: '50' },
+        rating: { color: '#f59e0b', fontSize: '16' }
+    };
+
+    var FIELD_STYLE_DEFAULTS = {
+        labelColor: '#64748b',
+        labelSize: '12',
+        valueColor: '#111827',
+        valueSize: '16',
+        valueWeight: '400',
+        gap: '7'
+    };
+
+    var STYLE_PANELS = {
+        section: { label: 'Секция', hint: 'фон, текст, ширина, внешние отступы', controls: [
+            ['bgColor', 'Фон', 'color'],
+            ['textColor', 'Текст', 'color'],
+            ['paddingY', 'Высота секции', 'number', 'px'],
+            ['maxWidth', 'Ширина контента', 'number', 'px'],
+            ['gap', 'Промежуток', 'number', 'px']
+        ] },
+        kicker: { label: 'Бейдж / подпись', hint: '.zifra-acf-kicker', controls: [
+            ['color', 'Цвет', 'color'],
+            ['fontSize', 'Размер', 'number', 'px'],
+            ['fontWeight', 'Насыщенность', 'number'],
+            ['marginBottom', 'Отступ снизу', 'number', 'px']
+        ] },
+        title: { label: 'Заголовок', hint: '.zifra-acf-title', controls: [
+            ['color', 'Цвет', 'color'],
+            ['fontSize', 'Размер', 'number', 'px'],
+            ['fontWeight', 'Насыщенность', 'number'],
+            ['lineHeight', 'Интерлиньяж', 'number', '%'],
+            ['marginBottom', 'Отступ снизу', 'number', 'px']
+        ] },
+        lead: { label: 'Описание', hint: '.zifra-acf-lead', controls: [
+            ['color', 'Цвет', 'color'],
+            ['fontSize', 'Размер', 'number', 'px'],
+            ['lineHeight', 'Интерлиньяж', 'number', '%'],
+            ['marginTop', 'Отступ сверху', 'number', 'px']
+        ] },
+        button: { label: 'Кнопка', hint: '.zifra-acf-btn', controls: [
+            ['bgColor', 'Фон', 'color'],
+            ['textColor', 'Текст', 'color'],
+            ['height', 'Высота', 'number', 'px'],
+            ['paddingX', 'Боковые отступы', 'number', 'px'],
+            ['radius', 'Скругление', 'number', 'px'],
+            ['fontSize', 'Размер текста', 'number', 'px']
+        ] },
+        media: { label: 'Медиа / картинка', hint: '.zifra-acf-media', controls: [
+            ['bgColor', 'Фон', 'color'],
+            ['minHeight', 'Высота', 'number', 'px'],
+            ['radius', 'Скругление', 'number', 'px']
+        ] },
+        card: { label: 'Карточка', hint: '.zifra-acf-card', controls: [
+            ['bgColor', 'Фон', 'color'],
+            ['textColor', 'Текст', 'color'],
+            ['padding', 'Внутренний отступ', 'number', 'px'],
+            ['radius', 'Скругление', 'number', 'px'],
+            ['borderColor', 'Граница', 'color'],
+            ['borderWidth', 'Толщина', 'number', 'px']
+        ] },
+        fieldLabel: { label: 'Лейбл поля', hint: '.zifra-acf-label', controls: [
+            ['color', 'Цвет', 'color'],
+            ['fontSize', 'Размер', 'number', 'px'],
+            ['fontWeight', 'Насыщенность', 'number']
+        ] },
+        fieldValue: { label: 'Значение поля', hint: '.zifra-acf-value', controls: [
+            ['color', 'Цвет', 'color'],
+            ['fontSize', 'Размер', 'number', 'px'],
+            ['fontWeight', 'Насыщенность', 'number']
+        ] },
+        faqList: { label: 'Список FAQ', hint: '.zifra-acf-faq', controls: [
+            ['gap', 'Расстояние', 'number', 'px'],
+            ['maxWidth', 'Ширина', 'number', 'px']
+        ] },
+        question: { label: 'Вопрос FAQ', hint: '.zifra-acf-faq summary', controls: [
+            ['bgColor', 'Фон', 'color'],
+            ['textColor', 'Текст', 'color'],
+            ['paddingY', 'Отступ сверху/снизу', 'number', 'px'],
+            ['paddingX', 'Отступ слева/справа', 'number', 'px'],
+            ['fontSize', 'Размер', 'number', 'px'],
+            ['fontWeight', 'Насыщенность', 'number']
+        ] },
+        answer: { label: 'Ответ FAQ', hint: '.zifra-acf-faq-answer', controls: [
+            ['textColor', 'Текст', 'color'],
+            ['fontSize', 'Размер', 'number', 'px'],
+            ['paddingX', 'Боковой отступ', 'number', 'px'],
+            ['paddingBottom', 'Отступ снизу', 'number', 'px']
+        ] },
+        layout: { label: 'Flexible layout', hint: '.zifra-acf-layout', controls: [
+            ['bgColor', 'Фон', 'color'],
+            ['padding', 'Отступ', 'number', 'px'],
+            ['radius', 'Скругление', 'number', 'px'],
+            ['borderColor', 'Граница', 'color']
+        ] },
+        avatar: { label: 'Аватар', hint: '.zifra-acf-avatar', controls: [
+            ['size', 'Размер', 'number', 'px'],
+            ['bgColor', 'Фон', 'color'],
+            ['textColor', 'Текст', 'color'],
+            ['radius', 'Скругление', 'number', '%']
+        ] },
+        rating: { label: 'Рейтинг', hint: '.zifra-acf-rating', controls: [
+            ['color', 'Цвет', 'color'],
+            ['fontSize', 'Размер', 'number', 'px']
+        ] }
+    };
+
+    var styleEditorSignature = '';
+    var toggleHome = null;
+
+    function copyStyleObject(source) {
+        var out = {};
+        var keys = Object.keys(source || {});
+        for (var i = 0; i < keys.length; i++) out[keys[i]] = source[keys[i]];
+        return out;
+    }
+
+    function getElementStyle(key) {
+        window.productionElementStyles = window.productionElementStyles || {};
+        if (!window.productionElementStyles[key]) {
+            window.productionElementStyles[key] = copyStyleObject(ELEMENT_STYLE_DEFAULTS[key] || {});
+        }
+        var merged = copyStyleObject(ELEMENT_STYLE_DEFAULTS[key] || {});
+        var current = window.productionElementStyles[key] || {};
+        var keys = Object.keys(current);
+        for (var i = 0; i < keys.length; i++) merged[keys[i]] = current[keys[i]];
+        return merged;
+    }
+
+    function setElementStyle(key, prop, value) {
+        window.productionElementStyles = window.productionElementStyles || {};
+        window.productionElementStyles[key] = window.productionElementStyles[key] || copyStyleObject(ELEMENT_STYLE_DEFAULTS[key] || {});
+        window.productionElementStyles[key][prop] = String(value == null ? '' : value).trim();
+        syncLegacyBlockStyles(key, prop, window.productionElementStyles[key][prop]);
+        refreshProductionViews();
+    }
+
+    function collectRenderableFields(list, out) {
+        out = out || [];
+        list = list || [];
+        for (var i = 0; i < list.length; i++) {
+            var field = list[i];
+            if (!field) continue;
+            if (field.name && field.type !== 'tab' && field.type !== 'message' && field.type !== 'repeater' && field.type !== 'flexible_content') {
+                out.push(field);
+            }
+            if (field.sub_fields) collectRenderableFields(field.sub_fields, out);
+            if (field.layouts) {
+                for (var j = 0; j < field.layouts.length; j++) collectRenderableFields(field.layouts[j].sub_fields || [], out);
+            }
+        }
+        return out;
+    }
+
+    function fieldUsesGenericMarkup(field) {
+        if (!field || !field.name) return false;
+        return ['image', 'gallery', 'link', 'tab', 'message', 'repeater', 'flexible_content'].indexOf(field.type) === -1;
+    }
+
+    function collectFieldStyleTargets() {
+        var kind = inferBlock(getFields());
+        if (kind === 'hero' || kind === 'faq') return [];
+        var fields = collectRenderableFields(getFields(), []);
+        var out = [];
+        for (var i = 0; i < fields.length; i++) {
+            if (fieldUsesGenericMarkup(fields[i])) out.push(fields[i]);
+        }
+        return out;
+    }
+
+    function getFieldStyle(field) {
+        var key = attr(fieldName(field));
+        window.productionFieldStyles = window.productionFieldStyles || {};
+        if (!window.productionFieldStyles[key]) window.productionFieldStyles[key] = copyStyleObject(FIELD_STYLE_DEFAULTS);
+        var merged = copyStyleObject(FIELD_STYLE_DEFAULTS);
+        var current = window.productionFieldStyles[key] || {};
+        var keys = Object.keys(current);
+        for (var i = 0; i < keys.length; i++) merged[keys[i]] = current[keys[i]];
+        return merged;
+    }
+
+    function setFieldStyle(fieldKey, prop, value) {
+        window.productionFieldStyles = window.productionFieldStyles || {};
+        window.productionFieldStyles[fieldKey] = window.productionFieldStyles[fieldKey] || copyStyleObject(FIELD_STYLE_DEFAULTS);
+        window.productionFieldStyles[fieldKey][prop] = String(value == null ? '' : value).trim();
+        refreshProductionViews();
+    }
+
+    function syncLegacyBlockStyles(key, prop, value) {
+        window.blockStyles = window.blockStyles || {};
+        if (key === 'section' && prop === 'bgColor') window.blockStyles.bgColor = value;
+        if (key === 'section' && prop === 'textColor') window.blockStyles.textColor = value;
+        if (key === 'section' && prop === 'paddingY') window.blockStyles.padding = value;
+        if (key === 'section' && prop === 'gap') window.blockStyles.gap = value;
+        if (key === 'card' && prop === 'bgColor') window.blockStyles.cardBg = value;
+        if (key === 'card' && prop === 'padding') window.blockStyles.cardPadding = value;
+        if (key === 'card' && prop === 'radius') window.blockStyles.cardRadius = value;
+        if (key === 'card' && prop === 'borderColor') window.blockStyles.borderColor = value;
+        if (key === 'card' && prop === 'borderWidth') window.blockStyles.borderWidth = value;
+    }
+
     var STYLE_CONTROL_MAP = {
         'se-bg-color': 'bgColor',
         'se-bg-color-text': 'bgColor',
@@ -151,6 +366,77 @@
         return 'content';
     }
 
+    function cssPx(value, fallback) {
+        var n = parseFloat(value);
+        if (!isFinite(n)) n = fallback || 0;
+        return n + 'px';
+    }
+
+    function cssPercent(value, fallback) {
+        var n = parseFloat(value);
+        if (!isFinite(n)) n = fallback || 100;
+        return (n / 100).toFixed(2);
+    }
+
+    function cssRaw(value, fallback) {
+        value = String(value == null ? '' : value).trim();
+        return value || fallback;
+    }
+
+    function elementOverridesCSS() {
+        var section = getElementStyle('section');
+        var kicker = getElementStyle('kicker');
+        var title = getElementStyle('title');
+        var lead = getElementStyle('lead');
+        var button = getElementStyle('button');
+        var media = getElementStyle('media');
+        var card = getElementStyle('card');
+        var label = getElementStyle('fieldLabel');
+        var value = getElementStyle('fieldValue');
+        var faq = getElementStyle('faqList');
+        var question = getElementStyle('question');
+        var answer = getElementStyle('answer');
+        var layout = getElementStyle('layout');
+        var avatar = getElementStyle('avatar');
+        var rating = getElementStyle('rating');
+        return [
+            '/* Element-level editor styles */',
+            '.zifra-acf-block { background: ' + cssRaw(section.bgColor, '#fff') + '; color: ' + cssRaw(section.textColor, '#111827') + '; padding: clamp(32px, 6vw, ' + cssPx(section.paddingY, 72) + ') 0; }',
+            '.zifra-acf-wrap { width: min(' + cssPx(section.maxWidth, 1120) + ', calc(100% - 32px)); }',
+            '.zifra-acf-grid { gap: ' + cssPx(section.gap, 18) + '; }',
+            '.zifra-acf-kicker { color: ' + cssRaw(kicker.color, '#14b8a6') + '; font-size: ' + cssPx(kicker.fontSize, 12) + '; font-weight: ' + cssRaw(kicker.fontWeight, '800') + '; margin-bottom: ' + cssPx(kicker.marginBottom, 10) + '; }',
+            '.zifra-acf-title { color: ' + cssRaw(title.color, '#111827') + '; font-size: clamp(2rem, 5vw, ' + cssPx(title.fontSize, 72) + '); font-weight: ' + cssRaw(title.fontWeight, '850') + '; line-height: ' + cssPercent(title.lineHeight, 98) + '; margin-bottom: ' + cssPx(title.marginBottom, 0) + '; }',
+            '.zifra-acf-lead { color: ' + cssRaw(lead.color, '#475569') + '; font-size: ' + cssPx(lead.fontSize, 19) + '; line-height: ' + cssPercent(lead.lineHeight, 165) + '; margin-top: ' + cssPx(lead.marginTop, 18) + '; }',
+            '.zifra-acf-btn { background: ' + cssRaw(button.bgColor, '#111827') + '; color: ' + cssRaw(button.textColor, '#fff') + '; min-height: ' + cssPx(button.height, 46) + '; padding: 0 ' + cssPx(button.paddingX, 20) + '; border-radius: ' + cssPx(button.radius, 10) + '; font-size: ' + cssPx(button.fontSize, 15) + '; }',
+            '.zifra-acf-media { background: linear-gradient(135deg, ' + cssRaw(media.bgColor, '#ccfbf1') + ', #e0f2fe); border-radius: ' + cssPx(media.radius, 16) + '; min-height: ' + cssPx(media.minHeight, 320) + '; }',
+            '.zifra-acf-card { background: ' + cssRaw(card.bgColor, '#fff') + '; color: ' + cssRaw(card.textColor, '#111827') + '; padding: ' + cssPx(card.padding, 22) + '; border-radius: ' + cssPx(card.radius, 16) + '; border-color: ' + cssRaw(card.borderColor, '#e5e7eb') + '; border-width: ' + cssPx(card.borderWidth, 1) + '; }',
+            '.zifra-acf-label { color: ' + cssRaw(label.color, '#64748b') + '; font-size: ' + cssPx(label.fontSize, 12) + '; font-weight: ' + cssRaw(label.fontWeight, '800') + '; }',
+            '.zifra-acf-value { color: ' + cssRaw(value.color, '#111827') + '; font-size: ' + cssPx(value.fontSize, 16) + '; font-weight: ' + cssRaw(value.fontWeight, '400') + '; }',
+            '.zifra-acf-faq { gap: ' + cssPx(faq.gap, 12) + '; max-width: ' + cssPx(faq.maxWidth, 860) + '; }',
+            '.zifra-acf-faq summary { background: ' + cssRaw(question.bgColor, '#fff') + '; color: ' + cssRaw(question.textColor, '#111827') + '; padding: ' + cssPx(question.paddingY, 18) + ' ' + cssPx(question.paddingX, 20) + '; font-size: ' + cssPx(question.fontSize, 16) + '; font-weight: ' + cssRaw(question.fontWeight, '800') + '; }',
+            '.zifra-acf-faq-answer { color: ' + cssRaw(answer.textColor, '#475569') + '; font-size: ' + cssPx(answer.fontSize, 15) + '; padding: 0 ' + cssPx(answer.paddingX, 20) + ' ' + cssPx(answer.paddingBottom, 18) + '; }',
+            '.zifra-acf-layout { background: ' + cssRaw(layout.bgColor, '#fff') + '; padding: ' + cssPx(layout.padding, 22) + '; border-radius: ' + cssPx(layout.radius, 16) + '; border-color: ' + cssRaw(layout.borderColor, '#e5e7eb') + '; }',
+            '.zifra-acf-avatar { width: ' + cssPx(avatar.size, 64) + '; height: ' + cssPx(avatar.size, 64) + '; background: ' + cssRaw(avatar.bgColor, '#14b8a6') + '; color: ' + cssRaw(avatar.textColor, '#fff') + '; border-radius: ' + cssRaw(avatar.radius, '50') + '%; }',
+            '.zifra-acf-rating { color: ' + cssRaw(rating.color, '#f59e0b') + '; font-size: ' + cssPx(rating.fontSize, 16) + '; }'
+        ].join('\n');
+    }
+
+    function fieldOverridesCSS() {
+        var fields = collectFieldStyleTargets();
+        var seen = {};
+        var out = ['/* Per-field editor styles */'];
+        for (var i = 0; i < fields.length; i++) {
+            var key = attr(fieldName(fields[i]));
+            if (!key || seen[key]) continue;
+            seen[key] = true;
+            var s = getFieldStyle(fields[i]);
+            out.push('.zifra-acf-field--' + key + ' { gap: ' + cssPx(s.gap, 7) + '; }');
+            out.push('.zifra-acf-field--' + key + ' .zifra-acf-label { color: ' + cssRaw(s.labelColor, '#64748b') + '; font-size: ' + cssPx(s.labelSize, 12) + '; }');
+            out.push('.zifra-acf-field--' + key + ' .zifra-acf-value { color: ' + cssRaw(s.valueColor, '#111827') + '; font-size: ' + cssPx(s.valueSize, 16) + '; font-weight: ' + cssRaw(s.valueWeight, '400') + '; }');
+        }
+        return out.join('\n');
+    }
+
     function productionCSS() {
         var s = getStyles();
         return [
@@ -201,6 +487,8 @@
             '.zifra-acf-list { display: grid; gap: 12px; }',
             '.zifra-acf-layout { margin-top: 20px; }',
             '.zifra-acf-layout:first-child { margin-top: 0; }',
+            elementOverridesCSS(),
+            fieldOverridesCSS(),
             '@supports not (color: color-mix(in srgb, #000 50%, transparent)) { .zifra-acf-block { --acf-muted: #64748b; } }',
             '@media (max-width: 860px) {',
             '  .zifra-acf-hero, .zifra-acf-grid { grid-template-columns: 1fr; }',
@@ -506,12 +794,166 @@
         return '<!DOCTYPE html><html lang="ru"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><style>body{margin:0;background:#f8fafc;}' + productionCSS() + '</style></head><body>' + renderPreviewBlock() + '</body></html>';
     }
 
+    function activeStyleKeys() {
+        var kind = inferBlock(getFields());
+        var keys = ['section'];
+        if (kind === 'hero') return keys.concat(['kicker', 'title', 'lead', 'button', 'media']);
+        if (kind === 'faq') return keys.concat(['kicker', 'faqList', 'card', 'question', 'answer']);
+        if (kind === 'team') return keys.concat(['kicker', 'card', 'avatar', 'fieldLabel', 'fieldValue']);
+        if (kind === 'testimonials') return keys.concat(['kicker', 'card', 'rating', 'fieldLabel', 'fieldValue']);
+        if (kind === 'builder') return keys.concat(['kicker', 'layout', 'card', 'fieldLabel', 'fieldValue', 'media', 'button']);
+        return keys.concat(['kicker', 'card', 'fieldLabel', 'fieldValue', 'media', 'button']);
+    }
+
+    function currentStyleSignature() {
+        var fieldKeys = collectFieldStyleTargets().map(function(field) {
+            return attr(fieldName(field));
+        }).join(',');
+        return inferBlock(getFields()) + ':' + activeStyleKeys().join(',') + ':' + fieldKeys;
+    }
+
+    function renderControl(key, control) {
+        var prop = control[0];
+        var label = control[1];
+        var type = control[2];
+        var unit = control[3] || '';
+        var value = getElementStyle(key)[prop];
+        var id = 'pe-' + key + '-' + prop;
+        if (type === 'color') {
+            return [
+                '<div class="se-row">',
+                '  <span class="se-label">' + h(label) + '</span>',
+                '  <div class="se-control-pair">',
+                '    <input type="color" class="se-color" id="' + id + '-color" value="' + h(value) + '" data-production-style="1" data-element="' + h(key) + '" data-prop="' + h(prop) + '">',
+                '    <input type="text" class="se-input" id="' + id + '" value="' + h(value) + '" data-production-style="1" data-element="' + h(key) + '" data-prop="' + h(prop) + '">',
+                '  </div>',
+                '</div>'
+            ].join('');
+        }
+        return [
+            '<div class="se-row">',
+            '  <span class="se-label">' + h(label) + '</span>',
+            '  <input type="number" class="se-input se-size" id="' + id + '" value="' + h(value) + '" data-production-style="1" data-element="' + h(key) + '" data-prop="' + h(prop) + '">',
+            unit ? '  <span class="se-unit">' + h(unit) + '</span>' : '',
+            '</div>'
+        ].join('');
+    }
+
+    function renderFieldStylePanel(field) {
+        var key = attr(fieldName(field));
+        var s = getFieldStyle(field);
+        var title = fieldLabel(field);
+        return [
+            '<div class="se-row-group" data-field-style-panel="' + h(key) + '">',
+            '<div class="se-row-group-title"><span>Поле: ' + h(title) + '</span><small>.' + h(key) + '</small></div>',
+            '<div class="se-row"><span class="se-label">Label цвет</span><div class="se-control-pair"><input type="color" class="se-color" value="' + h(s.labelColor) + '" data-field-style="1" data-field-key="' + h(key) + '" data-prop="labelColor"><input type="text" class="se-input" value="' + h(s.labelColor) + '" data-field-style="1" data-field-key="' + h(key) + '" data-prop="labelColor"></div></div>',
+            '<div class="se-row"><span class="se-label">Label размер</span><input type="number" class="se-input se-size" value="' + h(s.labelSize) + '" data-field-style="1" data-field-key="' + h(key) + '" data-prop="labelSize"><span class="se-unit">px</span></div>',
+            '<div class="se-row"><span class="se-label">Value цвет</span><div class="se-control-pair"><input type="color" class="se-color" value="' + h(s.valueColor) + '" data-field-style="1" data-field-key="' + h(key) + '" data-prop="valueColor"><input type="text" class="se-input" value="' + h(s.valueColor) + '" data-field-style="1" data-field-key="' + h(key) + '" data-prop="valueColor"></div></div>',
+            '<div class="se-row"><span class="se-label">Value размер</span><input type="number" class="se-input se-size" value="' + h(s.valueSize) + '" data-field-style="1" data-field-key="' + h(key) + '" data-prop="valueSize"><span class="se-unit">px</span></div>',
+            '<div class="se-row"><span class="se-label">Value вес</span><input type="number" class="se-input se-size" value="' + h(s.valueWeight) + '" data-field-style="1" data-field-key="' + h(key) + '" data-prop="valueWeight"></div>',
+            '</div>'
+        ].join('');
+    }
+
+    function renderDynamicStyleEditor(force) {
+        var body = document.querySelector('#style-editor .style-editor-body');
+        if (!body) return;
+        var sig = currentStyleSignature();
+        if (!force && styleEditorSignature === sig) return;
+        styleEditorSignature = sig;
+        var keys = activeStyleKeys();
+        var html = ['<p class="se-dynamic-note">Редактируются реальные элементы текущего превью. Эти же значения попадают в HTML/CSS export.</p>'];
+        for (var i = 0; i < keys.length; i++) {
+            var panel = STYLE_PANELS[keys[i]];
+            if (!panel) continue;
+            html.push('<div class="se-row-group" data-style-panel="' + h(keys[i]) + '">');
+            html.push('<div class="se-row-group-title"><span>' + h(panel.label) + '</span><small>' + h(panel.hint) + '</small></div>');
+            for (var j = 0; j < panel.controls.length; j++) {
+                html.push(renderControl(keys[i], panel.controls[j]));
+            }
+            html.push('</div>');
+        }
+        var fieldList = collectFieldStyleTargets();
+        var seen = {};
+        for (var f = 0; f < fieldList.length; f++) {
+            var fieldKey = attr(fieldName(fieldList[f]));
+            if (!fieldKey || seen[fieldKey]) continue;
+            seen[fieldKey] = true;
+            html.push(renderFieldStylePanel(fieldList[f]));
+        }
+        html.push('<div style="margin-top:10px;display:flex;justify-content:flex-end;gap:8px;"><button class="se-reset" data-action="reset-production-styles">Сбросить стили элементов</button></div>');
+        body.innerHTML = html.join('');
+    }
+
+    function resetProductionStyles() {
+        window.productionElementStyles = {};
+        window.productionFieldStyles = {};
+        var keys = Object.keys(ELEMENT_STYLE_DEFAULTS);
+        for (var i = 0; i < keys.length; i++) {
+            window.productionElementStyles[keys[i]] = copyStyleObject(ELEMENT_STYLE_DEFAULTS[keys[i]]);
+        }
+        window.blockStyles = window.blockStyles || {};
+        window.blockStyles.bgColor = ELEMENT_STYLE_DEFAULTS.section.bgColor;
+        window.blockStyles.textColor = ELEMENT_STYLE_DEFAULTS.section.textColor;
+        window.blockStyles.padding = ELEMENT_STYLE_DEFAULTS.section.paddingY;
+        window.blockStyles.gap = ELEMENT_STYLE_DEFAULTS.section.gap;
+        window.blockStyles.cardBg = ELEMENT_STYLE_DEFAULTS.card.bgColor;
+        window.blockStyles.cardPadding = ELEMENT_STYLE_DEFAULTS.card.padding;
+        window.blockStyles.cardRadius = ELEMENT_STYLE_DEFAULTS.card.radius;
+        window.blockStyles.borderColor = ELEMENT_STYLE_DEFAULTS.card.borderColor;
+        window.blockStyles.borderWidth = ELEMENT_STYLE_DEFAULTS.card.borderWidth;
+        renderDynamicStyleEditor(true);
+        refreshProductionViews();
+    }
+
+    function handleProductionStyleInput(target) {
+        var key = target.getAttribute('data-element');
+        var prop = target.getAttribute('data-prop');
+        if (!key || !prop) return;
+        var value = target.value;
+        setElementStyle(key, prop, value);
+        if (target.type === 'color') {
+            var paired = document.getElementById('pe-' + key + '-' + prop);
+            if (paired && paired.value !== value) paired.value = value;
+        } else if (isHexColor(value)) {
+            var color = document.getElementById('pe-' + key + '-' + prop + '-color');
+            if (color && color.value !== value) color.value = value;
+        }
+    }
+
+    function handleFieldStyleInput(target) {
+        var key = target.getAttribute('data-field-key');
+        var prop = target.getAttribute('data-prop');
+        if (!key || !prop) return;
+        setFieldStyle(key, prop, target.value);
+        var row = target.closest('.se-row');
+        if (!row) return;
+        var paired = row.querySelector(target.type === 'color' ? 'input[type="text"]' : 'input[type="color"]');
+        if (paired && (target.type === 'color' || isHexColor(target.value)) && paired.value !== target.value) {
+            paired.value = target.value;
+        }
+    }
+
+    function moveToggleButton(active) {
+        var btn = document.getElementById('toggle-preview-btn');
+        if (!btn) return;
+        if (!toggleHome) toggleHome = { parent: btn.parentNode, next: btn.nextSibling };
+        var headerActions = document.querySelector('.visual-editor-header-actions');
+        if (active && headerActions && btn.parentNode !== headerActions) {
+            headerActions.appendChild(btn);
+        } else if (!active && toggleHome.parent && btn.parentNode !== toggleHome.parent) {
+            if (toggleHome.next) toggleHome.parent.insertBefore(btn, toggleHome.next);
+            else toggleHome.parent.appendChild(btn);
+        }
+    }
+
     var refreshTimer = 0;
 
     function refreshProductionViews() {
         var iframe = document.getElementById('visual-editor-iframe');
         var legacyFrame = document.getElementById('preview-frame');
         var workspace = document.querySelector('.generator-workspace');
+        renderDynamicStyleEditor(false);
         if (iframe && workspace && workspace.classList.contains('preview-mode')) {
             iframe.srcdoc = fullPreviewDoc();
         }
@@ -529,6 +971,7 @@
 
         window.previewModeActive = !!active;
         workspace.classList.toggle('preview-mode', !!active);
+        moveToggleButton(!!active);
         if (btn) {
             btn.classList.toggle('active', !!active);
             btn.setAttribute('aria-pressed', active ? 'true' : 'false');
@@ -539,9 +982,9 @@
         refreshProductionViews();
         if (active) {
             window.requestAnimationFrame(function() {
-                var grid = document.querySelector('.gen-grid');
-                if (!grid) return;
-                var y = grid.getBoundingClientRect().top + window.pageYOffset - 96;
+                var editor = document.getElementById('visual-editor');
+                if (!editor) return;
+                var y = editor.getBoundingClientRect().top + window.pageYOffset - 96;
                 window.scrollTo({ top: Math.max(0, y), behavior: 'auto' });
             });
         }
@@ -575,9 +1018,20 @@
     document.addEventListener('DOMContentLoaded', function() {
         var label = document.querySelector('.visual-editor-label');
         if (label) label.textContent = 'Единый live preview';
+        renderDynamicStyleEditor(true);
         var activeTab = document.querySelector('.code-tab.active');
         if (activeTab && activeTab.getAttribute('data-tab') === 'html') window.generateHTML();
     });
+    document.addEventListener('input', function(e) {
+        var target = e.target.closest('[data-production-style]');
+        if (target) handleProductionStyleInput(target);
+        var fieldTarget = e.target.closest('[data-field-style]');
+        if (fieldTarget) handleFieldStyleInput(fieldTarget);
+    }, true);
+    document.addEventListener('click', function(e) {
+        var reset = e.target.closest('[data-action="reset-production-styles"]');
+        if (reset) resetProductionStyles();
+    }, true);
     document.addEventListener('click', scheduleRefresh, true);
     document.addEventListener('input', scheduleRefresh, true);
     document.addEventListener('change', scheduleRefresh, true);
