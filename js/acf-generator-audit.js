@@ -49,6 +49,59 @@
         return count;
     }
 
+    function countTopLevelRenderable(fields) {
+        var count = 0;
+        for (var i = 0; i < fields.length; i++) {
+            if (fields[i] && fields[i].type !== 'tab' && fields[i].type !== 'message') count += 1;
+        }
+        return count;
+    }
+
+    function inferExportKind(fields) {
+        if (!fields.length) return 'Не выбран';
+        var first = fields[0] || {};
+        var text = fields.map(function(field) {
+            return [field.name, field.label, field.type].join(' ');
+        }).join(' ').toLowerCase();
+
+        if (fields.some(function(field) { return field.type === 'flexible_content'; })) return 'Page Builder';
+        if (first.type === 'repeater' && /faq|question|answer|вопрос|ответ/.test(text)) return 'FAQ';
+        if (first.type === 'repeater' && /team|person|member|name|role|команд|имя|должност/.test(text)) return 'Команда';
+        if (first.type === 'repeater' && /review|testimonial|rating|отзыв|рейтинг/.test(text)) return 'Отзывы';
+        if (/hero|headline|subtitle|button|cta|заголовок|кнопк/.test(text)) return 'Hero';
+        return 'Карточки';
+    }
+
+    function renderExportSummary(fields, hardIssues) {
+        var total = countNestedFields(fields);
+        var topLevel = countTopLevelRenderable(fields);
+        var kind = inferExportKind(fields);
+        var ready = hardIssues === 0 && fields.length > 0;
+        var nextText = ready
+            ? 'Готовый пакет: регистрация ACF, JSON snapshot и чистый PHP-шаблон с CSS без editor-маркеров.'
+            : 'Сначала закройте критичные пункты выше, затем проверьте preview и скачайте код.';
+        var action = ready
+            ? '<button class="gen-btn gen-btn-sm gen-btn-primary" data-action="switch-tab" data-tab="html"><span class="material-symbols-outlined">integration_instructions</span> Открыть шаблон</button>'
+            : '<button class="gen-btn gen-btn-sm gen-btn-primary" data-action="toggle-preview-mode"><span class="material-symbols-outlined">visibility</span> Проверить preview</button>';
+
+        return [
+            '<div class="audit-export">',
+            '  <div class="audit-export-grid">',
+            '    <div class="audit-export-stat"><span class="audit-export-label">Тип блока</span><span class="audit-export-value">' + esc(kind) + '</span></div>',
+            '    <div class="audit-export-stat"><span class="audit-export-label">Поля</span><span class="audit-export-value">' + total + ' всего / ' + topLevel + ' верхний слой</span></div>',
+            '    <div class="audit-export-stat"><span class="audit-export-label">Экспорт</span><span class="audit-export-value">' + (ready ? 'Готов' : 'Нужны правки') + '</span></div>',
+            '  </div>',
+            '  <div class="audit-export-next"><span class="material-symbols-outlined">' + (ready ? 'task_alt' : 'rule') + '</span><span>' + esc(nextText) + '</span></div>',
+            '  <div class="audit-actions">',
+            action,
+            '    <button class="gen-btn gen-btn-sm gen-btn-outline" data-action="copy-code"><span class="material-symbols-outlined">content_copy</span> Копировать</button>',
+            '    <button class="gen-btn gen-btn-sm gen-btn-outline" data-action="download-code"><span class="material-symbols-outlined">download</span> Скачать код</button>',
+            '    <button class="gen-btn gen-btn-sm gen-btn-outline" data-action="download-project-bundle"><span class="material-symbols-outlined">inventory_2</span> Snapshot</button>',
+            '  </div>',
+            '</div>'
+        ].join('');
+    }
+
     function validateStructure() {
         var fields = getFields();
         var issues = [];
@@ -156,6 +209,8 @@
             summary = 'Есть пункты, которые лучше исправить перед переносом в WordPress.';
         }
 
+        html += renderExportSummary(fields, hardIssues);
+
         if (issues.length > 0) {
             html += '<ul class="audit-list">';
             for (var i = 0; i < Math.min(issues.length, 6); i++) {
@@ -163,11 +218,6 @@
             }
             html += '</ul>';
         }
-
-        html += '<div class="audit-actions">';
-        html += '<button class="gen-btn gen-btn-sm gen-btn-primary" data-action="download-project-bundle"><span class="material-symbols-outlined">inventory_2</span> Скачать snapshot</button>';
-        html += '<button class="gen-btn gen-btn-sm gen-btn-outline" data-action="copy-code"><span class="material-symbols-outlined">content_copy</span> Копировать код</button>';
-        html += '</div>';
 
         status.innerHTML = '<div class="audit-summary">' + esc(summary) + '</div>' + html;
     }
