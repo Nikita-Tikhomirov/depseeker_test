@@ -335,12 +335,12 @@
         .generator-workspace.preview-mode .style-editor-body { max-height: calc(100vh - 190px); overflow-y: auto; }
         .generator-workspace.preview-mode .code-preview { display: none; }
         .generator-workspace.preview-mode .audit-panel { display: none; }
-        .generator-workspace.preview-mode .preview-area > div:last-child { display: none; }
         .generator-workspace.preview-mode .visual-editor-panel { display: flex; }
         .generator-workspace.preview-mode .preview-area { min-width: 0; display: flex; flex-direction: column; gap: 0; padding-top: 0; }
         .generator-workspace.preview-mode .preview-layout { display: none; }
         .generator-workspace.preview-mode #preview-frame { display: none; }
         .generator-workspace.preview-mode .preview-toggle-bar { display: none; }
+        .generator-workspace.preview-mode #toggle-preview-btn { display: none !important; }
         .generator-workspace.preview-mode .gen-toggle-preview-btn { margin-left: auto; }
 
         /* ============ PREVIEW TOGGLE BAR ============ */
@@ -350,14 +350,15 @@
         .preview-toggle-bar .gen-toggle-preview-btn .material-symbols-outlined { font-size: 1.3rem; }
 
         /* ============ VISUAL EDITOR ============ */
-        .visual-editor-panel { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; display: none; flex-direction: column; min-height: clamp(680px, calc(100vh - 150px), 920px); }
-        .visual-editor-header { padding: 16px 28px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; background: var(--surface); }
-        .visual-editor-header span:first-child { font-weight: 700; font-size: 1.2rem; display: flex; align-items: center; gap: 8px; }
-        .visual-editor-header-actions { display:flex; align-items:center; gap:10px; margin-left:auto; }
+        .visual-editor-panel { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; display: none; flex-direction: column; min-height: 680px; height: clamp(680px, calc(100vh - 150px), 980px); }
+        .visual-editor-header { padding: 16px 28px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; gap: 14px; flex-wrap: wrap; background: var(--surface); }
+        .visual-editor-title { font-weight: 700; font-size: 1.2rem; display: flex; align-items: center; gap: 8px; min-width: 0; }
+        .visual-editor-header-actions { display:flex; align-items:center; justify-content:flex-end; flex-wrap:wrap; gap:10px; margin-left:auto; min-width:0; }
         .visual-editor-header-actions .gen-toggle-preview-btn { padding:10px 15px; }
+        .visual-editor-back-btn { white-space: nowrap; }
         .visual-editor-label { font-size: 0.8rem; color: var(--text-dim); background: var(--bg); padding: 4px 12px; border-radius: 999px; }
-        .visual-editor-frame { flex: 1; min-height: clamp(600px, calc(100vh - 270px), 790px); position: relative; background: #fff; }
-        .visual-editor-frame iframe { width: 100%; height: 100%; border: none; min-height: clamp(600px, calc(100vh - 270px), 790px); }
+        .visual-editor-frame { flex: 1; min-height: 600px; position: relative; background: #fff; }
+        .visual-editor-frame iframe { width: 100%; height: 100%; border: none; min-height: 600px; }
         .visual-editor-toolbar { display: flex; gap: 6px; padding: 12px 28px; border-top: 1px solid var(--border); background: var(--bg); }
         .visual-editor-toolbar button { padding: 8px 16px; border-radius: 6px; border: 1px solid var(--border); background: var(--surface); color: var(--text-2); cursor: pointer; font-size: 0.75rem; font-family: var(--font); transition: all 0.2s; }
         .visual-editor-toolbar button:hover { border-color: var(--accent); color: var(--accent); }
@@ -375,6 +376,7 @@
         @media (max-width:1400px) { .gen-grid { grid-template-columns:1fr 560px; } }
         @media (max-width:1100px) { .tool-hero-grid { display:block; } .tool-demo-card { display:none; } .gen-grid { grid-template-columns:1fr; } .generator-workspace.preview-mode .gen-grid { grid-template-columns:1fr; } .generator-workspace.preview-mode .preview-area { order:1; padding-top:0; } .generator-workspace.preview-mode .style-editor { order:2; position:relative; top:auto; max-height:none; } .generator-workspace.preview-mode .style-editor-body { max-height:none; } .quickstart { grid-template-columns:1fr; } }
         @media (max-width:900px) { .quickstart-presets { grid-template-columns:repeat(3,minmax(0,1fr)); } }
+        @media (max-width:720px) { .visual-editor-header { align-items:flex-start; padding:14px 16px; } .visual-editor-title { width:100%; font-size:1.05rem; } .visual-editor-header-actions { width:100%; justify-content:space-between; margin-left:0; } .visual-editor-label { max-width:46%; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; } .visual-editor-back-btn { flex:1; justify-content:center; min-width:180px; } }
         @media (max-width:768px) { .tool-hero { padding:42px 0 28px; } .tool-hero h1 { font-size:2.4rem; } .tool-hero p { max-width:100%; } .gen-grid { gap:20px; } .field-type-row { flex-wrap:wrap; } .field-type-row > .cs-wrap { flex:0 1 calc(33.33% - 6px); } .generator-workspace .container { padding: 0 16px; } .gen-panel-body { padding:18px; } }
         @media (max-width:640px) { .tool-hero .container, .generator-workspace .container { max-width:100%; } .tool-hero-copy, .tool-hero h1, .tool-hero p, .hero-actions, .hero-proof { max-width:min(330px, calc(100vw - 48px)); } .tool-hero p { width:min(330px, calc(100vw - 48px)); } .hero-actions .gen-btn { width:100%; justify-content:center; } .quickstart { width:100%; min-width:0; padding:18px; } .quickstart > * { min-width:0; max-width:100%; } .quickstart-sub { width:min(300px, 100%); } .quickstart-presets { grid-template-columns:repeat(2,minmax(0,1fr)); } .preset-chip { font-size:0.74rem; } .gen-grid { gap:14px; } .gen-panel-header { flex-wrap:wrap; align-items:flex-start; } .gen-panel-header > div { width:100%; justify-content:flex-start; flex-wrap:wrap; } .panel-title { width:100%; } .field-type-row > .cs-wrap { flex:0 1 calc(50% - 4px); } .tool-stats { grid-template-columns:repeat(2,minmax(0,1fr)); } .generator-workspace .container { max-width: 100%; padding: 0 12px; } .code-preview-header { flex-wrap:wrap; } .code-preview-header .code-actions { width:100%; margin-left:0; justify-content:flex-end; } .audit-head { align-items:flex-start; flex-direction:column; } .audit-score { text-align:left; } .audit-actions .gen-btn { width:100%; justify-content:center; } }
     </style>
@@ -658,9 +660,12 @@
                 <!-- Visual Editor (visible in preview mode) -->
                 <div class="visual-editor-panel" id="visual-editor">
                     <div class="visual-editor-header">
-                        <span><span class="material-symbols-outlined">preview</span> Визуальный редактор</span>
+                        <span class="visual-editor-title"><span class="material-symbols-outlined">preview</span> Визуальный редактор</span>
                         <div class="visual-editor-header-actions">
                             <span class="visual-editor-label">Адаптивный просмотр</span>
+                            <button class="gen-btn gen-btn-primary visual-editor-back-btn" data-action="toggle-preview-mode" type="button">
+                                <span class="material-symbols-outlined">edit</span> Вернуться к полям
+                            </button>
                         </div>
                     </div>
                     <div class="visual-editor-frame" id="visual-editor-frame">
