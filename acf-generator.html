@@ -59,48 +59,80 @@
         .field-card-header .fc-drag .material-symbols-outlined { font-size: 1.3rem; }
 
         :root { --font-mono: 'JetBrains Mono', 'Cascadia Code', 'Fira Code', monospace; }
+        html, body { overflow-x: hidden; }
 
         /* Wider generator container */
         .generator-workspace .container { max-width: 95vw; padding: 0 40px; }
 
         /* Tool Hero */
-        .tool-hero { padding: 100px 0 80px; text-align: center; position: relative; }
+        .tool-hero { padding: 64px 0 42px; position: relative; overflow:hidden; }
         .tool-hero::before { content:''; position:absolute; inset:0; background:var(--gradient-hero); pointer-events:none; }
-        .tool-hero .tool-icon { font-size: 4rem; margin-bottom: 13px; display: inline-block; background: var(--surface); width: 100px; height: 100px; border-radius: var(--radius-xl); display:flex; align-items:center; justify-content:center; margin: 0 auto 13px; border: 1px solid var(--border); box-shadow: 0 8px 32px rgba(0,0,0,0.3); }
-        .tool-hero h1 { font-size: clamp(2rem, 4vw, 2.8rem); font-weight: 800; letter-spacing: -0.025em; line-height: 1.15; margin-bottom: 12px; }
-        .tool-hero p { color: var(--text-2); font-size: 1.4rem; max-width: 780px; margin: 0 auto 28px; line-height: 1.65; }
-        .tool-stats { display:flex; gap:32px; justify-content:center; flex-wrap:wrap; margin-top:20px; }
-        .tool-stat { text-align: center; }
-        .tool-stat .stat-num { font-size:3rem; font-weight:800; background:var(--gradient-1); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
-        .tool-stat .stat-label { font-size:1.1rem; color:var(--text-dim); text-transform:uppercase; letter-spacing:0.05em; }
+        .tool-hero .container { position:relative; }
+        .tool-hero-grid { display:grid; grid-template-columns:minmax(0,1.08fr) 420px; gap:42px; align-items:center; }
+        .tool-hero-grid > * { min-width:0; }
+        .tool-hero-copy { max-width:760px; min-width:0; }
+        .tool-hero .tool-icon { font-size: 2.15rem; margin-bottom: 18px; background: rgba(79,70,229,0.16); width: 58px; height: 58px; border-radius: 16px; display:flex; align-items:center; justify-content:center; border: 1px solid rgba(255,255,255,0.08); box-shadow: 0 14px 34px rgba(79,70,229,0.18); }
+        .tool-hero h1 { font-size: clamp(2.45rem, 5vw, 4.8rem); font-weight: 850; letter-spacing: -0.04em; line-height: 0.96; margin-bottom: 18px; max-width: 760px; overflow-wrap:break-word; }
+        .tool-hero p { color: var(--text-2); font-size: 1.16rem; width:100%; max-width: 660px; margin: 0 0 26px; line-height: 1.65; overflow-wrap:break-word; }
+        .hero-actions { display:flex; gap:12px; flex-wrap:wrap; align-items:center; }
+        .hero-actions .gen-btn { padding:14px 20px; border-radius:10px; font-size:0.92rem; }
+        .hero-actions .gen-btn-primary { box-shadow:0 16px 38px rgba(79,70,229,0.24); }
+        .hero-proof { display:flex; gap:18px; flex-wrap:wrap; margin-top:24px; color:var(--text-dim); font-size:0.88rem; }
+        .hero-proof span { display:inline-flex; align-items:center; gap:6px; }
+        .tool-demo-card { background:linear-gradient(180deg, rgba(24,24,48,0.94), rgba(12,12,24,0.96)); border:1px solid rgba(255,255,255,0.08); border-radius:18px; padding:18px; box-shadow:0 28px 70px rgba(0,0,0,0.38); }
+        .demo-window-bar { display:flex; gap:6px; margin-bottom:16px; }
+        .demo-dot { width:9px; height:9px; border-radius:50%; background:var(--text-dim); opacity:0.5; }
+        .demo-dot:nth-child(1) { background:#f87171; }
+        .demo-dot:nth-child(2) { background:#fbbf24; }
+        .demo-dot:nth-child(3) { background:#34d399; }
+        .demo-code-line { height:12px; border-radius:999px; background:rgba(255,255,255,0.08); margin-bottom:10px; }
+        .demo-code-line:nth-child(2) { width:78%; background:rgba(124,58,237,0.42); }
+        .demo-code-line:nth-child(3) { width:92%; }
+        .demo-code-line:nth-child(4) { width:64%; background:rgba(16,185,129,0.28); }
+        .demo-code-line:nth-child(5) { width:84%; }
+        .tool-stats { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px; margin-top:18px; }
+        .tool-stat { background:rgba(255,255,255,0.035); border:1px solid rgba(255,255,255,0.06); border-radius:14px; padding:14px; }
+        .tool-stat .stat-num { font-size:1.55rem; font-weight:800; background:var(--gradient-1); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; line-height:1; }
+        .tool-stat .stat-label { font-size:0.72rem; color:var(--text-dim); text-transform:uppercase; letter-spacing:0.06em; margin-top:7px; }
+
+        /* Quick start */
+        .quickstart { margin-bottom:20px; background:linear-gradient(180deg, rgba(17,17,34,0.98), rgba(12,12,24,0.98)); border:1px solid var(--border); border-radius:18px; padding:18px; display:grid; grid-template-columns:240px 1fr; gap:18px; align-items:center; }
+        .quickstart-title { font-size:1rem; font-weight:750; margin-bottom:4px; }
+        .quickstart-sub { color:var(--text-dim); font-size:0.82rem; line-height:1.45; }
+        .quickstart-presets { display:grid; grid-template-columns:repeat(6,minmax(0,1fr)); gap:8px; }
+        .preset-chip { display:flex; align-items:center; justify-content:center; gap:6px; min-height:44px; min-width:0; padding:8px 10px; border-radius:10px; border:1px solid var(--border); color:var(--text-2); background:rgba(255,255,255,0.025); cursor:pointer; font-family:var(--font); font-size:0.78rem; font-weight:650; transition:all 0.2s; }
+        .preset-chip:hover { border-color:rgba(124,58,237,0.55); color:var(--text); background:rgba(124,58,237,0.12); transform:translateY(-1px); }
+        .preset-chip .material-symbols-outlined { font-size:1.15rem; color:var(--accent-2); }
 
         /* ============ GENERATOR LAYOUT ============ */
         .generator-workspace { padding:0 0 80px; }
         .gen-grid { display:grid; grid-template-columns:1fr 680px; gap:36px; align-items:start; }
+        .gen-grid > * { min-width:0; }
 
         /* ============ PANELS ============ */
-        .gen-panel { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius-lg); overflow:hidden; }
-        .gen-panel-header { padding:24px 32px; border-bottom:1px solid var(--border); font-weight:700; font-size:1.3rem; display:flex; align-items:center; justify-content:space-between; gap:12px; }
-        .gen-panel-body { padding:32px 36px; max-height:900px; overflow-y:auto; }
+        .gen-panel { min-width:0; background:var(--surface); border:1px solid var(--border); border-radius:16px; overflow:hidden; box-shadow:0 18px 50px rgba(0,0,0,0.22); }
+        .gen-panel-header { padding:20px 24px; border-bottom:1px solid var(--border); font-weight:700; font-size:1.05rem; display:flex; align-items:center; justify-content:space-between; gap:12px; }
+        .panel-title { display:inline-flex; align-items:center; gap:10px; min-width:0; }
+        .gen-panel-body { padding:24px; max-height:900px; overflow-y:auto; }
         .gen-panel-body::-webkit-scrollbar { width:5px; }
         .gen-panel-body::-webkit-scrollbar-track { background:var(--bg); border-radius:3px; }
         .gen-panel-body::-webkit-scrollbar-thumb { background:var(--border-hover); border-radius:3px; }
 
         /* ============ FORM CONTROLS ============ */
-        .gen-label { display:block; font-size:1.2rem; font-weight:600; text-transform:uppercase; letter-spacing:0.05em; color:var(--text-dim); margin-bottom:6px; }
-        .gen-input, .gen-select, .gen-textarea { width:100%; padding:16px 20px; background:var(--bg); border:1px solid var(--border); border-radius:var(--radius-sm); color:var(--text); font-size:1.2rem; font-family:var(--font); outline:none; transition:border-color 0.2s; }
+        .gen-label { display:block; font-size:0.78rem; font-weight:700; text-transform:uppercase; letter-spacing:0.06em; color:var(--text-dim); margin-bottom:7px; }
+        .gen-input, .gen-select, .gen-textarea { width:100%; padding:13px 15px; background:var(--bg); border:1px solid var(--border); border-radius:10px; color:var(--text); font-size:0.96rem; font-family:var(--font); outline:none; transition:border-color 0.2s, box-shadow 0.2s; }
         .gen-input:focus, .gen-select:focus, .gen-textarea:focus { border-color:var(--accent); }
         .gen-select { -webkit-appearance:none; appearance:none; background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%236e6e88' d='M6 8L1 3h10z'/%3E%3C/svg%3E"); background-repeat:no-repeat; background-position:right 10px center; padding-right:36px; }
-        .gen-textarea { min-height:100px; resize:vertical; font-size:1.15rem; }
+        .gen-textarea { min-height:100px; resize:vertical; font-size:0.96rem; }
         .gen-row { margin-bottom:22px; }
         .gen-row:last-child { margin-bottom:0; }
         .gen-row-inline { display:flex; gap:18px; align-items:end; }
         .gen-row-inline > * { flex:1; }
-        .gen-hint { font-size:1.05rem; color:var(--text-dim); margin-top:4px; }
+        .gen-hint { font-size:0.82rem; color:var(--text-dim); margin-top:4px; }
         .gen-divider { border:none; border-top:1px solid var(--border); margin:28px 0; }
 
         /* ============ BUTTONS ============ */
-        .gen-btn { display:inline-flex; align-items:center; gap:7px; padding:10px 17px; border-radius:7px; font-size:0.8rem; font-weight:600; border:none; cursor:pointer; transition:all 0.2s; font-family:var(--font); white-space:nowrap; }
+        .gen-btn { display:inline-flex; align-items:center; gap:7px; min-width:0; padding:10px 17px; border-radius:7px; font-size:0.8rem; font-weight:600; border:none; cursor:pointer; transition:all 0.2s; font-family:var(--font); white-space:nowrap; text-decoration:none; }
         .gen-btn-primary { background:var(--accent); color:#fff; }
         .gen-btn-primary:hover { background:var(--accent-hover); }
         .gen-btn-accent { background:var(--accent-2); color:#000; }
@@ -114,9 +146,9 @@
         .gen-btn-icon:hover { border-color:var(--border-hover); color:var(--text); background:var(--surface-2); }
 
         /* ============ FIELD TYPE SELECT ROW ============ */
-        .field-type-row { display:flex; gap:5px; margin-bottom:24px; }
+        .field-type-row { display:flex; gap:8px; margin-bottom:24px; }
         .field-type-row > .cs-wrap { flex:1; min-width:0; }
-        .field-type-row .cs-trigger { padding:12px 14px; font-size:0.75rem; font-weight:500; text-transform:uppercase; letter-spacing:0.03em; justify-content:center; gap:4px; }
+        .field-type-row .cs-trigger { padding:12px 10px; font-size:0.72rem; font-weight:750; text-transform:uppercase; letter-spacing:0.03em; justify-content:center; gap:4px; border-radius:10px; }
         .field-type-row .cs-trigger .cs-arrow { font-size:0.65rem; }
         .field-type-row .cs-dropdown { min-width:180px; }
         .cs-option-icon { font-size:1.1rem; margin-right:4px; vertical-align:middle; color:var(--accent); }
@@ -126,11 +158,11 @@
         .field-card { background:var(--bg); border:1px solid var(--border); border-radius:var(--radius-sm); margin-bottom:14px; transition:border-color 0.2s; overflow:visible; }
         .field-card:hover { border-color:var(--border-hover); }
         .field-card.selected { border-color:var(--accent); box-shadow:0 0 0 1px var(--accent-glow); }
-        .field-card-header { display:flex; align-items:center; gap:20px; padding:20px 28px; cursor:pointer; user-select:none; }
+        .field-card-header { display:flex; align-items:center; gap:14px; padding:16px 18px; cursor:pointer; user-select:none; }
         .field-card-header .fc-drag { color:var(--text-dim); cursor:grab; flex-shrink:0; font-size:1.15rem; }
         .field-card-header .fc-type { font-size:1.4rem; flex-shrink:0; }
-        .field-card-header .fc-label { flex:1; font-weight:600; font-size:1.3rem; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
-        .field-card-header .fc-type-name { font-size:1.05rem; color:var(--text-dim); font-weight:400; }
+        .field-card-header .fc-label { flex:1; font-weight:700; font-size:1rem; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+        .field-card-header .fc-type-name { font-size:0.82rem; color:var(--text-dim); font-weight:500; }
         .field-card-header .fc-actions { display:flex; gap:6px; opacity:0; transition:opacity 0.2s; }
         .field-card:hover .fc-actions { opacity:1; }
         .field-card-body { display:none; padding:0 28px 28px; border-top:1px solid var(--border); padding-top:24px; }
@@ -165,28 +197,28 @@
         .location-rule select, .location-rule .custom-select-trigger { flex:1; }
 
         /* ============ CODE PREVIEW ============ */
-        .code-preview { background:#0a0a14; border:1px solid var(--border); border-radius:var(--radius); overflow:hidden; font-family:var(--font-mono); font-size:1.15rem; line-height:1.55; }
-        .code-preview-header { display:flex; align-items:center; gap:12px; padding:20px 28px; background:var(--surface); border-bottom:1px solid var(--border); }
-        .code-preview-header .code-tab { padding:10px 24px; border-radius:999px; font-size:1.1rem; font-weight:600; border:1px solid transparent; background:transparent; color:var(--text-dim); cursor:pointer; transition:all 0.2s; font-family:var(--font); }
+        .code-preview { background:#080812; border:1px solid var(--border); border-radius:16px; overflow:hidden; font-family:var(--font-mono); font-size:0.86rem; line-height:1.62; box-shadow:0 18px 50px rgba(0,0,0,0.24); }
+        .code-preview-header { display:flex; align-items:center; gap:12px; padding:14px 16px; background:var(--surface); border-bottom:1px solid var(--border); }
+        .code-preview-header .code-tab { padding:8px 14px; border-radius:999px; font-size:0.82rem; font-weight:700; border:1px solid transparent; background:transparent; color:var(--text-dim); cursor:pointer; transition:all 0.2s; font-family:var(--font); }
         .code-preview-header .code-tab.active { background:var(--accent); color:#fff; border-color:var(--accent); }
         .code-preview-header .code-actions { margin-left:auto; display:flex; gap:6px; }
-        .code-preview pre { margin:0; padding:28px; overflow-x:auto; max-height:700px; color:#c9d1d9; tab-size:4; white-space:pre; }
+        .code-preview pre { margin:0; padding:20px; overflow-x:auto; max-height:620px; color:#c9d1d9; tab-size:4; white-space:pre; }
         .code-preview pre::-webkit-scrollbar { height:5px; }
         .code-preview pre::-webkit-scrollbar-track { background:transparent; }
         .code-preview pre::-webkit-scrollbar-thumb { background:var(--border-hover); border-radius:3px; }
 
         /* Empty state */
-        .empty-state { text-align:center; padding:80px 20px; color:var(--text-dim); }
+        .empty-state { text-align:center; padding:52px 20px; color:var(--text-dim); border:1px dashed var(--border); border-radius:14px; background:rgba(255,255,255,0.018); }
         .empty-state .empty-icon { font-size:3.7rem; margin-bottom:9px; opacity:0.5; }
         .empty-state p { font-size:0.85rem; margin-bottom:8px; }
 
         /* Templates */
-        .templates-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(220px,1fr)); gap:18px; margin-top:24px; }
-        .template-card { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:30px; cursor:pointer; transition:all 0.3s; text-align:center; }
+        .templates-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(150px,1fr)); gap:10px; margin-top:0; }
+        .template-card { background:rgba(255,255,255,0.025); border:1px solid var(--border); border-radius:12px; padding:18px 14px; cursor:pointer; transition:all 0.3s; text-align:left; }
         .template-card:hover { border-color:var(--accent); transform:translateY(-2px); box-shadow:0 8px 24px rgba(0,0,0,0.25); }
-        .template-card .template-icon { font-size:2.3rem; margin-bottom:7px; }
-        .template-card h4 { font-size:1.2rem; font-weight:700; margin-bottom:4px; }
-        .template-card p { font-size:1rem; color:var(--text-dim); line-height:1.4; }
+        .template-card .template-icon { font-size:1.8rem; margin-bottom:10px; color:var(--accent-2); }
+        .template-card h4 { font-size:0.95rem; font-weight:750; margin-bottom:4px; }
+        .template-card p { font-size:0.78rem; color:var(--text-dim); line-height:1.45; }
 
         /* Toast */
         .toast { position:fixed; bottom:30px; left:50%; transform:translateX(-50%); background:var(--accent); color:#fff; padding:22px 40px; border-radius:999px; font-weight:600; font-size:1.2rem; z-index:9999; opacity:0; pointer-events:none; transition:opacity 0.3s, transform 0.3s; box-shadow:0 8px 32px var(--accent-glow); }
@@ -211,7 +243,7 @@
 
         /* ============ CUSTOM SELECT ============ */
         .cs-wrap { position:relative; font-family:var(--font); }
-        .cs-trigger { display:flex; align-items:center; justify-content:space-between; width:100%; padding:16px 20px; background:var(--bg); border:1px solid var(--border); border-radius:var(--radius-sm); color:var(--text); font-size:1.2rem; cursor:pointer; transition:border-color 0.2s; user-select:none; gap:8px; }
+        .cs-trigger { display:flex; align-items:center; justify-content:space-between; width:100%; min-width:0; padding:16px 20px; background:var(--bg); border:1px solid var(--border); border-radius:var(--radius-sm); color:var(--text); font-size:1.2rem; cursor:pointer; transition:border-color 0.2s; user-select:none; gap:8px; }
         .cs-trigger:hover { border-color:var(--border-hover); }
         .cs-trigger.open { border-color:var(--accent); box-shadow:0 0 0 1px var(--accent-glow); }
         .cs-trigger .cs-arrow { font-size:0.8rem; color:var(--text-dim); transition:transform 0.25s; flex-shrink:0; }
@@ -241,7 +273,7 @@
         .code-preview pre#code-pre::-webkit-scrollbar-thumb { background:var(--border-hover); border-radius:3px; }
 
         /* ============ STYLE EDITOR ============ */
-        .style-editor { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); overflow:hidden; }
+        .style-editor { display:none; background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); overflow:hidden; }
         .style-editor-header { display:flex; align-items:center; gap:8px; padding:18px 24px; border-bottom:1px solid var(--border); font-weight:600; font-size:1.1rem; cursor:pointer; user-select:none; }
         .style-editor-header:hover { background:var(--surface-2); }
         .style-editor-header .se-arrow { margin-left:auto; transition:transform 0.2s; font-size:0.8rem; color:var(--text-dim); }
@@ -266,28 +298,52 @@
         /* Preview sync indicator */
         .preview-synced { display:inline-flex; align-items:center; gap:4px; font-size:0.75rem; color:#22c55e; font-weight:500; }
 
-        /* ============ FULL PREVIEW MODE ============ */
-        .gen-grid.full-preview { grid-template-columns: 1fr; }
-        .gen-grid.full-preview #panel-builder { display: none; }
-        .gen-grid.full-preview .code-preview { max-width: 100%; }
-        .gen-grid.full-preview #preview-container { padding: 32px; }
-        .gen-grid.full-preview #preview-frame { height: 65vh; min-height: 520px; }
-        .gen-grid.full-preview .style-editor { max-width: 380px; flex-shrink: 0; }
-        .gen-grid.full-preview .preview-layout { display: flex; gap: 18px; }
-        .gen-grid.full-preview .preview-layout .code-preview { flex: 1; min-width: 0; }
-        .full-preview-btn { display: inline-flex; align-items: center; gap: 5px; padding: 6px 14px; border-radius: 6px; font-size: 0.75rem; font-weight: 600; background: rgba(34,197,94,0.12); color: #22c55e; border: 1px solid rgba(34,197,94,0.25); cursor: pointer; transition: all 0.2s; font-family: var(--font); white-space: nowrap; }
-        .full-preview-btn:hover { background: rgba(34,197,94,0.2); }
-        .full-preview-btn.active { background: #22c55e; color: #fff; border-color: #22c55e; }
+        /* ============ PREVIEW CONTAINER DEFAULT ============ */
+        #preview-container { display: none; }
+
+        /* ============ PREVIEW MODE ============ */
+        .generator-workspace.preview-mode .gen-grid { grid-template-columns: 1fr 1fr; }
+        .generator-workspace.preview-mode #panel-builder { display: none; }
+        .generator-workspace.preview-mode #preview-container { display: block; }
+        .generator-workspace.preview-mode .style-editor { display: block; }
+        .generator-workspace.preview-mode .code-preview { display: none; }
+        .generator-workspace.preview-mode .preview-area > div:last-child { display: none; }
+        .generator-workspace.preview-mode .visual-editor-panel { display: flex; }
+        .generator-workspace.preview-mode .preview-layout { display: flex; gap: 18px; height: 100%; }
+        .generator-workspace.preview-mode #preview-frame { height: 100%; min-height: 520px; }
+
+        /* ============ PREVIEW TOGGLE BAR ============ */
+        .preview-toggle-bar { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
+        .preview-toggle-bar .gen-toggle-preview-btn { padding: 12px 24px; font-size: 0.85rem; border-radius: 8px; transition: all 0.25s; }
+        .preview-toggle-bar .gen-toggle-preview-btn.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+        .preview-toggle-bar .gen-toggle-preview-btn .material-symbols-outlined { font-size: 1.3rem; }
+
+        /* ============ VISUAL EDITOR ============ */
+        .visual-editor-panel { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; display: none; flex-direction: column; min-height: 400px; }
+        .visual-editor-header { padding: 16px 28px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; background: var(--surface); }
+        .visual-editor-header span:first-child { font-weight: 700; font-size: 1.2rem; display: flex; align-items: center; gap: 8px; }
+        .visual-editor-label { font-size: 0.8rem; color: var(--text-dim); background: var(--bg); padding: 4px 12px; border-radius: 999px; }
+        .visual-editor-frame { flex: 1; min-height: 350px; position: relative; background: #fff; }
+        .visual-editor-frame iframe { width: 100%; height: 100%; border: none; min-height: 350px; }
+        .visual-editor-toolbar { display: flex; gap: 6px; padding: 12px 28px; border-top: 1px solid var(--border); background: var(--bg); }
+        .visual-editor-toolbar button { padding: 8px 16px; border-radius: 6px; border: 1px solid var(--border); background: var(--surface); color: var(--text-2); cursor: pointer; font-size: 0.75rem; font-family: var(--font); transition: all 0.2s; }
+        .visual-editor-toolbar button:hover { border-color: var(--accent); color: var(--accent); }
+        .visual-editor-toolbar button.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+
+        /* ============ VISUAL EDITOR RESPONSIVE ============ */
+        .visual-editor-frame.mobile iframe { width: 375px; margin: 0 auto; display: block; box-shadow: 0 0 30px rgba(0,0,0,0.1); }
+        .visual-editor-frame.tablet iframe { width: 768px; margin: 0 auto; display: block; box-shadow: 0 0 30px rgba(0,0,0,0.1); }
 
         /* ============ SVG PLACEHOLDER ============ */
         .acf-placeholder-img { width: 100%; height: 120px; border-radius: 8px; background: #f0f0f5; display: flex; align-items: center; justify-content: center; overflow: hidden; }
         .acf-placeholder-img svg { width: 48px; height: 48px; opacity: 0.25; }
 
         /* Responsive */
-        @media (max-width:1400px) { .gen-grid { grid-template-columns:1fr 580px; } }
-        @media (max-width:1100px) { .gen-grid { grid-template-columns:1fr; } }
-        @media (max-width:768px) { .gen-grid { gap:20px; } .field-type-row { flex-wrap:wrap; } .field-type-row > .cs-wrap { flex:0 1 calc(33.33% - 4px); } .generator-workspace .container { padding: 0 16px; } }
-        @media (max-width:640px) { .gen-grid { gap:14px; } .field-type-row > .cs-wrap { flex:0 1 calc(50% - 4px); } .tool-stats { gap:14px; } .generator-workspace .container { max-width: 100%; padding: 0 12px; } }
+        @media (max-width:1400px) { .gen-grid { grid-template-columns:1fr 560px; } }
+        @media (max-width:1100px) { .tool-hero-grid { display:block; } .tool-demo-card { display:none; } .gen-grid { grid-template-columns:1fr; } .quickstart { grid-template-columns:1fr; } }
+        @media (max-width:900px) { .quickstart-presets { grid-template-columns:repeat(3,minmax(0,1fr)); } }
+        @media (max-width:768px) { .tool-hero { padding:42px 0 28px; } .tool-hero h1 { font-size:2.4rem; } .tool-hero p { max-width:100%; } .gen-grid { gap:20px; } .field-type-row { flex-wrap:wrap; } .field-type-row > .cs-wrap { flex:0 1 calc(33.33% - 6px); } .generator-workspace .container { padding: 0 16px; } .gen-panel-body { padding:18px; } }
+        @media (max-width:640px) { .tool-hero .container, .generator-workspace .container { max-width:100%; } .tool-hero-copy, .tool-hero h1, .tool-hero p, .hero-actions, .hero-proof { max-width:min(330px, calc(100vw - 48px)); } .tool-hero p { width:min(330px, calc(100vw - 48px)); } .hero-actions .gen-btn { width:100%; justify-content:center; } .quickstart { width:100%; min-width:0; padding:18px; } .quickstart > * { min-width:0; max-width:100%; } .quickstart-sub { width:min(300px, 100%); } .quickstart-presets { grid-template-columns:repeat(2,minmax(0,1fr)); } .preset-chip { font-size:0.74rem; } .gen-grid { gap:14px; } .gen-panel-header { flex-wrap:wrap; align-items:flex-start; } .gen-panel-header > div { width:100%; justify-content:flex-start; flex-wrap:wrap; } .panel-title { width:100%; } .field-type-row > .cs-wrap { flex:0 1 calc(50% - 4px); } .tool-stats { grid-template-columns:repeat(2,minmax(0,1fr)); } .generator-workspace .container { max-width: 100%; padding: 0 12px; } .code-preview-header { flex-wrap:wrap; } .code-preview-header .code-actions { width:100%; margin-left:0; justify-content:flex-end; } }
     </style>
 </head>
 <body>
@@ -332,27 +388,61 @@
 <!-- ==================== TOOL HERO ==================== -->
 <section class="tool-hero">
     <div class="container">
-        <div class="tool-icon"><span class="material-symbols-outlined">bolt</span></div>
-        <h1>Генератор ACF для WordPress</h1>
-        <p>Создавайте кастомные поля Advanced Custom Fields без написания кода. 20+ типов полей, живое превью PHP и JSON, готовые шаблоны и экспорт в один клик.</p>
-        <div class="tool-stats">
-            <div class="tool-stat"><div class="stat-num" id="stat-types">20+</div><div class="stat-label">типов полей</div></div>
-            <div class="tool-stat"><div class="stat-num" id="stat-count">0</div><div class="stat-label">полей создано</div></div>
-            <div class="tool-stat"><div class="stat-num">PHP</div><div class="stat-label">+ JSON экспорт</div></div>
-            <div class="tool-stat"><div class="stat-num">0 ₽</div><div class="stat-label">бесплатно</div></div>
+        <div class="tool-hero-grid">
+            <div class="tool-hero-copy">
+                <div class="tool-icon"><span class="material-symbols-outlined">bolt</span></div>
+                <h1>Генератор ACF для WordPress</h1>
+                <p>Соберите группу полей, проверьте структуру в превью и заберите готовый PHP или JSON для Advanced Custom Fields.</p>
+                <div class="hero-actions">
+                    <a class="gen-btn gen-btn-primary" href="#generator-workspace"><span class="material-symbols-outlined">build</span> Открыть генератор</a>
+                    <button class="gen-btn gen-btn-outline" data-action="load-template" data-template="faq"><span class="material-symbols-outlined">quiz</span> Начать с FAQ</button>
+                </div>
+                <div class="hero-proof">
+                    <span><span class="material-symbols-outlined">done</span> 20+ типов полей</span>
+                    <span><span class="material-symbols-outlined">done</span> Repeater и Flexible Content</span>
+                    <span><span class="material-symbols-outlined">done</span> Экспорт PHP / JSON / HTML</span>
+                </div>
+            </div>
+            <div class="tool-demo-card" aria-hidden="true">
+                <div class="demo-window-bar"><span class="demo-dot"></span><span class="demo-dot"></span><span class="demo-dot"></span></div>
+                <div class="demo-code-line"></div>
+                <div class="demo-code-line"></div>
+                <div class="demo-code-line"></div>
+                <div class="demo-code-line"></div>
+                <div class="tool-stats">
+                    <div class="tool-stat"><div class="stat-num" id="stat-types">20+</div><div class="stat-label">типов полей</div></div>
+                    <div class="tool-stat"><div class="stat-num" id="stat-count">0</div><div class="stat-label">полей создано</div></div>
+                    <div class="tool-stat"><div class="stat-num">PHP</div><div class="stat-label">+ JSON экспорт</div></div>
+                    <div class="tool-stat"><div class="stat-num">0 ₽</div><div class="stat-label">бесплатно</div></div>
+                </div>
+            </div>
         </div>
     </div>
 </section>
 
 <!-- ==================== GENERATOR WORKSPACE ==================== -->
-<section class="generator-workspace" aria-label="Рабочая область генератора">
+<section class="generator-workspace" id="generator-workspace" aria-label="Рабочая область генератора">
     <div class="container">
+        <div class="quickstart" aria-label="Быстрый старт">
+            <div>
+                <div class="quickstart-title">Быстрый старт</div>
+                <div class="quickstart-sub">Выберите типовой ACF-сценарий, затем поправьте поля и сразу скачайте код.</div>
+            </div>
+            <div class="quickstart-presets">
+                <button class="preset-chip" data-action="load-template" data-template="hero"><span class="material-symbols-outlined">star</span> Hero</button>
+                <button class="preset-chip" data-action="load-template" data-template="faq"><span class="material-symbols-outlined">quiz</span> FAQ</button>
+                <button class="preset-chip" data-action="load-template" data-template="seo"><span class="material-symbols-outlined">search</span> SEO</button>
+                <button class="preset-chip" data-action="load-template" data-template="team"><span class="material-symbols-outlined">groups</span> Команда</button>
+                <button class="preset-chip" data-action="load-template" data-template="testimonials"><span class="material-symbols-outlined">forum</span> Отзывы</button>
+                <button class="preset-chip" data-action="load-template" data-template="flexible_page"><span class="material-symbols-outlined">dashboard_customize</span> Page Builder</button>
+            </div>
+        </div>
         <div class="gen-grid">
 
             <!-- ===== LEFT: BUILDER ===== -->
             <div class="gen-panel" id="panel-builder">
                 <div class="gen-panel-header">
-                    <span class="material-symbols-outlined">construction</span> Конструктор полей
+                    <span class="panel-title"><span class="material-symbols-outlined">construction</span> Конструктор полей</span>
                     <div style="display:flex;gap:6px;">
                         <button class="gen-btn gen-btn-sm gen-btn-outline" data-action="reset-all"><span class="material-symbols-outlined">refresh</span> Сброс</button>
                         <button class="gen-btn gen-btn-sm gen-btn-outline" data-action="import-json"><span class="material-symbols-outlined">file_upload</span> Импорт JSON</button>
@@ -454,33 +544,16 @@
                 </div>
             </div>
 
-            <!-- ===== RIGHT: CODE PREVIEW ===== -->
-            <div>
-                <div class="code-preview">
-                    <div class="code-preview-header">
-                        <div class="code-tabs-wrap">
-                            <button class="code-tab active" data-tab="php" data-action="switch-tab">PHP</button>
-                            <button class="code-tab" data-tab="html" data-action="switch-tab">HTML</button>
-                            <button class="code-tab" data-tab="json" data-action="switch-tab">JSON</button>
-                            <button class="code-tab" data-tab="preview" data-action="switch-tab">Превью</button>
-                        </div>
-                        <div class="code-actions">
-                            <button class="full-preview-btn" data-action="toggle-full-preview" id="full-preview-btn"><span class="material-symbols-outlined">open_in_full</span> Развернуть</button>
-                            <span class="preview-synced" id="preview-synced-indicator" style="display:none;"><span class="material-symbols-outlined">check_circle</span> live</span>
-                            <button class="gen-btn gen-btn-sm gen-btn-primary" data-action="copy-code" title="Копировать код"><span class="material-symbols-outlined">content_copy</span></button>
-                            <button class="gen-btn gen-btn-sm gen-btn-outline" data-action="download-code" title="Скачать"><span class="material-symbols-outlined">download</span></button>
-                        </div>
-                    </div>
-                    <pre id="code-pre"><code id="code-output">Добавьте поля — код появится здесь</code></pre>
-                    <div id="preview-container" style="display:none; background:#f5f5f5; min-height:300px; padding:20px;">
-                        <div class="preview-layout">
-                            <div style="flex:1;min-width:0;">
-                                <iframe id="preview-frame" sandbox="allow-same-origin" style="width:100%; border:none; height:440px; background:#fff;"></iframe>
-                            </div>
-                        </div>
+            <!-- ===== LEFT: PREVIEW CONTAINER (visible in preview mode) ===== -->
+            <div id="preview-container" style="background:#f5f5f5; min-height:300px; padding:20px;">
+                <div class="preview-layout">
+                    <div style="flex:1;min-width:0;">
+                        <iframe id="preview-frame" sandbox="allow-same-origin" style="width:100%; border:none; height:440px; background:#fff;"></iframe>
                     </div>
                 </div>
+            </div>
 
+            <!-- ===== LEFT: STYLE EDITOR (visible in preview mode) ===== -->
                 <!-- Style Editor -->
                 <div class="style-editor" id="style-editor" style="margin-top:18px;">
                     <div class="style-editor-header" data-action="toggle-style-editor">
@@ -509,6 +582,50 @@
                         <div style="margin-top:10px;display:flex;justify-content:flex-end;gap:8px;">
                             <button class="se-reset" data-action="reset-styles">Сбросить стили</button>
                         </div>
+                    </div>
+                </div>
+
+
+
+            <!-- ===== RIGHT: CODE PREVIEW + VISUAL EDITOR ===== -->
+            <div class="preview-area">
+                <div class="preview-toggle-bar">
+                    <button class="gen-btn gen-btn-outline gen-toggle-preview-btn" data-action="toggle-preview-mode" id="toggle-preview-btn">
+                        <span class="material-symbols-outlined">visibility</span> Режим превью
+                    </button>
+                </div>
+
+                <div class="code-preview">
+                    <div class="code-preview-header">
+                        <div class="code-tabs-wrap">
+                            <button class="code-tab active" data-tab="php" data-action="switch-tab">PHP</button>
+                            <button class="code-tab" data-tab="html" data-action="switch-tab">HTML</button>
+                            <button class="code-tab" data-tab="json" data-action="switch-tab">JSON</button>
+                        </div>
+                        <div class="code-actions">
+                            <span class="preview-synced" id="preview-synced-indicator" style="display:none;"><span class="material-symbols-outlined">check_circle</span> live</span>
+                            <button class="gen-btn gen-btn-sm gen-btn-primary" data-action="copy-code" title="Копировать код"><span class="material-symbols-outlined">content_copy</span></button>
+                            <button class="gen-btn gen-btn-sm gen-btn-outline" data-action="download-code" title="Скачать"><span class="material-symbols-outlined">download</span></button>
+                        </div>
+                    </div>
+                    <pre id="code-pre"><code id="code-output">Добавьте поля — код появится здесь</code></pre>
+                </div>
+
+                <!-- Visual Editor (visible in preview mode) -->
+                <div class="visual-editor-panel" id="visual-editor">
+                    <div class="visual-editor-header">
+                        <span><span class="material-symbols-outlined">preview</span> Визуальный редактор</span>
+                        <span class="visual-editor-label">Адаптивный просмотр</span>
+                    </div>
+                    <div class="visual-editor-frame" id="visual-editor-frame">
+                        <iframe id="visual-editor-iframe" sandbox="allow-scripts" title="Превью шаблона"></iframe>
+                    </div>
+                    <div class="visual-editor-toolbar">
+                        <button data-size="desktop" class="active" title="Десктоп"><span class="material-symbols-outlined">desktop_windows</span></button>
+                        <button data-size="tablet" title="Планшет"><span class="material-symbols-outlined">tablet</span></button>
+                        <button data-size="mobile" title="Мобильный"><span class="material-symbols-outlined">smartphone</span></button>
+                        <span style="flex:1;"></span>
+                        <button data-action="refresh-visual-editor" title="Обновить"><span class="material-symbols-outlined">refresh</span></button>
                     </div>
                 </div>
 
