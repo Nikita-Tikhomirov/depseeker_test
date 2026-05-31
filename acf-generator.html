@@ -99,7 +99,7 @@
         .quickstart { margin-bottom:20px; background:linear-gradient(180deg, rgba(17,17,34,0.98), rgba(12,12,24,0.98)); border:1px solid var(--border); border-radius:18px; padding:18px; display:grid; grid-template-columns:240px 1fr; gap:18px; align-items:center; }
         .quickstart-title { font-size:1rem; font-weight:750; margin-bottom:4px; }
         .quickstart-sub { color:var(--text-dim); font-size:0.82rem; line-height:1.45; }
-        .quickstart-presets { display:grid; grid-template-columns:repeat(6,minmax(0,1fr)); gap:8px; }
+        .quickstart-presets { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:8px; }
         .preset-chip { display:flex; align-items:center; justify-content:center; gap:6px; min-height:44px; min-width:0; padding:8px 10px; border-radius:10px; border:1px solid var(--border); color:var(--text-2); background:rgba(255,255,255,0.025); cursor:pointer; font-family:var(--font); font-size:0.78rem; font-weight:650; transition:all 0.2s; }
         .preset-chip:hover { border-color:rgba(124,58,237,0.55); color:var(--text); background:rgba(124,58,237,0.12); transform:translateY(-1px); }
         .preset-chip .material-symbols-outlined { font-size:1.15rem; color:var(--accent-2); }
@@ -390,7 +390,7 @@
         /* Responsive */
         @media (max-width:1400px) { .gen-grid { grid-template-columns:1fr 560px; } }
         @media (max-width:1100px) { .tool-hero-grid { display:block; } .tool-demo-card { display:none; } .gen-grid { grid-template-columns:1fr; } .generator-workspace.preview-mode .gen-grid { grid-template-columns:1fr; } .generator-workspace.preview-mode .preview-area { order:1; padding-top:0; } .generator-workspace.preview-mode .style-editor { order:2; position:relative; top:auto; max-height:none; } .generator-workspace.preview-mode .style-editor-body { max-height:none; } .quickstart, .landing-context { grid-template-columns:1fr; } .landing-context-actions { justify-content:flex-start; } }
-        @media (max-width:900px) { .quickstart-presets { grid-template-columns:repeat(3,minmax(0,1fr)); } }
+        @media (max-width:900px) { .quickstart-presets { grid-template-columns:repeat(2,minmax(0,1fr)); } }
         @media (max-width:720px) { .visual-editor-header { align-items:flex-start; padding:14px 16px; } .visual-editor-title { width:100%; font-size:1.05rem; } .visual-editor-header-actions { width:100%; justify-content:space-between; margin-left:0; } .visual-editor-label { max-width:46%; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; } .visual-editor-back-btn { flex:1; justify-content:center; min-width:180px; } }
         @media (max-width:768px) { .tool-hero { padding:42px 0 28px; } .tool-hero h1 { font-size:2.4rem; } .tool-hero p { max-width:100%; } .gen-grid { gap:20px; } .field-type-row { flex-wrap:wrap; } .field-type-row > .cs-wrap { flex:0 1 calc(33.33% - 6px); } .generator-workspace .container { padding: 0 16px; } .gen-panel-body { padding:18px; } }
         @media (max-width:640px) { .tool-hero .container, .generator-workspace .container { max-width:100%; } .tool-hero-copy, .tool-hero h1, .tool-hero p, .hero-actions, .hero-proof { max-width:min(330px, calc(100vw - 48px)); } .tool-hero p { width:min(330px, calc(100vw - 48px)); } .hero-actions .gen-btn { width:100%; justify-content:center; } .quickstart { width:100%; min-width:0; padding:18px; } .quickstart > * { min-width:0; max-width:100%; } .quickstart-sub { width:min(300px, 100%); } .quickstart-presets { grid-template-columns:repeat(2,minmax(0,1fr)); } .preset-chip { font-size:0.74rem; } .gen-grid { gap:14px; } .gen-panel-header { flex-wrap:wrap; align-items:flex-start; } .gen-panel-header > div { width:100%; justify-content:flex-start; flex-wrap:wrap; } .panel-title { width:100%; } .field-type-row > .cs-wrap { flex:0 1 calc(50% - 4px); } .tool-stats { grid-template-columns:repeat(2,minmax(0,1fr)); } .generator-workspace .container { max-width: 100%; padding: 0 12px; } .code-preview-header { flex-wrap:wrap; } .code-preview-header .code-actions { width:100%; margin-left:0; justify-content:flex-end; } .audit-head { align-items:flex-start; flex-direction:column; } .audit-score { text-align:left; } .audit-export-grid { grid-template-columns:1fr; } .audit-actions .gen-btn { width:100%; justify-content:center; } }
@@ -485,6 +485,8 @@
                 <button class="preset-chip" data-action="load-template" data-template="team"><span class="material-symbols-outlined">groups</span> Команда</button>
                 <button class="preset-chip" data-action="load-template" data-template="testimonials"><span class="material-symbols-outlined">forum</span> Отзывы</button>
                 <button class="preset-chip" data-action="load-template" data-template="flexible_page"><span class="material-symbols-outlined">dashboard_customize</span> Page Builder</button>
+                <button class="preset-chip" data-action="load-template" data-template="field_group"><span class="material-symbols-outlined">view_list</span> Field Group</button>
+                <button class="preset-chip" data-action="load-template" data-template="woocommerce_product"><span class="material-symbols-outlined">shopping_bag</span> WooCommerce</button>
             </div>
         </div>
         <div class="landing-context" id="landing-context" hidden aria-live="polite"></div>
@@ -719,6 +721,12 @@
                                 </div>
                                 <div class="template-card" data-action="load-template" data-template="faq">
                                     <div class="template-icon"><span class="material-symbols-outlined">quiz</span></div><h4>FAQ</h4><p>Аккордеон: вопрос-ответ, JS, стили</p>
+                                </div>
+                                <div class="template-card" data-action="load-template" data-template="field_group">
+                                    <div class="template-icon"><span class="material-symbols-outlined">view_list</span></div><h4>Field Group</h4><p>Базовая группа: текст, медиа, преимущества</p>
+                                </div>
+                                <div class="template-card" data-action="load-template" data-template="woocommerce_product">
+                                    <div class="template-icon"><span class="material-symbols-outlined">shopping_bag</span></div><h4>WooCommerce</h4><p>Характеристики, комплектация, FAQ товара</p>
                                 </div>
                             </div>
                         </div>
