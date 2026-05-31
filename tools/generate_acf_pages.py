@@ -136,7 +136,7 @@ PAGES = [
     },
     {
         "slug": "acf-woocommerce-product-fields",
-        "preset": "seo",
+        "preset": "woocommerce_product",
         "query": "acf woocommerce product fields",
         "title": "ACF поля для товара WooCommerce",
         "h1": "ACF поля для товара WooCommerce",
@@ -200,6 +200,22 @@ STRUCTURE_COPY = {
 }
 
 
+PRESET_MAP_RESULTS = {
+    "acf-php-generator": ("acf php generator", "Content Fields, PHP export tab"),
+    "acf-json-generator": ("acf json generator", "Content Fields, JSON export tab"),
+    "acf-repeater-generator": ("acf repeater generator", "FAQ/repeater preset, preview template"),
+    "acf-flexible-content-generator": ("acf flexible content", "Flexible page builder layouts"),
+    "acf-field-group-generator": ("acf field group generator", "Group title, keys, location rules"),
+    "acf-seo-fields": ("acf seo fields", "Title, description, canonical, OG"),
+    "acf-faq-fields": ("acf faq fields", "Question/answer repeater, FAQ schema"),
+    "acf-hero-section": ("acf hero section", "Hero title, CTA, image fields"),
+    "acf-team-repeater": ("acf team repeater", "Member cards, photo, role, bio"),
+    "acf-testimonials-repeater": ("acf testimonials repeater", "Review cards, rating, author fields"),
+    "acf-page-builder": ("acf page builder", "Flexible sections for landing pages"),
+    "acf-woocommerce-product-fields": ("acf woocommerce fields", "Product specs, manual, FAQ, trust block"),
+}
+
+
 def esc(value: str) -> str:
     return html.escape(value, quote=True)
 
@@ -240,6 +256,7 @@ def asset_head(page: dict[str, object]) -> str:
 
 def header(active: str = "") -> str:
     hub_active = ' class="is-active"' if active == "hub" else ""
+    migx_link = '\n            <a href="migx.html">MIGX для MODX</a>' if active == "hub" else ""
     return f"""<header class="acf-header">
     <div class="acf-container acf-header__inner">
         <a class="acf-logo" href="index.html" aria-label="Цифра — на главную"><span>◆</span> Цифра</a>
@@ -247,21 +264,34 @@ def header(active: str = "") -> str:
             <a href="acf.html"{hub_active}>ACF</a>
             <a href="acf-generator.html">Генератор</a>
             <a href="acf-repeater-generator.html">Repeater</a>
-            <a href="acf-flexible-content-generator.html">Flexible</a>
+            <a href="acf-flexible-content-generator.html">Flexible</a>{migx_link}
         </nav>
         <a class="acf-header-cta" href="acf-generator.html">Открыть генератор</a>
     </div>
 </header>"""
 
 
-def footer() -> str:
-    return """<footer class="acf-footer">
+def footer(include_migx: bool = False) -> str:
+    text = (
+        "Инструменты для CMS-разработчиков: ACF, MIGX, шаблоны, структуры и готовые блоки."
+        if include_migx
+        else "Инструменты для WordPress-разработчиков: ACF, шаблоны, структуры и готовые блоки."
+    )
+    link = (
+        '<div class="acf-footer-links">\n'
+        '            <a href="acf-generator.html">Запустить ACF генератор</a>\n'
+        '            <a href="migx.html">MIGX для MODX</a>\n'
+        '        </div>'
+        if include_migx
+        else '<a href="acf-generator.html">Запустить генератор</a>'
+    )
+    return f"""<footer class="acf-footer">
     <div class="acf-container acf-footer__inner">
         <div>
             <strong>Цифра</strong>
-            <p>Инструменты для WordPress-разработчиков: ACF, шаблоны, структуры и готовые блоки.</p>
+            <p>{text}</p>
         </div>
-        <a href="acf-generator.html">Запустить генератор</a>
+        {link}
     </div>
 </footer>"""
 
@@ -350,6 +380,21 @@ def hub_chooser() -> str:
         </a>"""
         for title, text, href, tag in choices
     )
+
+
+def preset_map() -> str:
+    rows = []
+    for page in PAGES:
+        query, result = PRESET_MAP_RESULTS[str(page["slug"])]
+        rows.append(
+            f"""<div class="acf-preset-row">
+                    <span class="acf-preset-query">{esc(query)}</span>
+                    <a class="acf-preset-name" href="{esc(page["slug"])}.html">{esc(page["h1"])}</a>
+                    <span class="acf-preset-result">{esc(result)}</span>
+                    <a class="acf-preset-link" href="{generator_url(page)}">Открыть</a>
+                </div>"""
+        )
+    return "\n                ".join(rows)
 
 
 def preset_strip(page: dict[str, object]) -> str:
@@ -583,6 +628,19 @@ def render_hub() -> str:
         </div>
     </section>
 
+    <section class="acf-section">
+        <div class="acf-container">
+            <div class="acf-section-head">
+                <span class="acf-section-label">Карта пресетов</span>
+                <h2>Как SEO-страницы связаны с генератором</h2>
+                <p>Каждая посадочная ведет в генератор с готовым набором полей и контекстной подсказкой, чтобы пользователь не начинал с пустого экрана.</p>
+            </div>
+            <div class="acf-preset-map" aria-label="Карта ACF-пресетов">
+                {preset_map()}
+            </div>
+        </div>
+    </section>
+
     <section class="acf-section acf-section--muted">
         <div class="acf-container acf-roadmap">
             <div>
@@ -601,6 +659,30 @@ def render_hub() -> str:
         </div>
     </section>
 
+    <section class="acf-section">
+        <div class="acf-container">
+            <div class="acf-section-head">
+                <span class="acf-section-label">MODX</span>
+                <h2>Похожий генератор для MIGX</h2>
+                <p>Если вы собираете не WordPress-поля, а MODX TV через MIGX, используйте отдельный кластер с JSON, Form Tabs, Grid Columns и готовыми примерами вывода.</p>
+            </div>
+            <div class="acf-related-grid">
+                <a class="acf-related-card" href="migx.html">
+                    <span>migx generator</span>
+                    <strong>MIGX генератор и шаблоны для MODX</strong>
+                </a>
+                <a class="acf-related-card" href="migx-generator.html?preset=gallery&amp;source=acf-related">
+                    <span>migx json</span>
+                    <strong>Открыть MIGX генератор с пресетом галереи</strong>
+                </a>
+                <a class="acf-related-card" href="migx-getimagelist.html">
+                    <span>getImageList</span>
+                    <strong>Примеры вывода MIGX через getImageList</strong>
+                </a>
+            </div>
+        </div>
+    </section>
+
     <section class="acf-final-cta">
         <div class="acf-container">
             <h2>Готовая связка: SEO-страница → предустановка → экспорт</h2>
@@ -609,7 +691,7 @@ def render_hub() -> str:
         </div>
     </section>
 </main>
-{footer()}
+{footer(True)}
 </body>
 </html>
 """
@@ -684,6 +766,13 @@ def render_css() -> str:
 .acf-choice-card span { color: #0f9f7e; font-size: 0.76rem; font-weight: 900; text-transform: uppercase; }
 .acf-choice-card strong { font-size: 1.12rem; line-height: 1.25; }
 .acf-choice-card p { margin: 0; font-size: 0.94rem; }
+.acf-preset-map { display: grid; gap: 12px; }
+.acf-preset-row { display: grid; grid-template-columns: minmax(160px, 0.72fr) minmax(190px, 1fr) minmax(180px, 0.82fr) auto; gap: 12px; align-items: center; padding: 14px 16px; border: 1px solid #dce7e3; border-radius: 8px; background: #fff; }
+.acf-preset-row:hover { border-color: #22d3a6; box-shadow: 0 14px 34px rgba(15, 23, 42, 0.07); }
+.acf-preset-query { color: #0f9f7e; font-weight: 900; font-size: 0.78rem; text-transform: uppercase; }
+.acf-preset-name { color: #121821; font-weight: 900; line-height: 1.35; text-decoration: none; }
+.acf-preset-result { color: #4b5563; font-size: 0.94rem; line-height: 1.45; }
+.acf-preset-link { color: #07110e; background: #22d3a6; border-radius: 8px; padding: 10px 12px; text-decoration: none; font-size: 0.86rem; font-weight: 900; white-space: nowrap; text-align: center; }
 .acf-roadmap ol { color: #273444; background: #fff; border: 1px solid #dce7e3; border-radius: 8px; padding: 22px 22px 22px 42px; }
 .acf-roadmap li { margin-bottom: 10px; }
 .acf-final-cta { color: #fff; background: #101820; padding: 58px 0; text-align: center; }
@@ -694,6 +783,7 @@ def render_css() -> str:
 .acf-footer strong { color: #fff; }
 .acf-footer p { margin: 6px 0 0; }
 .acf-footer a { color: #22d3a6; font-weight: 900; text-decoration: none; }
+.acf-footer-links { display: flex; flex-wrap: wrap; gap: 14px; justify-content: flex-end; }
 .acf-breadcrumbs { display: flex; gap: 8px; flex-wrap: wrap; color: rgba(255,255,255,0.48); font-size: 0.88rem; margin-bottom: 18px; }
 .acf-breadcrumbs a { color: rgba(255,255,255,0.7); text-decoration: none; }
 @media (max-width: 900px) {
@@ -701,7 +791,7 @@ def render_css() -> str:
     .acf-nav { order: 3; width: 100%; overflow-x: auto; margin-left: 0; padding-bottom: 4px; }
     .acf-header-cta { margin-left: auto; }
     .acf-hero__grid, .acf-two-col, .acf-use-grid, .acf-roadmap { grid-template-columns: 1fr; }
-    .acf-topic-grid, .acf-benefit-grid, .acf-related-grid, .acf-choice-grid, .acf-conversion-strip { grid-template-columns: 1fr; }
+    .acf-topic-grid, .acf-benefit-grid, .acf-related-grid, .acf-choice-grid, .acf-conversion-strip, .acf-preset-row { grid-template-columns: 1fr; }
     .acf-hero { padding: 46px 0; }
     .acf-section { padding: 46px 0; }
 }
@@ -712,6 +802,7 @@ def render_css() -> str:
     .acf-actions .acf-btn { width: 100%; }
     .acf-plan-card, .acf-intent-card, .acf-topic-card, .acf-benefit-grid article, .acf-code-card, .acf-checklist { padding: 16px; }
     .acf-footer__inner { align-items: flex-start; flex-direction: column; }
+    .acf-footer-links { justify-content: flex-start; }
 }
 """
 

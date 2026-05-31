@@ -73,7 +73,12 @@ function escapeRegex(value) {
 
 function testCategoryPresetMap() {
   const category = read('acf.html');
+  const generatorSource = read('tools/generate_acf_pages.py');
+
   assert(countMatches(category, /class="acf-preset-row"/g) === expectedRoutes.length, 'acf.html must expose 12 preset rows');
+  assert(generatorSource.includes('def preset_map()'), 'tools/generate_acf_pages.py must preserve the ACF preset map section');
+  assert(generatorSource.includes('MIGX для MODX'), 'tools/generate_acf_pages.py must preserve the MIGX cross-link in generated ACF pages');
+  assert(generatorSource.includes('.acf-preset-map'), 'tools/generate_acf_pages.py must preserve preset map CSS');
 
   for (const route of expectedRoutes) {
     assert(category.includes(`href="${route.href}"`), `acf.html is missing route ${route.href}`);
