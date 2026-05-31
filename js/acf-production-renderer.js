@@ -1086,6 +1086,9 @@
 
         downloadTextFile(code, attr(group.key || 'acf-export') + '.' + ext, mime);
         if (typeof window.showToast === 'function') window.showToast('Файл ' + attr(group.key || 'acf-export') + '.' + ext + ' сохранен');
+        if (typeof window.trackGeneratorEvent === 'function') {
+            window.trackGeneratorEvent('acf_code_downloaded', { generator: 'acf', tab: tab, filename: attr(group.key || 'acf-export') + '.' + ext, fields: getFields().length });
+        }
     }
 
     window.generatePreviewCSS = productionCSS;
@@ -1100,7 +1103,11 @@
     };
     window.updatePreview = refreshProductionViews;
     window.togglePreviewMode = function() {
-        setEditorMode(!window.previewModeActive);
+        var nextState = !window.previewModeActive;
+        setEditorMode(nextState);
+        if (typeof window.trackGeneratorEvent === 'function') {
+            window.trackGeneratorEvent('acf_preview_toggled', { generator: 'acf', active: nextState });
+        }
     };
     window.handleProductionTargetMessage = handleProductionTargetMessage;
     window.refreshProductionViews = refreshProductionViews;

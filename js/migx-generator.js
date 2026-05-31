@@ -317,6 +317,9 @@ function restoreSharedStateFromURL() {
         switchCodeTab(currentCodeTab);
         showSharedContext();
         showToast('Конфигурация загружена из ссылки');
+        if (typeof window.trackGeneratorEvent === 'function') {
+            window.trackGeneratorEvent('migx_shared_config_loaded', { generator: 'migx', fields: fields.length, tabs: tabs.length });
+        }
         return true;
     } catch (err) {
         showToast('Не удалось открыть сохраненную MIGX-ссылку', true);
@@ -330,6 +333,9 @@ function applyPresetFromURL() {
     if (!presetName || !MIGX_PRESETS[presetName]) return;
     loadTemplate(MIGX_PRESETS[presetName].template);
     showLandingContext(presetName, source);
+    if (typeof window.trackGeneratorEvent === 'function') {
+        window.trackGeneratorEvent('migx_preset_loaded', { generator: 'migx', preset: presetName, source: source || MIGX_PRESETS[presetName].source });
+    }
 }
 
 function collectFields(arr, result) {
@@ -888,6 +894,9 @@ function generateFenomChunk() {
 // ==================== CODE TABS ====================
 function switchCodeTab(tab) {
     currentCodeTab = tab;
+    if (typeof window.trackGeneratorEvent === 'function') {
+        window.trackGeneratorEvent('migx_export_tab_changed', { generator: 'migx', tab: tab });
+    }
     var tabs = document.querySelectorAll('.code-tab');
     for (var i = 0; i < tabs.length; i++) {
         tabs[i].classList.toggle('active', tabs[i].getAttribute('data-tab') === tab);
@@ -904,6 +913,9 @@ function copyCode() {
     }
     navigator.clipboard.writeText(code).then(function() {
         showToast('JSON скопирован в буфер обмена');
+        if (typeof window.trackGeneratorEvent === 'function') {
+            window.trackGeneratorEvent('migx_code_copied', { generator: 'migx', tab: currentCodeTab, fields: fields.length });
+        }
     }).catch(function() {
         var ta = document.createElement('textarea');
         ta.value = code;
@@ -913,6 +925,9 @@ function copyCode() {
         document.execCommand('copy');
         document.body.removeChild(ta);
         showToast('JSON скопирован в буфер обмена');
+        if (typeof window.trackGeneratorEvent === 'function') {
+            window.trackGeneratorEvent('migx_code_copied', { generator: 'migx', tab: currentCodeTab, fields: fields.length, fallback: true });
+        }
     });
 }
 
@@ -950,6 +965,9 @@ function copyAuditChecklist() {
     var text = buildAuditChecklistText();
     navigator.clipboard.writeText(text).then(function() {
         showToast('Аудит MIGX скопирован');
+        if (typeof window.trackGeneratorEvent === 'function') {
+            window.trackGeneratorEvent('migx_audit_copied', { generator: 'migx', score: lastValidationReport.score, fields: lastValidationReport.metrics.fields });
+        }
     }).catch(function() {
         var ta = document.createElement('textarea');
         ta.value = text;
@@ -960,6 +978,9 @@ function copyAuditChecklist() {
         document.execCommand('copy');
         document.body.removeChild(ta);
         showToast('Аудит MIGX скопирован');
+        if (typeof window.trackGeneratorEvent === 'function') {
+            window.trackGeneratorEvent('migx_audit_copied', { generator: 'migx', score: lastValidationReport.score, fields: lastValidationReport.metrics.fields, fallback: true });
+        }
     });
 }
 
@@ -988,11 +1009,17 @@ function copyShareText(link) {
         var copied = document.execCommand('copy');
         document.body.removeChild(ta);
         showToast(copied ? 'Ссылка на MIGX-конфигурацию скопирована' : 'Не удалось скопировать ссылку', !copied);
+        if (copied && typeof window.trackGeneratorEvent === 'function') {
+            window.trackGeneratorEvent('migx_share_link_copied', { generator: 'migx', fields: fields.length, fallback: true });
+        }
     }
 
     if (navigator.clipboard && navigator.clipboard.writeText) {
         navigator.clipboard.writeText(link).then(function() {
             showToast('Ссылка на MIGX-конфигурацию скопирована');
+            if (typeof window.trackGeneratorEvent === 'function') {
+                window.trackGeneratorEvent('migx_share_link_copied', { generator: 'migx', fields: fields.length });
+            }
         }).catch(fallback);
         return;
     }
@@ -1025,6 +1052,9 @@ function downloadCode() {
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
     showToast('Файл ' + filename + ' сохранён');
+    if (typeof window.trackGeneratorEvent === 'function') {
+        window.trackGeneratorEvent('migx_code_downloaded', { generator: 'migx', tab: currentCodeTab, filename: filename, fields: fields.length });
+    }
 }
 
 // ==================== TOAST ====================
@@ -1262,6 +1292,9 @@ function loadTemplate(name) {
     generateJSON();
     validateMIGXConfig();
     showToast('Шаблон загружен');
+    if (typeof window.trackGeneratorEvent === 'function') {
+        window.trackGeneratorEvent('migx_template_loaded', { generator: 'migx', template: name, fields: fields.length });
+    }
 }
 
 // ==================== EVENT DELEGATION ====================

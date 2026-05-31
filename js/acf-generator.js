@@ -1213,6 +1213,9 @@ function updateCodeExportNote(tab) {
 
 function switchCodeTab(tab) {
     currentCodeTab = tab;
+    if (typeof window.trackGeneratorEvent === 'function') {
+        window.trackGeneratorEvent('acf_export_tab_changed', { generator: 'acf', tab: tab });
+    }
     // Update active tab buttons
     var tabs = document.querySelectorAll('.code-tab');
     for (var i = 0; i < tabs.length; i++) {
@@ -2797,6 +2800,9 @@ function copyCode() {
     }
     navigator.clipboard.writeText(code).then(function() {
         showToast('Код скопирован в буфер обмена');
+        if (typeof window.trackGeneratorEvent === 'function') {
+            window.trackGeneratorEvent('acf_code_copied', { generator: 'acf', tab: currentCodeTab, fields: fields.length });
+        }
     }).catch(function() {
         // Fallback
         var ta = document.createElement('textarea');
@@ -2808,6 +2814,9 @@ function copyCode() {
         document.execCommand('copy');
         document.body.removeChild(ta);
         showToast('Код скопирован в буфер обмена');
+        if (typeof window.trackGeneratorEvent === 'function') {
+            window.trackGeneratorEvent('acf_code_copied', { generator: 'acf', tab: currentCodeTab, fields: fields.length, fallback: true });
+        }
     });
 }
 
@@ -2844,6 +2853,9 @@ function downloadCode() {
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
     showToast('Файл ' + filename + ' сохранён');
+    if (typeof window.trackGeneratorEvent === 'function') {
+        window.trackGeneratorEvent('acf_code_downloaded', { generator: 'acf', tab: currentCodeTab, filename: filename, fields: fields.length });
+    }
 }
 
 // ==================== TOAST ====================
@@ -3166,6 +3178,9 @@ function loadTemplate(name) {
     renderAll();
     liveUpdate();
     showToast('Шаблон «' + document.getElementById('group-title').value + '» загружен');
+    if (typeof window.trackGeneratorEvent === 'function') {
+        window.trackGeneratorEvent('acf_template_loaded', { generator: 'acf', template: name, fields: fields.length });
+    }
 }
 
 function landingContextCopy(source, preset, template) {

@@ -2,6 +2,7 @@ import { readFileSync } from 'node:fs';
 import { execFileSync } from 'node:child_process';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import vm from 'node:vm';
 
 const root = dirname(dirname(fileURLToPath(import.meta.url)));
 
@@ -202,10 +203,16 @@ print("acf generator output matches")
 
 function testProductionExportGuards() {
   const generatorHtml = read('acf-generator.html');
+  const conversion = read('js/conversion-events.js');
   const generator = read('js/acf-generator.js');
   const production = read('js/acf-production-renderer.js');
   const audit = read('js/acf-generator-audit.js');
 
+  assert(generatorHtml.includes('js/conversion-events.js?v=launch-analytics-20260531-1'), 'acf-generator.html must load conversion tracking helper');
+  assert(conversion.includes('window.trackGeneratorEvent'), 'conversion helper must expose trackGeneratorEvent');
+  assert(conversion.includes('window.dataLayer.push'), 'conversion helper must push events to dataLayer');
+  assert(conversion.includes('new CustomEvent'), 'conversion helper must dispatch browser events for local QA');
+  assert(conversion.includes('window.gtag('), 'conversion helper must forward events to gtag when available');
   assert(generatorHtml.includes('js/acf-generator.js?v=acf-ui-20260531-10'), 'acf-generator.html must load the current generator cache-buster');
   assert(generatorHtml.includes('js/acf-production-renderer.js?v=acf-ui-20260531-5'), 'acf-generator.html must load the current production renderer cache-buster');
   assert(generatorHtml.includes('js/acf-generator-audit.js?v=acf-ui-20260531-3'), 'acf-generator.html must load the current audit cache-buster');
@@ -216,6 +223,11 @@ function testProductionExportGuards() {
   assert(generator.includes("return fullDocument ? ' data-style-target=\"' + key + '\"' : '';"), 'fallback editor markers must be gated by fullDocument');
   assert(generator.includes('code = window.renderProductionPHP();'), 'HTML download fallback must use production WP template');
   assert(generator.includes("ext = 'php'; mime = 'text/x-php';"), 'HTML download fallback must save WP template as PHP');
+  assert(generator.includes("trackGeneratorEvent('acf_template_loaded'"), 'ACF template loads must be tracked');
+  assert(generator.includes("trackGeneratorEvent('acf_code_copied'"), 'ACF copy action must be tracked');
+  assert(generator.includes("trackGeneratorEvent('acf_code_downloaded'"), 'ACF download action must be tracked');
+  assert(generator.includes("trackGeneratorEvent('acf_export_tab_changed'"), 'ACF export tab changes must be tracked');
+  assert(production.includes("trackGeneratorEvent('acf_preview_toggled'"), 'ACF visual preview toggles must be tracked');
   assert(!generator.includes('code = generateVisualHTML({ fullDocument: false });'), 'HTML download fallback must not download editor preview snippets');
   assert(production.includes('window.generateHTML = function()'), 'production renderer must own HTML export');
   assert(production.includes('output.textContent = renderProductionPHP();'), 'HTML export must render production PHP template');
@@ -242,6 +254,34 @@ function testProductionExportGuards() {
   assert(audit.includes('window.generateProductionCSS'), 'snapshot must include generated production CSS');
 }
 
+function testConversionHelperRuns() {
+  const source = read('js/conversion-events.js');
+  const dispatched = [];
+  const gtagCalls = [];
+  const context = {
+    CustomEvent: function CustomEvent(name, options) {
+      this.type = name;
+      this.detail = options.detail;
+    },
+    window: {
+      location: { pathname: '/acf-generator.html', search: '?preset=hero' },
+      dispatchEvent(event) {
+        dispatched.push(event);
+      },
+      gtag() {
+        gtagCalls.push(Array.from(arguments));
+      }
+    }
+  };
+  vm.createContext(context);
+  vm.runInContext(source, context);
+  const payload = context.window.trackGeneratorEvent('acf_code_copied', { generator: 'acf', fields: 5 });
+  assert(payload.event === 'acf_code_copied', 'conversion helper must return the tracked event name');
+  assert(context.window.dataLayer.length === 1, 'conversion helper must push one event to dataLayer');
+  assert(dispatched.length === 1 && dispatched[0].type === 'generator:conversion', 'conversion helper must dispatch generator:conversion');
+  assert(gtagCalls.length === 1 && gtagCalls[0][0] === 'event', 'conversion helper must forward event to gtag');
+}
+
 function main() {
   testCategoryPresetMap();
   testLandingCtas();
@@ -252,6 +292,7 @@ function main() {
   testAcfPageGeneratorRenders();
   testAcfPageGeneratorMatchesCheckedInPages();
   testProductionExportGuards();
+  testConversionHelperRuns();
   console.log('ACF smoke checks passed: 12 routes, landing CTAs, sitemap lastmod, context copy, export tabs, production guards.');
 }
 

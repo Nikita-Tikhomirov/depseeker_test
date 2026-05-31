@@ -178,6 +178,11 @@ function testTechnicalSeo() {
 function testGeneratorWiring() {
   const html = read('migx-generator.html');
   const js = read('js/migx-generator.js');
+  const conversion = read('js/conversion-events.js');
+  assert(html.includes('js/conversion-events.js?v=launch-analytics-20260531-1'), 'migx-generator.html must load conversion tracking helper');
+  assert(conversion.includes('window.trackGeneratorEvent'), 'conversion helper must expose trackGeneratorEvent');
+  assert(conversion.includes('window.dataLayer.push'), 'conversion helper must push events to dataLayer');
+  assert(conversion.includes('new CustomEvent'), 'conversion helper must dispatch browser events for local QA');
   assert(html.includes('id="validation-panel"'), 'migx-generator.html must expose validation panel');
   assert(html.includes('id="validation-score"'), 'migx-generator.html must expose readiness score');
   assert(html.includes('id="validation-metrics"'), 'migx-generator.html must expose validation metrics');
@@ -195,6 +200,11 @@ function testGeneratorWiring() {
   assert(js.includes('function copyShareText('), 'js/migx-generator.js must copy shareable config URLs with fallback');
   assert(js.includes('function restoreSharedStateFromURL()'), 'js/migx-generator.js must restore shareable config URLs');
   assert(js.includes('function sanitizeSharedFields('), 'js/migx-generator.js must sanitize shared fields before rendering');
+  assert(js.includes("trackGeneratorEvent('migx_preset_loaded'"), 'MIGX preset loads must be tracked');
+  assert(js.includes("trackGeneratorEvent('migx_code_copied'"), 'MIGX copy action must be tracked');
+  assert(js.includes("trackGeneratorEvent('migx_code_downloaded'"), 'MIGX download action must be tracked');
+  assert(js.includes("trackGeneratorEvent('migx_share_link_copied'"), 'MIGX share link action must be tracked');
+  assert(js.includes("trackGeneratorEvent('migx_export_tab_changed'"), 'MIGX export tab changes must be tracked');
   assert(js.includes('function generateFormTabsJSON()'), 'js/migx-generator.js must generate Form Tabs export');
   assert(js.includes('function generateGridColumnsJSON()'), 'js/migx-generator.js must generate Grid Columns export');
   assert(js.includes('function generateFenomChunk()'), 'js/migx-generator.js must generate Fenom chunk export');
