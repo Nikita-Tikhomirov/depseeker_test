@@ -42,7 +42,9 @@
             "Nested MIGX",
             "getImageList",
             "Fenom chunk",
-            "Проверка ошибок MIGX"
+            "Проверка ошибок MIGX",
+            "MIGX readiness score",
+            "Аудит готовности конфигурации"
         ],
         "creator": {
             "@type": "Organization",
@@ -233,6 +235,12 @@
         .gen-context-card strong { display: block; font-size: 1rem; margin-bottom: 4px; }
         .gen-context-card p { color: var(--text-2); margin: 0; font-size: 0.9rem; line-height: 1.55; }
         .gen-validation { margin: 16px 0; }
+        .validation-score-card { display:grid; grid-template-columns:auto 1fr; gap:12px; align-items:center; padding:12px; margin-bottom:12px; background:rgba(16,185,129,0.08); border:1px solid rgba(16,185,129,0.22); border-radius:8px; }
+        .validation-score-value { min-width:68px; font-size:1.65rem; font-weight:900; color:var(--accent-2); line-height:1; }
+        .validation-score-summary { margin:0; color:var(--text-2); font-size:0.85rem; line-height:1.5; }
+        .validation-metrics { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:6px; margin:0 0 12px; }
+        .validation-metric { padding:8px 10px; border:1px solid var(--border); border-radius:7px; background:var(--bg); font-size:0.78rem; color:var(--text-2); }
+        .validation-metric strong { display:block; color:var(--text); font-size:0.95rem; margin-bottom:2px; }
         .validation-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
         .validation-list li { padding: 9px 12px; border-radius: 7px; background: rgba(245,158,11,0.08); color: var(--text-2); font-size: 0.84rem; }
         .validation-list .validation-ok { background: rgba(16,185,129,0.1); color: var(--accent-2); }
@@ -370,9 +378,15 @@
                     <div class="gen-panel gen-validation" id="validation-panel" aria-live="polite">
                         <div class="gen-panel-header">Проверка MIGX</div>
                         <div class="gen-panel-body" style="max-height:none;">
+                            <div class="validation-score-card">
+                                <div class="validation-score-value" id="validation-score">0%</div>
+                                <p class="validation-score-summary" id="validation-summary">Добавьте поля, чтобы увидеть готовность конфигурации.</p>
+                            </div>
+                            <div class="validation-metrics" id="validation-metrics"></div>
                             <ul id="validation-list" class="validation-list">
                                 <li class="validation-ok">Добавьте поля, чтобы увидеть проверку.</li>
                             </ul>
+                            <button class="gen-btn gen-btn-sm gen-btn-outline" data-action="copy-audit" type="button" style="margin-top:10px;">📋 Скопировать аудит</button>
                         </div>
                     </div>
 

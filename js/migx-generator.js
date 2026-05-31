@@ -29,6 +29,12 @@ var fieldIdCounter = 0;
 var selectedFieldId = null;
 var tabs = [];           // { id: 'tab_xxx', caption: 'Tab Name', color: '#f59e0b' }
 var currentCodeTab = 'json';
+var lastValidationReport = {
+    score: 0,
+    summary: 'Добавьте поля, чтобы увидеть готовность конфигурации.',
+    warnings: [],
+    metrics: { fields: 0, tabs: 0, nested: 0, errors: 0, warnings: 0 }
+};
 
 var MIGX_PRESETS = {
     json: { source: 'migx-json-generator', title: 'MIGX JSON генератор', template: 'tabs_demo' },
@@ -245,6 +251,51 @@ function collectFields(arr, result) {
     return result;
 }
 
+function renderValidationSummary(warnings, allFields) {
+    var totalFields = allFields.length;
+    var errorCount = warnings.filter(function(w) { return w.level === 'error'; }).length;
+    var warnCount = warnings.length - errorCount;
+    var nestedCount = allFields.filter(function(f) { return f.inputTVtype === 'migx'; }).length;
+    var score = totalFields ? Math.max(0, Math.min(100, 100 - errorCount * 22 - warnCount * 8)) : 0;
+    var summary = 'Добавьте поля, чтобы увидеть готовность конфигурации.';
+
+    if (totalFields && errorCount) {
+        summary = 'Есть критичные ошибки. Исправьте их перед вставкой MIGX JSON в MODX.';
+    } else if (totalFields && warnCount) {
+        summary = 'Конфигурация почти готова. Осталось поправить предупреждения для более надежного экспорта.';
+    } else if (totalFields) {
+        summary = 'Конфигурация готова к экспорту: fieldname, типы полей и вложенность выглядят корректно.';
+    }
+
+    var scoreEl = document.getElementById('validation-score');
+    var summaryEl = document.getElementById('validation-summary');
+    var metricsEl = document.getElementById('validation-metrics');
+
+    if (scoreEl) scoreEl.textContent = score + '%';
+    if (summaryEl) summaryEl.textContent = summary;
+    if (metricsEl) {
+        metricsEl.innerHTML = [
+            '<div class="validation-metric"><strong>' + totalFields + '</strong>Полей всего</div>',
+            '<div class="validation-metric"><strong>' + tabs.length + '</strong>Табов формы</div>',
+            '<div class="validation-metric"><strong>' + nestedCount + '</strong>Вложенных MIGX</div>',
+            '<div class="validation-metric"><strong>' + errorCount + '/' + warnCount + '</strong>Ошибок / предупреждений</div>'
+        ].join('');
+    }
+
+    lastValidationReport = {
+        score: score,
+        summary: summary,
+        warnings: warnings.slice(),
+        metrics: {
+            fields: totalFields,
+            tabs: tabs.length,
+            nested: nestedCount,
+            errors: errorCount,
+            warnings: warnCount
+        }
+    };
+}
+
 function validateMIGXConfig() {
     var list = document.getElementById('validation-list');
     if (!list) return [];
@@ -268,10 +319,12 @@ function validateMIGXConfig() {
     }
 
     if (!warnings.length) {
+        renderValidationSummary(warnings, all);
         list.innerHTML = '<li class="validation-ok">Ошибок не найдено. Конфигурацию можно экспортировать.</li>';
         return warnings;
     }
 
+    renderValidationSummary(warnings, all);
     list.innerHTML = warnings.map(function(w) {
         var cls = w.level === 'error' ? 'validation-error' : '';
         return '<li class="' + cls + '">' + escHtml(w.text) + '</li>';
@@ -771,6 +824,53 @@ function copyCode() {
     });
 }
 
+function buildAuditChecklistText() {
+    var report = lastValidationReport;
+    var lines = [
+        'MIGX аудит готовности: ' + report.score + '%',
+        report.summary,
+        '',
+        'Метрики:',
+        '- Полей всего: ' + report.metrics.fields,
+        '- Табов формы: ' + report.metrics.tabs,
+        '- Вложенных MIGX: ' + report.metrics.nested,
+        '- Ошибок: ' + report.metrics.errors,
+        '- Предупреждений: ' + report.metrics.warnings,
+        ''
+    ];
+
+    if (report.warnings.length) {
+        lines.push('Что исправить:');
+        for (var i = 0; i < report.warnings.length; i++) {
+            lines.push('- ' + report.warnings[i].text);
+        }
+    } else if (report.metrics.fields) {
+        lines.push('Что исправить: критичных замечаний нет.');
+    } else {
+        lines.push('Что исправить: добавьте поля MIGX и повторите проверку.');
+    }
+
+    return lines.join('\n');
+}
+
+function copyAuditChecklist() {
+    validateMIGXConfig();
+    var text = buildAuditChecklistText();
+    navigator.clipboard.writeText(text).then(function() {
+        showToast('Аудит MIGX скопирован');
+    }).catch(function() {
+        var ta = document.createElement('textarea');
+        ta.value = text;
+        ta.style.position = 'fixed';
+        ta.style.opacity = '0';
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand('copy');
+        document.body.removeChild(ta);
+        showToast('Аудит MIGX скопирован');
+    });
+}
+
 function downloadCode() {
     var code = document.getElementById('code-output').textContent;
     if (!code || code === 'Добавьте поля — JSON появится здесь') {
@@ -1053,6 +1153,9 @@ document.addEventListener('click', function(e) {
             break;
         case 'copy-code':
             copyCode();
+            break;
+        case 'copy-audit':
+            copyAuditChecklist();
             break;
         case 'download-code':
             downloadCode();
