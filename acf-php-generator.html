@@ -124,11 +124,11 @@
         <div class="acf-conversion-copy">
             <span class="acf-section-label">Быстрый старт</span>
             <h2>Откройте генератор уже с нужной структурой</h2>
-            <p>Предустановка под запрос «acf php generator» сразу подставит базовые поля, а дальше можно поправить названия, стили и экспорт.</p>
+            <p>Предустановка под запрос «acf php generator» открывает группу Content Fields и сразу ведет к PHP-коду, который можно перенести в functions.php или отдельный include.</p>
         </div>
-        <ul><li>PHP массив group и fields</li>
-<li>Location rules</li>
-<li>Ключи полей без конфликтов</li></ul>
+        <ul><li>Группа Content Fields</li>
+<li>PHP registration array</li>
+<li>Location rules и стабильные field keys</li></ul>
         <a class="acf-btn acf-btn--primary" href="acf-generator.html?preset=php&amp;source=acf-php-generator">Открыть preset</a>
     </section>
         </div>
@@ -143,9 +143,9 @@
             </div>
             <div class="acf-checklist">
                 <ul>
-                    <li>PHP массив group и fields</li>
-<li>Location rules</li>
-<li>Ключи полей без конфликтов</li>
+                    <li>Группа Content Fields</li>
+<li>PHP registration array</li>
+<li>Location rules и стабильные field keys</li>
                 </ul>
             </div>
         </div>
@@ -156,9 +156,9 @@
             <article>
                 <h2>Как использовать</h2>
                 <ol class="acf-steps">
-                    <li><span>1</span><p>Откройте генератор с готовой предустановкой под этот тип ACF-структуры.</p></li>
+                    <li><span>1</span><p>Откройте генератор с готовой группой Content Fields и PHP export.</p></li>
                     <li><span>2</span><p>Переименуйте группу и поля под свой тип записи, шаблон или страницу.</p></li>
-                    <li><span>3</span><p>Скопируйте PHP или JSON и перенесите в проект WordPress.</p></li>
+                    <li><span>3</span><p>Скопируйте PHP-массив и подключите его в проект WordPress.</p></li>
                 </ol>
             </article>
             <article class="acf-code-card" aria-label="Пример структуры">
@@ -191,7 +191,7 @@
         <div class="acf-container acf-faq">
             <h2>Вопросы по ACF PHP генератор</h2>
             <details open><summary>Для чего нужен этот генератор?</summary><p>Нужен быстрый PHP export без ручной сборки массива полей.</p></details>
-            <details><summary>Что получится на выходе?</summary><p>PHP массив group и fields, Location rules, Ключи полей без конфликтов.</p></details>
+            <details><summary>Что получится на выходе?</summary><p>Content Fields preset, PHP-массив группы, Location rules и стабильные ключи полей.</p></details>
             <details><summary>Можно ли доработать поля после генерации?</summary><p>Да, генератор дает стартовую структуру. Поля можно переименовать, удалить, вложить или дополнить перед экспортом.</p></details>
         </div>
     </section>
@@ -215,7 +215,7 @@
     <section class="acf-final-cta">
         <div class="acf-container">
             <h2>Соберите структуру прямо сейчас</h2>
-            <p>Откройте генератор, проверьте поля в визуальном превью и экспортируйте PHP или JSON.</p>
+            <p>Откройте генератор, проверьте поля в визуальном превью и экспортируйте чистый PHP-код.</p>
             <a class="acf-btn acf-btn--primary" href="acf-generator.html?preset=php&amp;source=acf-php-generator">Открыть предустановку</a>
         </div>
     </section>

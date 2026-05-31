@@ -124,11 +124,11 @@
         <div class="acf-conversion-copy">
             <span class="acf-section-label">Быстрый старт</span>
             <h2>Откройте генератор уже с нужной структурой</h2>
-            <p>Предустановка под запрос «acf json generator» сразу подставит базовые поля, а дальше можно поправить названия, стили и экспорт.</p>
+            <p>Предустановка под запрос «acf json generator» открывает группу Content Fields и сразу переключает генератор на JSON export.</p>
         </div>
-        <ul><li>JSON export</li>
-<li>Стабильные field keys</li>
-<li>Проверяемая структура полей</li></ul>
+        <ul><li>Группа Content Fields</li>
+<li>JSON export tab</li>
+<li>Стабильные field keys</li></ul>
         <a class="acf-btn acf-btn--primary" href="acf-generator.html?preset=json&amp;source=acf-json-generator">Открыть preset</a>
     </section>
         </div>
@@ -143,9 +143,9 @@
             </div>
             <div class="acf-checklist">
                 <ul>
-                    <li>JSON export</li>
+                    <li>Группа Content Fields</li>
+<li>JSON export tab</li>
 <li>Стабильные field keys</li>
-<li>Проверяемая структура полей</li>
                 </ul>
             </div>
         </div>
@@ -156,19 +156,23 @@
             <article>
                 <h2>Как использовать</h2>
                 <ol class="acf-steps">
-                    <li><span>1</span><p>Откройте генератор с готовой предустановкой под этот тип ACF-структуры.</p></li>
+                    <li><span>1</span><p>Откройте генератор с готовой группой Content Fields и активной вкладкой JSON.</p></li>
                     <li><span>2</span><p>Переименуйте группу и поля под свой тип записи, шаблон или страницу.</p></li>
-                    <li><span>3</span><p>Скопируйте PHP или JSON и перенесите в проект WordPress.</p></li>
+                    <li><span>3</span><p>Скачайте или скопируйте JSON и перенесите его в ACF JSON workflow проекта.</p></li>
                 </ol>
             </article>
             <article class="acf-code-card" aria-label="Пример структуры">
-                <pre><code>acf_add_local_field_group([
-  'key' => 'group_acf_json_generator',
-  'title' => 'ACF JSON генератор',
-  'fields' => [
-    // fields from generator
-  ],
-]);</code></pre>
+                <pre><code>{
+  "key": "group_content_fields",
+  "title": "Content Fields",
+  "fields": [
+    {
+      "key": "field_hero_title",
+      "label": "Hero title",
+      "type": "text"
+    }
+  ]
+}</code></pre>
             </article>
         </div>
     </section>
@@ -191,7 +195,7 @@
         <div class="acf-container acf-faq">
             <h2>Вопросы по ACF JSON генератор</h2>
             <details open><summary>Для чего нужен этот генератор?</summary><p>Нужен переносимый JSON для ACF без ручного редактирования.</p></details>
-            <details><summary>Что получится на выходе?</summary><p>JSON export, Стабильные field keys, Проверяемая структура полей.</p></details>
+            <details><summary>Что получится на выходе?</summary><p>Content Fields preset, активная JSON-вкладка, стабильные field keys и проверяемая структура полей.</p></details>
             <details><summary>Можно ли доработать поля после генерации?</summary><p>Да, генератор дает стартовую структуру. Поля можно переименовать, удалить, вложить или дополнить перед экспортом.</p></details>
         </div>
     </section>
@@ -215,7 +219,7 @@
     <section class="acf-final-cta">
         <div class="acf-container">
             <h2>Соберите структуру прямо сейчас</h2>
-            <p>Откройте генератор, проверьте поля в визуальном превью и экспортируйте PHP или JSON.</p>
+            <p>Откройте генератор, проверьте поля в визуальном превью и экспортируйте ACF JSON.</p>
             <a class="acf-btn acf-btn--primary" href="acf-generator.html?preset=json&amp;source=acf-json-generator">Открыть предустановку</a>
         </div>
     </section>
