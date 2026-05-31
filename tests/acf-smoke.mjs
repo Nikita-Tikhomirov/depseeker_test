@@ -164,6 +164,10 @@ function testProductionExportGuards() {
   assert(audit.includes('ACF PHP'), 'handoff package must mention ACF PHP');
   assert(audit.includes('WP-шаблон+CSS'), 'handoff package must mention WP template and CSS');
   assert(audit.includes('JSON snapshot'), 'handoff package must mention JSON snapshot');
+  assert(audit.includes('Скачать пакет'), 'handoff action must be labeled as a downloadable package');
+  assert(audit.includes('-handoff.json'), 'handoff package filename must reflect the handoff payload');
+  assert(audit.includes('Handoff-пакет проекта скачан'), 'handoff toast must describe the package download');
+  assert(!audit.includes('inventory_2</span> Snapshot</button>'), 'handoff action must not use the vague Snapshot label');
   assert(audit.includes('acf_json'), 'snapshot must include a dedicated ACF JSON payload');
   assert(audit.includes('wp_template'), 'snapshot must include a dedicated WP template payload');
   assert(audit.includes('production_css'), 'snapshot must include a dedicated production CSS payload');

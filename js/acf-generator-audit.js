@@ -101,7 +101,7 @@
             action,
             '    <button class="gen-btn gen-btn-sm gen-btn-outline" data-action="copy-code"><span class="material-symbols-outlined">content_copy</span> Копировать</button>',
             '    <button class="gen-btn gen-btn-sm gen-btn-outline" data-action="download-code"><span class="material-symbols-outlined">download</span> Скачать код</button>',
-            '    <button class="gen-btn gen-btn-sm gen-btn-outline" data-action="download-project-bundle"><span class="material-symbols-outlined">inventory_2</span> Snapshot</button>',
+            '    <button class="gen-btn gen-btn-sm gen-btn-outline" data-action="download-project-bundle"><span class="material-symbols-outlined">inventory_2</span> Скачать пакет</button>',
             '  </div>',
             '</div>'
         ].join('');
@@ -206,7 +206,7 @@
 
         scoreEl.textContent = score + '%';
         if (hardIssues === 0 && fields.length > 0) {
-            summary = 'Структура выглядит готовой: можно копировать код, скачать файл или сохранить snapshot проекта.';
+            summary = 'Структура выглядит готовой: можно копировать код, скачать файл или сохранить handoff-пакет проекта.';
             html += '<ul class="audit-list"><li class="audit-item audit-item--ok"><span class="material-symbols-outlined">check_circle</span><span>Критичных ошибок нет. Проверьте names под ваш шаблон и экспортируйте код.</span></li></ul>';
         } else if (fields.length === 0) {
             summary = 'Начните с готового шаблона или добавьте первое поле. После этого аудит покажет, что мешает экспорту.';
@@ -285,13 +285,13 @@
         var blob = new Blob([JSON.stringify(snapshot, null, 2)], { type: 'application/json;charset=utf-8' });
         var link = document.createElement('a');
         link.href = URL.createObjectURL(blob);
-        link.download = groupKey.replace(/[^a-zA-Z0-9_-]+/g, '_') + '-snapshot.json';
+        link.download = groupKey.replace(/[^a-zA-Z0-9_-]+/g, '_') + '-handoff.json';
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
         setTimeout(function() { URL.revokeObjectURL(link.href); }, 1000);
         if (typeof window.showToast === 'function') {
-            window.showToast('Snapshot проекта скачан');
+            window.showToast('Handoff-пакет проекта скачан');
         }
     }
 
