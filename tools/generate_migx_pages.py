@@ -1,0 +1,529 @@
+from __future__ import annotations
+
+import html
+import json
+from pathlib import Path
+import xml.etree.ElementTree as ET
+
+
+ROOT = Path(__file__).resolve().parents[1]
+SITE = "https://zifra.example.com"
+SITEMAP_NS = "http://www.sitemaps.org/schemas/sitemap/0.9"
+
+
+PAGES = [
+    {
+        "slug": "migx-json-generator",
+        "preset": "json",
+        "query": "migx json generator",
+        "title": "MIGX JSON генератор для MODX",
+        "h1": "MIGX JSON генератор",
+        "description": "Соберите MIGX JSON для MODX Revolution: поля, табы, вложенные MIGX и готовая структура для вставки в TV.",
+        "intent": "Нужен готовый JSON без ручной сборки массива полей.",
+        "deliverables": ["MIGX fields JSON", "Проверка fieldname", "Экспорт для TV"],
+        "example": '[{"fieldname":"title","caption":"Заголовок","inputTVtype":"text"}]',
+    },
+    {
+        "slug": "migx-tv-generator",
+        "preset": "tv",
+        "query": "migx tv modx",
+        "title": "MIGX TV генератор для MODX",
+        "h1": "MIGX TV генератор",
+        "description": "Настройте поля для MIGX TV: Form Tabs, Grid Columns, JSON-конфигурация и пример вывода.",
+        "intent": "Нужно быстро подготовить конфигурацию TV под MIGX.",
+        "deliverables": ["Form Tabs", "Grid Columns", "TV-ready JSON"],
+        "example": '[{"caption":"Контент","fields":[{"field":"title","caption":"Заголовок"}]}]',
+    },
+    {
+        "slug": "migx-formtabs-generator",
+        "preset": "formtabs",
+        "query": "migx formtabs generator",
+        "title": "MIGX Form Tabs генератор",
+        "h1": "MIGX Form Tabs генератор",
+        "description": "Создайте Form Tabs для MIGX: группы полей, подписи, типы ввода и безопасный JSON для MODX.",
+        "intent": "Нужно собрать formtabs без ошибок кавычек и вложенных массивов.",
+        "deliverables": ["Form Tabs JSON", "Группировка полей", "Подсказки по ошибкам"],
+        "example": '[{"caption":"Основное","fields":[{"field":"title","caption":"Заголовок","inputTVtype":"text"}]}]',
+    },
+    {
+        "slug": "migx-grid-columns-generator",
+        "preset": "grid_columns",
+        "query": "migx grid columns",
+        "title": "MIGX Grid Columns генератор",
+        "h1": "MIGX Grid Columns генератор",
+        "description": "Соберите Grid Columns для MIGX: подписи колонок, sortable поля и видимые значения в таблице MODX.",
+        "intent": "Нужно настроить список элементов MIGX в админке MODX.",
+        "deliverables": ["Grid Columns JSON", "Колонки таблицы", "Рекомендуемые поля"],
+        "example": '[{"header":"Заголовок","dataIndex":"title","sortable":true}]',
+    },
+    {
+        "slug": "migx-nested-generator",
+        "preset": "nested",
+        "query": "nested migx modx",
+        "title": "Вложенный MIGX генератор",
+        "h1": "Вложенный MIGX генератор",
+        "description": "Создайте nested MIGX структуру: секции, элементы внутри секций и JSON configs для вложенных полей.",
+        "intent": "Нужна структура section -> items без ручного вложения configs.",
+        "deliverables": ["Nested MIGX", "Вложенные configs", "Пример секций"],
+        "example": '[{"fieldname":"sections","caption":"Секции","inputTVtype":"migx","configs":"[...]"}]',
+    },
+    {
+        "slug": "migx-tabs-generator",
+        "preset": "tabs",
+        "query": "migx tabs modx",
+        "title": "MIGX tabs генератор",
+        "h1": "MIGX tabs генератор",
+        "description": "Разделите MIGX-поля по табам: контент, медиа, SEO и дополнительные настройки.",
+        "intent": "Нужно сделать удобную форму MIGX с табами для редактора.",
+        "deliverables": ["Tabs", "tabid для полей", "Удобная структура формы"],
+        "example": '[{"fieldname":"tab_content","caption":"Контент","inputTVtype":"tab"}]',
+    },
+    {
+        "slug": "migx-gallery",
+        "preset": "gallery",
+        "query": "migx gallery",
+        "title": "MIGX галерея для MODX",
+        "h1": "MIGX галерея",
+        "description": "Соберите MIGX-галерею: изображение, alt, подпись, описание и пример вывода через getImageList.",
+        "intent": "Нужна редактируемая галерея изображений в MODX.",
+        "deliverables": ["Image field", "Alt и подпись", "getImageList пример"],
+        "example": "[[getImageList? &tvname=`gallery` &tpl=`galleryItemTpl`]]",
+    },
+    {
+        "slug": "migx-slider",
+        "preset": "slider",
+        "query": "migx slider",
+        "title": "MIGX слайдер для MODX",
+        "h1": "MIGX слайдер",
+        "description": "Соберите поля для слайдера MODX: изображение, заголовок, текст, кнопка и ссылка.",
+        "intent": "Нужен управляемый слайдер без отдельного компонента.",
+        "deliverables": ["Поля слайда", "CTA", "Пример chunk"],
+        "example": "[[getImageList? &tvname=`slider` &tpl=`slideTpl`]]",
+    },
+    {
+        "slug": "migx-faq",
+        "preset": "faq",
+        "query": "migx faq",
+        "title": "MIGX FAQ блок для MODX",
+        "h1": "MIGX FAQ",
+        "description": "Соберите FAQ через MIGX: вопрос, ответ, категория, порядок и пример вывода аккордеоном.",
+        "intent": "Нужен редактируемый FAQ-блок для SEO-страницы.",
+        "deliverables": ["FAQ fields", "Richtext answer", "Accordion chunk"],
+        "example": '[{"fieldname":"question","caption":"Вопрос","inputTVtype":"text"}]',
+    },
+    {
+        "slug": "migx-catalog",
+        "preset": "catalog",
+        "query": "migx catalog",
+        "title": "MIGX каталог для MODX",
+        "h1": "MIGX каталог",
+        "description": "Создайте простой каталог на MIGX: название, фото, цена, свойства и описание карточки.",
+        "intent": "Нужно хранить небольшой каталог в TV без отдельной базы.",
+        "deliverables": ["Карточка товара", "Цена и свойства", "Grid Columns"],
+        "example": '[{"fieldname":"price","caption":"Цена","inputTVtype":"number"}]',
+    },
+    {
+        "slug": "migx-team",
+        "preset": "team",
+        "query": "migx team",
+        "title": "MIGX команда для MODX",
+        "h1": "MIGX команда",
+        "description": "Соберите блок команды: фото, имя, должность, описание, контакты и порядок сотрудников.",
+        "intent": "Нужен управляемый блок сотрудников в MODX.",
+        "deliverables": ["Team fields", "Фото и роль", "Контакты"],
+        "example": '[{"fieldname":"name","caption":"Имя","inputTVtype":"text"}]',
+    },
+    {
+        "slug": "migx-reviews",
+        "preset": "reviews",
+        "query": "migx reviews",
+        "title": "MIGX отзывы для MODX",
+        "h1": "MIGX отзывы",
+        "description": "Соберите отзывы на MIGX: автор, компания, текст, рейтинг, фото и ссылка на кейс.",
+        "intent": "Нужен редактируемый блок отзывов с рейтингом.",
+        "deliverables": ["Review fields", "Rating", "Author photo"],
+        "example": '[{"fieldname":"rating","caption":"Рейтинг","inputTVtype":"number"}]',
+    },
+    {
+        "slug": "migx-getimagelist",
+        "preset": "getimagelist",
+        "query": "migx getimagelist",
+        "title": "MIGX getImageList пример вывода",
+        "h1": "MIGX getImageList",
+        "description": "Получите пример вывода MIGX через getImageList: tvname, tpl, wrapperTpl и поля чанка.",
+        "intent": "Нужно вывести MIGX TV на фронтенде через getImageList.",
+        "deliverables": ["getImageList вызов", "tpl chunk", "Подстановка placeholders"],
+        "example": "[[getImageList? &tvname=`items` &tpl=`itemTpl`]]",
+    },
+    {
+        "slug": "migx-fenom-chunk",
+        "preset": "fenom_chunk",
+        "query": "migx fenom chunk",
+        "title": "MIGX Fenom chunk для MODX",
+        "h1": "MIGX Fenom chunk",
+        "description": "Соберите Fenom/chunk пример для вывода MIGX-полей в MODX с понятными placeholders.",
+        "intent": "Нужен готовый шаблон вывода MIGX-элементов.",
+        "deliverables": ["Fenom snippet", "Chunk placeholders", "HTML-разметка"],
+        "example": "<article>{$item.title}</article>",
+    },
+    {
+        "slug": "migx-configs",
+        "preset": "configs",
+        "query": "migx configs",
+        "title": "MIGX configs генератор",
+        "h1": "MIGX configs",
+        "description": "Разберите и соберите MIGX configs для вложенных структур, listbox и сложных наборов полей.",
+        "intent": "Нужно понять и собрать configs без поломанного JSON.",
+        "deliverables": ["configs JSON", "Nested fields", "Проверка синтаксиса"],
+        "example": '{"formtabs":[{"caption":"Основное","fields":[]}]}',
+    },
+    {
+        "slug": "migx-image-field",
+        "preset": "image_field",
+        "query": "migx image field",
+        "title": "MIGX image field",
+        "h1": "MIGX image field",
+        "description": "Настройте изображение в MIGX: image field, alt, подпись, превью и вывод в чанке.",
+        "intent": "Нужно правильно добавить изображение в MIGX-структуру.",
+        "deliverables": ["Image input", "Alt field", "Preview column"],
+        "example": '[{"fieldname":"image","caption":"Изображение","inputTVtype":"image"}]',
+    },
+    {
+        "slug": "migx-richtext-field",
+        "preset": "richtext_field",
+        "query": "migx richtext field",
+        "title": "MIGX richtext field",
+        "h1": "MIGX richtext field",
+        "description": "Добавьте richtext поле в MIGX и проверьте структуру для описаний, FAQ и контентных блоков.",
+        "intent": "Нужно хранить форматированный текст внутри MIGX.",
+        "deliverables": ["Richtext input", "Описание", "Пример вывода"],
+        "example": '[{"fieldname":"content","caption":"Текст","inputTVtype":"richtext"}]',
+    },
+    {
+        "slug": "migx-validator",
+        "preset": "validator",
+        "query": "migx validator",
+        "title": "MIGX validator",
+        "h1": "MIGX validator",
+        "description": "Проверьте MIGX JSON: пустые fieldname, дубли, listbox без опций, MIGX без вложенных полей и ошибки импорта.",
+        "intent": "Нужно быстро найти ошибки в MIGX-конфигурации.",
+        "deliverables": ["Проверка JSON", "Список предупреждений", "Безопасный экспорт"],
+        "example": "fieldname не должен быть пустым или повторяться",
+    },
+    {
+        "slug": "migx-import-json",
+        "preset": "import_json",
+        "query": "migx import json",
+        "title": "MIGX import JSON",
+        "h1": "MIGX import JSON",
+        "description": "Импортируйте существующий MIGX JSON, проверьте поля и доработайте конфигурацию визуально.",
+        "intent": "Нужно загрузить старую MIGX-конфигурацию и поправить ее без ручного редактирования.",
+        "deliverables": ["Импорт JSON", "Разбор tab fields", "Проверка nested MIGX"],
+        "example": "Загрузите .json файл через кнопку Импорт",
+    },
+    {
+        "slug": "migx-errors",
+        "preset": "errors",
+        "query": "migx json error",
+        "title": "Ошибки MIGX JSON и Form Tabs",
+        "h1": "Ошибки MIGX JSON",
+        "description": "Найдите типовые ошибки MIGX: битый JSON, неверный configs, пустой fieldname и проблемы Form Tabs.",
+        "intent": "Нужно понять, почему MIGX не сохраняет или не показывает поля.",
+        "deliverables": ["Диагностика ошибок", "Подсказки", "Проверка конфига"],
+        "example": "Unexpected token чаще всего означает неэкранированные кавычки или лишнюю запятую",
+    },
+    {
+        "slug": "migx-examples",
+        "preset": "examples",
+        "query": "migx examples",
+        "title": "MIGX examples для MODX",
+        "h1": "MIGX examples",
+        "description": "Готовые примеры MIGX для MODX: галерея, слайдер, FAQ, каталог, команда и отзывы.",
+        "intent": "Нужна стартовая библиотека рабочих MIGX-шаблонов.",
+        "deliverables": ["Готовые пресеты", "JSON examples", "Связанные страницы"],
+        "example": "Выберите шаблон и откройте генератор с предустановкой",
+    },
+]
+
+
+def esc(value: object) -> str:
+    return html.escape(str(value), quote=True)
+
+
+def slug_url(slug: str) -> str:
+    return f"{SITE}/{slug}.html"
+
+
+def generator_url(page: dict[str, object]) -> str:
+    return f"migx-generator.html?preset={esc(page['preset'])}&amp;source={esc(page['slug'])}"
+
+
+def asset_head(page: dict[str, object]) -> str:
+    title = esc(f"{page['title']} | Цифра")
+    description = esc(page["description"])
+    canonical = esc(slug_url(str(page["slug"])))
+    return f"""<meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="{description}">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="{canonical}">
+    <meta name="author" content="Цифра">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="{title}">
+    <meta property="og:description" content="{description}">
+    <meta property="og:url" content="{canonical}">
+    <meta property="og:locale" content="ru_RU">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="{title}">
+    <meta name="twitter:description" content="{description}">
+    <title>{title}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/layout.css">
+    <link rel="stylesheet" href="css/responsive.css">
+    <link rel="stylesheet" href="css/themes.css">
+    <link rel="stylesheet" href="css/acf-content.css">"""
+
+
+def breadcrumb_schema(page: dict[str, object] | None) -> str:
+    items = [
+        {"@type": "ListItem", "position": 1, "name": "Главная", "item": f"{SITE}/"},
+        {"@type": "ListItem", "position": 2, "name": "MIGX", "item": f"{SITE}/migx.html"},
+    ]
+    if page:
+        items.append(
+            {
+                "@type": "ListItem",
+                "position": 3,
+                "name": str(page["h1"]),
+                "item": slug_url(str(page["slug"])),
+            }
+        )
+    return json.dumps({"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": items}, ensure_ascii=False, indent=4)
+
+
+def faq_schema(page: dict[str, object]) -> str:
+    payload = {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+            {
+                "@type": "Question",
+                "name": f"Для чего нужен {page['h1']}?",
+                "acceptedAnswer": {"@type": "Answer", "text": str(page["intent"])},
+            },
+            {
+                "@type": "Question",
+                "name": "Что получится на выходе?",
+                "acceptedAnswer": {"@type": "Answer", "text": ", ".join(page["deliverables"])},
+            },
+            {
+                "@type": "Question",
+                "name": "Можно ли использовать результат в MODX?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Да. Скопируйте JSON, Form Tabs, Grid Columns или chunk и перенесите в MIGX TV или шаблон MODX.",
+                },
+            },
+        ],
+    }
+    return json.dumps(payload, ensure_ascii=False, indent=4)
+
+
+def header(active: str = "") -> str:
+    hub_active = ' class="is-active"' if active == "hub" else ""
+    return f"""<header class="acf-header">
+    <div class="acf-container acf-header__inner">
+        <a class="acf-logo" href="index.html" aria-label="Цифра — на главную"><span>◆</span> Цифра</a>
+        <nav class="acf-nav" aria-label="Навигация MIGX">
+            <a href="migx.html"{hub_active}>MIGX</a>
+            <a href="migx-generator.html">Генератор</a>
+            <a href="migx-nested-generator.html">Nested</a>
+            <a href="migx-validator.html">Валидатор</a>
+        </nav>
+        <a class="acf-header-cta" href="migx-generator.html">Открыть генератор</a>
+    </div>
+</header>"""
+
+
+def footer() -> str:
+    return """<footer class="acf-footer">
+    <div class="acf-container acf-footer__inner">
+        <div>
+            <strong>Цифра</strong>
+            <p>Инструменты для MODX-разработчиков: MIGX, JSON, Form Tabs, Grid Columns и готовые шаблоны.</p>
+        </div>
+        <a href="migx-generator.html">Запустить MIGX генератор</a>
+    </div>
+</footer>"""
+
+
+def related_links(current_slug: str) -> str:
+    links = [p for p in PAGES if p["slug"] != current_slug][:6]
+    return "\n".join(
+        f'<a class="acf-related-card" href="{esc(p["slug"])}.html"><span>{esc(p["query"])}</span><strong>{esc(p["h1"])}</strong></a>'
+        for p in links
+    )
+
+
+def preset_rows() -> str:
+    return "\n".join(
+        f"""<div class="acf-preset-row">
+            <span class="acf-preset-query">{esc(p["query"])}</span>
+            <a class="acf-preset-name" href="{esc(p["slug"])}.html">{esc(p["h1"])}</a>
+            <span class="acf-preset-result">{esc(", ".join(p["deliverables"]))}</span>
+            <a class="acf-preset-link" href="{generator_url(p)}">Открыть</a>
+        </div>"""
+        for p in PAGES
+    )
+
+
+def render_page(page: dict[str, object]) -> str:
+    deliverables = "\n".join(f"<li>{esc(item)}</li>" for item in page["deliverables"])
+    return f"""<!DOCTYPE html>
+<html lang="ru">
+<head>
+    {asset_head(page)}
+    <script type="application/ld+json">{breadcrumb_schema(page)}</script>
+    <script type="application/ld+json">{faq_schema(page)}</script>
+</head>
+<body>
+{header()}
+<main>
+    <section class="acf-hero acf-page-hero">
+        <div class="acf-container acf-hero__grid">
+            <div class="acf-hero__copy">
+                <nav class="acf-breadcrumbs" aria-label="Хлебные крошки"><a href="index.html">Главная</a><span>/</span><a href="migx.html">MIGX</a><span>/</span>{esc(page["h1"])}</nav>
+                <span class="acf-kicker">{esc(page["query"])}</span>
+                <h1>{esc(page["h1"])}</h1>
+                <p>{esc(page["description"])}</p>
+                <div class="acf-actions">
+                    <a class="acf-btn acf-btn--primary" href="{generator_url(page)}">Открыть пресет</a>
+                    <a class="acf-btn acf-btn--ghost" href="#example">Посмотреть пример</a>
+                </div>
+            </div>
+            <aside class="acf-intent-card" aria-label="Сценарий использования">
+                <span>Сценарий</span>
+                <h2>{esc(page["intent"])}</h2>
+                <p>Откройте готовую структуру, поправьте поля и экспортируйте конфигурацию для MODX.</p>
+            </aside>
+        </div>
+    </section>
+    <section class="acf-section" id="example">
+        <div class="acf-container acf-use-grid">
+            <article>
+                <span class="acf-section-label">Что входит</span>
+                <h2>Готовая структура под запрос</h2>
+                <div class="acf-checklist"><ul>{deliverables}</ul></div>
+            </article>
+            <article class="acf-code-card"><pre><code>{esc(page["example"])}</code></pre></article>
+        </div>
+    </section>
+    <section class="acf-section acf-section--muted">
+        <div class="acf-container">
+            <div class="acf-section-head"><span class="acf-section-label">Связанные страницы</span><h2>Продолжить по MIGX-кластеру</h2></div>
+            <div class="acf-related-grid">{related_links(str(page["slug"]))}</div>
+        </div>
+    </section>
+    <section class="acf-final-cta"><div class="acf-container"><h2>Соберите MIGX-конфигурацию сейчас</h2><p>Страница откроет генератор с нужной предустановкой.</p><a class="acf-btn acf-btn--primary" href="{generator_url(page)}">Открыть генератор</a></div></section>
+</main>
+{footer()}
+</body>
+</html>"""
+
+
+def render_hub() -> str:
+    page = {
+        "slug": "migx",
+        "title": "MIGX генератор и шаблоны для MODX",
+        "description": "Категория MIGX-инструментов для MODX: JSON, Form Tabs, Grid Columns, nested MIGX, getImageList, Fenom chunks и готовые пресеты.",
+    }
+    cards = "\n".join(
+        f'<article class="acf-topic-card"><span>{esc(p["query"])}</span><h3><a href="{esc(p["slug"])}.html">{esc(p["h1"])}</a></h3><p>{esc(p["description"])}</p><a href="{esc(p["slug"])}.html">Открыть страницу</a></article>'
+        for p in PAGES
+    )
+    item_list = {
+        "@context": "https://schema.org",
+        "@type": "ItemList",
+        "itemListElement": [
+            {"@type": "ListItem", "position": i + 1, "url": slug_url(str(p["slug"])), "name": str(p["h1"])}
+            for i, p in enumerate(PAGES)
+        ],
+    }
+    return f"""<!DOCTYPE html>
+<html lang="ru">
+<head>
+    {asset_head(page)}
+    <script type="application/ld+json">{breadcrumb_schema(None)}</script>
+    <script type="application/ld+json">{json.dumps(item_list, ensure_ascii=False, indent=4)}</script>
+</head>
+<body>
+{header("hub")}
+<main>
+    <section class="acf-hero">
+        <div class="acf-container acf-hero__grid">
+            <div class="acf-hero__copy">
+                <span class="acf-kicker">MODX MIGX</span>
+                <h1>MIGX генератор и шаблоны для MODX</h1>
+                <p>Соберите MIGX JSON, Form Tabs, Grid Columns, nested-конфигурации и готовые chunks без ручной сборки массива.</p>
+                <div class="acf-actions"><a class="acf-btn acf-btn--primary" href="migx-generator.html">Открыть генератор</a><a class="acf-btn acf-btn--ghost" href="#pages">Смотреть страницы</a></div>
+            </div>
+            <aside class="acf-plan-card"><h2>Карта категории</h2><ul><li>Базовые MIGX JSON и TV.</li><li>Form Tabs и Grid Columns.</li><li>Галерея, слайдер, FAQ, каталог, команда и отзывы.</li><li>Валидатор, импорт, ошибки и вывод через getImageList/Fenom.</li></ul></aside>
+        </div>
+    </section>
+    <section class="acf-section" id="pages"><div class="acf-container"><div class="acf-section-head"><span class="acf-section-label">Кластеры</span><h2>Страницы под MIGX-запросы</h2><p>Каждая страница ведет в генератор с нужной предустановкой.</p></div><div class="acf-topic-grid">{cards}</div></div></section>
+    <section class="acf-section acf-section--muted"><div class="acf-container"><div class="acf-section-head"><span class="acf-section-label">Карта пресетов</span><h2>SEO-страница -> пресет генератора</h2></div><div class="acf-preset-map" aria-label="Карта MIGX-пресетов">{preset_rows()}</div></div></section>
+    <section class="acf-final-cta"><div class="acf-container"><h2>Откройте MIGX генератор</h2><p>Выберите шаблон, проверьте ошибки и экспортируйте JSON или chunk.</p><a class="acf-btn acf-btn--primary" href="migx-generator.html">Запустить</a></div></section>
+</main>
+{footer()}
+</body>
+</html>"""
+
+
+def write_pages() -> None:
+    (ROOT / "migx.html").write_text(render_hub(), encoding="utf-8")
+    for page in PAGES:
+        (ROOT / f"{page['slug']}.html").write_text(render_page(page), encoding="utf-8")
+
+
+def update_sitemap() -> None:
+    sitemap = ROOT / "sitemap.xml"
+    tree = ET.parse(sitemap)
+    old_root = tree.getroot()
+    entries: dict[str, tuple[str, str]] = {}
+    for url in old_root.findall(".//{*}url"):
+        loc = url.find("{*}loc")
+        if loc is None or not loc.text:
+            continue
+        changefreq = url.find("{*}changefreq")
+        priority = url.find("{*}priority")
+        entries[loc.text] = (
+            changefreq.text if changefreq is not None and changefreq.text else "weekly",
+            priority.text if priority is not None and priority.text else "0.5",
+        )
+    entries[f"{SITE}/migx.html"] = ("weekly", "0.85")
+    entries[f"{SITE}/migx-generator.html"] = ("weekly", "0.8")
+    for page in PAGES:
+        entries[slug_url(str(page["slug"]))] = ("weekly", "0.75")
+    ET.register_namespace("", SITEMAP_NS)
+    root = ET.Element(f"{{{SITEMAP_NS}}}urlset")
+    for loc, (changefreq, priority) in entries.items():
+        url = ET.SubElement(root, f"{{{SITEMAP_NS}}}url")
+        ET.SubElement(url, f"{{{SITEMAP_NS}}}loc").text = loc
+        ET.SubElement(url, f"{{{SITEMAP_NS}}}changefreq").text = changefreq
+        ET.SubElement(url, f"{{{SITEMAP_NS}}}priority").text = priority
+    tree = ET.ElementTree(root)
+    ET.indent(tree, space="    ")
+    tree.write(sitemap, encoding="utf-8", xml_declaration=True)
+
+
+def main() -> None:
+    write_pages()
+    update_sitemap()
+
+
+if __name__ == "__main__":
+    main()
