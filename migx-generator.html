@@ -201,6 +201,17 @@
         .depth-2 { border-left: 3px solid rgba(79,70,229,0.3) !important; }
         .depth-3 { border-left: 3px solid rgba(245,158,11,0.3) !important; }
 
+        .generator-context { padding: 0 0 22px; }
+        .gen-context-card { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 16px 20px; }
+        .gen-context-label { display: block; color: var(--accent-2); font-size: 0.78rem; font-weight: 800; text-transform: uppercase; margin-bottom: 6px; }
+        .gen-context-card strong { display: block; font-size: 1rem; margin-bottom: 4px; }
+        .gen-context-card p { color: var(--text-2); margin: 0; font-size: 0.9rem; line-height: 1.55; }
+        .gen-validation { margin: 16px 0; }
+        .validation-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+        .validation-list li { padding: 9px 12px; border-radius: 7px; background: rgba(245,158,11,0.08); color: var(--text-2); font-size: 0.84rem; }
+        .validation-list .validation-ok { background: rgba(16,185,129,0.1); color: var(--accent-2); }
+        .validation-list .validation-error { background: rgba(239,68,68,0.1); color: #f87171; }
+
         /* Responsive */
         @media (max-width:1300px) { .gen-grid { grid-template-columns:1fr 420px; } }
         @media (max-width:1100px) { .gen-grid { grid-template-columns:1fr; } }
@@ -258,6 +269,16 @@
             <div class="tool-stat"><div class="stat-num" id="stat-count">0</div><div class="stat-label">полей создано</div></div>
             <div class="tool-stat"><div class="stat-num">♾️</div><div class="stat-label">влож. MIGX</div></div>
             <div class="tool-stat"><div class="stat-num">0 ₽</div><div class="stat-label">бесплатно</div></div>
+        </div>
+    </div>
+</section>
+
+<section class="generator-context" id="generator-context" hidden>
+    <div class="container">
+        <div class="gen-context-card">
+            <span class="gen-context-label">Открыто из SEO-страницы</span>
+            <strong id="generator-context-title">MIGX пресет</strong>
+            <p id="generator-context-copy">Генератор загрузил подходящую структуру. Проверьте поля и экспортируйте конфигурацию.</p>
         </div>
     </div>
 </section>
@@ -320,6 +341,15 @@
 
                     <div class="gen-divider"></div>
 
+                    <div class="gen-panel gen-validation" id="validation-panel" aria-live="polite">
+                        <div class="gen-panel-header">Проверка MIGX</div>
+                        <div class="gen-panel-body" style="max-height:none;">
+                            <ul id="validation-list" class="validation-list">
+                                <li class="validation-ok">Добавьте поля, чтобы увидеть проверку.</li>
+                            </ul>
+                        </div>
+                    </div>
+
                     <!-- === TABS MANAGER === -->
                     <details style="margin-bottom:16px;">
                         <summary style="font-weight:700;font-size:0.9rem;cursor:pointer;color:var(--text);margin-bottom:8px;user-select:none;">📑 Табы <span style="color:var(--text-dim);font-weight:400;font-size:0.82rem;" id="tabs-count">(0)</span></summary>
@@ -349,6 +379,10 @@
                     <div class="code-preview-header">
                         <button class="code-tab active" data-tab="json" data-action="switch-tab">JSON (MIGX config)</button>
                         <button class="code-tab" data-tab="json_flat" data-action="switch-tab">JSON Flat</button>
+                        <button class="code-tab" data-tab="formtabs" data-action="switch-tab">Form Tabs</button>
+                        <button class="code-tab" data-tab="grid_columns" data-action="switch-tab">Grid Columns</button>
+                        <button class="code-tab" data-tab="getimagelist" data-action="switch-tab">getImageList</button>
+                        <button class="code-tab" data-tab="fenom" data-action="switch-tab">Fenom</button>
                         <div class="code-actions">
                             <button class="gen-btn gen-btn-sm gen-btn-primary" data-action="copy-code" title="Копировать">📋 Копировать</button>
                             <button class="gen-btn gen-btn-sm gen-btn-outline" data-action="download-code" title="Скачать">⬇</button>
@@ -398,7 +432,7 @@
 <!-- Toast -->
 <div class="toast" id="toast"></div>
 
-<script src="js/migx-generator.js" defer></script>
+<script src="js/migx-generator.js?v=migx-seo-20260531-1" defer></script>
 
 </body>
 </html>
