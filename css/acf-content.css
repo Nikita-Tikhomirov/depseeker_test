@@ -83,6 +83,7 @@ html, body { background: #0b0f14; }
 .acf-footer strong { color: #fff; }
 .acf-footer p { margin: 6px 0 0; }
 .acf-footer a { color: #22d3a6; font-weight: 900; text-decoration: none; }
+.acf-footer-links { display: flex; flex-wrap: wrap; gap: 14px; justify-content: flex-end; }
 .acf-breadcrumbs { display: flex; gap: 8px; flex-wrap: wrap; color: rgba(255,255,255,0.48); font-size: 0.88rem; margin-bottom: 18px; }
 .acf-breadcrumbs a { color: rgba(255,255,255,0.7); text-decoration: none; }
 @media (max-width: 900px) {
@@ -101,4 +102,5 @@ html, body { background: #0b0f14; }
     .acf-actions .acf-btn { width: 100%; }
     .acf-plan-card, .acf-intent-card, .acf-topic-card, .acf-benefit-grid article, .acf-code-card, .acf-checklist { padding: 16px; }
     .acf-footer__inner { align-items: flex-start; flex-direction: column; }
+    .acf-footer-links { justify-content: flex-start; }
 }

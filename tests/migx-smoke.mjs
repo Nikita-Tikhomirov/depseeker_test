@@ -96,12 +96,26 @@ function testGeneratorWiring() {
   }
 }
 
+function testInternalEntryLinks() {
+  const index = read('index.html');
+  const acf = read('acf.html');
+  assert(countMatches(index, /href="migx\.html"/g) >= 3, 'index.html must link to the MIGX hub from multiple entry points');
+  assert(countMatches(index, /href="acf\.html"/g) >= 3, 'index.html must keep ACF hub entry links');
+  assert(acf.includes('href="migx.html"'), 'acf.html must cross-link to the MIGX hub');
+  assert(
+    acf.includes('href="migx-generator.html?preset=gallery&amp;source=acf-related"'),
+    'acf.html must link to a concrete MIGX generator preset'
+  );
+  assert(acf.includes('href="migx-getimagelist.html"'), 'acf.html must link to a MIGX supporting article');
+}
+
 function main() {
   testHubRoutes();
   testLandingPages();
   testSitemapRoutes();
   testGeneratorWiring();
-  console.log('MIGX smoke checks passed: hub, 21 landings, sitemap, generator wiring.');
+  testInternalEntryLinks();
+  console.log('MIGX smoke checks passed: hub, 21 landings, sitemap, generator wiring, internal entry links.');
 }
 
 main();
