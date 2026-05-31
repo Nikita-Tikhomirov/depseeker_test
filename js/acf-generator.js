@@ -1443,7 +1443,7 @@ function generatePHP() {
 
 // ==================== GENERATE HTML TEMPLATE ====================
 function generateHTML() {
-    document.getElementById('code-output').textContent = generateVisualHTML();
+    document.getElementById('code-output').textContent = generateVisualHTML({ fullDocument: false });
 }
 
 function generateWordPressTemplateHTML() {
@@ -2494,7 +2494,9 @@ function getPlaceholderSVG() {
     );
 }
 
-function generateVisualHTML() {
+function generateVisualHTML(options) {
+    var opts = options || {};
+    var fullDocument = opts.fullDocument !== false;
     var styles = blockStyles;
     var elementStyles = styles.elements || ensureElementStyles();
     var e = elementStyles;
@@ -2504,9 +2506,9 @@ function generateVisualHTML() {
                 fields[0].sub_fields[0].name && fields[0].sub_fields[0].name.indexOf('question') !== -1;
 
     var css = [
-        '*{box-sizing:border-box;margin:0;padding:0;}',
-        'body{font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;line-height:1.6;color:' + styles.textColor + ';background:' + styles.bgColor + ';padding:' + styles.padding + 'px;}',
-        '.acf-block{max-width:800px;margin:0 auto;}',
+        '.acf-block{box-sizing:border-box;max-width:800px;margin:0 auto;padding:' + (fullDocument ? '0' : styles.padding + 'px') + ';background:' + (fullDocument ? 'transparent' : styles.bgColor) + ';color:' + styles.textColor + ';font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;line-height:1.6;}',
+        '.acf-block *{box-sizing:border-box;}',
+        '.acf-block :where(h1,h2,h3,p,ul,ol,figure){margin:0;}',
         '.acf-block-title{font-size:' + e.title.fontSize + 'px;font-weight:700;margin-bottom:' + e.title.marginBottom + 'px;color:' + e.title.color + ';}',
         '.acf-field{margin-bottom:' + styles.gap + 'px;}',
         '.acf-field:last-child{margin-bottom:0;}',
@@ -2555,12 +2557,25 @@ function generateVisualHTML() {
         '.acf-flex-layout{margin-bottom:12px;padding:12px 16px;border-left:3px solid ' + e.flex.accentColor + ';background:' + e.flex.bgColor + ';border-radius:0 6px 6px 0;}',
         '.acf-flex-layout:last-child{margin-bottom:0;}',
         '.acf-flex-layout-title{font-size:0.7rem;text-transform:uppercase;letter-spacing:0.06em;opacity:0.4;margin-bottom:10px;font-weight:600;}',
-        '[data-style-target]{cursor:pointer;}',
-        '.acf-style-selected{outline:2px solid #7c3aed;outline-offset:3px;}',
-    ].join('\n');
+    ];
+    if (fullDocument) {
+        css.unshift(
+            '*{box-sizing:border-box;margin:0;padding:0;}',
+            'body{font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;line-height:1.6;color:' + styles.textColor + ';background:' + styles.bgColor + ';padding:' + styles.padding + 'px;}'
+        );
+        css.push(
+            '[data-style-target]{cursor:pointer;}',
+            '.acf-style-selected{outline:2px solid #7c3aed;outline-offset:3px;}'
+        );
+    }
+    css = css.join('\n');
+
+    function T(key) {
+        return fullDocument ? ' data-style-target="' + key + '"' : '';
+    }
 
     function V(content, cls) {
-        return '<div class="acf-value' + (cls ? ' ' + cls : '') + '" data-style-target="value">' + (content || '') + '</div>';
+        return '<div class="acf-value' + (cls ? ' ' + cls : '') + '"' + T('value') + '>' + (content || '') + '</div>';
     }
 
     function F(body) {
@@ -2569,7 +2584,7 @@ function generateVisualHTML() {
     }
 
     function L(text) {
-        return '<div class="acf-label" data-style-target="label">' + escHtml(text || '') + '</div>';
+        return '<div class="acf-label"' + T('label') + '>' + escHtml(text || '') + '</div>';
     }
 
     function iconImg() {
@@ -2603,14 +2618,14 @@ function generateVisualHTML() {
         var body = '';
 
         if (t === 'image') {
-            body = '<div class="acf-img" data-style-target="media">' + iconImg() + '</div>';
+            body = '<div class="acf-img"' + T('media') + '>' + iconImg() + '</div>';
         } else if (t === 'gallery') {
-            var g = '<div class="acf-gallery" data-style-target="media">';
-            for (var gi = 0; gi < 3; gi++) g += '<div class="acf-gallery-item" data-style-target="media"></div>';
+            var g = '<div class="acf-gallery"' + T('media') + '>';
+            for (var gi = 0; gi < 3; gi++) g += '<div class="acf-gallery-item"' + T('media') + '></div>';
             g += '</div>';
             body = g;
         } else if (t === 'link') {
-            body = V('<a class="acf-btn" href="#" data-style-target="button">' + escHtml(f.title || name || 'Перейти') + '</a>');
+            body = V('<a class="acf-btn" href="#"' + T('button') + '>' + escHtml(f.title || name || 'Перейти') + '</a>');
         } else if (t === 'true_false') {
             var tfVal = (f.default_value === 1 || f.default_value === '1');
             body = V('<span class="acf-badge ' + (tfVal ? 'acf-badge--yes' : 'acf-badge--no') + '">' + (tfVal ? '✓ ' + escHtml(f.message || 'Да') : '✗ ' + escHtml(f.message || 'Нет')) + '</span>');
@@ -2642,17 +2657,17 @@ function generateVisualHTML() {
         } else if (t === 'password') {
             body = V('••••••••');
         } else if (t === 'oembed') {
-            body = '<div class="acf-oembed" data-style-target="media">' + iconPlay() + '</div>';
+            body = '<div class="acf-oembed"' + T('media') + '>' + iconPlay() + '</div>';
         } else if (t === 'file') {
-            body = '<div class="acf-file-card" data-style-target="media">' + iconFile() + '<div><div class="acf-file-name">document.pdf</div><div class="acf-file-size">2.4 МБ</div></div></div>';
+            body = '<div class="acf-file-card"' + T('media') + '>' + iconFile() + '<div><div class="acf-file-name">document.pdf</div><div class="acf-file-size">2.4 МБ</div></div></div>';
         } else if (t === 'google_map') {
-            body = '<div class="acf-map" data-style-target="media">' + iconMap() + ' Карта</div>';
+            body = '<div class="acf-map"' + T('media') + '>' + iconMap() + ' Карта</div>';
         } else if (t === 'post_object' || t === 'relationship') {
-            body = '<div class="acf-post-card" data-style-target="media"><div class="acf-post-thumb"></div><div><div class="acf-post-title">Выбранная запись</div><div class="acf-post-meta">ID: 42</div></div></div>';
+            body = '<div class="acf-post-card"' + T('media') + '><div class="acf-post-thumb"></div><div><div class="acf-post-title">Выбранная запись</div><div class="acf-post-meta">ID: 42</div></div></div>';
         } else if (t === 'taxonomy') {
             body = V('Категория 1, Метка 2');
         } else if (t === 'user') {
-            body = '<div class="acf-repeater-item" data-style-target="repeater"><div class="acf-avatar" data-style-target="repeater">И</div><div class="acf-info"><div class="acf-name">Иван Петров</div><div class="acf-role">editor</div></div></div>';
+            body = '<div class="acf-repeater-item"' + T('repeater') + '><div class="acf-avatar"' + T('repeater') + '>И</div><div class="acf-info"><div class="acf-name">Иван Петров</div><div class="acf-role">editor</div></div></div>';
         } else if (t === 'group' && f.sub_fields && f.sub_fields.length) {
             var gin = '';
             for (var gsi = 0; gsi < f.sub_fields.length; gsi++) {
@@ -2673,17 +2688,17 @@ function generateVisualHTML() {
                 ];
                 body = '';
                 for (var fi = 0; fi < faqs.length; fi++) {
-                    body += '<div class="acf-faq-item' + (fi === 0 ? ' open' : '') + '" data-style-target="faq"><button class="acf-faq-question" data-style-target="faq">' + escHtml(faqs[fi][0]) + '</button><div class="acf-faq-answer" data-style-target="faq">' + escHtml(faqs[fi][1]) + '</div></div>';
+                    body += '<div class="acf-faq-item' + (fi === 0 ? ' open' : '') + '"' + T('faq') + '><button class="acf-faq-question"' + T('faq') + '>' + escHtml(faqs[fi][0]) + '</button><div class="acf-faq-answer"' + T('faq') + '>' + escHtml(faqs[fi][1]) + '</div></div>';
                 }
             } else {
-                body = '<div class="acf-repeater" data-style-target="repeater">';
+                body = '<div class="acf-repeater"' + T('repeater') + '>';
                 for (var ri = 0; ri < 2; ri++) {
                     var hasImg = false;
-                    body += '<div class="acf-repeater-item" data-style-target="repeater">';
+                    body += '<div class="acf-repeater-item"' + T('repeater') + '>';
                     for (var si = 0; si < f.sub_fields.length; si++) {
                         var sf = f.sub_fields[si];
                         if (sf.type === 'image') {
-                            body += '<div class="acf-avatar" data-style-target="repeater">' + (ri === 0 ? 'А' : 'М') + '</div>';
+                            body += '<div class="acf-avatar"' + T('repeater') + '>' + (ri === 0 ? 'А' : 'М') + '</div>';
                             hasImg = true;
                             break;
                         }
@@ -2715,7 +2730,7 @@ function generateVisualHTML() {
             body = '';
             for (var li = 0; li < Math.min(f.layouts.length, 2); li++) {
                 var lay = f.layouts[li];
-                body += '<div class="acf-flex-layout" data-style-target="flex"><div class="acf-flex-layout-title" data-style-target="flex">' + escHtml(lay.label || lay.name) + '</div>';
+                body += '<div class="acf-flex-layout"' + T('flex') + '><div class="acf-flex-layout-title"' + T('flex') + '>' + escHtml(lay.label || lay.name) + '</div>';
                 if (lay.sub_fields) {
                     for (var lsi = 0; lsi < lay.sub_fields.length; lsi++) {
                         body += renderField(lay.sub_fields[lsi], true);
@@ -2731,15 +2746,20 @@ function generateVisualHTML() {
         return F(L(label) + body);
     }
 
-    var html = '<!DOCTYPE html><html lang="ru"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>' + escHtml(groupTitle) + '</title><style>' + css + '</style></head><body><div class="acf-block">';
-    if (groupTitle && !isFAQ) html += '<h2 class="acf-block-title" data-style-target="title">' + escHtml(groupTitle) + '</h2>';
+    var html = '<div class="acf-block">';
+    if (groupTitle && !isFAQ) html += '<h2 class="acf-block-title"' + T('title') + '>' + escHtml(groupTitle) + '</h2>';
     for (var i = 0; i < fields.length; i++) {
         html += renderField(fields[i], false);
     }
     html += '</div>';
-    html += '<script>(function(){function selectTarget(el){var prev=document.querySelector(".acf-style-selected");if(prev)prev.classList.remove("acf-style-selected");if(el)el.classList.add("acf-style-selected");}document.addEventListener("click",function(e){var target=e.target.closest("[data-style-target]");if(target){selectTarget(target);parent.postMessage({source:"acf-style-target",styleKey:target.getAttribute("data-style-target")},"*");}var q=e.target.closest(".acf-faq-question");if(q)q.parentElement.classList.toggle("open");});})();</' + 'script>';
-    html += '</body></html>';
-    return html;
+    if (fullDocument) {
+        html += '<script>(function(){function selectTarget(el){var prev=document.querySelector(".acf-style-selected");if(prev)prev.classList.remove("acf-style-selected");if(el)el.classList.add("acf-style-selected");}document.addEventListener("click",function(e){var target=e.target.closest("[data-style-target]");if(target){selectTarget(target);parent.postMessage({source:"acf-style-target",styleKey:target.getAttribute("data-style-target")},"*");}var q=e.target.closest(".acf-faq-question");if(q)q.parentElement.classList.toggle("open");});})();</' + 'script>';
+        return '<!DOCTYPE html><html lang="ru"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>' + escHtml(groupTitle) + '</title><style>' + css + '</style></head><body>' + html + '</body></html>';
+    }
+    if (isFAQ) {
+        html += '\n<script>(function(){document.addEventListener("click",function(e){var q=e.target.closest(".acf-faq-question");if(q)q.parentElement.classList.toggle("open");});})();</' + 'script>';
+    }
+    return '<style>\n' + css + '\n</style>\n' + html;
 }
 
 function renderVisualEditor() {
@@ -2789,7 +2809,7 @@ function downloadCode() {
         ext = 'json'; mime = 'application/json';
     } else if (currentCodeTab === 'html') {
         ext = 'html'; mime = 'text/html';
-        code = generateVisualHTML();
+        code = generateVisualHTML({ fullDocument: false });
     } else if (currentCodeTab === 'preview') {
         ext = 'html'; mime = 'text/html';
         code = generateVisualHTML();
