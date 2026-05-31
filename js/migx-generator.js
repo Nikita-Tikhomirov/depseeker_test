@@ -221,6 +221,66 @@ function getURLParam(name) {
     return params.get(name) || '';
 }
 
+function encodeSharePayload(payload) {
+    return btoa(unescape(encodeURIComponent(JSON.stringify(payload))));
+}
+
+function decodeSharePayload(value) {
+    return JSON.parse(decodeURIComponent(escape(atob(value))));
+}
+
+function safeSharedId(value, fallback) {
+    var id = String(value || '').replace(/[^a-zA-Z0-9_-]/g, '_').slice(0, 80);
+    return id || fallback;
+}
+
+function safeSharedColor(value) {
+    var color = String(value || '');
+    return /^#[0-9a-fA-F]{3,8}$/.test(color) ? color : '#10b981';
+}
+
+function isAllowedCodeTab(tab) {
+    return ['json', 'json_flat', 'formtabs', 'grid_columns', 'getimagelist', 'fenom'].indexOf(tab) !== -1;
+}
+
+function sanitizeSharedFields(items, counterRef) {
+    if (!Array.isArray(items)) return [];
+    return items.map(function(item) {
+        counterRef.value += 1;
+        var field = {};
+        for (var key in item) {
+            if (Object.prototype.hasOwnProperty.call(item, key)) field[key] = item[key];
+        }
+        field.id = safeSharedId(field.id, 'migx_' + counterRef.value);
+        field.inputTVtype = MIGX_TYPES[field.inputTVtype] ? field.inputTVtype : 'text';
+        field.type = field.inputTVtype;
+        field.tabid = field.tabid ? safeSharedId(field.tabid, '') : '';
+        field.nestedFields = sanitizeSharedFields(field.nestedFields, counterRef);
+        return field;
+    });
+}
+
+function sanitizeSharedTabs(items) {
+    if (!Array.isArray(items)) return [];
+    return items.map(function(item, index) {
+        return {
+            id: safeSharedId(item && item.id, 'tab_shared_' + (index + 1)),
+            caption: String(item && item.caption ? item.caption : 'Таб ' + (index + 1)),
+            color: safeSharedColor(item && item.color)
+        };
+    });
+}
+
+function syncFieldIdCounter() {
+    var all = collectFields(fields, []);
+    var maxId = 0;
+    for (var i = 0; i < all.length; i++) {
+        var match = String(all[i].id || '').match(/^migx_(\d+)$/);
+        if (match) maxId = Math.max(maxId, parseInt(match[1], 10));
+    }
+    fieldIdCounter = Math.max(fieldIdCounter, maxId);
+}
+
 function showLandingContext(presetName, source) {
     var preset = MIGX_PRESETS[presetName];
     var box = document.getElementById('generator-context');
@@ -230,6 +290,38 @@ function showLandingContext(presetName, source) {
     if (title) title.textContent = preset.title;
     if (copy) copy.textContent = source ? 'Источник: ' + source + '. Проверьте поля, ошибки и экспорт.' : 'Проверьте поля, ошибки и экспорт.';
     box.hidden = false;
+}
+
+function showSharedContext() {
+    var box = document.getElementById('generator-context');
+    if (!box) return;
+    var title = document.getElementById('generator-context-title');
+    var copy = document.getElementById('generator-context-copy');
+    if (title) title.textContent = 'Сохраненная MIGX-конфигурация';
+    if (copy) copy.textContent = 'Конфигурация восстановлена из ссылки. Можно править поля, проверять score и экспортировать результат.';
+    box.hidden = false;
+}
+
+function restoreSharedStateFromURL() {
+    var hash = window.location.hash || '';
+    if (hash.indexOf('#migx=') !== 0) return false;
+    try {
+        var payload = decodeSharePayload(decodeURIComponent(hash.slice(6)));
+        var counterRef = { value: 0 };
+        fields = sanitizeSharedFields(payload.fields, counterRef);
+        tabs = sanitizeSharedTabs(payload.tabs);
+        selectedFieldId = null;
+        currentCodeTab = isAllowedCodeTab(payload.currentCodeTab) ? payload.currentCodeTab : 'json';
+        syncFieldIdCounter();
+        renderAll();
+        switchCodeTab(currentCodeTab);
+        showSharedContext();
+        showToast('Конфигурация загружена из ссылки');
+        return true;
+    } catch (err) {
+        showToast('Не удалось открыть сохраненную MIGX-ссылку', true);
+        return false;
+    }
 }
 
 function applyPresetFromURL() {
@@ -871,6 +963,51 @@ function copyAuditChecklist() {
     });
 }
 
+function buildShareURL() {
+    var payload = {
+        version: 1,
+        fields: fields,
+        tabs: tabs,
+        currentCodeTab: currentCodeTab
+    };
+    var url = new URL(window.location.href);
+    url.searchParams.delete('preset');
+    url.searchParams.delete('source');
+    url.hash = 'migx=' + encodeURIComponent(encodeSharePayload(payload));
+    return url.toString();
+}
+
+function copyShareText(link) {
+    function fallback() {
+        var ta = document.createElement('textarea');
+        ta.value = link;
+        ta.style.position = 'fixed';
+        ta.style.opacity = '0';
+        document.body.appendChild(ta);
+        ta.select();
+        var copied = document.execCommand('copy');
+        document.body.removeChild(ta);
+        showToast(copied ? 'Ссылка на MIGX-конфигурацию скопирована' : 'Не удалось скопировать ссылку', !copied);
+    }
+
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(link).then(function() {
+            showToast('Ссылка на MIGX-конфигурацию скопирована');
+        }).catch(fallback);
+        return;
+    }
+
+    fallback();
+}
+
+function copyShareLink() {
+    if (!fields.length) {
+        showToast('Добавьте поля, чтобы создать ссылку на конфигурацию', true);
+        return;
+    }
+    copyShareText(buildShareURL());
+}
+
 function downloadCode() {
     var code = document.getElementById('code-output').textContent;
     if (!code || code === 'Добавьте поля — JSON появится здесь') {
@@ -1157,6 +1294,9 @@ document.addEventListener('click', function(e) {
         case 'copy-audit':
             copyAuditChecklist();
             break;
+        case 'copy-share-link':
+            copyShareLink();
+            break;
         case 'download-code':
             downloadCode();
             break;
@@ -1272,8 +1412,10 @@ document.addEventListener('DOMContentLoaded', function() {
         jsonImport.addEventListener('change', importFromJSON);
     }
 
-    renderAll();
-    generateJSON();
-    applyPresetFromURL();
+    if (!restoreSharedStateFromURL()) {
+        renderAll();
+        generateJSON();
+        applyPresetFromURL();
+    }
     validateMIGXConfig();
 });

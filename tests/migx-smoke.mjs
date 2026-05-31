@@ -157,7 +157,7 @@ function testTechnicalSeo() {
   assert(generatorSchema.url === 'https://zifra.example.com/migx-generator.html', 'MIGX generator JSON-LD must expose the canonical URL');
   assert(generatorSchema.isAccessibleForFree === true, 'MIGX generator JSON-LD must mark the tool as free');
   assert(Array.isArray(generatorSchema.featureList), 'MIGX generator JSON-LD must expose featureList');
-  for (const feature of ['MIGX JSON', 'Form Tabs', 'Grid Columns', 'getImageList', 'Fenom chunk', 'MIGX readiness score']) {
+  for (const feature of ['MIGX JSON', 'Form Tabs', 'Grid Columns', 'getImageList', 'Fenom chunk', 'MIGX readiness score', 'Shareable MIGX config URL']) {
     assert(generatorSchema.featureList.includes(feature), `MIGX generator JSON-LD must include feature ${feature}`);
   }
   assert(
@@ -182,6 +182,7 @@ function testGeneratorWiring() {
   assert(html.includes('id="validation-score"'), 'migx-generator.html must expose readiness score');
   assert(html.includes('id="validation-metrics"'), 'migx-generator.html must expose validation metrics');
   assert(html.includes('data-action="copy-audit"'), 'migx-generator.html must expose audit checklist copy action');
+  assert(html.includes('data-action="copy-share-link"'), 'migx-generator.html must expose shareable config link action');
   assert(html.includes('data-tab="formtabs"'), 'migx-generator.html must expose Form Tabs export tab');
   assert(html.includes('data-tab="grid_columns"'), 'migx-generator.html must expose Grid Columns export tab');
   assert(html.includes('data-tab="fenom"'), 'migx-generator.html must expose Fenom export tab');
@@ -190,6 +191,10 @@ function testGeneratorWiring() {
   assert(js.includes('function validateMIGXConfig()'), 'js/migx-generator.js must validate the current config');
   assert(js.includes('function renderValidationSummary('), 'js/migx-generator.js must render readiness score');
   assert(js.includes('function copyAuditChecklist()'), 'js/migx-generator.js must copy the audit checklist');
+  assert(js.includes('function buildShareURL()'), 'js/migx-generator.js must build shareable config URLs');
+  assert(js.includes('function copyShareText('), 'js/migx-generator.js must copy shareable config URLs with fallback');
+  assert(js.includes('function restoreSharedStateFromURL()'), 'js/migx-generator.js must restore shareable config URLs');
+  assert(js.includes('function sanitizeSharedFields('), 'js/migx-generator.js must sanitize shared fields before rendering');
   assert(js.includes('function generateFormTabsJSON()'), 'js/migx-generator.js must generate Form Tabs export');
   assert(js.includes('function generateGridColumnsJSON()'), 'js/migx-generator.js must generate Grid Columns export');
   assert(js.includes('function generateFenomChunk()'), 'js/migx-generator.js must generate Fenom chunk export');
