@@ -75,6 +75,10 @@
     <style>
         :root { --font-mono: 'JetBrains Mono', 'Cascadia Code', 'Fira Code', monospace; }
         .material-symbols-outlined { font-family:'Material Symbols Outlined'; font-weight:normal; font-style:normal; font-size:1.05rem; line-height:1; letter-spacing:normal; text-transform:none; display:inline-block; white-space:nowrap; word-wrap:normal; direction:ltr; -webkit-font-feature-settings:'liga'; -webkit-font-smoothing:antialiased; font-feature-settings:'liga'; }
+        .tool-icon .material-symbols-outlined { font-size:3.6rem; color:var(--accent-2); }
+        .tool-stat .material-symbols-outlined { font-size:2rem; vertical-align:-5px; color:var(--accent-2); }
+        .gen-panel-header > span, .gen-panel summary, .gen-panel [style*="font-weight:700"] { display:inline-flex; align-items:center; gap:6px; }
+        .gen-panel-header .material-symbols-outlined, .gen-panel summary .material-symbols-outlined { color:var(--accent-2); font-size:1.1rem; }
         .field-type-btn .material-symbols-outlined, .fc-type .material-symbols-outlined, .nf-type .material-symbols-outlined { color:var(--accent-2); font-size:1.08rem; }
         .fc-type .material-symbols-outlined { font-size:1.22rem; }
         .nested-badge .material-symbols-outlined, .tab-badge .material-symbols-outlined { font-size:0.86rem; vertical-align:-2px; }
@@ -215,7 +219,9 @@
         .templates-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(190px,1fr)); gap:10px; margin-top:14px; }
         .template-card { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:20px; cursor:pointer; transition:all 0.3s; text-align:center; }
         .template-card:hover { border-color:var(--accent); transform:translateY(-2px); box-shadow:0 8px 24px rgba(0,0,0,0.25); }
-        .template-card .template-icon { font-size:2.2rem; margin-bottom:8px; }
+        .template-card .template-icon { margin-bottom:8px; }
+        .template-card .template-icon .material-symbols-outlined { font-size:2.2rem; color:var(--accent-2); }
+        .empty-icon .material-symbols-outlined { font-size:3rem; color:var(--text-dim); }
         .template-card h4 { font-size:0.9rem; font-weight:700; margin-bottom:3px; }
         .template-card p { font-size:0.78rem; color:var(--text-dim); line-height:1.4; }
 
@@ -305,13 +311,13 @@
 <!-- ==================== TOOL HERO ==================== -->
 <section class="tool-hero">
     <div class="container">
-        <div class="tool-icon">📦</div>
+        <div class="tool-icon"><span class="material-symbols-outlined" aria-hidden="true">deployed_code</span></div>
         <h1>Генератор MIGX для MODX Revolution</h1>
         <p>Создавайте конфигурации MIGX визуально. Поддержка вложенных MIGX любой глубины, табов, всех типов полей. Готовый JSON для вставки в MIGX TV.</p>
         <div class="tool-stats">
             <div class="tool-stat"><div class="stat-num">15+</div><div class="stat-label">типов полей</div></div>
             <div class="tool-stat"><div class="stat-num" id="stat-count">0</div><div class="stat-label">полей создано</div></div>
-            <div class="tool-stat"><div class="stat-num">♾️</div><div class="stat-label">влож. MIGX</div></div>
+            <div class="tool-stat"><div class="stat-num"><span class="material-symbols-outlined" aria-hidden="true">account_tree</span></div><div class="stat-label">влож. MIGX</div></div>
             <div class="tool-stat"><div class="stat-num">0 ₽</div><div class="stat-label">бесплатно</div></div>
         </div>
     </div>
@@ -335,7 +341,7 @@
             <!-- ===== LEFT: BUILDER ===== -->
             <div class="gen-panel" id="panel-builder">
                 <div class="gen-panel-header">
-                    🏗️ Конструктор MIGX
+                    <span><span class="material-symbols-outlined" aria-hidden="true">construction</span> Конструктор MIGX</span>
                     <div style="display:flex;gap:5px;">
                         <button class="gen-btn gen-btn-sm gen-btn-outline" data-action="reset-all"><span class="material-symbols-outlined">restart_alt</span> Сброс</button>
                         <button class="gen-btn gen-btn-sm gen-btn-outline" data-action="import-json"><span class="material-symbols-outlined">upload_file</span> Импорт</button>
@@ -402,7 +408,7 @@
 
                     <!-- === TABS MANAGER === -->
                     <details style="margin-bottom:16px;">
-                        <summary style="font-weight:700;font-size:0.9rem;cursor:pointer;color:var(--text);margin-bottom:8px;user-select:none;">📑 Табы <span style="color:var(--text-dim);font-weight:400;font-size:0.82rem;" id="tabs-count">(0)</span></summary>
+                        <summary style="font-weight:700;font-size:0.9rem;cursor:pointer;color:var(--text);margin-bottom:8px;user-select:none;"><span class="material-symbols-outlined" aria-hidden="true">tab</span> Табы <span style="color:var(--text-dim);font-weight:400;font-size:0.82rem;" id="tabs-count">(0)</span></summary>
                         <div class="tabs-manager">
                             <div class="tab-entries" id="tab-entries"></div>
                             <button class="gen-btn gen-btn-sm gen-btn-outline" data-action="add-tab"><span class="material-symbols-outlined">add</span> Добавить таб</button>
@@ -411,12 +417,12 @@
 
                     <!-- === FIELDS LIST === -->
                     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
-                        <span style="font-weight:700;font-size:0.9rem;">📋 Поля</span>
+                        <span style="font-weight:700;font-size:0.9rem;"><span class="material-symbols-outlined" aria-hidden="true">list_alt</span> Поля</span>
                         <span style="font-size:0.78rem;color:var(--text-dim);" id="field-count-display">0 полей</span>
                     </div>
                     <div id="fields-list"></div>
                     <div class="empty-state" id="fields-empty">
-                        <div class="empty-icon">📭</div>
+                        <div class="empty-icon"><span class="material-symbols-outlined" aria-hidden="true">inbox</span></div>
                         <p>Нет полей</p>
                         <p style="font-size:0.8rem;">Нажмите на кнопку типа поля выше, чтобы добавить</p>
                     </div>
@@ -451,26 +457,26 @@
                 <!-- === TEMPLATES === -->
                 <div style="margin-top:20px;">
                     <div class="gen-panel">
-                        <div class="gen-panel-header">📦 Готовые шаблоны MIGX</div>
+                        <div class="gen-panel-header"><span><span class="material-symbols-outlined" aria-hidden="true">view_module</span> Готовые шаблоны MIGX</span></div>
                         <div class="gen-panel-body">
                             <div class="templates-grid">
                                 <div class="template-card" data-action="load-template" data-template="slider">
-                                    <div class="template-icon">🎠</div><h4>Слайдер</h4><p>Изображение, заголовок, ссылка</p>
+                                    <div class="template-icon"><span class="material-symbols-outlined" aria-hidden="true">view_carousel</span></div><h4>Слайдер</h4><p>Изображение, заголовок, ссылка</p>
                                 </div>
                                 <div class="template-card" data-action="load-template" data-template="team">
-                                    <div class="template-icon">👥</div><h4>Команда</h4><p>Фото, имя, должность, описание</p>
+                                    <div class="template-icon"><span class="material-symbols-outlined" aria-hidden="true">groups</span></div><h4>Команда</h4><p>Фото, имя, должность, описание</p>
                                 </div>
                                 <div class="template-card" data-action="load-template" data-template="faq">
-                                    <div class="template-icon">❓</div><h4>FAQ / Аккордеон</h4><p>Вопрос, ответ (richtext)</p>
+                                    <div class="template-icon"><span class="material-symbols-outlined" aria-hidden="true">quiz</span></div><h4>FAQ / Аккордеон</h4><p>Вопрос, ответ (richtext)</p>
                                 </div>
                                 <div class="template-card" data-action="load-template" data-template="catalog">
-                                    <div class="template-icon">🛍️</div><h4>Каталог товаров</h4><p>Название, цена, фото, описание</p>
+                                    <div class="template-icon"><span class="material-symbols-outlined" aria-hidden="true">shopping_bag</span></div><h4>Каталог товаров</h4><p>Название, цена, фото, описание</p>
                                 </div>
                                 <div class="template-card" data-action="load-template" data-template="nested">
-                                    <div class="template-icon">🪆</div><h4>Вложенный MIGX</h4><p>Секции → элементы внутри</p>
+                                    <div class="template-icon"><span class="material-symbols-outlined" aria-hidden="true">account_tree</span></div><h4>Вложенный MIGX</h4><p>Секции → элементы внутри</p>
                                 </div>
                                 <div class="template-card" data-action="load-template" data-template="tabs_demo">
-                                    <div class="template-icon">📑</div><h4>С табами</h4><p>Контент + Медиа + SEO табы</p>
+                                    <div class="template-icon"><span class="material-symbols-outlined" aria-hidden="true">tab</span></div><h4>С табами</h4><p>Контент + Медиа + SEO табы</p>
                                 </div>
                             </div>
                         </div>

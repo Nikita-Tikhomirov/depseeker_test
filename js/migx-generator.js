@@ -2,23 +2,23 @@
 
 // ==================== FIELD TYPES ====================
 var MIGX_TYPES = {
-    text:       { label: 'Text',      icon: 'Aa' },
-    textarea:   { label: 'Textarea',  icon: '📝' },
-    richtext:   { label: 'Richtext',  icon: '✏️' },
-    number:     { label: 'Number',    icon: '🔢' },
-    email:      { label: 'Email',     icon: '📧' },
-    url:        { label: 'URL',       icon: '🔗' },
-    hidden:     { label: 'Hidden',    icon: '👁️‍🗨️' },
-    image:      { label: 'Image',     icon: '🖼️' },
-    file:       { label: 'File',      icon: '📄' },
-    video:      { label: 'Video',     icon: '🎬' },
-    listbox:    { label: 'Listbox',   icon: '📋' },
-    checkbox:   { label: 'Checkbox',  icon: '☑️' },
-    date:       { label: 'Date',      icon: '📅' },
-    color:      { label: 'Color',     icon: '🎨' },
-    tag:        { label: 'Tag',       icon: '🏷️' },
-    tab:        { label: 'Tab',       icon: '📑' },
-    migx:       { label: 'MIGX ↻',   icon: '📦' }
+    text:       { label: 'Text',      icon: 'short_text' },
+    textarea:   { label: 'Textarea',  icon: 'notes' },
+    richtext:   { label: 'Richtext',  icon: 'format_bold' },
+    number:     { label: 'Number',    icon: 'tag' },
+    email:      { label: 'Email',     icon: 'alternate_email' },
+    url:        { label: 'URL',       icon: 'link' },
+    hidden:     { label: 'Hidden',    icon: 'visibility_off' },
+    image:      { label: 'Image',     icon: 'image' },
+    file:       { label: 'File',      icon: 'draft' },
+    video:      { label: 'Video',     icon: 'smart_display' },
+    listbox:    { label: 'Listbox',   icon: 'list_alt' },
+    checkbox:   { label: 'Checkbox',  icon: 'check_box' },
+    date:       { label: 'Date',      icon: 'calendar_month' },
+    color:      { label: 'Color',     icon: 'palette' },
+    tag:        { label: 'Tag',       icon: 'sell' },
+    tab:        { label: 'Tab',       icon: 'tab' },
+    migx:       { label: 'MIGX',      icon: 'deployed_code' }
 };
 
 var TAB_COLORS = ['#f59e0b','#10b981','#6366f1','#ef4444','#8b5cf6','#06b6d4','#f97316','#ec4899'];
@@ -82,6 +82,10 @@ function plural(n, forms) {
 
 function genId() {
     return 'migx_' + (++fieldIdCounter);
+}
+
+function materialIcon(name) {
+    return '<span class="material-symbols-outlined" aria-hidden="true">' + escHtml(name || 'help') + '</span>';
 }
 
 // ==================== FIELD DEFAULTS ====================
@@ -547,7 +551,7 @@ function renderTabs() {
         html += '<div class="tab-entry">';
         html += '<span class="tab-color" style="background:' + t.color + ';"></span>';
         html += '<span>' + escHtml(t.caption) + '</span>';
-        html += '<button data-action="remove-tab" data-tab-id="' + t.id + '" title="Удалить таб">✕</button>';
+        html += '<button data-action="remove-tab" data-tab-id="' + t.id + '" title="Удалить таб">' + materialIcon('close') + '</button>';
         html += '</div>';
     }
     container.innerHTML = html;
@@ -577,7 +581,7 @@ function renderFields() {
 function renderFieldCard(f, idx, total) {
     var isSel = selectedFieldId === f.id;
     var ti = MIGX_TYPES[f.type || f.inputTVtype];
-    var icon = ti ? ti.icon : '❓';
+    var icon = ti ? ti.icon : 'help';
     var tLabel = ti ? ti.label : (f.inputTVtype || '?');
     var cls = 'field-card';
     if (f.inputTVtype === 'migx') cls += ' is-migx';
@@ -587,23 +591,23 @@ function renderFieldCard(f, idx, total) {
     var h = '';
     h += '<div class="' + cls + '">';
     h += '<div class="field-card-header" data-action="select-field" data-field-id="' + f.id + '">';
-    h += '<span class="fc-type">' + icon + '</span>';
+    h += '<span class="fc-type">' + materialIcon(icon) + '</span>';
     h += '<span class="fc-label">' + escHtml(f.caption || f.fieldname || 'Новое поле') + '</span>';
     h += '<span class="fc-type-name">[' + tLabel + ']</span>';
     // Badges
     if (f.inputTVtype === 'migx') {
         var nCount = f.nestedFields ? f.nestedFields.length : 0;
-        h += '<span class="nested-badge' + (nCount === 0 ? ' empty' : '') + '">📦 ' + nCount + '</span>';
+        h += '<span class="nested-badge' + (nCount === 0 ? ' empty' : '') + '">' + materialIcon('deployed_code') + ' ' + nCount + '</span>';
     }
     if (f.tabid) {
         var tab = findTab(f.tabid);
-        if (tab) h += '<span class="tab-badge">📑 ' + escHtml(tab.caption) + '</span>';
+        if (tab) h += '<span class="tab-badge">' + materialIcon('tab') + ' ' + escHtml(tab.caption) + '</span>';
     }
     h += '<div class="fc-actions">';
-    if (idx > 0) h += '<button class="gen-btn-icon" data-action="move-field" data-field-id="'+f.id+'" data-dir="-1" title="Вверх">▲</button>';
-    if (idx < total - 1) h += '<button class="gen-btn-icon" data-action="move-field" data-field-id="'+f.id+'" data-dir="1" title="Вниз">▼</button>';
-    h += '<button class="gen-btn-icon" data-action="duplicate-field" data-field-id="'+f.id+'" title="Копировать">⧉</button>';
-    h += '<button class="gen-btn-icon" data-action="remove-field" data-field-id="'+f.id+'" title="Удалить" style="color:#f87171;">✕</button>';
+    if (idx > 0) h += '<button class="gen-btn-icon" data-action="move-field" data-field-id="'+f.id+'" data-dir="-1" title="Вверх">' + materialIcon('keyboard_arrow_up') + '</button>';
+    if (idx < total - 1) h += '<button class="gen-btn-icon" data-action="move-field" data-field-id="'+f.id+'" data-dir="1" title="Вниз">' + materialIcon('keyboard_arrow_down') + '</button>';
+    h += '<button class="gen-btn-icon" data-action="duplicate-field" data-field-id="'+f.id+'" title="Копировать">' + materialIcon('content_copy') + '</button>';
+    h += '<button class="gen-btn-icon" data-action="remove-field" data-field-id="'+f.id+'" title="Удалить" style="color:#f87171;">' + materialIcon('close') + '</button>';
     h += '</div></div>';
     h += '<div class="field-card-body">' + renderFieldForm(f) + '</div>';
     h += '</div>';
@@ -655,7 +659,7 @@ function renderFieldForm(f) {
     // Listbox
     if (t === 'listbox') {
         h += '<div class="gen-divider"></div>';
-        h += '<div style="font-weight:600;margin-bottom:8px;">📋 Опции Listbox</div>';
+        h += '<div style="font-weight:600;margin-bottom:8px;display:flex;align-items:center;gap:6px;">' + materialIcon('list_alt') + ' Опции Listbox</div>';
         h += '<div class="gen-row"><label class="gen-label">Опции (ключ==значение)</label><textarea class="gen-textarea configs-area" data-action="update-field" data-field-id="' + f.id + '" data-key="configs" placeholder="option1==Метка 1\noption2==Метка 2">' + escHtml(f.configs || '') + '</textarea><div class="gen-hint">Формат: ключ==Метка, каждая с новой строки</div></div>';
     }
 
@@ -674,7 +678,7 @@ function renderNestedMIGXPanel(f) {
     var nf = f.nestedFields || [];
     h += '<div class="nested-migx-panel">';
     h += '<div class="nested-title">';
-    h += '📦 Вложенные поля MIGX';
+    h += materialIcon('deployed_code') + ' Вложенные поля MIGX';
     h += '<span class="nested-depth">полей: ' + nf.length + '</span>';
     h += '</div>';
 
@@ -695,7 +699,7 @@ function renderNestedMIGXPanel(f) {
         var nti = MIGX_TYPES[nt];
         var btnCls = 'gen-btn gen-btn-sm gen-btn-outline';
         if (nt === 'migx') btnCls += ' migx-btn';
-        h += '<button class="' + btnCls + '" data-action="add-nested-field" data-parent-id="' + f.id + '" data-field-type="' + nt + '" style="font-size:0.7rem;padding:4px 8px;">+' + (nti ? nti.icon : nt) + '</button>';
+        h += '<button class="' + btnCls + '" data-action="add-nested-field" data-parent-id="' + f.id + '" data-field-type="' + nt + '" style="font-size:0.7rem;padding:4px 8px;">' + materialIcon(nti ? nti.icon : 'add') + '</button>';
     }
     h += '</div>';
     h += '</div>';
@@ -707,10 +711,10 @@ function renderNestedFieldRow(parent, child, grandparentId) {
     var cls = 'nested-field-row';
     if (child.inputTVtype === 'migx') cls += ' depth-1';
     var ti = MIGX_TYPES[child.inputTVtype];
-    var icon = ti ? ti.icon : '❓';
+    var icon = ti ? ti.icon : 'help';
 
     h += '<div class="' + cls + '">';
-    h += '<span class="nf-type">' + icon + '</span>';
+    h += '<span class="nf-type">' + materialIcon(icon) + '</span>';
     h += '<input type="text" value="' + escAttr(child.caption || '') + '" data-action="update-nested-field" data-parent-id="' + parent.id + '" data-nested-id="' + child.id + '" data-key="caption" placeholder="Caption">';
     h += '<input type="text" class="nf-fn-input" value="' + escAttr(child.fieldname || '') + '" data-action="update-nested-field" data-parent-id="' + parent.id + '" data-nested-id="' + child.id + '" data-key="fieldname" placeholder="fieldname">';
     h += '<select data-action="change-nested-type" data-parent-id="' + parent.id + '" data-nested-id="' + child.id + '">';
@@ -719,7 +723,7 @@ function renderNestedFieldRow(parent, child, grandparentId) {
         h += '<option value="' + tKeys[tk] + '"' + (child.inputTVtype === tKeys[tk] ? ' selected' : '') + '>' + MIGX_TYPES[tKeys[tk]].label + '</option>';
     }
     h += '</select>';
-    h += '<button class="gen-btn-icon" data-action="remove-nested-field" data-parent-id="' + parent.id + '" data-nested-id="' + child.id + '" style="color:#f87171;width:26px;height:26px;font-size:0.7rem;">✕</button>';
+    h += '<button class="gen-btn-icon" data-action="remove-nested-field" data-parent-id="' + parent.id + '" data-nested-id="' + child.id + '" style="color:#f87171;width:26px;height:26px;font-size:0.7rem;">' + materialIcon('close') + '</button>';
     h += '</div>';
 
     // If the nested field itself is a migx, show its own nested fields
@@ -734,7 +738,7 @@ function renderNestedFieldRow(parent, child, grandparentId) {
         for (var ni = 0; ni < nestTypes.length; ni++) {
             var nt2 = nestTypes[ni];
             var nti2 = MIGX_TYPES[nt2];
-            h += '<button class="gen-btn gen-btn-sm gen-btn-outline" data-action="add-deep-nested-field" data-parent-id="' + parent.id + '" data-nested-id="' + child.id + '" data-field-type="' + nt2 + '" style="font-size:0.65rem;padding:3px 6px;">+' + (nti2 ? nti2.icon : nt2) + '</button>';
+            h += '<button class="gen-btn gen-btn-sm gen-btn-outline" data-action="add-deep-nested-field" data-parent-id="' + parent.id + '" data-nested-id="' + child.id + '" data-field-type="' + nt2 + '" style="font-size:0.65rem;padding:3px 6px;">' + materialIcon(nti2 ? nti2.icon : 'add') + '</button>';
         }
         h += '</div>';
         h += '</div>';

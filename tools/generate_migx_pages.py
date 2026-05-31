@@ -392,8 +392,8 @@ def header(active: str = "") -> str:
         <nav class="acf-nav" aria-label="Навигация MIGX">
             <a href="migx.html"{hub_active}>MIGX</a>
             <a href="migx-generator.html">Генератор</a>
-            <a href="migx-nested-generator.html">Nested</a>
-            <a href="migx-validator.html">Валидатор</a>
+            <a href="migx-generator.html?preset=nested&amp;source=nav">Nested</a>
+            <a href="migx-generator.html?preset=validator&amp;source=nav">Валидатор</a>
         </nav>
         <a class="acf-header-cta" href="migx-generator.html">Открыть генератор</a>
     </div>
@@ -466,7 +466,7 @@ def preset_rows() -> str:
     return "\n".join(
         f"""<div class="acf-preset-row">
             <span class="acf-preset-query">{esc(p["query"])}</span>
-            <a class="acf-preset-name" href="{esc(p["slug"])}.html">{esc(p["h1"])}</a>
+            <strong class="acf-preset-name">{esc(p["h1"])}</strong>
             <span class="acf-preset-result">{esc(p["intent"])} На выходе: {esc(", ".join(p["deliverables"]))}.</span>
             <a class="acf-preset-link" href="{generator_url(p)}">{esc(page_cta(p))}</a>
         </div>"""

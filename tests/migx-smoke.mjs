@@ -94,7 +94,7 @@ function testHubRoutes() {
   for (const route of expectedRoutes) {
     const topicCardPattern = new RegExp(`<article class="acf-topic-card"[\\s\\S]*?href="${escapeRegex(route.page)}"[\\s\\S]*?</article>`);
     assert(!topicCardPattern.test(hub), `migx.html topic cards must not send users to intermediate landing ${route.page}`);
-    assert(hub.includes(`href="${route.page}"`), `migx.html must keep crawlable landing link ${route.page}`);
+    assert(!hub.includes(`href="${route.page}"`), `migx.html must not show intermediate landing link ${route.page} in user-facing hub cards`);
     assert(hub.includes(`href="${landingHref(route)}"`), `migx.html is missing generator route ${landingHref(route)}`);
   }
 }
