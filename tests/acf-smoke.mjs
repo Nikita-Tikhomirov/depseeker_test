@@ -174,6 +174,32 @@ print("acf generator render ok")
   assert(output.includes('acf generator render ok'), 'tools/generate_acf_pages.py must render all ACF pages without writing files');
 }
 
+function testAcfPageGeneratorMatchesCheckedInPages() {
+  const script = `
+from pathlib import Path
+import importlib.util
+
+root = Path.cwd()
+spec = importlib.util.spec_from_file_location("acfgen", root / "tools" / "generate_acf_pages.py")
+mod = importlib.util.module_from_spec(spec)
+spec.loader.exec_module(mod)
+checks = [("acf.html", mod.render_hub()), ("css/acf-content.css", mod.render_css())]
+for page in mod.PAGES:
+    checks.append((f"{page['slug']}.html", mod.render_page(page)))
+changed = []
+for rel, generated in checks:
+    current = (root / rel).read_text(encoding="utf-8").replace("\\r\\n", "\\n")
+    expected = generated.replace("\\r\\n", "\\n")
+    if current != expected:
+        changed.append(rel)
+if changed:
+    raise SystemExit("generator output drift: " + ", ".join(changed))
+print("acf generator output matches")
+`;
+  const output = execFileSync('python', ['-c', script], { cwd: root, encoding: 'utf8' });
+  assert(output.includes('acf generator output matches'), 'tools/generate_acf_pages.py must match checked-in ACF generated files');
+}
+
 function testProductionExportGuards() {
   const generatorHtml = read('acf-generator.html');
   const generator = read('js/acf-generator.js');
@@ -216,6 +242,7 @@ function main() {
   testGeneratorRouteConfig();
   testGeneratorLandingContextCopy();
   testAcfPageGeneratorRenders();
+  testAcfPageGeneratorMatchesCheckedInPages();
   testProductionExportGuards();
   console.log('ACF smoke checks passed: 12 routes, landing CTAs, sitemap lastmod, context copy, export tabs, production guards.');
 }

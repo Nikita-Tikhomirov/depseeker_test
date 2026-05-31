@@ -216,8 +216,199 @@ PRESET_MAP_RESULTS = {
 }
 
 
+DELIVERABLES_COPY = {
+    "acf-php-generator": ["Группа Content Fields", "PHP registration array", "Location rules и стабильные field keys"],
+    "acf-json-generator": ["Группа Content Fields", "JSON export tab", "Стабильные field keys"],
+    "acf-repeater-generator": ["повторяемый список", "sub fields", "цикл вывода"],
+    "acf-flexible-content-generator": ["flexible content", "layouts", "секции страницы"],
+    "acf-field-group-generator": ["Group title, key и location rules", "Text, image и repeater fields", "PHP и JSON export tabs"],
+    "acf-seo-fields": ["Meta title и description", "canonical и robots", "Open Graph поля"],
+    "acf-faq-fields": ["Repeater вопрос-ответ", "аккордеон FAQ", "FAQPage schema"],
+    "acf-hero-section": ["Заголовок и подзаголовок", "CTA-кнопка", "изображение hero"],
+    "acf-team-repeater": ["карточки команды", "фото сотрудника", "социальные ссылки"],
+    "acf-testimonials-repeater": ["отзывы клиентов", "рейтинг", "автор отзыва"],
+    "acf-page-builder": ["page builder layouts", "порядок секций", "шаблон вывода"],
+    "acf-woocommerce-product-fields": ["характеристики товара", "инструкции и комплектация", "FAQ товара"],
+}
+
+
+CHECKLIST_COPY = {
+    "acf-php-generator": ["Группа Content Fields", "PHP registration array", "Location rules и стабильные field keys"],
+    "acf-json-generator": ["Группа Content Fields", "JSON export tab", "Стабильные field keys"],
+    "acf-repeater-generator": ["Repeater field", "Sub fields", "Пример вывода в шаблоне"],
+    "acf-flexible-content-generator": ["Flexible content", "Layouts", "Набор секций для page builder"],
+    "acf-field-group-generator": ["Group title, key и location rules", "Text, image и repeater fields", "PHP и JSON export tabs"],
+    "acf-seo-fields": ["Meta title/description", "OG поля", "Robots и canonical"],
+    "acf-faq-fields": ["FAQ repeater", "Question/answer fields", "FAQPage schema"],
+    "acf-hero-section": ["Hero title", "CTA buttons", "Image/background fields"],
+    "acf-team-repeater": ["Team repeater", "Фото и роль", "Социальные ссылки"],
+    "acf-testimonials-repeater": ["Отзывы repeater", "Rating field", "Автор и компания"],
+    "acf-page-builder": ["Набор layouts", "Порядок секций", "Шаблон вывода блоков"],
+    "acf-woocommerce-product-fields": ["Product fields", "FAQ товара", "Характеристики и инструкции"],
+}
+
+
+PRESET_COPY = {
+    "acf-php-generator": "Предустановка под запрос «acf php generator» открывает группу Content Fields и сразу ведет к PHP-коду, который можно перенести в functions.php или отдельный include.",
+    "acf-json-generator": "Предустановка под запрос «acf json generator» открывает группу Content Fields и сразу переключает генератор на JSON export.",
+    "acf-repeater-generator": "Предустановка под запрос «acf repeater generator» открывает повторяемый список с sub fields и примером под цикл вывода в шаблоне.",
+    "acf-flexible-content-generator": "Предустановка под запрос «acf flexible content generator» открывает flexible content с layouts для hero, текста, FAQ и других секций страницы.",
+    "acf-field-group-generator": "Предустановка под запрос «acf field group generator» открывает группу Content Fields с текстовыми, медиа и повторяемыми полями.",
+    "acf-seo-fields": "Предустановка под запрос «acf seo fields» открывает поля meta title, description, canonical, robots и Open Graph без тяжелого SEO-комбайна.",
+    "acf-faq-fields": "Предустановка под запрос «acf faq fields» открывает repeater вопрос-ответ, готовый аккордеон FAQ и структуру под FAQPage schema.",
+    "acf-hero-section": "Предустановка под запрос «acf hero section» открывает набор для первого экрана: заголовок, описание, CTA и изображение hero для live preview.",
+    "acf-team-repeater": "Предустановка под запрос «acf team repeater» открывает карточки команды: фото сотрудника, роль, описание и социальные ссылки.",
+    "acf-testimonials-repeater": "Предустановка под запрос «acf testimonials repeater» открывает отзывы клиентов: текст, рейтинг, автор отзыва, компания и аватар.",
+    "acf-page-builder": "Предустановка под запрос «acf page builder» открывает page builder на flexible content: layouts, порядок секций и шаблон вывода блоков.",
+    "acf-woocommerce-product-fields": "Предустановка под запрос «acf woocommerce product fields» открывает product preset: характеристики товара, инструкции, комплектацию и FAQ товара.",
+}
+
+
+STEP_COPY = {
+    "acf-php-generator": [
+        "Откройте генератор с готовой группой Content Fields и PHP export.",
+        "Переименуйте группу и поля под свой тип записи, шаблон или страницу.",
+        "Скопируйте PHP-массив и подключите его в проект WordPress.",
+    ],
+    "acf-json-generator": [
+        "Откройте генератор с готовой группой Content Fields и активной вкладкой JSON.",
+        "Переименуйте группу и поля под свой тип записи, шаблон или страницу.",
+        "Скачайте или скопируйте JSON и перенесите его в ACF JSON workflow проекта.",
+    ],
+    "acf-repeater-generator": [
+        "Откройте repeater preset с вложенными sub fields.",
+        "Настройте названия строк, item-поля и порядок элементов.",
+        "Экспортируйте структуру и используйте цикл вывода в теме.",
+    ],
+    "acf-flexible-content-generator": [
+        "Откройте flexible preset с несколькими layouts.",
+        "Оставьте только нужные секции страницы и переименуйте поля.",
+        "Экспортируйте WP-шаблон+CSS или PHP-регистрацию для темы.",
+    ],
+    "acf-field-group-generator": [
+        "Откройте генератор с готовой группой Content Fields.",
+        "Переименуйте группу и поля под свой тип записи, шаблон или страницу.",
+        "Выберите PHP или JSON вкладку и перенесите структуру в проект WordPress.",
+    ],
+    "acf-seo-fields": [
+        "Откройте SEO preset с готовой группой meta-полей.",
+        "Настройте names под ваш шаблон вывода в head.",
+        "Экспортируйте PHP-регистрацию и подключите значения в теме.",
+    ],
+    "acf-faq-fields": [
+        "Откройте FAQ preset с repeater-полями вопрос-ответ.",
+        "Переименуйте вопросы, ответы и кнопку добавления строки под свой шаблон.",
+        "Проверьте аккордеон FAQ в preview и экспортируйте шаблон.",
+    ],
+    "acf-hero-section": [
+        "Откройте hero preset с готовыми полями для первого экрана.",
+        "Переименуйте заголовок, описание, CTA и изображение под ваш шаблон.",
+        "Экспортируйте WP-шаблон+CSS или PHP-регистрацию для темы.",
+    ],
+    "acf-team-repeater": [
+        "Откройте team preset с повторяемыми карточками сотрудников.",
+        "Настройте поля фото, роли, описания и ссылок под ваш дизайн.",
+        "Экспортируйте WP-шаблон+CSS или PHP-регистрацию для темы.",
+    ],
+    "acf-testimonials-repeater": [
+        "Откройте testimonials preset с повторяемыми отзывами.",
+        "Настройте поля текста, рейтинга, автора и компании.",
+        "Проверьте preview и экспортируйте блок для темы.",
+    ],
+    "acf-page-builder": [
+        "Откройте page builder preset с готовыми layouts.",
+        "Настройте порядок секций и поля внутри каждого блока.",
+        "Экспортируйте шаблон вывода и CSS для темы.",
+    ],
+    "acf-woocommerce-product-fields": [
+        "Откройте WooCommerce product preset с готовыми секциями товара.",
+        "Переименуйте поля под вашу карточку, атрибуты и шаблон вывода.",
+        "Проверьте preview и экспортируйте WP-шаблон+CSS для темы.",
+    ],
+}
+
+
+FAQ_OUTPUT_COPY = {
+    "acf-php-generator": "Content Fields preset, PHP-массив для acf_add_local_field_group, Location rules и код для functions.php.",
+    "acf-json-generator": "ACF JSON для acf-json workflow: стабильные field keys, group key и понятная структура, где синхронизация между окружениями не ломает поля.",
+    "acf-repeater-generator": "Повторяемый список, sub fields и основа под цикл вывода в шаблоне.",
+    "acf-flexible-content-generator": "Flexible content, layouts и набор секций страницы для WordPress-шаблона.",
+    "acf-field-group-generator": "Content Fields preset с group key, field names, location rules, базовыми полями и PHP/JSON export.",
+    "acf-seo-fields": "Meta title, description, canonical, robots и Open Graph поля.",
+    "acf-faq-fields": "Repeater вопрос-ответ, аккордеон FAQ и основа под FAQPage schema.",
+    "acf-hero-section": "Поля для первого экрана: заголовок, описание, CTA и изображение hero.",
+    "acf-team-repeater": "Карточки команды: фото сотрудника, роль, описание и социальные ссылки.",
+    "acf-testimonials-repeater": "Отзывы клиентов, рейтинг, автор отзыва, компания и аватар.",
+    "acf-page-builder": "Page builder: layouts, порядок секций и шаблон вывода блоков.",
+    "acf-woocommerce-product-fields": "Product fields: характеристики товара, инструкции, комплектация и FAQ товара.",
+}
+
+
+FINAL_CTA_COPY = {
+    "acf-php-generator": "Откройте генератор, проверьте поля в визуальном превью и экспортируйте чистый PHP-код.",
+    "acf-json-generator": "Откройте генератор, проверьте поля в визуальном превью и экспортируйте ACF JSON.",
+    "acf-field-group-generator": "Откройте генератор, проверьте группу в визуальном превью и выберите PHP или JSON export.",
+}
+
+
 def esc(value: str) -> str:
     return html.escape(value, quote=True)
+
+
+def page_deliverables(page: dict[str, object]) -> list[str]:
+    return DELIVERABLES_COPY.get(str(page["slug"]), list(page["deliverables"]))
+
+
+def checklist_deliverables(page: dict[str, object]) -> list[str]:
+    return CHECKLIST_COPY.get(str(page["slug"]), list(page["deliverables"]))
+
+
+def preset_copy(page: dict[str, object]) -> str:
+    return PRESET_COPY.get(
+        str(page["slug"]),
+        f"Предустановка под запрос «{page['query']}» сразу подставит базовые поля, а дальше можно поправить названия, стили и экспорт.",
+    )
+
+
+def steps_copy(page: dict[str, object]) -> list[str]:
+    return STEP_COPY.get(
+        str(page["slug"]),
+        [
+            "Откройте генератор с готовой предустановкой под этот тип ACF-структуры.",
+            "Переименуйте группу и поля под свой тип записи, шаблон или страницу.",
+            "Скопируйте PHP или JSON и перенесите в проект WordPress.",
+        ],
+    )
+
+
+def faq_output_copy(page: dict[str, object]) -> str:
+    return FAQ_OUTPUT_COPY.get(str(page["slug"]), f"{', '.join(page_deliverables(page))}.")
+
+
+def final_cta_copy(page: dict[str, object]) -> str:
+    return FINAL_CTA_COPY.get(str(page["slug"]), "Откройте генератор, проверьте поля в визуальном превью и экспортируйте PHP или JSON.")
+
+
+def code_sample(page: dict[str, object], group_key: str) -> str:
+    if page["slug"] == "acf-json-generator":
+        return """{
+  "key": "group_content_fields",
+  "title": "Content Fields",
+  "fields": [
+    {
+      "key": "field_hero_title",
+      "label": "Hero title",
+      "type": "text"
+    }
+  ]
+}"""
+    return f"""acf_add_local_field_group([
+  'key' => 'group_{group_key}',
+  'title' => '{esc(page["h1"])}',
+  'fields' => [
+    // fields from generator
+  ],
+]);"""
 
 
 def slug_url(slug: str) -> str:
@@ -398,12 +589,12 @@ def preset_map() -> str:
 
 
 def preset_strip(page: dict[str, object]) -> str:
-    items = "\n".join(f"<li>{esc(item)}</li>" for item in page["deliverables"])
+    items = "\n".join(f"<li>{esc(item)}</li>" for item in page_deliverables(page))
     return f"""<section class="acf-conversion-strip" aria-label="Быстрый переход в генератор">
         <div class="acf-conversion-copy">
             <span class="acf-section-label">Быстрый старт</span>
             <h2>Откройте генератор уже с нужной структурой</h2>
-            <p>Предустановка под запрос «{esc(str(page["query"]))}» сразу подставит базовые поля, а дальше можно поправить названия, стили и экспорт.</p>
+            <p>{esc(preset_copy(page))}</p>
         </div>
         <ul>{items}</ul>
         <a class="acf-btn acf-btn--primary" href="{generator_url(page)}">Открыть preset</a>
@@ -411,10 +602,15 @@ def preset_strip(page: dict[str, object]) -> str:
 
 
 def render_page(page: dict[str, object]) -> str:
-    deliverables = "\n".join(f"<li>{esc(item)}</li>" for item in page["deliverables"])
+    deliverables = "\n".join(f"<li>{esc(item)}</li>" for item in checklist_deliverables(page))
+    steps = "\n".join(
+        f'                    <li><span>{index}</span><p>{esc(text)}</p></li>'
+        for index, text in enumerate(steps_copy(page), 1)
+    )
     related = related_links(str(page["slug"]))
     structure_heading, structure_text = structure_copy(page)
     group_key_example = esc(str(page["slug"]).replace("-", "_"))
+    sample = code_sample(page, group_key_example)
     return f"""<!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -475,19 +671,11 @@ def render_page(page: dict[str, object]) -> str:
             <article>
                 <h2>Как использовать</h2>
                 <ol class="acf-steps">
-                    <li><span>1</span><p>Откройте генератор с готовой предустановкой под этот тип ACF-структуры.</p></li>
-                    <li><span>2</span><p>Переименуйте группу и поля под свой тип записи, шаблон или страницу.</p></li>
-                    <li><span>3</span><p>Скопируйте PHP или JSON и перенесите в проект WordPress.</p></li>
+{steps}
                 </ol>
             </article>
             <article class="acf-code-card" aria-label="Пример структуры">
-                <pre><code>acf_add_local_field_group([
-  'key' => 'group_{group_key_example}',
-  'title' => '{esc(page["h1"])}',
-  'fields' => [
-    // fields from generator
-  ],
-]);</code></pre>
+                <pre><code>{sample}</code></pre>
             </article>
         </div>
     </section>
@@ -510,7 +698,7 @@ def render_page(page: dict[str, object]) -> str:
         <div class="acf-container acf-faq">
             <h2>Вопросы по {esc(page["h1"])}</h2>
             <details open><summary>Для чего нужен этот генератор?</summary><p>{esc(page["intent"])}</p></details>
-            <details><summary>Что получится на выходе?</summary><p>{esc(", ".join(page["deliverables"]))}.</p></details>
+            <details><summary>Что получится на выходе?</summary><p>{esc(faq_output_copy(page))}</p></details>
             <details><summary>Можно ли доработать поля после генерации?</summary><p>Да, генератор дает стартовую структуру. Поля можно переименовать, удалить, вложить или дополнить перед экспортом.</p></details>
         </div>
     </section>
@@ -530,7 +718,7 @@ def render_page(page: dict[str, object]) -> str:
     <section class="acf-final-cta">
         <div class="acf-container">
             <h2>Соберите структуру прямо сейчас</h2>
-            <p>Откройте генератор, проверьте поля в визуальном превью и экспортируйте PHP или JSON.</p>
+            <p>{esc(final_cta_copy(page))}</p>
             <a class="acf-btn acf-btn--primary" href="{generator_url(page)}">Открыть предустановку</a>
         </div>
     </section>
