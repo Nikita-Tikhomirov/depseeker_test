@@ -207,9 +207,11 @@ function testProductionExportGuards() {
   const audit = read('js/acf-generator-audit.js');
 
   assert(generatorHtml.includes('js/acf-generator.js?v=acf-ui-20260531-10'), 'acf-generator.html must load the current generator cache-buster');
+  assert(generatorHtml.includes('js/acf-production-renderer.js?v=acf-ui-20260531-5'), 'acf-generator.html must load the current production renderer cache-buster');
   assert(generatorHtml.includes('js/acf-generator-audit.js?v=acf-ui-20260531-3'), 'acf-generator.html must load the current audit cache-buster');
   assert(generatorHtml.includes('WP-шаблон+CSS'), 'HTML export tab must be labeled as a WP template');
   assert(generatorHtml.includes('.audit-handoff'), 'generator UI must style the export handoff package');
+  assert(generatorHtml.includes('class="gen-btn gen-btn-primary visual-editor-back-btn"'), 'visual editor must have a dedicated header back button');
   assert(generator.includes('generateVisualHTML({ fullDocument: false })'), 'fallback HTML export must use snippet mode');
   assert(generator.includes("return fullDocument ? ' data-style-target=\"' + key + '\"' : '';"), 'fallback editor markers must be gated by fullDocument');
   assert(generator.includes('code = window.renderProductionPHP();'), 'HTML download fallback must use production WP template');
@@ -218,6 +220,12 @@ function testProductionExportGuards() {
   assert(production.includes('window.generateHTML = function()'), 'production renderer must own HTML export');
   assert(production.includes('output.textContent = renderProductionPHP();'), 'HTML export must render production PHP template');
   assert(production.includes('.zifra-acf-block, .zifra-acf-block * { box-sizing: border-box; }'), 'production CSS must be scoped to zifra-acf-block');
+  assert(!production.includes('headerActions.appendChild(btn)'), 'production renderer must not move the hidden preview toggle into the visual editor header');
+  assert(!production.includes("if (kind === 'hero' || kind === 'faq') return [];"), 'style editor must build field panels for hero and FAQ fields');
+  assert(production.includes("return ['tab', 'message', 'repeater', 'flexible_content'].indexOf(field.type) === -1;"), 'field style panels must include media, file, gallery and link fields');
+  assert(production.includes('function productionFieldTarget(field)'), 'production preview must expose field target attributes for semantic blocks');
+  assert(production.includes('data-production-field-target'), 'production preview must make generated field elements selectable');
+  assert(production.includes('.zifra-acf-field--\' + key + \'.zifra-acf-title'), 'field style CSS must affect semantic hero title fields');
   assert(!production.includes('output.textContent = fullPreviewDoc();'), 'HTML export must not output editor preview document');
   assert(audit.includes('class="audit-handoff"'), 'audit panel must render the export handoff package');
   assert(audit.includes('ACF PHP'), 'handoff package must mention ACF PHP');

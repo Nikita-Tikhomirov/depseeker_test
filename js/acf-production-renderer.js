@@ -226,12 +226,20 @@
 
     function fieldUsesGenericMarkup(field) {
         if (!field || !field.name) return false;
-        return ['image', 'gallery', 'link', 'tab', 'message', 'repeater', 'flexible_content'].indexOf(field.type) === -1;
+        return ['tab', 'message', 'repeater', 'flexible_content'].indexOf(field.type) === -1;
+    }
+
+    function productionFieldClass(field) {
+        var key = attr(fieldName(field));
+        return key ? ' zifra-acf-field--' + key : '';
+    }
+
+    function productionFieldTarget(field) {
+        var key = attr(fieldName(field));
+        return key ? ' data-production-field-target="' + key + '"' : '';
     }
 
     function collectFieldStyleTargets() {
-        var kind = inferBlock(getFields());
-        if (kind === 'hero' || kind === 'faq') return [];
         var fields = collectRenderableFields(getFields(), []);
         var out = [];
         for (var i = 0; i < fields.length; i++) {
@@ -435,6 +443,7 @@
             out.push('.zifra-acf-field--' + key + ' { gap: ' + cssPx(s.gap, 7) + '; }');
             out.push('.zifra-acf-field--' + key + ' .zifra-acf-label { color: ' + cssRaw(s.labelColor, '#64748b') + '; font-size: ' + cssPx(s.labelSize, 12) + '; }');
             out.push('.zifra-acf-field--' + key + ' .zifra-acf-value { color: ' + cssRaw(s.valueColor, '#111827') + '; font-size: ' + cssPx(s.valueSize, 16) + '; font-weight: ' + cssRaw(s.valueWeight, '400') + '; }');
+            out.push('.zifra-acf-field--' + key + '.zifra-acf-title, .zifra-acf-field--' + key + '.zifra-acf-lead, .zifra-acf-field--' + key + '.zifra-acf-btn, .zifra-acf-field--' + key + '[data-production-target="question"], .zifra-acf-field--' + key + '.zifra-acf-faq-answer { color: ' + cssRaw(s.valueColor, '#111827') + '; font-size: ' + cssPx(s.valueSize, 16) + '; font-weight: ' + cssRaw(s.valueWeight, '400') + '; }');
         }
         return out.join('\n');
     }
@@ -723,10 +732,10 @@
     function renderSampleField(field) {
         if (!field || field.type === 'tab') return '';
         if (field.type === 'image' || field.type === 'gallery') {
-            return '<div class="zifra-acf-media" data-production-target="media" aria-hidden="true"></div>';
+            return '<div class="zifra-acf-media' + productionFieldClass(field) + '" data-production-target="media"' + productionFieldTarget(field) + ' aria-hidden="true"></div>';
         }
         if (field.type === 'link') {
-            return '<a class="zifra-acf-btn" data-production-target="button" href="#">' + h(sampleFor(field)) + '</a>';
+            return '<a class="zifra-acf-btn' + productionFieldClass(field) + '" data-production-target="button"' + productionFieldTarget(field) + ' href="#">' + h(sampleFor(field)) + '</a>';
         }
         var key = attr(fieldName(field));
         return '<div class="zifra-acf-field zifra-acf-field--' + key + '" data-production-field-target="' + key + '"><span class="zifra-acf-label" data-production-target="fieldLabel">' + h(fieldLabel(field)) + '</span><div class="zifra-acf-value" data-production-target="fieldValue">' + h(sampleFor(field)) + '</div></div>';
@@ -746,12 +755,14 @@
             var lead = findFieldByIntent(fields, ['subtitle', 'description', 'lead', 'описание']);
             var image = findFieldByIntent(fields, ['image', 'photo', 'bg', 'background', 'картинка']);
             var link = findFieldByIntent(fields, ['button', 'cta', 'link', 'ссылка', 'кнопка']);
+            var buttonText = findFieldByIntent(fields, ['btn_text', 'button text', 'текст кнопки']);
+            var buttonField = buttonText || link;
             html.push('    <div class="zifra-acf-hero">');
             html.push('      <div>');
             html.push('        <p class="zifra-acf-kicker" data-production-target="kicker">' + h(group.title) + '</p>');
-            html.push('        <h2 class="zifra-acf-title" data-production-target="title">' + h(sampleFor(title)) + '</h2>');
-            if (lead) html.push('        <p class="zifra-acf-lead" data-production-target="lead">' + h(sampleFor(lead)) + '</p>');
-            if (link) html.push('        <div class="zifra-acf-actions">' + renderSampleField(link) + '</div>');
+            html.push('        <h2 class="zifra-acf-title' + productionFieldClass(title) + '" data-production-target="title"' + productionFieldTarget(title) + '>' + h(sampleFor(title)) + '</h2>');
+            if (lead) html.push('        <p class="zifra-acf-lead' + productionFieldClass(lead) + '" data-production-target="lead"' + productionFieldTarget(lead) + '>' + h(sampleFor(lead)) + '</p>');
+            if (buttonField) html.push('        <div class="zifra-acf-actions"><a class="zifra-acf-btn' + productionFieldClass(buttonField) + '" data-production-target="button"' + productionFieldTarget(buttonField) + ' href="#">' + h(sampleFor(buttonField)) + '</a></div>');
             html.push('      </div>');
             html.push('      ' + (image ? renderSampleField(image) : '<div class="zifra-acf-media" data-production-target="media" aria-hidden="true"></div>'));
             html.push('    </div>');
@@ -763,7 +774,7 @@
             html.push('    <p class="zifra-acf-kicker" data-production-target="kicker">' + h(group.title) + '</p>');
             html.push('    <div class="zifra-acf-faq" data-production-target="faqList">');
             for (var i = 0; i < 3; i++) {
-                html.push('      <details class="zifra-acf-card" data-production-target="card"' + (i === 0 ? ' open' : '') + '><summary data-production-target="question">' + h(i === 0 ? sampleFor(q) : 'Можно ли менять стили блока?') + '</summary><div class="zifra-acf-faq-answer" data-production-target="answer">' + h(i === 0 ? sampleFor(a) : 'Да, CSS scoped и его можно перенести в тему, изменить цвета, сетку и отступы.') + '</div></details>');
+                html.push('      <details class="zifra-acf-card" data-production-target="card"' + (i === 0 ? ' open' : '') + '><summary class="' + productionFieldClass(q).trim() + '" data-production-target="question"' + productionFieldTarget(q) + '>' + h(i === 0 ? sampleFor(q) : 'Можно ли менять стили блока?') + '</summary><div class="zifra-acf-faq-answer' + productionFieldClass(a) + '" data-production-target="answer"' + productionFieldTarget(a) + '>' + h(i === 0 ? sampleFor(a) : 'Да, CSS scoped и его можно перенести в тему, изменить цвета, сетку и отступы.') + '</div></details>');
             }
             html.push('    </div>');
         } else if (kind === 'team' || kind === 'testimonials' || kind === 'cards') {
@@ -976,10 +987,7 @@
         var btn = document.getElementById('toggle-preview-btn');
         if (!btn) return;
         if (!toggleHome) toggleHome = { parent: btn.parentNode, next: btn.nextSibling };
-        var headerActions = document.querySelector('.visual-editor-header-actions');
-        if (active && headerActions && btn.parentNode !== headerActions) {
-            headerActions.appendChild(btn);
-        } else if (!active && toggleHome.parent && btn.parentNode !== toggleHome.parent) {
+        if (!active && toggleHome.parent && btn.parentNode !== toggleHome.parent) {
             if (toggleHome.next) toggleHome.parent.insertBefore(btn, toggleHome.next);
             else toggleHome.parent.appendChild(btn);
         }
