@@ -209,6 +209,8 @@
         .code-preview-header .code-tab { padding:8px 14px; border-radius:999px; font-size:0.82rem; font-weight:700; border:1px solid transparent; background:transparent; color:var(--text-dim); cursor:pointer; transition:all 0.2s; font-family:var(--font); }
         .code-preview-header .code-tab.active { background:var(--accent); color:#fff; border-color:var(--accent); }
         .code-preview-header .code-actions { margin-left:auto; display:flex; gap:6px; }
+        .code-export-note { display:flex; align-items:flex-start; gap:8px; padding:10px 16px; border-bottom:1px solid var(--border); background:rgba(255,255,255,0.025); color:var(--text-dim); font-family:var(--font); font-size:0.82rem; line-height:1.45; }
+        .code-export-note .material-symbols-outlined { flex:0 0 auto; color:var(--accent-2); font-size:1.05rem; margin-top:1px; }
         .code-preview pre { margin:0; padding:20px; overflow-x:auto; max-height:620px; color:#c9d1d9; tab-size:4; white-space:pre; }
         .code-preview pre::-webkit-scrollbar { height:5px; }
         .code-preview pre::-webkit-scrollbar-track { background:transparent; }
@@ -393,7 +395,7 @@
         @media (max-width:900px) { .quickstart-presets { grid-template-columns:repeat(2,minmax(0,1fr)); } }
         @media (max-width:720px) { .visual-editor-header { align-items:flex-start; padding:14px 16px; } .visual-editor-title { width:100%; font-size:1.05rem; } .visual-editor-header-actions { width:100%; justify-content:space-between; margin-left:0; } .visual-editor-label { max-width:46%; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; } .visual-editor-back-btn { flex:1; justify-content:center; min-width:180px; } }
         @media (max-width:768px) { .tool-hero { padding:42px 0 28px; } .tool-hero h1 { font-size:2.4rem; } .tool-hero p { max-width:100%; } .gen-grid { gap:20px; } .field-type-row { flex-wrap:wrap; } .field-type-row > .cs-wrap { flex:0 1 calc(33.33% - 6px); } .generator-workspace .container { padding: 0 16px; } .gen-panel-body { padding:18px; } }
-        @media (max-width:640px) { .tool-hero .container, .generator-workspace .container { max-width:100%; } .tool-hero-copy, .tool-hero h1, .tool-hero p, .hero-actions, .hero-proof { max-width:min(330px, calc(100vw - 48px)); } .tool-hero p { width:min(330px, calc(100vw - 48px)); } .hero-actions .gen-btn { width:100%; justify-content:center; } .quickstart { width:100%; min-width:0; padding:18px; } .quickstart > * { min-width:0; max-width:100%; } .quickstart-sub { width:min(300px, 100%); } .quickstart-presets { grid-template-columns:repeat(2,minmax(0,1fr)); } .preset-chip { font-size:0.74rem; } .gen-grid { gap:14px; } .gen-panel-header { flex-wrap:wrap; align-items:flex-start; } .gen-panel-header > div { width:100%; justify-content:flex-start; flex-wrap:wrap; } .panel-title { width:100%; } .field-type-row > .cs-wrap { flex:0 1 calc(50% - 4px); } .tool-stats { grid-template-columns:repeat(2,minmax(0,1fr)); } .generator-workspace .container { max-width: 100%; padding: 0 12px; } .code-preview-header { flex-wrap:wrap; } .code-preview-header .code-actions { width:100%; margin-left:0; justify-content:flex-end; } .audit-head { align-items:flex-start; flex-direction:column; } .audit-score { text-align:left; } .audit-export-grid { grid-template-columns:1fr; } .audit-actions .gen-btn { width:100%; justify-content:center; } }
+        @media (max-width:640px) { .tool-hero .container, .generator-workspace .container { max-width:100%; } .tool-hero-copy, .tool-hero h1, .tool-hero p, .hero-actions, .hero-proof { max-width:min(330px, calc(100vw - 48px)); } .tool-hero p { width:min(330px, calc(100vw - 48px)); } .hero-actions .gen-btn { width:100%; justify-content:center; } .quickstart { width:100%; min-width:0; padding:18px; } .quickstart > * { min-width:0; max-width:100%; } .quickstart-sub { width:min(300px, 100%); } .quickstart-presets { grid-template-columns:repeat(2,minmax(0,1fr)); } .preset-chip { font-size:0.74rem; } .gen-grid { gap:14px; } .gen-panel-header { flex-wrap:wrap; align-items:flex-start; } .gen-panel-header > div { width:100%; justify-content:flex-start; flex-wrap:wrap; } .panel-title { width:100%; } .field-type-row > .cs-wrap { flex:0 1 calc(50% - 4px); } .tool-stats { grid-template-columns:repeat(2,minmax(0,1fr)); } .generator-workspace .container { max-width: 100%; padding: 0 12px; } .code-preview-header { flex-wrap:wrap; } .code-tabs-wrap { width:100%; display:flex; flex-wrap:wrap; gap:6px; } .code-preview-header .code-actions { width:100%; margin-left:0; justify-content:flex-end; } .audit-head { align-items:flex-start; flex-direction:column; } .audit-score { text-align:left; } .audit-export-grid { grid-template-columns:1fr; } .audit-actions .gen-btn { width:100%; justify-content:center; } }
     </style>
 </head>
 <body>
@@ -450,7 +452,7 @@
                 <div class="hero-proof">
                     <span><span class="material-symbols-outlined">done</span> 20+ типов полей</span>
                     <span><span class="material-symbols-outlined">done</span> Repeater и Flexible Content</span>
-                    <span><span class="material-symbols-outlined">done</span> Экспорт PHP / JSON / HTML</span>
+                    <span><span class="material-symbols-outlined">done</span> Экспорт PHP / JSON / WP-шаблон</span>
                 </div>
             </div>
             <div class="tool-demo-card" aria-hidden="true">
@@ -653,7 +655,7 @@
                     <div class="code-preview-header">
                         <div class="code-tabs-wrap">
                             <button class="code-tab active" data-tab="php" data-action="switch-tab">PHP</button>
-                            <button class="code-tab" data-tab="html" data-action="switch-tab">PHP-шаблон+CSS</button>
+                            <button class="code-tab" data-tab="html" data-action="switch-tab">WP-шаблон+CSS</button>
                             <button class="code-tab" data-tab="json" data-action="switch-tab">JSON</button>
                         </div>
                         <div class="code-actions">
@@ -661,6 +663,10 @@
                             <button class="gen-btn gen-btn-sm gen-btn-primary" data-action="copy-code" title="Копировать код"><span class="material-symbols-outlined">content_copy</span></button>
                             <button class="gen-btn gen-btn-sm gen-btn-outline" data-action="download-code" title="Скачать"><span class="material-symbols-outlined">download</span></button>
                         </div>
+                    </div>
+                    <div class="code-export-note" id="code-export-note">
+                        <span class="material-symbols-outlined">info</span>
+                        <span>Регистрация ACF: вставьте код в functions.php или отдельный include.</span>
                     </div>
                     <pre id="code-pre"><code id="code-output">Добавьте поля — код появится здесь</code></pre>
                 </div>
@@ -745,7 +751,7 @@
 <!-- Toast -->
 <div class="toast" id="toast"></div>
 
-<script src="js/acf-generator.js?v=acf-ui-20260531-7" defer></script>
+<script src="js/acf-generator.js?v=acf-ui-20260531-8" defer></script>
 <script src="js/acf-production-renderer.js?v=acf-ui-20260531-3" defer></script>
 <script src="js/acf-generator-audit.js?v=acf-ui-20260531-1" defer></script>
 

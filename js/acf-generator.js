@@ -1199,6 +1199,18 @@ function liveUpdate() {
 // ==================== CODE GENERATION ====================
 var currentCodeTab = 'php';
 
+function updateCodeExportNote(tab) {
+    var note = document.getElementById('code-export-note');
+    if (!note) return;
+    var text = 'Регистрация ACF: вставьте код в functions.php или отдельный include.';
+    if (tab === 'html') {
+        text = 'WordPress-шаблон + scoped CSS: без editor-маркеров, готов для переноса в тему.';
+    } else if (tab === 'json') {
+        text = 'ACF JSON: сохраните файл в acf-json или используйте для миграции между проектами.';
+    }
+    note.innerHTML = '<span class="material-symbols-outlined">info</span><span>' + escHtml(text) + '</span>';
+}
+
 function switchCodeTab(tab) {
     currentCodeTab = tab;
     // Update active tab buttons
@@ -1206,6 +1218,7 @@ function switchCodeTab(tab) {
     for (var i = 0; i < tabs.length; i++) {
         tabs[i].classList.toggle('active', tabs[i].getAttribute('data-tab') === tab);
     }
+    updateCodeExportNote(tab);
     liveUpdate();
 }
 
@@ -3594,6 +3607,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     renderAll();
     liveUpdate();
+    updateCodeExportNote(currentCodeTab);
 
     // Upgrade field-type-row selects to CustomSelect
     var fieldTypeSelects = document.querySelectorAll('.field-type-row select[data-action="add-field-select"]');
