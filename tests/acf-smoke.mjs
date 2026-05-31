@@ -19,6 +19,13 @@ const expectedRoutes = [
   { page: 'acf-woocommerce-product-fields.html', href: 'acf-generator.html?preset=woocommerce_product&amp;source=acf-woocommerce-product-fields', source: 'acf-woocommerce-product-fields', tab: 'html' }
 ];
 
+const specificLandingCopy = [
+  { page: 'acf-hero-section.html', required: ['первый экран', 'CTA', 'изображение hero'] },
+  { page: 'acf-faq-fields.html', required: ['FAQPage schema', 'вопрос-ответ', 'аккордеон FAQ'] },
+  { page: 'acf-seo-fields.html', required: ['canonical', 'robots', 'Open Graph'] },
+  { page: 'acf-woocommerce-product-fields.html', required: ['характеристики товара', 'инструкции', 'FAQ товара'] }
+];
+
 function read(relativePath) {
   return readFileSync(join(root, relativePath), 'utf8');
 }
@@ -52,6 +59,17 @@ function testLandingCtas() {
     const landing = read(route.page);
     assert(landing.includes(`href="${route.href}"`), `${route.page} must link to ${route.href}`);
     assert(landing.includes('application/ld+json'), `${route.page} must keep structured data`);
+  }
+}
+
+function testSpecificLandingCopy() {
+  const genericPhrase = 'Страница закрывает конкретный низкочастотный запрос';
+  for (const item of specificLandingCopy) {
+    const landing = read(item.page);
+    assert(!landing.includes(genericPhrase), `${item.page} must not use generic SEO placeholder copy`);
+    for (const phrase of item.required) {
+      assert(landing.includes(phrase), `${item.page} must include specific phrase: ${phrase}`);
+    }
   }
 }
 
@@ -94,6 +112,7 @@ function testProductionExportGuards() {
 function main() {
   testCategoryPresetMap();
   testLandingCtas();
+  testSpecificLandingCopy();
   testGeneratorRouteConfig();
   testProductionExportGuards();
   console.log('ACF smoke checks passed: 12 routes, landing CTAs, export tabs, production guards.');
