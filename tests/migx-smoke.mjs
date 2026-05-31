@@ -48,6 +48,16 @@ function landingHref(route) {
   return `migx-generator.html?preset=${route.preset}&amp;source=${route.source}`;
 }
 
+function parseFirstJsonLd(html, label) {
+  const match = html.match(/<script type="application\/ld\+json">\s*([\s\S]*?)\s*<\/script>/);
+  assert(match, `${label} must include JSON-LD`);
+  try {
+    return JSON.parse(match[1]);
+  } catch (error) {
+    throw new Error(`${label} JSON-LD must be valid JSON: ${error.message}`);
+  }
+}
+
 function assertSitemapEntry(sitemap, loc, { lastmod, changefreq, priority }) {
   const blockPattern = new RegExp(`<url>\\s*<loc>${escapeRegex(loc)}</loc>[\\s\\S]*?</url>`);
   const match = sitemap.match(blockPattern);
@@ -103,6 +113,7 @@ function testSitemapRoutes() {
 function testTechnicalSeo() {
   const hub = read('migx.html');
   const generator = read('migx-generator.html');
+  const generatorSchema = parseFirstJsonLd(generator, 'migx-generator.html');
   assert(
     hub.includes('<link rel="canonical" href="https://zifra.example.com/migx.html">'),
     'migx.html must expose a canonical URL'
@@ -116,6 +127,17 @@ function testTechnicalSeo() {
     'migx-generator.html Open Graph URL must match the canonical URL'
   );
   assert(!generator.includes('https://zifra.example.com/tools/migx-generator'), 'legacy MIGX generator URL must not remain in metadata');
+  assert(generatorSchema['@type'] === 'SoftwareApplication', 'MIGX generator JSON-LD must describe a SoftwareApplication');
+  assert(generatorSchema.url === 'https://zifra.example.com/migx-generator.html', 'MIGX generator JSON-LD must expose the canonical URL');
+  assert(generatorSchema.isAccessibleForFree === true, 'MIGX generator JSON-LD must mark the tool as free');
+  assert(Array.isArray(generatorSchema.featureList), 'MIGX generator JSON-LD must expose featureList');
+  for (const feature of ['MIGX JSON', 'Form Tabs', 'Grid Columns', 'getImageList', 'Fenom chunk']) {
+    assert(generatorSchema.featureList.includes(feature), `MIGX generator JSON-LD must include feature ${feature}`);
+  }
+  assert(
+    generatorSchema.potentialAction?.target === 'https://zifra.example.com/migx-generator.html',
+    'MIGX generator JSON-LD must expose a UseAction target'
+  );
 
   for (const route of expectedRoutes) {
     const page = read(route.page);
