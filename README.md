@@ -1,13 +1,32 @@
 # depseeker_test
 
-Static HTML workspace for the Цифра ACF generator and SEO landing-page cluster.
+Static HTML workspace for the Цифра ACF/MIGX generators and SEO landing-page clusters.
 
-## ACF Smoke Check
+## Smoke Checks
 
-Run the lightweight ACF regression check after changes to `acf*.html` or `js/acf-*.js`:
+Run the lightweight regression checks after changes to generator pages, SEO pages, sitemap, or shared scripts:
 
 ```powershell
 node tests/acf-smoke.mjs
+node tests/migx-smoke.mjs
+node tests/site-links-smoke.mjs
 ```
 
-It verifies the 12 category routes, landing-page CTAs, generator preset routing, export tab notes, and production export guards.
+The checks cover:
+
+- ACF category routes, landing CTAs, generator preset routing, production export, visual editor guards, and conversion tracking.
+- MIGX hub, 21 landing pages, sitemap entries, generator wiring, validation/audit/share features, and conversion tracking.
+- Local `href`/`src` links inside the ACF/MIGX clusters.
+
+## Local Preview
+
+Serve the static files from the project root:
+
+```powershell
+python -m http.server 8026 --bind 127.0.0.1
+```
+
+Then open:
+
+- `http://127.0.0.1:8026/acf-generator.html`
+- `http://127.0.0.1:8026/migx-generator.html`
