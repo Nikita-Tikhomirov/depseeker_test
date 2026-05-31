@@ -107,9 +107,9 @@
                 </div>
             </div>
             <aside class="acf-intent-card" aria-label="Сценарий использования">
-                <span>Сценарий</span>
+                <span>Когда использовать</span>
                 <h2>Нужен редактируемый FAQ-блок для SEO-страницы.</h2>
-                <p>Откройте готовую структуру, поправьте поля и экспортируйте конфигурацию для MODX.</p>
+                <p>Это не общая статья, а рабочий сценарий для MIGX: структура полей, пример вывода и ссылка на preset генератора уже связаны с запросом migx faq.</p>
             </aside>
         </div>
     </section>
@@ -126,6 +126,24 @@
         </div>
     </section>
     <section class="acf-section acf-section--muted">
+        <div class="acf-container acf-use-grid">
+            <article>
+                <span class="acf-section-label">Практический разбор</span>
+                <h2>Как использовать MIGX FAQ в MODX</h2>
+                <p>Соберите FAQ через MIGX: вопрос, ответ, категория, порядок и пример вывода аккордеоном. Этот раздел закрывает запрос <strong>migx faq</strong>: показывает, какие поля нужны, какой результат забрать из генератора и где его применить в MIGX TV.</p>
+                <p>После открытия пресета проверьте структуру, переименуйте поля под свой проект и заберите готовые артефакты: FAQ fields, Richtext answer, Accordion chunk.</p>
+            </article>
+            <article>
+                <span class="acf-section-label">Что проверить перед вставкой в MODX</span>
+                <h2>Мини-чек-лист перед публикацией</h2>
+                <div class="acf-checklist"><ul><li>fieldname заполняются латиницей, без пробелов и дублей;</li>
+<li>caption понятны редактору MODX и совпадают со смыслом поля;</li>
+<li>экспорт JSON, Form Tabs и Grid Columns не содержит пустых обязательных значений;</li>
+<li>получившийся preset открывается в генераторе и проходит readiness score без критичных ошибок;</li></ul></div>
+            </article>
+        </div>
+    </section>
+    <section class="acf-section">
         <div class="acf-container">
             <div class="acf-section-head"><span class="acf-section-label">Связанные страницы</span><h2>Продолжить по MIGX-кластеру</h2></div>
             <div class="acf-related-grid"><a class="acf-related-card" href="migx-json-generator.html"><span>migx json generator</span><strong>MIGX JSON генератор</strong></a>
@@ -136,7 +154,7 @@
 <a class="acf-related-card" href="migx-tabs-generator.html"><span>migx tabs modx</span><strong>MIGX tabs генератор</strong></a></div>
         </div>
     </section>
-    <section class="acf-final-cta"><div class="acf-container"><h2>Соберите MIGX-конфигурацию сейчас</h2><p>Страница откроет генератор с нужной предустановкой.</p><a class="acf-btn acf-btn--primary" href="migx-generator.html?preset=faq&amp;source=migx-faq">Открыть генератор</a></div></section>
+    <section class="acf-final-cta"><div class="acf-container"><h2>Соберите MIGX FAQ без ручной сборки JSON</h2><p>Откройте preset, проверьте readiness score и заберите конфигурацию, getImageList package или chunk для MODX.</p><a class="acf-btn acf-btn--primary" href="migx-generator.html?preset=faq&amp;source=migx-faq">Открыть пресет</a></div></section>
 </main>
 <footer class="acf-footer">
     <div class="acf-container acf-footer__inner">

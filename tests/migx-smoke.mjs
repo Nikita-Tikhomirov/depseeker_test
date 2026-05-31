@@ -84,10 +84,17 @@ function testHubRoutes() {
   const hub = read('migx.html');
   assert(countMatches(hub, /class="acf-preset-row"/g) === expectedRoutes.length, 'migx.html must expose 21 preset rows');
   assert(hub.includes('MIGX генератор и шаблоны для MODX'), 'migx.html must be the MIGX hub');
+  assert(!hub.includes('SEO-страница -> пресет генератора'), 'migx.html must not expose internal SEO map placeholder copy');
+  assert(!hub.includes('Карта пресетов'), 'migx.html must not expose generic preset map placeholder label');
+  assert(!hub.includes('Открыть страницу'), 'migx.html topic cards must not use generic page-transition links');
+  assert(hub.includes('Какой MIGX-инструмент выбрать под задачу MODX'), 'migx.html must describe preset choice as useful SEO content');
+  assert(hub.includes('Практические страницы под MIGX-запросы'), 'migx.html must frame cluster pages as useful search-intent content');
   assert(hub.includes('id="faq"'), 'migx.html must expose a FAQ section');
   assert(countMatches(hub, /class="acf-faq-item"/g) === 4, 'migx.html must expose 4 FAQ items');
   for (const route of expectedRoutes) {
-    assert(hub.includes(`href="${route.page}"`), `migx.html is missing landing link ${route.page}`);
+    const topicCardPattern = new RegExp(`<article class="acf-topic-card"[\\s\\S]*?href="${escapeRegex(route.page)}"[\\s\\S]*?</article>`);
+    assert(!topicCardPattern.test(hub), `migx.html topic cards must not send users to intermediate landing ${route.page}`);
+    assert(hub.includes(`href="${route.page}"`), `migx.html must keep crawlable landing link ${route.page}`);
     assert(hub.includes(`href="${landingHref(route)}"`), `migx.html is missing generator route ${landingHref(route)}`);
   }
 }
@@ -99,6 +106,9 @@ function testLandingPages() {
     assert(page.includes('application/ld+json'), `${route.page} must include structured data`);
     assert(page.includes('migx.html'), `${route.page} must link back to the MIGX hub`);
     assert(page.includes('MIGX'), `${route.page} must contain MIGX copy`);
+    assert(page.includes('Практический разбор'), `${route.page} must include a useful practical SEO section`);
+    assert(page.includes('Что проверить перед вставкой в MODX'), `${route.page} must include implementation checks`);
+    assert(!page.includes('Страница откроет генератор'), `${route.page} must not include generic generator placeholder copy`);
   }
 }
 
@@ -190,6 +200,9 @@ function testGeneratorWiring() {
   assert(html.includes('data-action="copy-share-link"'), 'migx-generator.html must expose shareable config link action');
   assert(html.includes('fonts.googleapis.com/css2?family=Material+Symbols+Outlined'), 'migx-generator.html must load Material Symbols for tool icons');
   assert(html.includes('id="code-export-note"'), 'migx-generator.html must explain the active export package');
+  assert(html.includes('data-icon="short_text"'), 'MIGX field type buttons must use Material Symbols icons');
+  assert(!html.includes('📝 Textarea'), 'MIGX field type buttons must not use emoji labels');
+  assert(!html.includes('📦 MIGX'), 'MIGX structure buttons must not use emoji labels');
   assert(html.includes('data-tab="formtabs"'), 'migx-generator.html must expose Form Tabs export tab');
   assert(html.includes('data-tab="grid_columns"'), 'migx-generator.html must expose Grid Columns export tab');
   assert(html.includes('data-tab="fenom"'), 'migx-generator.html must expose Fenom export tab');

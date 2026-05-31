@@ -75,6 +75,9 @@
     <style>
         :root { --font-mono: 'JetBrains Mono', 'Cascadia Code', 'Fira Code', monospace; }
         .material-symbols-outlined { font-family:'Material Symbols Outlined'; font-weight:normal; font-style:normal; font-size:1.05rem; line-height:1; letter-spacing:normal; text-transform:none; display:inline-block; white-space:nowrap; word-wrap:normal; direction:ltr; -webkit-font-feature-settings:'liga'; -webkit-font-smoothing:antialiased; font-feature-settings:'liga'; }
+        .field-type-btn .material-symbols-outlined, .fc-type .material-symbols-outlined, .nf-type .material-symbols-outlined { color:var(--accent-2); font-size:1.08rem; }
+        .fc-type .material-symbols-outlined { font-size:1.22rem; }
+        .nested-badge .material-symbols-outlined, .tab-badge .material-symbols-outlined { font-size:0.86rem; vertical-align:-2px; }
 
         .generator-workspace .container { max-width: 96vw; padding: 0 36px; }
 
@@ -345,38 +348,38 @@
                     <div class="field-type-section">
                         <div class="field-type-section-title">Текст</div>
                         <div class="field-type-grid">
-                            <button class="field-type-btn" data-action="add-field" data-field-type="text">Aa Text</button>
-                            <button class="field-type-btn" data-action="add-field" data-field-type="textarea">📝 Textarea</button>
-                            <button class="field-type-btn" data-action="add-field" data-field-type="richtext">✏️ Richtext</button>
-                            <button class="field-type-btn" data-action="add-field" data-field-type="number">🔢 Number</button>
-                            <button class="field-type-btn" data-action="add-field" data-field-type="email">📧 Email</button>
-                            <button class="field-type-btn" data-action="add-field" data-field-type="url">🔗 URL</button>
-                            <button class="field-type-btn" data-action="add-field" data-field-type="hidden">👁️‍🗨️ Hidden</button>
+                            <button class="field-type-btn" data-action="add-field" data-field-type="text" data-icon="short_text"><span class="material-symbols-outlined">short_text</span> Text</button>
+                            <button class="field-type-btn" data-action="add-field" data-field-type="textarea" data-icon="notes"><span class="material-symbols-outlined">notes</span> Textarea</button>
+                            <button class="field-type-btn" data-action="add-field" data-field-type="richtext" data-icon="format_bold"><span class="material-symbols-outlined">format_bold</span> Richtext</button>
+                            <button class="field-type-btn" data-action="add-field" data-field-type="number" data-icon="tag"><span class="material-symbols-outlined">tag</span> Number</button>
+                            <button class="field-type-btn" data-action="add-field" data-field-type="email" data-icon="alternate_email"><span class="material-symbols-outlined">alternate_email</span> Email</button>
+                            <button class="field-type-btn" data-action="add-field" data-field-type="url" data-icon="link"><span class="material-symbols-outlined">link</span> URL</button>
+                            <button class="field-type-btn" data-action="add-field" data-field-type="hidden" data-icon="visibility_off"><span class="material-symbols-outlined">visibility_off</span> Hidden</button>
                         </div>
                     </div>
                     <div class="field-type-section">
                         <div class="field-type-section-title">Медиа</div>
                         <div class="field-type-grid">
-                            <button class="field-type-btn" data-action="add-field" data-field-type="image">🖼️ Image</button>
-                            <button class="field-type-btn" data-action="add-field" data-field-type="file">📄 File</button>
-                            <button class="field-type-btn" data-action="add-field" data-field-type="video">🎬 Video</button>
+                            <button class="field-type-btn" data-action="add-field" data-field-type="image" data-icon="image"><span class="material-symbols-outlined">image</span> Image</button>
+                            <button class="field-type-btn" data-action="add-field" data-field-type="file" data-icon="draft"><span class="material-symbols-outlined">draft</span> File</button>
+                            <button class="field-type-btn" data-action="add-field" data-field-type="video" data-icon="smart_display"><span class="material-symbols-outlined">smart_display</span> Video</button>
                         </div>
                     </div>
                     <div class="field-type-section">
                         <div class="field-type-section-title">Выбор / Прочее</div>
                         <div class="field-type-grid">
-                            <button class="field-type-btn" data-action="add-field" data-field-type="listbox">📋 Listbox</button>
-                            <button class="field-type-btn" data-action="add-field" data-field-type="checkbox">☑️ Checkbox</button>
-                            <button class="field-type-btn" data-action="add-field" data-field-type="date">📅 Date</button>
-                            <button class="field-type-btn" data-action="add-field" data-field-type="color">🎨 Color</button>
-                            <button class="field-type-btn" data-action="add-field" data-field-type="tag">🏷️ Tag</button>
+                            <button class="field-type-btn" data-action="add-field" data-field-type="listbox" data-icon="list_alt"><span class="material-symbols-outlined">list_alt</span> Listbox</button>
+                            <button class="field-type-btn" data-action="add-field" data-field-type="checkbox" data-icon="check_box"><span class="material-symbols-outlined">check_box</span> Checkbox</button>
+                            <button class="field-type-btn" data-action="add-field" data-field-type="date" data-icon="calendar_month"><span class="material-symbols-outlined">calendar_month</span> Date</button>
+                            <button class="field-type-btn" data-action="add-field" data-field-type="color" data-icon="palette"><span class="material-symbols-outlined">palette</span> Color</button>
+                            <button class="field-type-btn" data-action="add-field" data-field-type="tag" data-icon="sell"><span class="material-symbols-outlined">sell</span> Tag</button>
                         </div>
                     </div>
                     <div class="field-type-section">
                         <div class="field-type-section-title">Структура</div>
                         <div class="field-type-grid">
-                            <button class="field-type-btn tab-btn" data-action="add-field" data-field-type="tab">📑 Tab</button>
-                            <button class="field-type-btn migx-btn" data-action="add-field" data-field-type="migx">📦 MIGX ↻</button>
+                            <button class="field-type-btn tab-btn" data-action="add-field" data-field-type="tab" data-icon="tab"><span class="material-symbols-outlined">tab</span> Tab</button>
+                            <button class="field-type-btn migx-btn" data-action="add-field" data-field-type="migx" data-icon="deployed_code"><span class="material-symbols-outlined">deployed_code</span> MIGX</button>
                         </div>
                     </div>
 
@@ -487,7 +490,7 @@
 <div class="toast" id="toast"></div>
 
 <script src="js/conversion-events.js?v=launch-analytics-20260531-1" defer></script>
-<script src="js/migx-generator.js?v=migx-seo-20260531-3" defer></script>
+<script src="js/migx-generator.js?v=migx-seo-20260531-4" defer></script>
 
 </body>
 </html>

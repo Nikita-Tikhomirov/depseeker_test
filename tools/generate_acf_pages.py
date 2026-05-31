@@ -921,8 +921,9 @@ def render_css() -> str:
 .acf-topic-card, .acf-benefit-grid article, .acf-related-card, .acf-code-card, .acf-checklist { border: 1px solid #dce7e3; border-radius: 8px; background: #fff; padding: 20px; }
 .acf-topic-card span, .acf-related-card span { color: #0f9f7e; font-weight: 900; font-size: 0.76rem; display: block; margin-bottom: 10px; }
 .acf-topic-card h3 { font-size: 1.08rem; line-height: 1.3; margin: 0 0 10px; }
-.acf-topic-card h3 a, .acf-topic-card > a, .acf-related-card { color: #121821; text-decoration: none; }
-.acf-topic-card > a { color: #0f9f7e; font-weight: 900; }
+.acf-topic-card h3, .acf-topic-card > a, .acf-related-card { color: #121821; text-decoration: none; }
+.acf-card-cta { min-height: 42px; display: inline-flex; align-items: center; justify-content: center; margin-top: 12px; padding: 0 14px; border-radius: 8px; background: #22d3a6; color: #07110e; font-weight: 900; text-decoration: none; }
+.acf-card-cta:hover { background: #19bd94; }
 .acf-two-col, .acf-use-grid, .acf-roadmap { display: grid; grid-template-columns: minmax(0, 0.9fr) minmax(300px, 0.7fr); gap: 34px; align-items: start; }
 .acf-checklist ul { margin: 0; padding: 0; list-style: none; display: grid; gap: 12px; }
 .acf-checklist li { padding-left: 30px; position: relative; color: #243142; font-weight: 800; }

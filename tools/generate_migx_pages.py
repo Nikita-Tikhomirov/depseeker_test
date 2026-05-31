@@ -420,13 +420,55 @@ def related_links(current_slug: str) -> str:
     )
 
 
+def page_cta(page: dict[str, object]) -> str:
+    return "Открыть пресет"
+
+
+def implementation_checks(page: dict[str, object]) -> list[str]:
+    checks = [
+        "fieldname заполняются латиницей, без пробелов и дублей;",
+        "caption понятны редактору MODX и совпадают со смыслом поля;",
+        "экспорт JSON, Form Tabs и Grid Columns не содержит пустых обязательных значений;",
+    ]
+    preset = str(page["preset"])
+    if preset in {"gallery", "image_field", "slider"}:
+        checks.append("для image field есть alt или подпись, чтобы вывод через getImageList был полезен для SEO;")
+    elif preset in {"nested", "configs"}:
+        checks.append("у вложенных MIGX заполнены дочерние поля и пример вывода через &value не теряет структуру;")
+    elif preset in {"getimagelist", "fenom_chunk"}:
+        checks.append("имена placeholders в chunk совпадают с fieldname из MIGX-конфигурации;")
+    else:
+        checks.append("получившийся preset открывается в генераторе и проходит readiness score без критичных ошибок;")
+    return checks
+
+
+def practical_section(page: dict[str, object]) -> str:
+    deliverables = ", ".join(str(item) for item in page["deliverables"])
+    checks = "\n".join(f"<li>{esc(item)}</li>" for item in implementation_checks(page))
+    return f"""<section class="acf-section acf-section--muted">
+        <div class="acf-container acf-use-grid">
+            <article>
+                <span class="acf-section-label">Практический разбор</span>
+                <h2>Как использовать {esc(page["h1"])} в MODX</h2>
+                <p>{esc(page["description"])} Этот раздел закрывает запрос <strong>{esc(page["query"])}</strong>: показывает, какие поля нужны, какой результат забрать из генератора и где его применить в MIGX TV.</p>
+                <p>После открытия пресета проверьте структуру, переименуйте поля под свой проект и заберите готовые артефакты: {esc(deliverables)}.</p>
+            </article>
+            <article>
+                <span class="acf-section-label">Что проверить перед вставкой в MODX</span>
+                <h2>Мини-чек-лист перед публикацией</h2>
+                <div class="acf-checklist"><ul>{checks}</ul></div>
+            </article>
+        </div>
+    </section>"""
+
+
 def preset_rows() -> str:
     return "\n".join(
         f"""<div class="acf-preset-row">
             <span class="acf-preset-query">{esc(p["query"])}</span>
             <a class="acf-preset-name" href="{esc(p["slug"])}.html">{esc(p["h1"])}</a>
-            <span class="acf-preset-result">{esc(", ".join(p["deliverables"]))}</span>
-            <a class="acf-preset-link" href="{generator_url(p)}">Открыть</a>
+            <span class="acf-preset-result">{esc(p["intent"])} На выходе: {esc(", ".join(p["deliverables"]))}.</span>
+            <a class="acf-preset-link" href="{generator_url(p)}">{esc(page_cta(p))}</a>
         </div>"""
         for p in PAGES
     )
@@ -452,14 +494,14 @@ def render_page(page: dict[str, object]) -> str:
                 <h1>{esc(page["h1"])}</h1>
                 <p>{esc(page["description"])}</p>
                 <div class="acf-actions">
-                    <a class="acf-btn acf-btn--primary" href="{generator_url(page)}">Открыть пресет</a>
+                    <a class="acf-btn acf-btn--primary" href="{generator_url(page)}">{esc(page_cta(page))}</a>
                     <a class="acf-btn acf-btn--ghost" href="#example">Посмотреть пример</a>
                 </div>
             </div>
             <aside class="acf-intent-card" aria-label="Сценарий использования">
-                <span>Сценарий</span>
+                <span>Когда использовать</span>
                 <h2>{esc(page["intent"])}</h2>
-                <p>Откройте готовую структуру, поправьте поля и экспортируйте конфигурацию для MODX.</p>
+                <p>Это не общая статья, а рабочий сценарий для MIGX: структура полей, пример вывода и ссылка на preset генератора уже связаны с запросом {esc(page["query"])}.</p>
             </aside>
         </div>
     </section>
@@ -473,13 +515,14 @@ def render_page(page: dict[str, object]) -> str:
             <article class="acf-code-card"><pre><code>{esc(page["example"])}</code></pre></article>
         </div>
     </section>
-    <section class="acf-section acf-section--muted">
+    {practical_section(page)}
+    <section class="acf-section">
         <div class="acf-container">
             <div class="acf-section-head"><span class="acf-section-label">Связанные страницы</span><h2>Продолжить по MIGX-кластеру</h2></div>
             <div class="acf-related-grid">{related_links(str(page["slug"]))}</div>
         </div>
     </section>
-    <section class="acf-final-cta"><div class="acf-container"><h2>Соберите MIGX-конфигурацию сейчас</h2><p>Страница откроет генератор с нужной предустановкой.</p><a class="acf-btn acf-btn--primary" href="{generator_url(page)}">Открыть генератор</a></div></section>
+    <section class="acf-final-cta"><div class="acf-container"><h2>Соберите {esc(page["h1"])} без ручной сборки JSON</h2><p>Откройте preset, проверьте readiness score и заберите конфигурацию, getImageList package или chunk для MODX.</p><a class="acf-btn acf-btn--primary" href="{generator_url(page)}">{esc(page_cta(page))}</a></div></section>
 </main>
 {footer()}
 </body>
@@ -494,7 +537,7 @@ def render_hub() -> str:
         "description": "Категория MIGX-инструментов для MODX: JSON, Form Tabs, Grid Columns, nested MIGX, getImageList, Fenom chunks и готовые пресеты.",
     }
     cards = "\n".join(
-        f'<article class="acf-topic-card"><span>{esc(p["query"])}</span><h3><a href="{esc(p["slug"])}.html">{esc(p["h1"])}</a></h3><p>{esc(p["description"])}</p><a href="{esc(p["slug"])}.html">Открыть страницу</a></article>'
+        f'<article class="acf-topic-card"><span>{esc(p["query"])}</span><h3>{esc(p["h1"])}</h3><p>{esc(p["description"])}</p><p>{esc(p["intent"])} Генератор сразу откроется с нужными полями и экспортом под этот сценарий.</p><a class="acf-card-cta" href="{generator_url(p)}">{esc(page_cta(p))}</a></article>'
         for p in PAGES
     )
     item_list = {
@@ -527,8 +570,8 @@ def render_hub() -> str:
             <aside class="acf-plan-card"><h2>Карта категории</h2><ul><li>Базовые MIGX JSON и TV.</li><li>Form Tabs и Grid Columns.</li><li>Галерея, слайдер, FAQ, каталог, команда и отзывы.</li><li>Валидатор, импорт, ошибки и вывод через getImageList/Fenom.</li></ul></aside>
         </div>
     </section>
-    <section class="acf-section" id="pages"><div class="acf-container"><div class="acf-section-head"><span class="acf-section-label">Кластеры</span><h2>Страницы под MIGX-запросы</h2><p>Каждая страница ведет в генератор с нужной предустановкой.</p></div><div class="acf-topic-grid">{cards}</div></div></section>
-    <section class="acf-section acf-section--muted"><div class="acf-container"><div class="acf-section-head"><span class="acf-section-label">Карта пресетов</span><h2>SEO-страница -> пресет генератора</h2></div><div class="acf-preset-map" aria-label="Карта MIGX-пресетов">{preset_rows()}</div></div></section>
+    <section class="acf-section" id="pages"><div class="acf-container"><div class="acf-section-head"><span class="acf-section-label">MIGX-разделы</span><h2>Практические страницы под MIGX-запросы</h2><p>Каждая страница закрывает отдельный интент: от MIGX JSON и Form Tabs до nested MIGX, getImageList, Fenom chunk и ошибок конфигурации.</p></div><div class="acf-topic-grid">{cards}</div></div></section>
+    <section class="acf-section acf-section--muted"><div class="acf-container"><div class="acf-section-head"><span class="acf-section-label">Выбор инструмента</span><h2>Какой MIGX-инструмент выбрать под задачу MODX</h2><p>Если нужен JSON для TV, открывайте базовый генератор. Для фронтенда используйте getImageList package или Fenom chunk. Для сложных блоков выбирайте nested MIGX, tabs и configs.</p></div><div class="acf-preset-map" aria-label="Подбор MIGX-инструмента по задаче">{preset_rows()}</div></div></section>
     {hub_faq_section()}
     <section class="acf-final-cta"><div class="acf-container"><h2>Откройте MIGX генератор</h2><p>Выберите шаблон, проверьте ошибки и экспортируйте JSON или chunk.</p><a class="acf-btn acf-btn--primary" href="migx-generator.html">Запустить</a></div></section>
 </main>
