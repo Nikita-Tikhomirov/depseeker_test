@@ -58,6 +58,18 @@ function parseFirstJsonLd(html, label) {
   }
 }
 
+function parseAllJsonLd(html, label) {
+  const matches = [...html.matchAll(/<script type="application\/ld\+json">\s*([\s\S]*?)\s*<\/script>/g)];
+  assert(matches.length > 0, `${label} must include JSON-LD`);
+  return matches.map((match, index) => {
+    try {
+      return JSON.parse(match[1]);
+    } catch (error) {
+      throw new Error(`${label} JSON-LD #${index + 1} must be valid JSON: ${error.message}`);
+    }
+  });
+}
+
 function assertSitemapEntry(sitemap, loc, { lastmod, changefreq, priority }) {
   const blockPattern = new RegExp(`<url>\\s*<loc>${escapeRegex(loc)}</loc>[\\s\\S]*?</url>`);
   const match = sitemap.match(blockPattern);
@@ -71,6 +83,8 @@ function testHubRoutes() {
   const hub = read('migx.html');
   assert(countMatches(hub, /class="acf-preset-row"/g) === expectedRoutes.length, 'migx.html must expose 21 preset rows');
   assert(hub.includes('MIGX генератор и шаблоны для MODX'), 'migx.html must be the MIGX hub');
+  assert(hub.includes('id="faq"'), 'migx.html must expose a FAQ section');
+  assert(countMatches(hub, /class="acf-faq-item"/g) === 4, 'migx.html must expose 4 FAQ items');
   for (const route of expectedRoutes) {
     assert(hub.includes(`href="${route.page}"`), `migx.html is missing landing link ${route.page}`);
     assert(hub.includes(`href="${landingHref(route)}"`), `migx.html is missing generator route ${landingHref(route)}`);
@@ -113,11 +127,22 @@ function testSitemapRoutes() {
 function testTechnicalSeo() {
   const hub = read('migx.html');
   const generator = read('migx-generator.html');
+  const hubSchemas = parseAllJsonLd(hub, 'migx.html');
+  const hubFaqSchema = hubSchemas.find((schema) => schema['@type'] === 'FAQPage');
   const generatorSchema = parseFirstJsonLd(generator, 'migx-generator.html');
   assert(
     hub.includes('<link rel="canonical" href="https://zifra.example.com/migx.html">'),
     'migx.html must expose a canonical URL'
   );
+  assert(hubFaqSchema, 'migx.html must expose FAQPage JSON-LD');
+  assert(Array.isArray(hubFaqSchema.mainEntity), 'migx.html FAQPage JSON-LD must expose mainEntity');
+  assert(hubFaqSchema.mainEntity.length === 4, 'migx.html FAQPage JSON-LD must expose 4 questions');
+  for (const question of ['Form Tabs', 'Grid Columns', 'nested MIGX', 'getImageList', 'Fenom', 'валидатор MIGX JSON']) {
+    assert(
+      JSON.stringify(hubFaqSchema).includes(question),
+      `migx.html FAQPage JSON-LD must include ${question}`
+    );
+  }
   assert(
     generator.includes('<link rel="canonical" href="https://zifra.example.com/migx-generator.html">'),
     'migx-generator.html canonical must match the sitemap URL'
