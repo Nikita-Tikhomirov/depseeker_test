@@ -30,6 +30,30 @@ var selectedFieldId = null;
 var tabs = [];           // { id: 'tab_xxx', caption: 'Tab Name', color: '#f59e0b' }
 var currentCodeTab = 'json';
 
+var MIGX_PRESETS = {
+    json: { source: 'migx-json-generator', title: 'MIGX JSON генератор', template: 'tabs_demo' },
+    tv: { source: 'migx-tv-generator', title: 'MIGX TV генератор', template: 'tabs_demo' },
+    formtabs: { source: 'migx-formtabs-generator', title: 'MIGX Form Tabs', template: 'tabs_demo' },
+    grid_columns: { source: 'migx-grid-columns-generator', title: 'MIGX Grid Columns', template: 'catalog' },
+    nested: { source: 'migx-nested-generator', title: 'Вложенный MIGX', template: 'nested' },
+    tabs: { source: 'migx-tabs-generator', title: 'MIGX tabs', template: 'tabs_demo' },
+    gallery: { source: 'migx-gallery', title: 'MIGX галерея', template: 'gallery' },
+    slider: { source: 'migx-slider', title: 'MIGX слайдер', template: 'slider' },
+    faq: { source: 'migx-faq', title: 'MIGX FAQ', template: 'faq' },
+    catalog: { source: 'migx-catalog', title: 'MIGX каталог', template: 'catalog' },
+    team: { source: 'migx-team', title: 'MIGX команда', template: 'team' },
+    reviews: { source: 'migx-reviews', title: 'MIGX отзывы', template: 'reviews' },
+    getimagelist: { source: 'migx-getimagelist', title: 'MIGX getImageList', template: 'gallery' },
+    fenom_chunk: { source: 'migx-fenom-chunk', title: 'MIGX Fenom chunk', template: 'catalog' },
+    configs: { source: 'migx-configs', title: 'MIGX configs', template: 'nested' },
+    image_field: { source: 'migx-image-field', title: 'MIGX image field', template: 'gallery' },
+    richtext_field: { source: 'migx-richtext-field', title: 'MIGX richtext field', template: 'faq' },
+    validator: { source: 'migx-validator', title: 'MIGX validator', template: 'errors' },
+    import_json: { source: 'migx-import-json', title: 'MIGX import JSON', template: 'tabs_demo' },
+    errors: { source: 'migx-errors', title: 'Ошибки MIGX JSON', template: 'errors' },
+    examples: { source: 'migx-examples', title: 'MIGX examples', template: 'nested' }
+};
+
 // ==================== HELPERS ====================
 function escHtml(s) {
     if (!s) return '';
@@ -184,6 +208,34 @@ function slugify(text) {
     }
     slug = slug.toLowerCase().replace(/[^a-z0-9_]+/g, '_').replace(/^_+|_+$/g, '');
     return slug || 'field';
+}
+
+function getURLParam(name) {
+    var params = new URLSearchParams(window.location.search);
+    return params.get(name) || '';
+}
+
+function showLandingContext(presetName, source) {
+    var preset = MIGX_PRESETS[presetName];
+    var box = document.getElementById('generator-context');
+    if (!box || !preset) return;
+    var title = document.getElementById('generator-context-title');
+    var copy = document.getElementById('generator-context-copy');
+    if (title) title.textContent = preset.title;
+    if (copy) copy.textContent = source ? 'Источник: ' + source + '. Проверьте поля, ошибки и экспорт.' : 'Проверьте поля, ошибки и экспорт.';
+    box.hidden = false;
+}
+
+function applyPresetFromURL() {
+    var presetName = getURLParam('preset');
+    var source = getURLParam('source');
+    if (!presetName || !MIGX_PRESETS[presetName]) return;
+    loadTemplate(MIGX_PRESETS[presetName].template);
+    showLandingContext(presetName, source);
+}
+
+function validateMIGXConfig() {
+    return [];
 }
 
 // ==================== NESTED MIGX ====================
@@ -783,6 +835,35 @@ function loadTemplate(name) {
             ];
             break;
 
+        case 'gallery':
+            fields = [
+                mkField('image', 'Изображение', 'image'),
+                mkField('text', 'Alt', 'alt'),
+                mkField('text', 'Подпись', 'caption'),
+                mkField('textarea', 'Описание', 'description')
+            ];
+            break;
+
+        case 'reviews':
+            fields = [
+                mkField('image', 'Фото автора', 'author_photo'),
+                mkField('text', 'Автор', 'author_name'),
+                mkField('text', 'Компания', 'company'),
+                mkField('richtext', 'Текст отзыва', 'review_text'),
+                mkField('number', 'Рейтинг', 'rating')
+            ];
+            break;
+
+        case 'errors':
+            fields = [
+                mkField('text', 'Поле без fieldname', ''),
+                mkField('text', 'Дубликат', 'duplicate_name'),
+                mkField('textarea', 'Дубликат 2', 'duplicate_name'),
+                mkField('migx', 'Пустой MIGX', 'empty_nested'),
+                mkField('listbox', 'Listbox без опций', 'empty_listbox')
+            ];
+            break;
+
         case 'faq':
             fields = [
                 mkField('text', 'Вопрос', 'faq_q'),
@@ -839,6 +920,7 @@ function loadTemplate(name) {
 
     renderAll();
     generateJSON();
+    validateMIGXConfig();
     showToast('Шаблон загружен');
 }
 
@@ -986,4 +1068,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
     renderAll();
     generateJSON();
+    applyPresetFromURL();
+    validateMIGXConfig();
 });
