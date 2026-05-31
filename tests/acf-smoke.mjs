@@ -73,15 +73,22 @@ function testProductionExportGuards() {
   const generatorHtml = read('acf-generator.html');
   const generator = read('js/acf-generator.js');
   const production = read('js/acf-production-renderer.js');
+  const audit = read('js/acf-generator-audit.js');
 
   assert(generatorHtml.includes('js/acf-generator.js?v=acf-ui-20260531-8'), 'acf-generator.html must load the current generator cache-buster');
+  assert(generatorHtml.includes('js/acf-generator-audit.js?v=acf-ui-20260531-2'), 'acf-generator.html must load the current audit cache-buster');
   assert(generatorHtml.includes('WP-шаблон+CSS'), 'HTML export tab must be labeled as a WP template');
+  assert(generatorHtml.includes('.audit-handoff'), 'generator UI must style the export handoff package');
   assert(generator.includes('generateVisualHTML({ fullDocument: false })'), 'fallback HTML export must use snippet mode');
   assert(generator.includes("return fullDocument ? ' data-style-target=\"' + key + '\"' : '';"), 'fallback editor markers must be gated by fullDocument');
   assert(production.includes('window.generateHTML = function()'), 'production renderer must own HTML export');
   assert(production.includes('output.textContent = renderProductionPHP();'), 'HTML export must render production PHP template');
   assert(production.includes('.zifra-acf-block, .zifra-acf-block * { box-sizing: border-box; }'), 'production CSS must be scoped to zifra-acf-block');
   assert(!production.includes('output.textContent = fullPreviewDoc();'), 'HTML export must not output editor preview document');
+  assert(audit.includes('class="audit-handoff"'), 'audit panel must render the export handoff package');
+  assert(audit.includes('ACF PHP'), 'handoff package must mention ACF PHP');
+  assert(audit.includes('WP-шаблон+CSS'), 'handoff package must mention WP template and CSS');
+  assert(audit.includes('JSON snapshot'), 'handoff package must mention JSON snapshot');
 }
 
 function main() {
