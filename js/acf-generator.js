@@ -2996,7 +2996,45 @@ function loadTemplate(name) {
         return d;
     }
 
-    if (name === 'hero') {
+    if (name === 'field_group') {
+        document.getElementById('group-title').value = 'Content Fields';
+        document.getElementById('group-key').value = 'group_content_fields';
+        document.getElementById('group-desc').value = 'Базовая группа ACF-полей для страницы или записи';
+        locationRules = [{ param: 'post_type', operator: '==', value: 'page' }];
+        var featureSubs = [
+            mkSubField('text','Заголовок преимущества','feature_title'),
+            mkSubField('textarea','Описание','feature_text',{new_lines:'br'}),
+            mkSubField('image','Иконка','feature_icon',{return_format:'array'})
+        ];
+        fields = [
+            mkField('text','Надзаголовок','eyebrow','Короткая подпись над заголовком'),
+            mkField('text','Заголовок','content_title','Основной заголовок блока'),
+            mkField('wysiwyg','Текст','content_body','Основной контент блока'),
+            mkField('image','Изображение','content_image','Иллюстрация или фото',{return_format:'array'}),
+            mkStruct('repeater','Преимущества','features','Список преимуществ или фактов',featureSubs,{button_label:'Добавить преимущество',min:0,max:12})
+        ];
+    } else if (name === 'woocommerce_product') {
+        document.getElementById('group-title').value = 'WooCommerce Product Fields';
+        document.getElementById('group-key').value = 'group_woocommerce_product_fields';
+        document.getElementById('group-desc').value = 'Дополнительные поля для карточки товара WooCommerce';
+        locationRules = [{ param: 'post_type', operator: '==', value: 'product' }];
+        var specSubs = [
+            mkSubField('text','Название характеристики','spec_name'),
+            mkSubField('text','Значение','spec_value')
+        ];
+        var productFaqSubs = [
+            mkSubField('text','Вопрос','product_faq_question'),
+            mkSubField('textarea','Ответ','product_faq_answer',{new_lines:'wpautop'})
+        ];
+        fields = [
+            mkField('text','Бейдж товара','product_badge','Например: хит продаж, новинка, гарантия'),
+            mkStruct('repeater','Характеристики','product_specs','Таблица характеристик товара',specSubs,{button_label:'Добавить характеристику',min:0,max:50}),
+            mkField('wysiwyg','Комплектация','product_package','Что входит в комплект поставки'),
+            mkField('file','Инструкция','product_manual','PDF-инструкция или файл для скачивания',{return_format:'array'}),
+            mkStruct('repeater','FAQ товара','product_faq','Вопросы и ответы на странице товара',productFaqSubs,{button_label:'Добавить вопрос',min:0,max:20}),
+            mkField('true_false','Показывать блок доверия','show_trust_block','Включить гарантию, доставку или другие trust-маркеры',{message:'Показывать блок доверия'})
+        ];
+    } else if (name === 'hero') {
         document.getElementById('group-title').value = 'Hero Section';
         document.getElementById('group-key').value = 'group_hero_section';
         document.getElementById('group-desc').value = 'Поля для главного экрана';
@@ -3099,18 +3137,24 @@ function loadTemplateFromURL() {
     if (!preset) return;
 
     var aliases = {
-        field_group: 'hero',
-        php: 'hero',
-        json: 'hero',
+        field_group: 'field_group',
+        php: 'field_group',
+        json: 'field_group',
         repeater: 'faq',
         flexible: 'flexible_page',
-        page_builder: 'flexible_page'
+        page_builder: 'flexible_page',
+        woocommerce: 'woocommerce_product'
+    };
+    var targetTabs = {
+        json: 'json',
+        php: 'php'
     };
     var template = aliases[preset] || preset;
-    var allowed = ['hero', 'team', 'testimonials', 'seo', 'faq', 'flexible_page'];
+    var allowed = ['field_group', 'woocommerce_product', 'hero', 'team', 'testimonials', 'seo', 'faq', 'flexible_page'];
     if (allowed.indexOf(template) === -1) return;
 
     loadTemplate(template);
+    if (targetTabs[preset]) switchCodeTab(targetTabs[preset]);
 }
 
 // ==================== EVENT DELEGATION ====================
