@@ -3131,9 +3131,99 @@ function loadTemplate(name) {
     showToast('Шаблон «' + document.getElementById('group-title').value + '» загружен');
 }
 
+function landingContextCopy(source, preset, template) {
+    var map = {
+        'acf-php-generator': {
+            title: 'ACF PHP генератор: структура уже загружена',
+            text: 'Проверьте названия полей, location rules и заберите PHP-код для темы или плагина.',
+            primaryTab: 'php'
+        },
+        'acf-json-generator': {
+            title: 'ACF JSON генератор: можно сразу экспортировать JSON',
+            text: 'Поля загружены в базовую группу. Проверьте структуру и скачайте JSON для local-json или миграции.',
+            primaryTab: 'json'
+        },
+        'acf-field-group-generator': {
+            title: 'ACF Field Group: базовая группа полей готова',
+            text: 'Отредактируйте ключ группы, location rules и состав полей перед переносом в WordPress.',
+            primaryTab: 'php'
+        },
+        'acf-repeater-generator': {
+            title: 'ACF Repeater: повторитель уже собран',
+            text: 'Проверьте sub fields, подписи кнопок и откройте preview перед экспортом.',
+            primaryTab: 'html'
+        },
+        'acf-flexible-content-generator': {
+            title: 'ACF Flexible Content: layouts загружены',
+            text: 'Настройте секции page builder, проверьте preview и заберите PHP-шаблон с CSS.',
+            primaryTab: 'html'
+        },
+        'acf-page-builder': {
+            title: 'ACF Page Builder: flexible layouts готовы',
+            text: 'Отредактируйте набор секций, посмотрите live preview и экспортируйте шаблон.',
+            primaryTab: 'html'
+        },
+        'acf-seo-fields': {
+            title: 'ACF SEO поля: meta-набор загружен',
+            text: 'Проверьте title, description, canonical, robots и OG-поле перед экспортом.',
+            primaryTab: 'php'
+        },
+        'acf-faq-fields': {
+            title: 'ACF FAQ поля: вопрос-ответ уже в repeater',
+            text: 'Откройте preview, проверьте FAQ-разметку и заберите production template.',
+            primaryTab: 'html'
+        },
+        'acf-hero-section': {
+            title: 'ACF Hero Section: поля первого экрана загружены',
+            text: 'Настройте заголовок, описание, изображение и кнопку, затем проверьте live preview.',
+            primaryTab: 'html'
+        },
+        'acf-team-repeater': {
+            title: 'ACF Team Repeater: команда загружена',
+            text: 'Проверьте поля участника команды, карточки и шаблон вывода.',
+            primaryTab: 'html'
+        },
+        'acf-testimonials-repeater': {
+            title: 'ACF Testimonials: отзывы загружены',
+            text: 'Проверьте автора, текст отзыва, аватар и шаблон карточек.',
+            primaryTab: 'html'
+        },
+        'acf-woocommerce-product-fields': {
+            title: 'ACF поля товара WooCommerce: product preset загружен',
+            text: 'Проверьте характеристики, комплектацию, инструкцию и FAQ товара перед экспортом.',
+            primaryTab: 'html'
+        }
+    };
+    return map[source] || {
+        title: 'Предустановка загружена',
+        text: 'Проверьте поля, откройте preview и экспортируйте код в нужном формате.',
+        primaryTab: preset === 'json' ? 'json' : (template === 'field_group' ? 'php' : 'html')
+    };
+}
+
+function renderLandingContext(source, preset, template) {
+    var el = document.getElementById('landing-context');
+    if (!el || !source) return;
+    var copy = landingContextCopy(source, preset, template);
+    var primaryLabel = copy.primaryTab === 'json' ? 'Открыть JSON' : (copy.primaryTab === 'php' ? 'Открыть PHP' : 'Открыть шаблон');
+    el.innerHTML = [
+        '<div>',
+        '  <div class="landing-context-kicker"><span class="material-symbols-outlined">travel_explore</span> Переход с посадочной</div>',
+        '  <h2>' + escHtml(copy.title) + '</h2>',
+        '  <p>' + escHtml(copy.text) + '</p>',
+        '</div>',
+        '<div class="landing-context-actions">',
+        '  <button class="gen-btn gen-btn-sm gen-btn-primary" data-action="switch-tab" data-tab="' + escAttr(copy.primaryTab) + '"><span class="material-symbols-outlined">integration_instructions</span> ' + escHtml(primaryLabel) + '</button>',
+        '  <button class="gen-btn gen-btn-sm gen-btn-outline" data-action="toggle-preview-mode"><span class="material-symbols-outlined">visibility</span> Live preview</button>',
+        '</div>'
+    ].join('');
+    el.hidden = false;
+}
+
 function loadTemplateFromURL() {
     var params = new URLSearchParams(window.location.search);
     var preset = params.get('preset') || params.get('template');
+    var source = params.get('source') || '';
     if (!preset) return;
 
     var aliases = {
@@ -3155,6 +3245,7 @@ function loadTemplateFromURL() {
 
     loadTemplate(template);
     if (targetTabs[preset]) switchCodeTab(targetTabs[preset]);
+    renderLandingContext(source, preset, template);
 }
 
 // ==================== EVENT DELEGATION ====================
