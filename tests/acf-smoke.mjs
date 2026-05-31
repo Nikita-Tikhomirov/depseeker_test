@@ -34,6 +34,21 @@ const specificLandingCopy = [
   { page: 'acf-woocommerce-product-fields.html', required: ['характеристики товара', 'инструкции', 'FAQ товара'] }
 ];
 
+const generatorContextRequirements = [
+  { source: 'acf-php-generator', required: ['acf_add_local_field_group', 'functions.php', 'Location rules'] },
+  { source: 'acf-json-generator', required: ['acf-json', 'синхронизация', 'field keys'] },
+  { source: 'acf-repeater-generator', required: ['sub fields', 'цикл вывода', 'повторяемый список'] },
+  { source: 'acf-flexible-content-generator', required: ['flexible content', 'layouts', 'секции страницы'] },
+  { source: 'acf-field-group-generator', required: ['group key', 'field names', 'location rules'] },
+  { source: 'acf-seo-fields', required: ['canonical', 'robots', 'Open Graph'] },
+  { source: 'acf-faq-fields', required: ['FAQPage schema', 'аккордеон FAQ', 'вопрос-ответ'] },
+  { source: 'acf-hero-section', required: ['первый экран', 'CTA', 'изображение hero'] },
+  { source: 'acf-team-repeater', required: ['карточки команды', 'фото сотрудника', 'социальные ссылки'] },
+  { source: 'acf-testimonials-repeater', required: ['отзывы клиентов', 'рейтинг', 'автор отзыва'] },
+  { source: 'acf-page-builder', required: ['page builder', 'порядок секций', 'шаблон вывода'] },
+  { source: 'acf-woocommerce-product-fields', required: ['характеристики товара', 'инструкции', 'FAQ товара'] }
+];
+
 function read(relativePath) {
   return readFileSync(join(root, relativePath), 'utf8');
 }
@@ -95,13 +110,27 @@ function testGeneratorRouteConfig() {
   assert(generator.includes('function updateCodeExportNote'), 'export format note must be wired');
 }
 
+function testGeneratorLandingContextCopy() {
+  const generator = read('js/acf-generator.js');
+
+  for (const item of generatorContextRequirements) {
+    const blockPattern = new RegExp(`'${escapeRegex(item.source)}'\\s*:\\s*\\{[\\s\\S]*?primaryTab:\\s*'[^']+'[\\s\\S]*?\\}`);
+    const match = generator.match(blockPattern);
+    assert(match, `landing context ${item.source} must have a copy block`);
+
+    for (const phrase of item.required) {
+      assert(match[0].includes(phrase), `landing context ${item.source} must include specific phrase: ${phrase}`);
+    }
+  }
+}
+
 function testProductionExportGuards() {
   const generatorHtml = read('acf-generator.html');
   const generator = read('js/acf-generator.js');
   const production = read('js/acf-production-renderer.js');
   const audit = read('js/acf-generator-audit.js');
 
-  assert(generatorHtml.includes('js/acf-generator.js?v=acf-ui-20260531-8'), 'acf-generator.html must load the current generator cache-buster');
+  assert(generatorHtml.includes('js/acf-generator.js?v=acf-ui-20260531-9'), 'acf-generator.html must load the current generator cache-buster');
   assert(generatorHtml.includes('js/acf-generator-audit.js?v=acf-ui-20260531-2'), 'acf-generator.html must load the current audit cache-buster');
   assert(generatorHtml.includes('WP-шаблон+CSS'), 'HTML export tab must be labeled as a WP template');
   assert(generatorHtml.includes('.audit-handoff'), 'generator UI must style the export handoff package');
@@ -122,8 +151,9 @@ function main() {
   testLandingCtas();
   testSpecificLandingCopy();
   testGeneratorRouteConfig();
+  testGeneratorLandingContextCopy();
   testProductionExportGuards();
-  console.log('ACF smoke checks passed: 12 routes, landing CTAs, export tabs, production guards.');
+  console.log('ACF smoke checks passed: 12 routes, landing CTAs, context copy, export tabs, production guards.');
 }
 
 main();

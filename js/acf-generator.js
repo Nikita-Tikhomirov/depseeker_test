@@ -3168,62 +3168,62 @@ function landingContextCopy(source, preset, template) {
     var map = {
         'acf-php-generator': {
             title: 'ACF PHP генератор: структура уже загружена',
-            text: 'Проверьте названия полей, location rules и заберите PHP-код для темы или плагина.',
+            text: 'Проверьте field names, Location rules и заберите acf_add_local_field_group для functions.php или отдельного include.',
             primaryTab: 'php'
         },
         'acf-json-generator': {
             title: 'ACF JSON генератор: можно сразу экспортировать JSON',
-            text: 'Поля загружены в базовую группу. Проверьте структуру и скачайте JSON для local-json или миграции.',
+            text: 'Проверьте field keys, group key и скачайте JSON в папку acf-json: синхронизация между окружениями не сломает поля.',
             primaryTab: 'json'
         },
         'acf-field-group-generator': {
             title: 'ACF Field Group: базовая группа полей готова',
-            text: 'Отредактируйте ключ группы, location rules и состав полей перед переносом в WordPress.',
+            text: 'Отредактируйте group key, field names, location rules и состав полей перед переносом в WordPress.',
             primaryTab: 'php'
         },
         'acf-repeater-generator': {
             title: 'ACF Repeater: повторитель уже собран',
-            text: 'Проверьте sub fields, подписи кнопок и откройте preview перед экспортом.',
+            text: 'Проверьте повторяемый список, sub fields и цикл вывода в preview перед экспортом шаблона.',
             primaryTab: 'html'
         },
         'acf-flexible-content-generator': {
             title: 'ACF Flexible Content: layouts загружены',
-            text: 'Настройте секции page builder, проверьте preview и заберите PHP-шаблон с CSS.',
+            text: 'Настройте flexible content, layouts и секции страницы, затем заберите WP-шаблон+CSS.',
             primaryTab: 'html'
         },
         'acf-page-builder': {
             title: 'ACF Page Builder: flexible layouts готовы',
-            text: 'Отредактируйте набор секций, посмотрите live preview и экспортируйте шаблон.',
+            text: 'Отредактируйте page builder, порядок секций и шаблон вывода, затем проверьте live preview.',
             primaryTab: 'html'
         },
         'acf-seo-fields': {
             title: 'ACF SEO поля: meta-набор загружен',
-            text: 'Проверьте title, description, canonical, robots и OG-поле перед экспортом.',
+            text: 'Проверьте title, description, canonical, robots и Open Graph поля перед экспортом.',
             primaryTab: 'php'
         },
         'acf-faq-fields': {
             title: 'ACF FAQ поля: вопрос-ответ уже в repeater',
-            text: 'Откройте preview, проверьте FAQ-разметку и заберите production template.',
+            text: 'Проверьте вопрос-ответ, аккордеон FAQ и основу под FAQPage schema, затем заберите production template.',
             primaryTab: 'html'
         },
         'acf-hero-section': {
             title: 'ACF Hero Section: поля первого экрана загружены',
-            text: 'Настройте заголовок, описание, изображение и кнопку, затем проверьте live preview.',
+            text: 'Настройте первый экран, CTA и изображение hero, затем проверьте live preview.',
             primaryTab: 'html'
         },
         'acf-team-repeater': {
             title: 'ACF Team Repeater: команда загружена',
-            text: 'Проверьте поля участника команды, карточки и шаблон вывода.',
+            text: 'Проверьте карточки команды, фото сотрудника и социальные ссылки перед экспортом шаблона.',
             primaryTab: 'html'
         },
         'acf-testimonials-repeater': {
             title: 'ACF Testimonials: отзывы загружены',
-            text: 'Проверьте автора, текст отзыва, аватар и шаблон карточек.',
+            text: 'Проверьте отзывы клиентов, рейтинг, автор отзыва и шаблон карточек.',
             primaryTab: 'html'
         },
         'acf-woocommerce-product-fields': {
             title: 'ACF поля товара WooCommerce: product preset загружен',
-            text: 'Проверьте характеристики, комплектацию, инструкцию и FAQ товара перед экспортом.',
+            text: 'Проверьте характеристики товара, инструкции, комплектацию и FAQ товара перед экспортом.',
             primaryTab: 'html'
         }
     };
