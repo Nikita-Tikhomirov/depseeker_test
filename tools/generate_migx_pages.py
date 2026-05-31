@@ -247,6 +247,26 @@ PAGES = [
 ]
 
 
+MIGX_HUB_FAQ = [
+    (
+        "Чем Form Tabs отличаются от Grid Columns в MIGX?",
+        "Form Tabs отвечают за вкладки и группировку полей внутри формы редактирования MIGX. Grid Columns задают колонки, которые видны в таблице элементов MIGX в менеджере MODX.",
+    ),
+    (
+        "Когда нужен nested MIGX?",
+        "Nested MIGX нужен, когда один элемент должен содержать повторяемые дочерние элементы: например секция с карточками, категория с пунктами или слайд с кнопками.",
+    ),
+    (
+        "Что выбрать для вывода MIGX: getImageList или Fenom?",
+        "getImageList удобен для классического вывода MIGX TV через tpl и wrapperTpl. Fenom подходит, если проект уже использует Fenom-шаблоны и нужно вывести поля через понятный синтаксис.",
+    ),
+    (
+        "Зачем нужен валидатор MIGX JSON?",
+        "Валидатор помогает найти пустые fieldname, дубли, listbox без options, MIGX без вложенных полей и ошибки импортированного JSON до вставки конфигурации в MODX.",
+    ),
+]
+
+
 def esc(value: object) -> str:
     return html.escape(str(value), quote=True)
 
@@ -332,6 +352,36 @@ def faq_schema(page: dict[str, object]) -> str:
         ],
     }
     return json.dumps(payload, ensure_ascii=False, indent=4)
+
+
+def hub_faq_schema() -> str:
+    payload = {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+            {
+                "@type": "Question",
+                "name": question,
+                "acceptedAnswer": {"@type": "Answer", "text": answer},
+            }
+            for question, answer in MIGX_HUB_FAQ
+        ],
+    }
+    return json.dumps(payload, ensure_ascii=False, indent=4)
+
+
+def hub_faq_section() -> str:
+    items = "\n        ".join(
+        '<details class="acf-faq-item"{open_attr}><summary>{question}</summary><p>{answer}</p></details>'.format(
+            open_attr=" open" if index == 0 else "",
+            question=esc(question),
+            answer=esc(answer),
+        )
+        for index, (question, answer) in enumerate(MIGX_HUB_FAQ)
+    )
+    return f"""<section class="acf-section" id="faq"><div class="acf-container"><div class="acf-section-head"><span class="acf-section-label">FAQ</span><h2>Частые вопросы по MIGX</h2><p>Короткие ответы на вопросы, с которыми обычно приходят перед настройкой MIGX TV.</p></div><div class="acf-faq">
+        {items}
+    </div></div></section>"""
 
 
 def header(active: str = "") -> str:
@@ -433,7 +483,8 @@ def render_page(page: dict[str, object]) -> str:
 </main>
 {footer()}
 </body>
-</html>"""
+</html>
+"""
 
 
 def render_hub() -> str:
@@ -460,6 +511,7 @@ def render_hub() -> str:
     {asset_head(page)}
     <script type="application/ld+json">{breadcrumb_schema(None)}</script>
     <script type="application/ld+json">{json.dumps(item_list, ensure_ascii=False, indent=4)}</script>
+    <script type="application/ld+json">{hub_faq_schema()}</script>
 </head>
 <body>
 {header("hub")}
@@ -477,11 +529,13 @@ def render_hub() -> str:
     </section>
     <section class="acf-section" id="pages"><div class="acf-container"><div class="acf-section-head"><span class="acf-section-label">Кластеры</span><h2>Страницы под MIGX-запросы</h2><p>Каждая страница ведет в генератор с нужной предустановкой.</p></div><div class="acf-topic-grid">{cards}</div></div></section>
     <section class="acf-section acf-section--muted"><div class="acf-container"><div class="acf-section-head"><span class="acf-section-label">Карта пресетов</span><h2>SEO-страница -> пресет генератора</h2></div><div class="acf-preset-map" aria-label="Карта MIGX-пресетов">{preset_rows()}</div></div></section>
+    {hub_faq_section()}
     <section class="acf-final-cta"><div class="acf-container"><h2>Откройте MIGX генератор</h2><p>Выберите шаблон, проверьте ошибки и экспортируйте JSON или chunk.</p><a class="acf-btn acf-btn--primary" href="migx-generator.html">Запустить</a></div></section>
 </main>
 {footer()}
 </body>
-</html>"""
+</html>
+"""
 
 
 def write_pages() -> None:
