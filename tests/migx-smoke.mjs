@@ -188,6 +188,8 @@ function testGeneratorWiring() {
   assert(html.includes('id="validation-metrics"'), 'migx-generator.html must expose validation metrics');
   assert(html.includes('data-action="copy-audit"'), 'migx-generator.html must expose audit checklist copy action');
   assert(html.includes('data-action="copy-share-link"'), 'migx-generator.html must expose shareable config link action');
+  assert(html.includes('fonts.googleapis.com/css2?family=Material+Symbols+Outlined'), 'migx-generator.html must load Material Symbols for tool icons');
+  assert(html.includes('id="code-export-note"'), 'migx-generator.html must explain the active export package');
   assert(html.includes('data-tab="formtabs"'), 'migx-generator.html must expose Form Tabs export tab');
   assert(html.includes('data-tab="grid_columns"'), 'migx-generator.html must expose Grid Columns export tab');
   assert(html.includes('data-tab="fenom"'), 'migx-generator.html must expose Fenom export tab');
@@ -200,6 +202,10 @@ function testGeneratorWiring() {
   assert(js.includes('function copyShareText('), 'js/migx-generator.js must copy shareable config URLs with fallback');
   assert(js.includes('function restoreSharedStateFromURL()'), 'js/migx-generator.js must restore shareable config URLs');
   assert(js.includes('function sanitizeSharedFields('), 'js/migx-generator.js must sanitize shared fields before rendering');
+  assert(js.includes('function buildGetImageListPackage()'), 'js/migx-generator.js must build a complete getImageList package');
+  assert(js.includes('function renderGetImageListTpl('), 'js/migx-generator.js must render the getImageList row tpl');
+  assert(js.includes('&value=`[[+'), 'getImageList export must include nested MIGX value handoff examples');
+  assert(js.includes('function updateExportNote()'), 'js/migx-generator.js must keep export notes in sync with tabs');
   assert(js.includes("trackGeneratorEvent('migx_preset_loaded'"), 'MIGX preset loads must be tracked');
   assert(js.includes("trackGeneratorEvent('migx_code_copied'"), 'MIGX copy action must be tracked');
   assert(js.includes("trackGeneratorEvent('migx_code_downloaded'"), 'MIGX download action must be tracked');

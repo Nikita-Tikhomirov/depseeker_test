@@ -876,8 +876,112 @@ function generateGridColumnsJSON() {
 }
 
 function generateGetImageListSnippet() {
-    var tpl = '[[getImageList? &tvname=`migx_items` &tpl=`migxItemTpl`]]';
-    document.getElementById('code-output').textContent = tpl;
+    document.getElementById('code-output').textContent = buildGetImageListPackage();
+}
+
+function fieldClassName(field) {
+    return String(field.fieldname || 'field').replace(/[^a-zA-Z0-9_-]/g, '-').toLowerCase();
+}
+
+function chunkNameForField(field) {
+    var name = String(field.fieldname || 'items').replace(/[^a-zA-Z0-9_]+/g, '_');
+    var parts = name.split('_');
+    var suffix = '';
+    for (var i = 0; i < parts.length; i++) {
+        if (!parts[i]) continue;
+        suffix += parts[i].charAt(0).toUpperCase() + parts[i].slice(1);
+    }
+    return 'migx' + (suffix || 'Nested') + 'Tpl';
+}
+
+function renderGetImageListValue(field) {
+    var name = field.fieldname || 'field';
+    var cls = fieldClassName(field);
+    if (field.inputTVtype === 'image') {
+        return '  <figure class="migx-item__' + cls + '">\n' +
+            '    <img src="[[+' + name + ']]" alt="[[+alt:default=`' + (field.caption || name) + '`:htmlent]]" loading="lazy">\n' +
+            '  </figure>';
+    }
+    if (field.inputTVtype === 'url') {
+        return '  <a class="migx-item__' + cls + '" href="[[+' + name + ']]">[[+' + name + ']]</a>';
+    }
+    if (field.inputTVtype === 'richtext' || field.inputTVtype === 'textarea') {
+        return '  <div class="migx-item__' + cls + '">[[+' + name + ']]</div>';
+    }
+    return '  <div class="migx-item__' + cls + '">[[+' + name + ']]</div>';
+}
+
+function renderNestedGetImageListCall(field) {
+    var name = field.fieldname || 'items';
+    return [
+        '  [[+' + name + ':notempty=`',
+        '  <div class="migx-item__' + fieldClassName(field) + '">',
+        '    [[getImageList?',
+        '      &value=`[[+' + name + ']]`',
+        '      &tpl=`' + chunkNameForField(field) + '`',
+        '      &limit=`0`',
+        '    ]]',
+        '  </div>',
+        '  `]]'
+    ].join('\n');
+}
+
+function renderGetImageListTpl(fieldList, className) {
+    var items = fieldList.filter(function(field) { return field.inputTVtype !== 'tab'; });
+    var lines = ['<article class="' + (className || 'migx-item') + '">'];
+    if (!items.length) {
+        lines.push('  <div class="migx-item__empty">[[+idx]]</div>');
+    }
+    for (var i = 0; i < items.length; i++) {
+        var field = items[i];
+        if (field.inputTVtype === 'migx') {
+            lines.push(renderNestedGetImageListCall(field));
+        } else {
+            lines.push(renderGetImageListValue(field));
+        }
+    }
+    lines.push('</article>');
+    return lines.join('\n');
+}
+
+function collectNestedGetImageListChunks(fieldList, chunks) {
+    chunks = chunks || [];
+    for (var i = 0; i < fieldList.length; i++) {
+        var field = fieldList[i];
+        if (field.inputTVtype !== 'migx') continue;
+        var nested = field.nestedFields || [];
+        chunks.push({
+            name: chunkNameForField(field),
+            body: renderGetImageListTpl(nested, 'migx-nested-item')
+        });
+        collectNestedGetImageListChunks(nested, chunks);
+    }
+    return chunks;
+}
+
+function buildGetImageListPackage() {
+    var tvName = 'migx_items';
+    var mainChunk = 'migxItemTpl';
+    var lines = [
+        '<!-- Вызов в шаблоне ресурса MODX -->',
+        '[[getImageList?',
+        '  &tvname=`' + tvName + '`',
+        '  &tpl=`' + mainChunk + '`',
+        '  &docid=`[[*id]]`',
+        '  &limit=`0`',
+        ']]',
+        '',
+        '<!-- Chunk: ' + mainChunk + ' -->',
+        renderGetImageListTpl(fields, 'migx-item')
+    ];
+    var nestedChunks = collectNestedGetImageListChunks(fields, []);
+    for (var i = 0; i < nestedChunks.length; i++) {
+        lines.push('', '<!-- Chunk: ' + nestedChunks[i].name + ' -->', nestedChunks[i].body);
+    }
+    lines.push('', '<!-- CSS стартовый минимум -->');
+    lines.push('.migx-item { display: grid; gap: 12px; }');
+    lines.push('.migx-item img { max-width: 100%; height: auto; display: block; }');
+    return lines.join('\n');
 }
 
 function generateFenomChunk() {
@@ -892,6 +996,21 @@ function generateFenomChunk() {
 }
 
 // ==================== CODE TABS ====================
+var EXPORT_NOTES = {
+    json: 'JSON для поля MIGX TV: вставьте в конфигурацию формы MIGX.',
+    json_flat: 'Плоский JSON без табов: удобно для проверки и импорта простых конфигураций.',
+    formtabs: 'Form Tabs JSON: структура вкладок формы MIGX с привязкой полей.',
+    grid_columns: 'Grid Columns JSON: колонки таблицы MIGX CMP/list view.',
+    getimagelist: 'Полный getImageList package: вызов сниппета, основной chunk, nested chunks и стартовый CSS.',
+    fenom: 'Fenom chunk: пример вывода для шаблонов на Fenom/Smarty-подобном синтаксисе.'
+};
+
+function updateExportNote() {
+    var note = document.getElementById('code-export-note');
+    if (!note) return;
+    note.innerHTML = '<span class="material-symbols-outlined">info</span><span>' + escHtml(EXPORT_NOTES[currentCodeTab] || EXPORT_NOTES.json) + '</span>';
+}
+
 function switchCodeTab(tab) {
     currentCodeTab = tab;
     if (typeof window.trackGeneratorEvent === 'function') {
@@ -901,6 +1020,7 @@ function switchCodeTab(tab) {
     for (var i = 0; i < tabs.length; i++) {
         tabs[i].classList.toggle('active', tabs[i].getAttribute('data-tab') === tab);
     }
+    updateExportNote();
     generateJSON();
 }
 
@@ -1450,5 +1570,6 @@ document.addEventListener('DOMContentLoaded', function() {
         generateJSON();
         applyPresetFromURL();
     }
+    updateExportNote();
     validateMIGXConfig();
 });
