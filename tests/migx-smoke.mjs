@@ -70,10 +70,39 @@ function testLandingPages() {
 
 function testSitemapRoutes() {
   const sitemap = read('sitemap.xml');
+  const robots = read('robots.txt');
   assert(sitemap.includes('https://zifra.example.com/migx.html'), 'sitemap must include migx.html');
   assert(sitemap.includes('https://zifra.example.com/migx-generator.html'), 'sitemap must include migx-generator.html');
+  assert(robots.includes('Sitemap: https://zifra.example.com/sitemap.xml'), 'robots.txt must expose the sitemap');
   for (const route of expectedRoutes) {
     assert(sitemap.includes(`https://zifra.example.com/${route.page}`), `sitemap must include ${route.page}`);
+  }
+}
+
+function testTechnicalSeo() {
+  const hub = read('migx.html');
+  const generator = read('migx-generator.html');
+  assert(
+    hub.includes('<link rel="canonical" href="https://zifra.example.com/migx.html">'),
+    'migx.html must expose a canonical URL'
+  );
+  assert(
+    generator.includes('<link rel="canonical" href="https://zifra.example.com/migx-generator.html">'),
+    'migx-generator.html canonical must match the sitemap URL'
+  );
+  assert(
+    generator.includes('<meta property="og:url" content="https://zifra.example.com/migx-generator.html">'),
+    'migx-generator.html Open Graph URL must match the canonical URL'
+  );
+  assert(!generator.includes('https://zifra.example.com/tools/migx-generator'), 'legacy MIGX generator URL must not remain in metadata');
+
+  for (const route of expectedRoutes) {
+    const page = read(route.page);
+    assert(
+      page.includes(`<link rel="canonical" href="https://zifra.example.com/${route.page}">`),
+      `${route.page} must expose a canonical URL`
+    );
+    assert(page.includes('<meta name="robots" content="index, follow">'), `${route.page} must be indexable`);
   }
 }
 
@@ -113,9 +142,10 @@ function main() {
   testHubRoutes();
   testLandingPages();
   testSitemapRoutes();
+  testTechnicalSeo();
   testGeneratorWiring();
   testInternalEntryLinks();
-  console.log('MIGX smoke checks passed: hub, 21 landings, sitemap, generator wiring, internal entry links.');
+  console.log('MIGX smoke checks passed: hub, 21 landings, sitemap, technical SEO, generator wiring, internal entry links.');
 }
 
 main();
