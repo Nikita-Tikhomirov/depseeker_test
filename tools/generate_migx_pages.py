@@ -9,6 +9,7 @@ import xml.etree.ElementTree as ET
 ROOT = Path(__file__).resolve().parents[1]
 SITE = "https://zifra.example.com"
 SITEMAP_NS = "http://www.sitemaps.org/schemas/sitemap/0.9"
+SITEMAP_LASTMOD = "2026-05-31"
 
 
 PAGES = [
@@ -493,31 +494,36 @@ def update_sitemap() -> None:
     sitemap = ROOT / "sitemap.xml"
     tree = ET.parse(sitemap)
     old_root = tree.getroot()
-    entries: dict[str, tuple[str, str]] = {}
+    entries: dict[str, tuple[str | None, str, str]] = {}
     for url in old_root.findall(".//{*}url"):
         loc = url.find("{*}loc")
         if loc is None or not loc.text:
             continue
+        lastmod = url.find("{*}lastmod")
         changefreq = url.find("{*}changefreq")
         priority = url.find("{*}priority")
         entries[loc.text] = (
+            lastmod.text if lastmod is not None and lastmod.text else None,
             changefreq.text if changefreq is not None and changefreq.text else "weekly",
             priority.text if priority is not None and priority.text else "0.5",
         )
-    entries[f"{SITE}/migx.html"] = ("weekly", "0.85")
-    entries[f"{SITE}/migx-generator.html"] = ("weekly", "0.8")
+    entries[f"{SITE}/migx.html"] = (SITEMAP_LASTMOD, "weekly", "0.85")
+    entries[f"{SITE}/migx-generator.html"] = (SITEMAP_LASTMOD, "weekly", "0.8")
     for page in PAGES:
-        entries[slug_url(str(page["slug"]))] = ("weekly", "0.75")
+        entries[slug_url(str(page["slug"]))] = (SITEMAP_LASTMOD, "weekly", "0.75")
     ET.register_namespace("", SITEMAP_NS)
     root = ET.Element(f"{{{SITEMAP_NS}}}urlset")
-    for loc, (changefreq, priority) in entries.items():
+    for loc, (lastmod, changefreq, priority) in entries.items():
         url = ET.SubElement(root, f"{{{SITEMAP_NS}}}url")
         ET.SubElement(url, f"{{{SITEMAP_NS}}}loc").text = loc
+        if lastmod:
+            ET.SubElement(url, f"{{{SITEMAP_NS}}}lastmod").text = lastmod
         ET.SubElement(url, f"{{{SITEMAP_NS}}}changefreq").text = changefreq
         ET.SubElement(url, f"{{{SITEMAP_NS}}}priority").text = priority
     tree = ET.ElementTree(root)
     ET.indent(tree, space="    ")
     tree.write(sitemap, encoding="utf-8", xml_declaration=True)
+    sitemap.write_text(sitemap.read_text(encoding="utf-8") + "\n", encoding="utf-8")
 
 
 def main() -> None:

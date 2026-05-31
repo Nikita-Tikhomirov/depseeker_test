@@ -146,116 +146,139 @@
     </url>
     <url>
         <loc>https://zifra.example.com/migx.html</loc>
+        <lastmod>2026-05-31</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.85</priority>
     </url>
     <url>
         <loc>https://zifra.example.com/migx-generator.html</loc>
+        <lastmod>2026-05-31</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.8</priority>
     </url>
     <url>
         <loc>https://zifra.example.com/migx-json-generator.html</loc>
+        <lastmod>2026-05-31</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.75</priority>
     </url>
     <url>
         <loc>https://zifra.example.com/migx-tv-generator.html</loc>
+        <lastmod>2026-05-31</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.75</priority>
     </url>
     <url>
         <loc>https://zifra.example.com/migx-formtabs-generator.html</loc>
+        <lastmod>2026-05-31</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.75</priority>
     </url>
     <url>
         <loc>https://zifra.example.com/migx-grid-columns-generator.html</loc>
+        <lastmod>2026-05-31</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.75</priority>
     </url>
     <url>
         <loc>https://zifra.example.com/migx-nested-generator.html</loc>
+        <lastmod>2026-05-31</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.75</priority>
     </url>
     <url>
         <loc>https://zifra.example.com/migx-tabs-generator.html</loc>
+        <lastmod>2026-05-31</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.75</priority>
     </url>
     <url>
         <loc>https://zifra.example.com/migx-gallery.html</loc>
+        <lastmod>2026-05-31</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.75</priority>
     </url>
     <url>
         <loc>https://zifra.example.com/migx-slider.html</loc>
+        <lastmod>2026-05-31</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.75</priority>
     </url>
     <url>
         <loc>https://zifra.example.com/migx-faq.html</loc>
+        <lastmod>2026-05-31</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.75</priority>
     </url>
     <url>
         <loc>https://zifra.example.com/migx-catalog.html</loc>
+        <lastmod>2026-05-31</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.75</priority>
     </url>
     <url>
         <loc>https://zifra.example.com/migx-team.html</loc>
+        <lastmod>2026-05-31</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.75</priority>
     </url>
     <url>
         <loc>https://zifra.example.com/migx-reviews.html</loc>
+        <lastmod>2026-05-31</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.75</priority>
     </url>
     <url>
         <loc>https://zifra.example.com/migx-getimagelist.html</loc>
+        <lastmod>2026-05-31</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.75</priority>
     </url>
     <url>
         <loc>https://zifra.example.com/migx-fenom-chunk.html</loc>
+        <lastmod>2026-05-31</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.75</priority>
     </url>
     <url>
         <loc>https://zifra.example.com/migx-configs.html</loc>
+        <lastmod>2026-05-31</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.75</priority>
     </url>
     <url>
         <loc>https://zifra.example.com/migx-image-field.html</loc>
+        <lastmod>2026-05-31</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.75</priority>
     </url>
     <url>
         <loc>https://zifra.example.com/migx-richtext-field.html</loc>
+        <lastmod>2026-05-31</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.75</priority>
     </url>
     <url>
         <loc>https://zifra.example.com/migx-validator.html</loc>
+        <lastmod>2026-05-31</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.75</priority>
     </url>
     <url>
         <loc>https://zifra.example.com/migx-import-json.html</loc>
+        <lastmod>2026-05-31</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.75</priority>
     </url>
     <url>
         <loc>https://zifra.example.com/migx-errors.html</loc>
+        <lastmod>2026-05-31</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.75</priority>
     </url>
     <url>
         <loc>https://zifra.example.com/migx-examples.html</loc>
+        <lastmod>2026-05-31</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.75</priority>
     </url>

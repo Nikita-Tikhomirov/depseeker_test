@@ -48,6 +48,15 @@ function landingHref(route) {
   return `migx-generator.html?preset=${route.preset}&amp;source=${route.source}`;
 }
 
+function assertSitemapEntry(sitemap, loc, { lastmod, changefreq, priority }) {
+  const blockPattern = new RegExp(`<url>\\s*<loc>${escapeRegex(loc)}</loc>[\\s\\S]*?</url>`);
+  const match = sitemap.match(blockPattern);
+  assert(match, `sitemap must include ${loc}`);
+  assert(match[0].includes(`<lastmod>${lastmod}</lastmod>`), `${loc} must expose lastmod ${lastmod}`);
+  assert(match[0].includes(`<changefreq>${changefreq}</changefreq>`), `${loc} must expose changefreq ${changefreq}`);
+  assert(match[0].includes(`<priority>${priority}</priority>`), `${loc} must expose priority ${priority}`);
+}
+
 function testHubRoutes() {
   const hub = read('migx.html');
   assert(countMatches(hub, /class="acf-preset-row"/g) === expectedRoutes.length, 'migx.html must expose 21 preset rows');
@@ -71,11 +80,23 @@ function testLandingPages() {
 function testSitemapRoutes() {
   const sitemap = read('sitemap.xml');
   const robots = read('robots.txt');
-  assert(sitemap.includes('https://zifra.example.com/migx.html'), 'sitemap must include migx.html');
-  assert(sitemap.includes('https://zifra.example.com/migx-generator.html'), 'sitemap must include migx-generator.html');
   assert(robots.includes('Sitemap: https://zifra.example.com/sitemap.xml'), 'robots.txt must expose the sitemap');
+  assertSitemapEntry(sitemap, 'https://zifra.example.com/migx.html', {
+    lastmod: '2026-05-31',
+    changefreq: 'weekly',
+    priority: '0.85'
+  });
+  assertSitemapEntry(sitemap, 'https://zifra.example.com/migx-generator.html', {
+    lastmod: '2026-05-31',
+    changefreq: 'weekly',
+    priority: '0.8'
+  });
   for (const route of expectedRoutes) {
-    assert(sitemap.includes(`https://zifra.example.com/${route.page}`), `sitemap must include ${route.page}`);
+    assertSitemapEntry(sitemap, `https://zifra.example.com/${route.page}`, {
+      lastmod: '2026-05-31',
+      changefreq: 'weekly',
+      priority: '0.75'
+    });
   }
 }
 
