@@ -147,12 +147,15 @@ function testProductionExportGuards() {
   const production = read('js/acf-production-renderer.js');
   const audit = read('js/acf-generator-audit.js');
 
-  assert(generatorHtml.includes('js/acf-generator.js?v=acf-ui-20260531-9'), 'acf-generator.html must load the current generator cache-buster');
+  assert(generatorHtml.includes('js/acf-generator.js?v=acf-ui-20260531-10'), 'acf-generator.html must load the current generator cache-buster');
   assert(generatorHtml.includes('js/acf-generator-audit.js?v=acf-ui-20260531-2'), 'acf-generator.html must load the current audit cache-buster');
   assert(generatorHtml.includes('WP-шаблон+CSS'), 'HTML export tab must be labeled as a WP template');
   assert(generatorHtml.includes('.audit-handoff'), 'generator UI must style the export handoff package');
   assert(generator.includes('generateVisualHTML({ fullDocument: false })'), 'fallback HTML export must use snippet mode');
   assert(generator.includes("return fullDocument ? ' data-style-target=\"' + key + '\"' : '';"), 'fallback editor markers must be gated by fullDocument');
+  assert(generator.includes('code = window.renderProductionPHP();'), 'HTML download fallback must use production WP template');
+  assert(generator.includes("ext = 'php'; mime = 'text/x-php';"), 'HTML download fallback must save WP template as PHP');
+  assert(!generator.includes('code = generateVisualHTML({ fullDocument: false });'), 'HTML download fallback must not download editor preview snippets');
   assert(production.includes('window.generateHTML = function()'), 'production renderer must own HTML export');
   assert(production.includes('output.textContent = renderProductionPHP();'), 'HTML export must render production PHP template');
   assert(production.includes('.zifra-acf-block, .zifra-acf-block * { box-sizing: border-box; }'), 'production CSS must be scoped to zifra-acf-block');

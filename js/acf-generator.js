@@ -2821,8 +2821,12 @@ function downloadCode() {
     if (currentCodeTab === 'json') {
         ext = 'json'; mime = 'application/json';
     } else if (currentCodeTab === 'html') {
-        ext = 'html'; mime = 'text/html';
-        code = generateVisualHTML({ fullDocument: false });
+        ext = 'php'; mime = 'text/x-php';
+        if (typeof window.renderProductionPHP === 'function') {
+            code = window.renderProductionPHP();
+        } else {
+            code = generateWordPressTemplateHTML();
+        }
     } else if (currentCodeTab === 'preview') {
         ext = 'html'; mime = 'text/html';
         code = generateVisualHTML();
