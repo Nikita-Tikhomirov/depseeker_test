@@ -3244,7 +3244,11 @@ function loadTemplateFromURL() {
     if (allowed.indexOf(template) === -1) return;
 
     loadTemplate(template);
-    if (targetTabs[preset]) switchCodeTab(targetTabs[preset]);
+    if (targetTabs[preset]) {
+        switchCodeTab(targetTabs[preset]);
+    } else if (source) {
+        switchCodeTab(landingContextCopy(source, preset, template).primaryTab);
+    }
     renderLandingContext(source, preset, template);
 }
 
