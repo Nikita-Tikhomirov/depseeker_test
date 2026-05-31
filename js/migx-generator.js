@@ -275,10 +275,10 @@ function renderValidationSummary(warnings, allFields) {
     if (summaryEl) summaryEl.textContent = summary;
     if (metricsEl) {
         metricsEl.innerHTML = [
-            '<div class="validation-metric"><strong>' + totalFields + '</strong><span>Полей всего</span></div>',
-            '<div class="validation-metric"><strong>' + tabs.length + '</strong><span>Табов формы</span></div>',
-            '<div class="validation-metric"><strong>' + nestedCount + '</strong><span>Вложенных MIGX</span></div>',
-            '<div class="validation-metric"><strong>' + errorCount + '/' + warnCount + '</strong><span>Ошибок / предупреждений</span></div>'
+            '<div class="validation-metric"><strong>' + totalFields + '</strong> <span>Полей всего</span></div>',
+            '<div class="validation-metric"><strong>' + tabs.length + '</strong> <span>Табов формы</span></div>',
+            '<div class="validation-metric"><strong>' + nestedCount + '</strong> <span>Вложенных MIGX</span></div>',
+            '<div class="validation-metric"><strong>' + errorCount + '/' + warnCount + '</strong> <span>Ошибок / предупреждений</span></div>'
         ].join('');
     }
 
