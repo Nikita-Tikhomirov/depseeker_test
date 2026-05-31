@@ -62,71 +62,85 @@
     </url>
     <url>
         <loc>https://zifra.example.com/acf.html</loc>
+        <lastmod>2026-05-31</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.85</priority>
     </url>
     <url>
         <loc>https://zifra.example.com/acf-generator.html</loc>
+        <lastmod>2026-05-31</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.75</priority>
     </url>
     <url>
         <loc>https://zifra.example.com/acf-php-generator.html</loc>
+        <lastmod>2026-05-31</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.75</priority>
     </url>
     <url>
         <loc>https://zifra.example.com/acf-json-generator.html</loc>
+        <lastmod>2026-05-31</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.75</priority>
     </url>
     <url>
         <loc>https://zifra.example.com/acf-repeater-generator.html</loc>
+        <lastmod>2026-05-31</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.75</priority>
     </url>
     <url>
         <loc>https://zifra.example.com/acf-flexible-content-generator.html</loc>
+        <lastmod>2026-05-31</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.75</priority>
     </url>
     <url>
         <loc>https://zifra.example.com/acf-field-group-generator.html</loc>
+        <lastmod>2026-05-31</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.75</priority>
     </url>
     <url>
         <loc>https://zifra.example.com/acf-seo-fields.html</loc>
+        <lastmod>2026-05-31</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.75</priority>
     </url>
     <url>
         <loc>https://zifra.example.com/acf-faq-fields.html</loc>
+        <lastmod>2026-05-31</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.75</priority>
     </url>
     <url>
         <loc>https://zifra.example.com/acf-hero-section.html</loc>
+        <lastmod>2026-05-31</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.75</priority>
     </url>
     <url>
         <loc>https://zifra.example.com/acf-team-repeater.html</loc>
+        <lastmod>2026-05-31</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.75</priority>
     </url>
     <url>
         <loc>https://zifra.example.com/acf-testimonials-repeater.html</loc>
+        <lastmod>2026-05-31</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.75</priority>
     </url>
     <url>
         <loc>https://zifra.example.com/acf-page-builder.html</loc>
+        <lastmod>2026-05-31</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.75</priority>
     </url>
     <url>
         <loc>https://zifra.example.com/acf-woocommerce-product-fields.html</loc>
+        <lastmod>2026-05-31</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.75</priority>
     </url>

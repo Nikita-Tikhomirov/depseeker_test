@@ -49,6 +49,9 @@ const generatorContextRequirements = [
   { source: 'acf-woocommerce-product-fields', required: ['характеристики товара', 'инструкции', 'FAQ товара'] }
 ];
 
+const acfSitemapPages = ['acf.html', 'acf-generator.html', ...expectedRoutes.map((route) => route.page)];
+const acfSitemapLastmod = '2026-05-31';
+
 function read(relativePath) {
   return readFileSync(join(root, relativePath), 'utf8');
 }
@@ -82,6 +85,20 @@ function testLandingCtas() {
     const landing = read(route.page);
     assert(landing.includes(`href="${route.href}"`), `${route.page} must link to ${route.href}`);
     assert(landing.includes('application/ld+json'), `${route.page} must keep structured data`);
+  }
+}
+
+function testSitemapLastmod() {
+  const sitemap = read('sitemap.xml');
+
+  for (const page of acfSitemapPages) {
+    const loc = `https://zifra.example.com/${page}`;
+    const locIndex = sitemap.indexOf(`<loc>${loc}</loc>`);
+    assert(locIndex !== -1, `sitemap.xml must include ${loc}`);
+
+    const nextUrlIndex = sitemap.indexOf('<url>', locIndex + loc.length);
+    const block = nextUrlIndex === -1 ? sitemap.slice(locIndex) : sitemap.slice(locIndex, nextUrlIndex);
+    assert(block.includes(`<lastmod>${acfSitemapLastmod}</lastmod>`), `sitemap.xml must include ${acfSitemapLastmod} lastmod for ${page}`);
   }
 }
 
@@ -149,11 +166,12 @@ function testProductionExportGuards() {
 function main() {
   testCategoryPresetMap();
   testLandingCtas();
+  testSitemapLastmod();
   testSpecificLandingCopy();
   testGeneratorRouteConfig();
   testGeneratorLandingContextCopy();
   testProductionExportGuards();
-  console.log('ACF smoke checks passed: 12 routes, landing CTAs, context copy, export tabs, production guards.');
+  console.log('ACF smoke checks passed: 12 routes, landing CTAs, sitemap lastmod, context copy, export tabs, production guards.');
 }
 
 main();
