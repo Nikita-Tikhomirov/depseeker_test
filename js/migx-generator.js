@@ -234,8 +234,49 @@ function applyPresetFromURL() {
     showLandingContext(presetName, source);
 }
 
+function collectFields(arr, result) {
+    result = result || [];
+    for (var i = 0; i < arr.length; i++) {
+        result.push(arr[i]);
+        if (arr[i].nestedFields && arr[i].nestedFields.length) {
+            collectFields(arr[i].nestedFields, result);
+        }
+    }
+    return result;
+}
+
 function validateMIGXConfig() {
-    return [];
+    var list = document.getElementById('validation-list');
+    if (!list) return [];
+    var warnings = [];
+    var all = collectFields(fields, []);
+    var seen = {};
+
+    for (var i = 0; i < all.length; i++) {
+        var f = all[i];
+        var name = f.fieldname || '';
+        if (!name) warnings.push({ level: 'error', text: 'Поле "' + (f.caption || 'без названия') + '" без fieldname.' });
+        if (name && /[^a-zA-Z0-9_]/.test(name)) warnings.push({ level: 'error', text: 'Fieldname "' + name + '" содержит пробелы, кириллицу или спецсимволы.' });
+        if (name) {
+            seen[name] = (seen[name] || 0) + 1;
+            if (seen[name] === 2) warnings.push({ level: 'error', text: 'Fieldname "' + name + '" повторяется.' });
+        }
+        if (!f.caption && f.inputTVtype !== 'tab') warnings.push({ level: 'warn', text: 'Поле "' + (name || 'без fieldname') + '" без caption.' });
+        if (f.inputTVtype === 'migx' && (!f.nestedFields || !f.nestedFields.length)) warnings.push({ level: 'warn', text: 'MIGX "' + (name || f.caption || 'без имени') + '" не содержит вложенных полей.' });
+        if (f.inputTVtype === 'listbox' && !f.configs && !f.inputOptionValues) warnings.push({ level: 'warn', text: 'Listbox "' + (name || f.caption || 'без имени') + '" без опций.' });
+        if (!MIGX_TYPES[f.inputTVtype || '']) warnings.push({ level: 'error', text: 'Неизвестный тип поля "' + (f.inputTVtype || '') + '".' });
+    }
+
+    if (!warnings.length) {
+        list.innerHTML = '<li class="validation-ok">Ошибок не найдено. Конфигурацию можно экспортировать.</li>';
+        return warnings;
+    }
+
+    list.innerHTML = warnings.map(function(w) {
+        var cls = w.level === 'error' ? 'validation-error' : '';
+        return '<li class="' + cls + '">' + escHtml(w.text) + '</li>';
+    }).join('');
+    return warnings;
 }
 
 // ==================== NESTED MIGX ====================
@@ -562,9 +603,18 @@ function renderNestedFieldRow(parent, child, grandparentId) {
 function generateJSON() {
     if (currentCodeTab === 'json_flat') {
         generateFlatJSON();
+    } else if (currentCodeTab === 'formtabs') {
+        generateFormTabsJSON();
+    } else if (currentCodeTab === 'grid_columns') {
+        generateGridColumnsJSON();
+    } else if (currentCodeTab === 'getimagelist') {
+        generateGetImageListSnippet();
+    } else if (currentCodeTab === 'fenom') {
+        generateFenomChunk();
     } else {
         generateStandardJSON();
     }
+    validateMIGXConfig();
 }
 
 function cleanFieldForOutput(f) {
@@ -635,6 +685,59 @@ function generateFlatJSON() {
     var out = flattenFields(fields);
     var json = JSON.stringify(out, null, 2);
     document.getElementById('code-output').textContent = json || '[]';
+}
+
+function generateFormTabsJSON() {
+    var formTabs = [];
+    var defaultTab = { caption: 'Основное', fields: [] };
+    var tabMap = {};
+    for (var i = 0; i < tabs.length; i++) {
+        tabMap[tabs[i].id] = { caption: tabs[i].caption, fields: [] };
+        formTabs.push(tabMap[tabs[i].id]);
+    }
+    if (!formTabs.length) formTabs.push(defaultTab);
+    for (var j = 0; j < fields.length; j++) {
+        var f = fields[j];
+        if (f.inputTVtype === 'tab') continue;
+        var row = {
+            field: f.fieldname || '',
+            caption: f.caption || f.fieldname || '',
+            inputTVtype: f.inputTVtype || 'text'
+        };
+        var target = f.tabid && tabMap[f.tabid] ? tabMap[f.tabid] : formTabs[0];
+        target.fields.push(row);
+    }
+    document.getElementById('code-output').textContent = JSON.stringify(formTabs, null, 2);
+}
+
+function generateGridColumnsJSON() {
+    var columns = [];
+    var all = fields.filter(function(f) { return f.inputTVtype !== 'tab'; });
+    for (var i = 0; i < all.length; i++) {
+        if (!all[i].fieldname) continue;
+        columns.push({
+            header: all[i].caption || all[i].fieldname,
+            dataIndex: all[i].fieldname,
+            sortable: true
+        });
+    }
+    document.getElementById('code-output').textContent = JSON.stringify(columns, null, 2);
+}
+
+function generateGetImageListSnippet() {
+    var tpl = '[[getImageList? &tvname=`migx_items` &tpl=`migxItemTpl`]]';
+    document.getElementById('code-output').textContent = tpl;
+}
+
+function generateFenomChunk() {
+    var all = fields.filter(function(f) { return f.inputTVtype !== 'tab'; });
+    var lines = ['<article class="migx-item">'];
+    for (var i = 0; i < all.length; i++) {
+        var name = all[i].fieldname || ('field_' + i);
+        lines.push('  <div class="migx-item__' + name + '">{$item.' + name + '}</div>');
+    }
+    lines.push('</article>');
+    document.getElementById('code-output').textContent = lines.join('\n');
 }
 
 // ==================== CODE TABS ====================
