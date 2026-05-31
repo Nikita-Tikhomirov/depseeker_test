@@ -148,7 +148,7 @@ function testProductionExportGuards() {
   const audit = read('js/acf-generator-audit.js');
 
   assert(generatorHtml.includes('js/acf-generator.js?v=acf-ui-20260531-10'), 'acf-generator.html must load the current generator cache-buster');
-  assert(generatorHtml.includes('js/acf-generator-audit.js?v=acf-ui-20260531-2'), 'acf-generator.html must load the current audit cache-buster');
+  assert(generatorHtml.includes('js/acf-generator-audit.js?v=acf-ui-20260531-3'), 'acf-generator.html must load the current audit cache-buster');
   assert(generatorHtml.includes('WP-шаблон+CSS'), 'HTML export tab must be labeled as a WP template');
   assert(generatorHtml.includes('.audit-handoff'), 'generator UI must style the export handoff package');
   assert(generator.includes('generateVisualHTML({ fullDocument: false })'), 'fallback HTML export must use snippet mode');
@@ -164,6 +164,11 @@ function testProductionExportGuards() {
   assert(audit.includes('ACF PHP'), 'handoff package must mention ACF PHP');
   assert(audit.includes('WP-шаблон+CSS'), 'handoff package must mention WP template and CSS');
   assert(audit.includes('JSON snapshot'), 'handoff package must mention JSON snapshot');
+  assert(audit.includes('acf_json'), 'snapshot must include a dedicated ACF JSON payload');
+  assert(audit.includes('wp_template'), 'snapshot must include a dedicated WP template payload');
+  assert(audit.includes('production_css'), 'snapshot must include a dedicated production CSS payload');
+  assert(audit.includes('window.renderProductionPHP'), 'snapshot must use the production renderer for the WP template');
+  assert(audit.includes('window.generateProductionCSS'), 'snapshot must include generated production CSS');
 }
 
 function main() {

@@ -237,6 +237,31 @@
         return output ? output.textContent : '';
     }
 
+    function getGeneratedOutput(generatorName) {
+        var output = document.getElementById('code-output');
+        if (!output || typeof window[generatorName] !== 'function') return '';
+        var previous = output.textContent;
+        window[generatorName]();
+        var generated = output.textContent || '';
+        output.textContent = previous;
+        return generated;
+    }
+
+    function buildHandoffBundle() {
+        var wpTemplate = typeof window.renderProductionPHP === 'function'
+            ? window.renderProductionPHP()
+            : getGeneratedOutput('generateHTML');
+        var productionCss = typeof window.generateProductionCSS === 'function'
+            ? window.generateProductionCSS()
+            : '';
+        return {
+            acf_php: getGeneratedOutput('generatePHP'),
+            acf_json: getGeneratedOutput('generateJSON'),
+            wp_template: wpTemplate,
+            production_css: productionCss
+        };
+    }
+
     function downloadSnapshot() {
         var groupTitleEl = document.getElementById('group-title');
         var groupKeyEl = document.getElementById('group-key');
@@ -254,6 +279,7 @@
             fields: getFields(),
             current_tab: window.currentCodeTab || 'php',
             current_code: getCurrentCode(),
+            handoff: buildHandoffBundle(),
             audit_issues: validateStructure()
         };
         var blob = new Blob([JSON.stringify(snapshot, null, 2)], { type: 'application/json;charset=utf-8' });
