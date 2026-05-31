@@ -9,6 +9,7 @@ import xml.etree.ElementTree as ET
 ROOT = Path(__file__).resolve().parents[1]
 SITE = "https://zifra.example.com"
 SITEMAP_NS = "http://www.sitemaps.org/schemas/sitemap/0.9"
+SITEMAP_LASTMOD = "2026-05-31"
 
 
 PAGES = [
@@ -147,6 +148,58 @@ PAGES = [
 ]
 
 
+STRUCTURE_COPY = {
+    "acf-php-generator": (
+        "PHP-регистрация ACF без ручной сборки массива",
+        "Страница ведет в preset, который готовит структуру для acf_add_local_field_group: group key, Location rules, field names и стабильные ключи для functions.php.",
+    ),
+    "acf-json-generator": (
+        "ACF JSON для переноса и синхронизации полей",
+        "Страница ведет в JSON preset: field keys, group key и структура полей готовы для папки acf-json, а синхронизация проверяется до переноса в проект.",
+    ),
+    "acf-repeater-generator": (
+        "Repeater-поля для списков, FAQ и карточек",
+        "Страница показывает, как собрать ACF repeater: родительское поле, вложенные sub fields и понятный цикл вывода для WordPress-шаблона.",
+    ),
+    "acf-flexible-content-generator": (
+        "Flexible layouts для управляемых страниц",
+        "Страница показывает, как собрать flexible content: отдельные layouts, порядок секций страницы и поля внутри каждого блока без тяжелого конструктора.",
+    ),
+    "acf-field-group-generator": (
+        "Field group с понятными ключами и правилами вывода",
+        "Страница ведет в базовый preset группы: group key, field names, location rules и стартовые поля уже собраны для PHP или JSON export.",
+    ),
+    "acf-seo-fields": (
+        "Набор SEO-полей для шаблона WordPress",
+        "Страница показывает минимальный ACF-набор для управления сниппетом, индексированием и соцсетями: title, description, canonical, robots и Open Graph.",
+    ),
+    "acf-faq-fields": (
+        "FAQ-блок, который удобно редактировать из админки",
+        "Страница ведет в preset для списка вопросов и ответов: редактор меняет пункты FAQ, preview показывает аккордеон FAQ, а экспорт дает основу для микроразметки.",
+    ),
+    "acf-hero-section": (
+        "Поля первого экрана без ручной сборки",
+        "Страница показывает, какие ACF-поля нужны для hero-блока: текст, CTA, медиа и доверительные маркеры. Из нее пользователь сразу попадает в генератор с готовым preview.",
+    ),
+    "acf-team-repeater": (
+        "Команда сайта как управляемый repeater",
+        "Страница показывает ACF-набор для блока «Команда»: карточки команды, фото сотрудника, должность, короткое био и социальные ссылки.",
+    ),
+    "acf-testimonials-repeater": (
+        "Отзывы как repeater с данными для доверия",
+        "Страница ведет в preset для social proof: отзывы клиентов, рейтинг, автор отзыва, должность, компания и изображение собираются в один ACF repeater.",
+    ),
+    "acf-page-builder": (
+        "Легкий page builder на ACF вместо тяжелого конструктора",
+        "Страница показывает набор layouts для редактора страницы: порядок секций, поля каждого блока и шаблон вывода для темы WordPress.",
+    ),
+    "acf-woocommerce-product-fields": (
+        "Дополнительные поля для карточки товара WooCommerce",
+        "Страница ведет в preset для товарной страницы: характеристики товара, инструкции, комплектация, блок доверия и FAQ товара собираются в один управляемый ACF-набор.",
+    ),
+}
+
+
 def esc(value: str) -> str:
     return html.escape(value, quote=True)
 
@@ -274,6 +327,14 @@ def generator_url(page: dict[str, object]) -> str:
     return f"acf-generator.html?preset={preset}&amp;source={slug}"
 
 
+def structure_copy(page: dict[str, object]) -> tuple[str, str]:
+    fallback = (
+        f"{page['h1']}: структура полей и маршрут в генератор",
+        "Посадочная показывает состав полей, объясняет сценарий и переводит пользователя в генератор с подходящей предустановкой.",
+    )
+    return STRUCTURE_COPY.get(str(page["slug"]), fallback)
+
+
 def hub_chooser() -> str:
     choices = [
         ("Нужен код в тему", "PHP/JSON экспорт для Git, code review и локальной регистрации ACF.", "acf-php-generator.html", "PHP и JSON"),
@@ -307,6 +368,8 @@ def preset_strip(page: dict[str, object]) -> str:
 def render_page(page: dict[str, object]) -> str:
     deliverables = "\n".join(f"<li>{esc(item)}</li>" for item in page["deliverables"])
     related = related_links(str(page["slug"]))
+    structure_heading, structure_text = structure_copy(page)
+    group_key_example = esc(str(page["slug"]).replace("-", "_"))
     return f"""<!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -351,8 +414,8 @@ def render_page(page: dict[str, object]) -> str:
         <div class="acf-container acf-two-col">
             <div>
                 <span class="acf-section-label">Что входит</span>
-                <h2>Страница закрывает конкретный низкочастотный запрос и ведет в генератор</h2>
-                <p>Пользователь получает понятный ответ, видит состав полей и сразу переходит в инструмент с подходящей предустановкой. Это снижает трение между SEO-трафиком и первым действием.</p>
+                <h2>{esc(structure_heading)}</h2>
+                <p>{esc(structure_text)}</p>
             </div>
             <div class="acf-checklist">
                 <ul>
@@ -374,7 +437,7 @@ def render_page(page: dict[str, object]) -> str:
             </article>
             <article class="acf-code-card" aria-label="Пример структуры">
                 <pre><code>acf_add_local_field_group([
-  'key' => 'group_{slug.replace("-", "_")}',
+  'key' => 'group_{group_key_example}',
   'title' => '{esc(page["h1"])}',
   'fields' => [
     // fields from generator
@@ -664,15 +727,17 @@ def update_sitemap() -> None:
     sitemap = ROOT / "sitemap.xml"
     tree = ET.parse(sitemap)
     old_root = tree.getroot()
-    entries: dict[str, tuple[str, str]] = {}
+    entries: dict[str, tuple[str | None, str, str]] = {}
 
     for url in old_root.findall(".//{*}url"):
         loc = url.find("{*}loc")
         if loc is None or not loc.text:
             continue
+        lastmod = url.find("{*}lastmod")
         changefreq = url.find("{*}changefreq")
         priority = url.find("{*}priority")
         entries[loc.text] = (
+            lastmod.text if lastmod is not None and lastmod.text else None,
             changefreq.text if changefreq is not None and changefreq.text else "weekly",
             priority.text if priority is not None and priority.text else "0.5",
         )
@@ -680,13 +745,16 @@ def update_sitemap() -> None:
     urls = ["acf.html", "acf-generator.html"] + [f"{p['slug']}.html" for p in PAGES]
     for path in urls:
         loc = f"{SITE}/{path}"
-        entries.setdefault(loc, ("weekly", "0.75" if path != "acf.html" else "0.85"))
+        priority = "0.85" if path == "acf.html" else "0.75"
+        entries[loc] = (SITEMAP_LASTMOD, "weekly", priority)
 
     ET.register_namespace("", SITEMAP_NS)
     root = ET.Element(f"{{{SITEMAP_NS}}}urlset")
-    for loc, (changefreq, priority) in entries.items():
+    for loc, (lastmod, changefreq, priority) in entries.items():
         url = ET.SubElement(root, f"{{{SITEMAP_NS}}}url")
         ET.SubElement(url, f"{{{SITEMAP_NS}}}loc").text = loc
+        if lastmod:
+            ET.SubElement(url, f"{{{SITEMAP_NS}}}lastmod").text = lastmod
         ET.SubElement(url, f"{{{SITEMAP_NS}}}changefreq").text = changefreq
         ET.SubElement(url, f"{{{SITEMAP_NS}}}priority").text = priority
     tree = ET.ElementTree(root)

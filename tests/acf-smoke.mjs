@@ -1,4 +1,5 @@
 import { readFileSync } from 'node:fs';
+import { execFileSync } from 'node:child_process';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -104,6 +105,14 @@ function testSitemapLastmod() {
 
 function testSpecificLandingCopy() {
   const genericPhrase = 'Страница закрывает конкретный низкочастотный запрос';
+  const generatorSource = read('tools/generate_acf_pages.py');
+
+  assert(!generatorSource.includes(genericPhrase), 'tools/generate_acf_pages.py must not reintroduce generic SEO placeholder copy');
+  assert(generatorSource.includes('STRUCTURE_COPY'), 'tools/generate_acf_pages.py must keep page-specific structure copy in the source generator');
+  assert(generatorSource.includes('SITEMAP_LASTMOD = "2026-05-31"'), 'tools/generate_acf_pages.py must pin the ACF sitemap lastmod date');
+  assert(generatorSource.includes('lastmod = url.find("{*}lastmod")'), 'tools/generate_acf_pages.py must preserve existing sitemap lastmod values');
+  assert(generatorSource.includes('ET.SubElement(url, f"{{{SITEMAP_NS}}}lastmod").text = lastmod'), 'tools/generate_acf_pages.py must write lastmod nodes');
+
   for (const item of specificLandingCopy) {
     const landing = read(item.page);
     assert(!landing.includes(genericPhrase), `${item.page} must not use generic SEO placeholder copy`);
@@ -139,6 +148,25 @@ function testGeneratorLandingContextCopy() {
       assert(match[0].includes(phrase), `landing context ${item.source} must include specific phrase: ${phrase}`);
     }
   }
+}
+
+function testAcfPageGeneratorRenders() {
+  const script = `
+from pathlib import Path
+import importlib.util
+
+root = Path.cwd()
+spec = importlib.util.spec_from_file_location("acfgen", root / "tools" / "generate_acf_pages.py")
+mod = importlib.util.module_from_spec(spec)
+spec.loader.exec_module(mod)
+mod.render_hub()
+mod.render_css()
+for page in mod.PAGES:
+    mod.render_page(page)
+print("acf generator render ok")
+`;
+  const output = execFileSync('python', ['-c', script], { cwd: root, encoding: 'utf8' });
+  assert(output.includes('acf generator render ok'), 'tools/generate_acf_pages.py must render all ACF pages without writing files');
 }
 
 function testProductionExportGuards() {
@@ -182,6 +210,7 @@ function main() {
   testSpecificLandingCopy();
   testGeneratorRouteConfig();
   testGeneratorLandingContextCopy();
+  testAcfPageGeneratorRenders();
   testProductionExportGuards();
   console.log('ACF smoke checks passed: 12 routes, landing CTAs, sitemap lastmod, context copy, export tabs, production guards.');
 }
