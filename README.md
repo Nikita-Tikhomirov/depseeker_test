@@ -30,3 +30,14 @@ Then open:
 
 - `http://127.0.0.1:8026/acf-generator.html`
 - `http://127.0.0.1:8026/migx-generator.html`
+
+## Launch Domain
+
+Before publishing, replace the placeholder origin in canonical URLs, sitemap entries, and structured data:
+
+```powershell
+python tools/set_site_domain.py https://your-domain.example --dry-run
+python tools/set_site_domain.py https://your-domain.example
+```
+
+The tool accepts only an HTTPS origin and keeps unrelated domains untouched.
