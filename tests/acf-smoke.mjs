@@ -20,9 +20,17 @@ const expectedRoutes = [
 ];
 
 const specificLandingCopy = [
+  { page: 'acf-php-generator.html', required: ['functions.php', 'acf_add_local_field_group', 'Location rules'] },
+  { page: 'acf-json-generator.html', required: ['acf-json', 'синхронизация', 'field keys'] },
+  { page: 'acf-repeater-generator.html', required: ['повторяемый список', 'sub fields', 'цикл вывода'] },
+  { page: 'acf-flexible-content-generator.html', required: ['flexible content', 'layouts', 'секции страницы'] },
+  { page: 'acf-field-group-generator.html', required: ['group key', 'location rules', 'field names'] },
   { page: 'acf-hero-section.html', required: ['первый экран', 'CTA', 'изображение hero'] },
   { page: 'acf-faq-fields.html', required: ['FAQPage schema', 'вопрос-ответ', 'аккордеон FAQ'] },
   { page: 'acf-seo-fields.html', required: ['canonical', 'robots', 'Open Graph'] },
+  { page: 'acf-team-repeater.html', required: ['карточки команды', 'фото сотрудника', 'социальные ссылки'] },
+  { page: 'acf-testimonials-repeater.html', required: ['отзывы клиентов', 'рейтинг', 'автор отзыва'] },
+  { page: 'acf-page-builder.html', required: ['page builder', 'порядок секций', 'шаблон вывода'] },
   { page: 'acf-woocommerce-product-fields.html', required: ['характеристики товара', 'инструкции', 'FAQ товара'] }
 ];
 
