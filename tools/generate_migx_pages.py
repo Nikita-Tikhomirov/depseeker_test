@@ -3,11 +3,18 @@ from __future__ import annotations
 import html
 import json
 from pathlib import Path
+import sys
 import xml.etree.ElementTree as ET
+
+TOOLS_DIR = Path(__file__).resolve().parent
+if str(TOOLS_DIR) not in sys.path:
+    sys.path.insert(0, str(TOOLS_DIR))
+
+from site_config import site_origin
 
 
 ROOT = Path(__file__).resolve().parents[1]
-SITE = "https://zifra.example.com"
+SITE = site_origin()
 SITEMAP_NS = "http://www.sitemaps.org/schemas/sitemap/0.9"
 SITEMAP_LASTMOD = "2026-05-31"
 
@@ -441,6 +448,9 @@ def footer() -> str:
             <a href="index.html#utilities">Утилиты</a>
             <a href="acf.html">ACF</a>
             <a href="migx.html">MIGX</a>
+            <a href="about.html">О проекте</a>
+            <a href="contacts.html">Контакты</a>
+            <a href="privacy.html">Политика</a>
         </div>
     </div>
 </footer>"""

@@ -2,6 +2,26 @@
 
 Static HTML workspace for the Цифра ACF/MIGX generators and SEO landing-page clusters.
 
+## Site Config
+
+Shared launch settings live in `site.config.json`.
+
+- `mode=local` is the current pre-launch mode and may use `https://zifra.example.com`.
+- `mode=production` must use the real HTTPS origin before publishing.
+- `cleanParams` is used when generating `robots.txt` for local query parameters such as `qa`, `preset`, and `source`.
+
+Regenerate sitemap and robots after adding pages:
+
+```powershell
+python tools/build_site_metadata.py
+```
+
+Check production readiness:
+
+```powershell
+python tools/check_production_ready.py
+```
+
 ## Smoke Checks
 
 Run the lightweight regression checks after changes to generator pages, SEO pages, sitemap, or shared scripts:
@@ -11,6 +31,7 @@ node tests/acf-smoke.mjs
 node tests/migx-smoke.mjs
 node tests/production-home-smoke.mjs
 node tests/site-links-smoke.mjs
+python tools/check_production_ready.py
 ```
 
 The checks cover:
@@ -18,7 +39,8 @@ The checks cover:
 - ACF category routes, landing CTAs, generator preset routing, production export, visual editor guards, and conversion tracking.
 - MIGX hub, 21 landing pages, sitemap entries, generator wiring, validation/audit/share features, and conversion tracking.
 - Production homepage positioning and shared navigation without marketplace/header leftovers.
-- Local `href`/`src` links inside the ACF/MIGX clusters.
+- Local `href`/`src` links across all HTML pages.
+- Production foundation: service pages, sitemap coverage, robots sitemap URL, clean query parameters, one H1 per page, canonical and descriptions.
 
 ## Local Preview
 
@@ -30,6 +52,7 @@ python -m http.server 8026 --bind 127.0.0.1
 
 Then open:
 
+- `http://127.0.0.1:8026/index.html`
 - `http://127.0.0.1:8026/acf-generator.html`
 - `http://127.0.0.1:8026/migx-generator.html`
 
@@ -40,6 +63,10 @@ Before publishing, replace the placeholder origin in canonical URLs, sitemap ent
 ```powershell
 python tools/set_site_domain.py https://your-domain.example --dry-run
 python tools/set_site_domain.py https://your-domain.example
+python tools/build_site_metadata.py
+python tools/check_production_ready.py
 ```
 
 The tool accepts only an HTTPS origin and keeps unrelated domains untouched.
+
+Before final deployment, switch `site.config.json` to `mode=production`, set the real `origin`, fill the real contacts in `contacts.html`, and add the actual Yandex Metrika ID if analytics is enabled.

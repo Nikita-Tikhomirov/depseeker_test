@@ -26,9 +26,13 @@ function targetPath(value) {
 }
 
 function pageFiles() {
-  return ['index.html', ...readdirSync(root)
-    .filter((file) => /^(acf|migx).*\.html$/.test(file))
-    .sort()];
+  return readdirSync(root)
+    .filter((file) => file.endsWith('.html'))
+    .sort((a, b) => {
+      if (a === 'index.html') return -1;
+      if (b === 'index.html') return 1;
+      return a.localeCompare(b);
+    });
 }
 
 function localRefs(html) {
@@ -53,7 +57,7 @@ function main() {
   }
 
   assert(missing.length === 0, `missing local links:\n${missing.join('\n')}`);
-  console.log(`Site link smoke passed: ${pageFiles().length} ACF/MIGX pages.`);
+  console.log(`Site link smoke passed: ${pageFiles().length} HTML pages.`);
 }
 
 main();

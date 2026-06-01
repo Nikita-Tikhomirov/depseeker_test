@@ -1,0 +1,21 @@
+{
+  "mode": "local",
+  "siteName": "Цифра",
+  "origin": "https://zifra.example.com",
+  "language": "ru",
+  "locale": "ru_RU",
+  "brand": "Цифра",
+  "adsEnabled": false,
+  "yandexMetrikaId": "",
+  "cleanParams": ["qa", "preset", "source"],
+  "servicePages": [
+    {"path": "about.html", "title": "О проекте"},
+    {"path": "contacts.html", "title": "Контакты"},
+    {"path": "privacy.html", "title": "Политика конфиденциальности"},
+    {"path": "terms.html", "title": "Пользовательское соглашение"}
+  ],
+  "categories": [
+    {"slug": "acf", "title": "ACF / WordPress", "path": "acf.html"},
+    {"slug": "migx", "title": "MODX / MIGX", "path": "migx.html"}
+  ]
+}

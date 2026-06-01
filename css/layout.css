@@ -223,6 +223,53 @@
     color: var(--text-dim);
 }
 
+/* ==================== SERVICE PAGES ==================== */
+.service-page {
+    padding: 86px 0 72px;
+}
+.service-page__shell {
+    max-width: 880px;
+}
+.service-page h1 {
+    font-size: clamp(2.25rem, 5vw, 4.2rem);
+    line-height: 1.05;
+    margin-bottom: 18px;
+}
+.service-page__lead {
+    color: var(--text-2);
+    font-size: 1.08rem;
+    line-height: 1.75;
+    margin-bottom: 34px;
+}
+.service-page__section {
+    border-top: 1px solid var(--border);
+    padding-top: 24px;
+    margin-top: 24px;
+}
+.service-page__section h2 {
+    font-size: 1.2rem;
+    margin-bottom: 10px;
+}
+.service-page__section p,
+.service-page__section li {
+    color: var(--text-2);
+    line-height: 1.75;
+}
+.service-page__section ul {
+    padding-left: 20px;
+}
+.ad-slot {
+    display: none;
+}
+body.ads-enabled .ad-slot {
+    display: block;
+    min-height: 120px;
+    border: 1px dashed var(--border-hover);
+    border-radius: 8px;
+    color: var(--text-dim);
+    background: rgba(255,255,255,0.025);
+}
+
 /* ==================== PRODUCTION HOME ==================== */
 .home-hero {
     position: relative;
