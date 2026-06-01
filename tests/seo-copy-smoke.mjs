@@ -24,6 +24,25 @@ const bannedCopy = [
   /null/i
 ];
 
+const bannedAcfHubCopy = [
+  /структура категории/i,
+  /низкочастот/i,
+  /план категории/i,
+  /страницы, которые запускаем первыми/i,
+  /кластер собран/i,
+  /маршруты/i,
+  /куда отправлять пользователя/i,
+  /интент/i,
+  /preset/i,
+  /предустанов/i,
+  /продукт/i,
+  /что доработать/i,
+  /production html\/css/i,
+  /динамические стили/i,
+  /проверка ошибок/i,
+  /главная цель продукта/i
+];
+
 function read(relativePath) {
   return readFileSync(join(root, relativePath), 'utf8');
 }
@@ -83,5 +102,24 @@ function testSeoCopyQuality() {
   }
 }
 
+function testAcfHubReadsLikePublicSeoPage() {
+  const html = read('acf.html');
+  const visibleText = stripTechnicalBlocks(html);
+
+  for (const pattern of bannedAcfHubCopy) {
+    assert(!pattern.test(visibleText), `acf.html must not expose internal planning copy matching ${pattern}`);
+  }
+
+  for (const phrase of [
+    'Выберите ACF-инструмент под задачу',
+    'Что можно собрать',
+    'Как работать с ACF генератором',
+    'Для WordPress-разработчиков'
+  ]) {
+    assert(visibleText.includes(phrase), `acf.html must include public hub copy: ${phrase}`);
+  }
+}
+
 testSeoCopyQuality();
+testAcfHubReadsLikePublicSeoPage();
 console.log(`seo copy smoke ok: ${pageFiles.length} pages checked`);

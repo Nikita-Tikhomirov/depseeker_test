@@ -201,18 +201,18 @@ STRUCTURE_COPY = {
 
 
 PRESET_MAP_RESULTS = {
-    "acf-php-generator": ("acf php generator", "Content Fields, PHP export tab"),
-    "acf-json-generator": ("acf json generator", "Content Fields, JSON export tab"),
-    "acf-repeater-generator": ("acf repeater generator", "FAQ/repeater preset, preview template"),
-    "acf-flexible-content-generator": ("acf flexible content", "Flexible page builder layouts"),
-    "acf-field-group-generator": ("acf field group generator", "Group title, keys, location rules"),
-    "acf-seo-fields": ("acf seo fields", "Title, description, canonical, OG"),
-    "acf-faq-fields": ("acf faq fields", "Question/answer repeater, FAQ schema"),
-    "acf-hero-section": ("acf hero section", "Hero title, CTA, image fields"),
-    "acf-team-repeater": ("acf team repeater", "Member cards, photo, role, bio"),
-    "acf-testimonials-repeater": ("acf testimonials repeater", "Review cards, rating, author fields"),
-    "acf-page-builder": ("acf page builder", "Flexible sections for landing pages"),
-    "acf-woocommerce-product-fields": ("acf woocommerce fields", "Product specs, manual, FAQ, trust block"),
+    "acf-php-generator": ("acf php generator", "PHP-код для acf_add_local_field_group"),
+    "acf-json-generator": ("acf json generator", "JSON для папки acf-json и синхронизации"),
+    "acf-repeater-generator": ("acf repeater generator", "Повторяемые списки, FAQ и карточки"),
+    "acf-flexible-content-generator": ("acf flexible content", "Гибкие секции для page builder"),
+    "acf-field-group-generator": ("acf field group generator", "Группа полей, ключи и правила показа"),
+    "acf-seo-fields": ("acf seo fields", "Title, description, canonical и Open Graph"),
+    "acf-faq-fields": ("acf faq fields", "Вопросы, ответы и основа для FAQPage"),
+    "acf-hero-section": ("acf hero section", "Заголовок, CTA, изображение и бейджи"),
+    "acf-team-repeater": ("acf team repeater", "Карточки сотрудников, фото, роль и ссылки"),
+    "acf-testimonials-repeater": ("acf testimonials repeater", "Отзывы, рейтинг, автор и компания"),
+    "acf-page-builder": ("acf page builder", "Набор управляемых секций страницы"),
+    "acf-woocommerce-product-fields": ("acf woocommerce fields", "Характеристики, инструкции и FAQ товара"),
 }
 
 
@@ -577,7 +577,7 @@ def hub_chooser() -> str:
         ("Нужен код в тему", "PHP/JSON экспорт для Git, code review и локальной регистрации ACF.", "acf-php-generator.html", "PHP и JSON"),
         ("Нужен повторяемый блок", "FAQ, отзывы, команда, преимущества и любые карточки через repeater.", "acf-repeater-generator.html", "Repeater"),
         ("Нужна страница из секций", "Page builder на Flexible Content без тяжелого конструктора.", "acf-page-builder.html", "Flexible"),
-        ("Нужны готовые блоки", "Hero, SEO, FAQ, WooCommerce и другие типовые структуры.", "acf-hero-section.html", "Пресеты"),
+        ("Нужны готовые блоки", "Hero, SEO, FAQ, WooCommerce и другие типовые структуры.", "acf-hero-section.html", "Готовые блоки"),
     ]
     return "\n".join(
         f"""<a class="acf-choice-card" href="{href}">
@@ -598,7 +598,7 @@ def preset_map() -> str:
                     <span class="acf-preset-query">{esc(query)}</span>
                     <a class="acf-preset-name" href="{esc(page["slug"])}.html">{esc(page["h1"])}</a>
                     <span class="acf-preset-result">{esc(result)}</span>
-                    <a class="acf-preset-link" href="{generator_url(page)}">Открыть</a>
+                    <a class="acf-preset-link" href="{generator_url(page)}">{esc(HUB_CARD_CTA[str(page["slug"])])}</a>
                 </div>"""
         )
     return "\n                ".join(rows)
@@ -750,7 +750,7 @@ def render_hub() -> str:
         "slug": "acf",
         "title": "ACF генераторы и шаблоны полей для WordPress",
         "h1": "ACF генераторы и шаблоны полей",
-        "description": "Категория инструментов для Advanced Custom Fields: генератор PHP и JSON, repeater, flexible content, SEO-поля, FAQ, hero, команда, отзывы и WooCommerce.",
+        "description": "Выберите ACF-шаблон для WordPress: PHP, JSON, repeater, flexible content, SEO-поля, FAQ, hero, команда, отзывы и WooCommerce.",
     }
     cards = "\n".join(
         f"""<article class="acf-topic-card">
@@ -788,19 +788,19 @@ def render_hub() -> str:
             <div class="acf-hero__copy">
                 <span class="acf-kicker">Advanced Custom Fields</span>
                 <h1>ACF генераторы и шаблоны полей</h1>
-                <p>Структура категории под низкочастотные запросы: каждая страница отвечает на конкретный сценарий и переводит пользователя в генератор с нужной предустановкой.</p>
+                <p>Соберите структуру полей для WordPress без ручной сборки массивов. Выберите задачу, откройте готовый шаблон и заберите PHP или JSON для темы, плагина или клиентского проекта.</p>
                 <div class="acf-actions">
                     <a class="acf-btn acf-btn--primary" href="acf-generator.html">Открыть генератор</a>
-                    <a class="acf-btn acf-btn--ghost" href="#pages">Смотреть страницы</a>
+                    <a class="acf-btn acf-btn--ghost" href="#pages">Выбрать шаблон</a>
                 </div>
             </div>
             <aside class="acf-plan-card">
-                <h2>План категории</h2>
+                <h2>Что можно собрать</h2>
                 <ul>
-                    <li>Главная категория: обзор ACF-инструментов.</li>
-                    <li>Форматы экспорта: PHP, JSON, field group.</li>
-                    <li>Структуры: repeater, flexible content, page builder.</li>
-                    <li>Готовые блоки: SEO, FAQ, hero, team, testimonials, WooCommerce.</li>
+                    <li>PHP-код для регистрации полей через acf_add_local_field_group.</li>
+                    <li>JSON для переноса ACF-настроек между WordPress-проектами.</li>
+                    <li>Repeater и flexible content для списков, блоков и страниц.</li>
+                    <li>Готовые группы для SEO, FAQ, hero, команды, отзывов и WooCommerce.</li>
                 </ul>
             </aside>
         </div>
@@ -809,9 +809,9 @@ def render_hub() -> str:
     <section class="acf-section" id="pages">
         <div class="acf-container">
             <div class="acf-section-head">
-                <span class="acf-section-label">Низкочастотники</span>
-                <h2>Страницы, которые запускаем первыми</h2>
-                <p>Кластер собран вокруг задач, где пользователь уже понимает, какой тип ACF-структуры ему нужен.</p>
+                <span class="acf-section-label">Для WordPress-разработчиков</span>
+                <h2>Выберите ACF-инструмент под задачу</h2>
+                <p>Каждый раздел объясняет, какие поля нужны, где они используются в шаблоне и какой экспорт лучше взять для проекта.</p>
             </div>
             <div class="acf-topic-grid">
                 {cards}
@@ -822,9 +822,9 @@ def render_hub() -> str:
     <section class="acf-section acf-section--muted">
         <div class="acf-container">
             <div class="acf-section-head">
-                <span class="acf-section-label">Маршруты</span>
-                <h2>Куда отправлять пользователя по интенту</h2>
-                <p>Категория работает как развилка: посетитель выбирает задачу, попадает на точную посадочную и оттуда открывает нужный preset генератора.</p>
+                <span class="acf-section-label">Подбор</span>
+                <h2>Какой генератор выбрать</h2>
+                <p>Начните с формата результата: регистрация в коде, перенос через JSON, повторяемый блок, гибкая страница или готовая группа полей под конкретный раздел сайта.</p>
             </div>
             <div class="acf-choice-grid">
                 {hub_chooser()}
@@ -835,9 +835,9 @@ def render_hub() -> str:
     <section class="acf-section">
         <div class="acf-container">
             <div class="acf-section-head">
-                <span class="acf-section-label">Интент и preset</span>
-                <h2>Как запросы связаны с генератором</h2>
-                <p>Каждая посадочная ведет в генератор с готовым набором полей и контекстной подсказкой, чтобы пользователь не начинал с пустого экрана.</p>
+                <span class="acf-section-label">Быстрый старт</span>
+                <h2>Откройте нужный шаблон без пустого экрана</h2>
+                <p>В таблице собраны самые частые ACF-задачи: выберите строку, проверьте состав полей и сразу переходите к генерации кода.</p>
             </div>
             <div class="acf-preset-map" aria-label="Карта ACF-пресетов">
                 {preset_map()}
@@ -848,17 +848,16 @@ def render_hub() -> str:
     <section class="acf-section acf-section--muted">
         <div class="acf-container acf-roadmap">
             <div>
-                <span class="acf-section-label">Продукт</span>
-                <h2>Что доработать в генераторе дальше</h2>
-                <p>Главная цель продукта — довести пользователя от запроса до готового кода за 1-2 минуты.</p>
+                <span class="acf-section-label">Процесс</span>
+                <h2>Как работать с ACF генератором</h2>
+                <p>Страница помогает быстро перейти от идеи блока к готовой структуре полей, которую можно вставить в WordPress-проект.</p>
             </div>
             <ol>
-                <li><strong>URL-предустановки.</strong> Каждая посадочная открывает генератор с нужным шаблоном.</li>
-                <li><strong>Экспорт проекта.</strong> Скачать PHP/JSON файлом и сохранить набор полей локально.</li>
-                <li><strong>Production HTML/CSS.</strong> Генерировать scoped верстку, которую не стыдно вставить в тему: hero, FAQ, команда, отзывы, flexible layouts и generic cards.</li>
-                <li><strong>Динамические стили элементов.</strong> Панель стилей должна генерироваться из текущего блока и редактировать конкретные элементы превью: секцию, заголовок, текст, кнопку, медиа, карточки, FAQ-вопросы и ответы.</li>
-                <li><strong>Проверка ошибок.</strong> Подсветка дублирующихся names, пустых keys и плохих location rules.</li>
-                <li><strong>Библиотека пресетов.</strong> Фильтр шаблонов по типу сайта: SaaS, услуги, магазин, блог.</li>
+                <li><strong>Выберите тип блока.</strong> Например, SEO-поля, FAQ, hero, команда, отзывы, карточка товара или flexible page builder.</li>
+                <li><strong>Проверьте названия полей.</strong> Сразу задайте понятные field names, labels и структуру вложенных элементов.</li>
+                <li><strong>Оцените вывод.</strong> Посмотрите, как данные будут выглядеть в блоке, и уберите лишние поля до экспорта.</li>
+                <li><strong>Заберите код.</strong> Скопируйте PHP для темы или JSON для синхронизации ACF через репозиторий.</li>
+                <li><strong>Вставьте в проект.</strong> Добавьте код в functions.php, mu-plugin или подключите JSON через папку acf-json.</li>
             </ol>
         </div>
     </section>
@@ -889,8 +888,8 @@ def render_hub() -> str:
 
     <section class="acf-final-cta">
         <div class="acf-container">
-            <h2>Готовая связка: запрос, предустановка и экспорт</h2>
-            <p>Переходите в генератор и собирайте первую группу полей.</p>
+            <h2>Соберите ACF-поля для WordPress за несколько минут</h2>
+            <p>Откройте генератор, выберите шаблон и получите структуру, которую можно доработать под свой сайт.</p>
             <a class="acf-btn acf-btn--primary" href="acf-generator.html">Запустить ACF генератор</a>
         </div>
     </section>
