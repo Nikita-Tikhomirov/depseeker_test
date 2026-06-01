@@ -284,13 +284,13 @@ var locationRules = [{ param: 'post_type', operator: '==', value: 'page' }];
 // Style state (for preview + generated HTML)
 function getDefaultElementStyles() {
     return {
-        title: { color: '#1a1a2e', fontSize: '22', marginBottom: '24' },
-        label: { color: '#6b7280', fontSize: '11', marginBottom: '6' },
-        value: { color: '#1f2937', bgColor: '#f8f9fa', padding: '20', radius: '12' },
-        button: { color: '#ffffff', bgColor: '#6366f1', padding: '12', radius: '8' },
+        title: { color: '#1a1a2e', fontSize: '22', fontWeight: '700', lineHeight: '120', marginBottom: '24' },
+        label: { color: '#6b7280', fontSize: '11', fontWeight: '600', letterSpacing: '1', marginBottom: '6' },
+        value: { color: '#1f2937', bgColor: '#f8f9fa', fontSize: '15', fontWeight: '400', lineHeight: '160', padding: '20', radius: '12' },
+        button: { color: '#ffffff', bgColor: '#6366f1', fontSize: '14', fontWeight: '700', padding: '12', radius: '8' },
         media: { bgColor: '#c7d2fe', radius: '8' },
         repeater: { gap: '14', avatarBg: '#c7d2fe' },
-        faq: { questionBg: '#f8f9fa', answerColor: '#4b5563' },
+        faq: { questionBg: '#f8f9fa', questionFontSize: '15', questionFontWeight: '700', answerColor: '#4b5563', answerFontSize: '14', answerLineHeight: '165' },
         flex: { accentColor: '#6366f1', bgColor: 'rgba(99,102,241,0.04)' }
     };
 }
@@ -2284,16 +2284,23 @@ function renderDynamicStyleControls() {
     groups.push(renderElementStyleGroup('title', 'Заголовок блока', 'heading', [
         renderElementStyleControl('title', 'color', 'Цвет', 'color'),
         renderElementStyleControl('title', 'fontSize', 'Размер', 'text', 'px'),
+        renderElementStyleControl('title', 'fontWeight', 'Толщина', 'text'),
+        renderElementStyleControl('title', 'lineHeight', 'Интерлиньяж', 'text', '%'),
         renderElementStyleControl('title', 'marginBottom', 'Низ', 'text', 'px')
     ]));
     groups.push(renderElementStyleGroup('label', 'Подписи полей', 'label', [
         renderElementStyleControl('label', 'color', 'Цвет', 'color'),
         renderElementStyleControl('label', 'fontSize', 'Размер', 'text', 'px'),
+        renderElementStyleControl('label', 'fontWeight', 'Толщина', 'text'),
+        renderElementStyleControl('label', 'letterSpacing', 'Трекинг', 'text', 'px'),
         renderElementStyleControl('label', 'marginBottom', 'Низ', 'text', 'px')
     ]));
     groups.push(renderElementStyleGroup('value', 'Значение поля', 'value/card', [
         renderElementStyleControl('value', 'color', 'Текст', 'color'),
         renderElementStyleControl('value', 'bgColor', 'Фон', 'color'),
+        renderElementStyleControl('value', 'fontSize', 'Размер', 'text', 'px'),
+        renderElementStyleControl('value', 'fontWeight', 'Толщина', 'text'),
+        renderElementStyleControl('value', 'lineHeight', 'Интерлиньяж', 'text', '%'),
         renderElementStyleControl('value', 'padding', 'Отступ', 'text', 'px'),
         renderElementStyleControl('value', 'radius', 'Радиус', 'text', 'px')
     ]));
@@ -2302,6 +2309,8 @@ function renderDynamicStyleControls() {
         groups.push(renderElementStyleGroup('button', 'Кнопка / ссылка', 'link field', [
             renderElementStyleControl('button', 'color', 'Текст', 'color'),
             renderElementStyleControl('button', 'bgColor', 'Фон', 'color'),
+            renderElementStyleControl('button', 'fontSize', 'Размер', 'text', 'px'),
+            renderElementStyleControl('button', 'fontWeight', 'Толщина', 'text'),
             renderElementStyleControl('button', 'padding', 'Отступ', 'text', 'px'),
             renderElementStyleControl('button', 'radius', 'Радиус', 'text', 'px')
         ]));
@@ -2327,7 +2336,11 @@ function renderDynamicStyleControls() {
     if (types.repeater && fields.length === 1 && fields[0].sub_fields && fields[0].sub_fields.length === 2) {
         groups.push(renderElementStyleGroup('faq', 'FAQ элементы', 'accordion', [
             renderElementStyleControl('faq', 'questionBg', 'Вопрос', 'color'),
-            renderElementStyleControl('faq', 'answerColor', 'Ответ', 'color')
+            renderElementStyleControl('faq', 'questionFontSize', 'Вопрос размер', 'text', 'px'),
+            renderElementStyleControl('faq', 'questionFontWeight', 'Вопрос вес', 'text'),
+            renderElementStyleControl('faq', 'answerColor', 'Ответ', 'color'),
+            renderElementStyleControl('faq', 'answerFontSize', 'Ответ размер', 'text', 'px'),
+            renderElementStyleControl('faq', 'answerLineHeight', 'Ответ строки', 'text', '%')
         ]));
     }
 
@@ -2408,6 +2421,18 @@ function resetStyles() {
     renderDynamicStyleControls();
     refreshStyledOutputs();
     showToast('Стили сброшены');
+}
+
+function cssPx(value, fallback) {
+    var n = parseFloat(value);
+    if (!isFinite(n)) n = fallback || 0;
+    return n + 'px';
+}
+
+function cssLineHeight(value, fallback) {
+    var n = parseFloat(value);
+    if (!isFinite(n)) n = fallback || 160;
+    return n > 10 ? (n / 100).toFixed(2) : String(n);
 }
 
 function toggleStyleEditor() {
@@ -2525,19 +2550,19 @@ function generateVisualHTML(options) {
         '.acf-block{box-sizing:border-box;max-width:800px;margin:0 auto;padding:' + (fullDocument ? '0' : styles.padding + 'px') + ';background:' + (fullDocument ? 'transparent' : styles.bgColor) + ';color:' + styles.textColor + ';font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;line-height:1.6;}',
         '.acf-block *{box-sizing:border-box;}',
         '.acf-block :where(h1,h2,h3,p,ul,ol,figure){margin:0;}',
-        '.acf-block-title{font-size:' + e.title.fontSize + 'px;font-weight:700;margin-bottom:' + e.title.marginBottom + 'px;color:' + e.title.color + ';}',
+        '.acf-block-title{font-size:' + cssPx(e.title.fontSize, 22) + ';font-weight:' + e.title.fontWeight + ';line-height:' + cssLineHeight(e.title.lineHeight, 120) + ';margin-bottom:' + cssPx(e.title.marginBottom, 24) + ';color:' + e.title.color + ';}',
         '.acf-field{margin-bottom:' + styles.gap + 'px;}',
         '.acf-field:last-child{margin-bottom:0;}',
-        '.acf-label{font-size:' + e.label.fontSize + 'px;text-transform:uppercase;letter-spacing:0.07em;font-weight:600;color:' + e.label.color + ';margin-bottom:' + e.label.marginBottom + 'px;}',
-        '.acf-value{color:' + e.value.color + ';background:' + e.value.bgColor + ';padding:' + e.value.padding + 'px;border-radius:' + e.value.radius + 'px;border:' + styles.borderWidth + 'px solid ' + styles.borderColor + ';}',
-        '.acf-value--text{font-size:0.95rem;}',
-        '.acf-value--textarea{font-size:0.9rem;white-space:pre-wrap;min-height:60px;line-height:1.7;}',
-        '.acf-value--number{font-family:"JetBrains Mono","SF Mono",monospace;font-size:1.1rem;font-weight:600;}',
+        '.acf-label{font-size:' + cssPx(e.label.fontSize, 11) + ';text-transform:uppercase;letter-spacing:' + cssPx(e.label.letterSpacing, 1) + ';font-weight:' + e.label.fontWeight + ';color:' + e.label.color + ';margin-bottom:' + cssPx(e.label.marginBottom, 6) + ';}',
+        '.acf-value{color:' + e.value.color + ';background:' + e.value.bgColor + ';font-size:' + cssPx(e.value.fontSize, 15) + ';font-weight:' + e.value.fontWeight + ';line-height:' + cssLineHeight(e.value.lineHeight, 160) + ';padding:' + cssPx(e.value.padding, 20) + ';border-radius:' + cssPx(e.value.radius, 12) + ';border:' + styles.borderWidth + 'px solid ' + styles.borderColor + ';}',
+        '.acf-value--text{font-size:inherit;}',
+        '.acf-value--textarea{font-size:inherit;white-space:pre-wrap;min-height:60px;}',
+        '.acf-value--number{font-family:"JetBrains Mono","SF Mono",monospace;font-size:inherit;font-weight:inherit;}',
         '.acf-value--email,.acf-value--url{color:#6366f1;text-decoration:underline;text-underline-offset:2px;cursor:pointer;}',
         '.acf-img{width:100%;aspect-ratio:16/9;border-radius:' + e.media.radius + 'px;background:' + e.media.bgColor + ';display:flex;align-items:center;justify-content:center;color:#6366f1;font-size:1.5rem;}',
         '.acf-gallery{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;}',
         '.acf-gallery-item{aspect-ratio:1;border-radius:' + e.media.radius + 'px;background:' + e.media.bgColor + ';}',
-        '.acf-btn{display:inline-block;padding:' + e.button.padding + 'px 28px;background:' + e.button.bgColor + ';color:' + e.button.color + ';border-radius:' + e.button.radius + 'px;text-decoration:none;font-weight:600;font-size:0.9rem;}',
+        '.acf-btn{display:inline-block;padding:' + cssPx(e.button.padding, 12) + ' 28px;background:' + e.button.bgColor + ';color:' + e.button.color + ';border-radius:' + cssPx(e.button.radius, 8) + ';text-decoration:none;font-weight:' + e.button.fontWeight + ';font-size:' + cssPx(e.button.fontSize, 14) + ';}',
         '.acf-badge{display:inline-block;padding:4px 12px;border-radius:999px;font-size:0.75rem;font-weight:600;}',
         '.acf-badge--yes{background:#dcfce7;color:#166534;}',
         '.acf-badge--no{background:#fee2e2;color:#991b1b;}',
@@ -2560,9 +2585,9 @@ function generateVisualHTML(options) {
         '.acf-company{font-size:0.8rem;font-weight:500;opacity:0.55;margin-top:2px;}',
         '.acf-faq-item{border:' + styles.borderWidth + 'px solid ' + styles.borderColor + ';border-radius:' + styles.cardRadius + 'px;overflow:hidden;margin-bottom:8px;background:' + styles.cardBg + ';}',
         '.acf-faq-item:last-child{margin-bottom:0;}',
-        '.acf-faq-question{padding:' + styles.cardPadding + 'px;font-weight:600;cursor:pointer;display:flex;justify-content:space-between;align-items:center;user-select:none;border:none;width:100%;text-align:left;font-size:0.95rem;color:' + styles.textColor + ';font-family:inherit;background:' + e.faq.questionBg + ';}',
+        '.acf-faq-question{padding:' + styles.cardPadding + 'px;font-weight:' + e.faq.questionFontWeight + ';cursor:pointer;display:flex;justify-content:space-between;align-items:center;user-select:none;border:none;width:100%;text-align:left;font-size:' + cssPx(e.faq.questionFontSize, 15) + ';color:' + styles.textColor + ';font-family:inherit;background:' + e.faq.questionBg + ';}',
         '.acf-faq-question::after{content:"+";font-size:1.2rem;opacity:0.35;transition:transform 0.2s;}',
-        '.acf-faq-answer{padding:0 ' + styles.cardPadding + 'px;max-height:0;overflow:hidden;transition:all 0.3s;font-size:0.9rem;color:' + e.faq.answerColor + ';line-height:1.65;}',
+        '.acf-faq-answer{padding:0 ' + styles.cardPadding + 'px;max-height:0;overflow:hidden;transition:all 0.3s;font-size:' + cssPx(e.faq.answerFontSize, 14) + ';color:' + e.faq.answerColor + ';line-height:' + cssLineHeight(e.faq.answerLineHeight, 165) + ';}',
         '.acf-faq-item.open .acf-faq-question::after{content:"−";transform:rotate(180deg);}',
         '.acf-faq-item.open .acf-faq-answer{max-height:200px;padding-bottom:' + styles.cardPadding + 'px;}',
         '.acf-post-card{display:flex;gap:12px;align-items:center;padding:12px;border:1px solid ' + styles.borderColor + ';border-radius:8px;}',

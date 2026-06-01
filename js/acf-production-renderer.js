@@ -58,15 +58,15 @@
         section: { bgColor: '#ffffff', textColor: '#111827', paddingY: '72', maxWidth: '1120', gap: '18' },
         kicker: { color: '#14b8a6', fontSize: '12', fontWeight: '800', marginBottom: '10' },
         title: { color: '#111827', fontSize: '72', fontWeight: '850', lineHeight: '98', marginBottom: '0' },
-        lead: { color: '#475569', fontSize: '19', lineHeight: '165', marginTop: '18' },
-        button: { bgColor: '#111827', textColor: '#ffffff', radius: '10', paddingX: '20', height: '46', fontSize: '15' },
+        lead: { color: '#475569', fontSize: '19', fontWeight: '400', lineHeight: '165', marginTop: '18' },
+        button: { bgColor: '#111827', textColor: '#ffffff', radius: '10', paddingX: '20', height: '46', fontSize: '15', fontWeight: '700' },
         media: { bgColor: '#ccfbf1', radius: '16', minHeight: '320' },
         card: { bgColor: '#ffffff', textColor: '#111827', padding: '22', radius: '16', borderColor: '#e5e7eb', borderWidth: '1' },
         fieldLabel: { color: '#64748b', fontSize: '12', fontWeight: '800' },
         fieldValue: { color: '#111827', fontSize: '16', fontWeight: '400' },
         faqList: { gap: '12', maxWidth: '860' },
         question: { bgColor: '#ffffff', textColor: '#111827', paddingY: '18', paddingX: '20', fontSize: '16', fontWeight: '800' },
-        answer: { textColor: '#475569', fontSize: '15', paddingX: '20', paddingBottom: '18' },
+        answer: { textColor: '#475569', fontSize: '15', lineHeight: '165', paddingX: '20', paddingBottom: '18' },
         layout: { bgColor: '#ffffff', padding: '22', radius: '16', borderColor: '#e5e7eb' },
         avatar: { size: '64', bgColor: '#14b8a6', textColor: '#ffffff', radius: '50' },
         rating: { color: '#f59e0b', fontSize: '16' }
@@ -105,6 +105,7 @@
         lead: { label: 'Описание', hint: '.zifra-acf-lead', controls: [
             ['color', 'Цвет', 'color'],
             ['fontSize', 'Размер', 'number', 'px'],
+            ['fontWeight', 'Насыщенность', 'number'],
             ['lineHeight', 'Интерлиньяж', 'number', '%'],
             ['marginTop', 'Отступ сверху', 'number', 'px']
         ] },
@@ -114,7 +115,8 @@
             ['height', 'Высота', 'number', 'px'],
             ['paddingX', 'Боковые отступы', 'number', 'px'],
             ['radius', 'Скругление', 'number', 'px'],
-            ['fontSize', 'Размер текста', 'number', 'px']
+            ['fontSize', 'Размер текста', 'number', 'px'],
+            ['fontWeight', 'Насыщенность', 'number']
         ] },
         media: { label: 'Медиа / картинка', hint: '.zifra-acf-media', controls: [
             ['bgColor', 'Фон', 'color'],
@@ -154,6 +156,7 @@
         answer: { label: 'Ответ FAQ', hint: '.zifra-acf-faq-answer', controls: [
             ['textColor', 'Текст', 'color'],
             ['fontSize', 'Размер', 'number', 'px'],
+            ['lineHeight', 'Интерлиньяж', 'number', '%'],
             ['paddingX', 'Боковой отступ', 'number', 'px'],
             ['paddingBottom', 'Отступ снизу', 'number', 'px']
         ] },
@@ -416,15 +419,15 @@
             '.zifra-acf-grid { gap: ' + cssPx(section.gap, 18) + '; }',
             '.zifra-acf-kicker { color: ' + cssRaw(kicker.color, '#14b8a6') + '; font-size: ' + cssPx(kicker.fontSize, 12) + '; font-weight: ' + cssRaw(kicker.fontWeight, '800') + '; margin-bottom: ' + cssPx(kicker.marginBottom, 10) + '; }',
             '.zifra-acf-title { color: ' + cssRaw(title.color, '#111827') + '; font-size: clamp(2rem, 5vw, ' + cssPx(title.fontSize, 72) + '); font-weight: ' + cssRaw(title.fontWeight, '850') + '; line-height: ' + cssPercent(title.lineHeight, 98) + '; margin-bottom: ' + cssPx(title.marginBottom, 0) + '; }',
-            '.zifra-acf-lead { color: ' + cssRaw(lead.color, '#475569') + '; font-size: ' + cssPx(lead.fontSize, 19) + '; line-height: ' + cssPercent(lead.lineHeight, 165) + '; margin-top: ' + cssPx(lead.marginTop, 18) + '; }',
-            '.zifra-acf-btn { background: ' + cssRaw(button.bgColor, '#111827') + '; color: ' + cssRaw(button.textColor, '#fff') + '; min-height: ' + cssPx(button.height, 46) + '; padding: 0 ' + cssPx(button.paddingX, 20) + '; border-radius: ' + cssPx(button.radius, 10) + '; font-size: ' + cssPx(button.fontSize, 15) + '; }',
+            '.zifra-acf-lead { color: ' + cssRaw(lead.color, '#475569') + '; font-size: ' + cssPx(lead.fontSize, 19) + '; font-weight: ' + cssRaw(lead.fontWeight, '400') + '; line-height: ' + cssPercent(lead.lineHeight, 165) + '; margin-top: ' + cssPx(lead.marginTop, 18) + '; }',
+            '.zifra-acf-btn { background: ' + cssRaw(button.bgColor, '#111827') + '; color: ' + cssRaw(button.textColor, '#fff') + '; min-height: ' + cssPx(button.height, 46) + '; padding: 0 ' + cssPx(button.paddingX, 20) + '; border-radius: ' + cssPx(button.radius, 10) + '; font-size: ' + cssPx(button.fontSize, 15) + '; font-weight: ' + cssRaw(button.fontWeight, '700') + '; }',
             '.zifra-acf-media { background: linear-gradient(135deg, ' + cssRaw(media.bgColor, '#ccfbf1') + ', #e0f2fe); border-radius: ' + cssPx(media.radius, 16) + '; min-height: ' + cssPx(media.minHeight, 320) + '; }',
             '.zifra-acf-card { background: ' + cssRaw(card.bgColor, '#fff') + '; color: ' + cssRaw(card.textColor, '#111827') + '; padding: ' + cssPx(card.padding, 22) + '; border-radius: ' + cssPx(card.radius, 16) + '; border-color: ' + cssRaw(card.borderColor, '#e5e7eb') + '; border-width: ' + cssPx(card.borderWidth, 1) + '; }',
             '.zifra-acf-label { color: ' + cssRaw(label.color, '#64748b') + '; font-size: ' + cssPx(label.fontSize, 12) + '; font-weight: ' + cssRaw(label.fontWeight, '800') + '; }',
             '.zifra-acf-value { color: ' + cssRaw(value.color, '#111827') + '; font-size: ' + cssPx(value.fontSize, 16) + '; font-weight: ' + cssRaw(value.fontWeight, '400') + '; }',
             '.zifra-acf-faq { gap: ' + cssPx(faq.gap, 12) + '; max-width: ' + cssPx(faq.maxWidth, 860) + '; }',
             '.zifra-acf-faq summary { background: ' + cssRaw(question.bgColor, '#fff') + '; color: ' + cssRaw(question.textColor, '#111827') + '; padding: ' + cssPx(question.paddingY, 18) + ' ' + cssPx(question.paddingX, 20) + '; font-size: ' + cssPx(question.fontSize, 16) + '; font-weight: ' + cssRaw(question.fontWeight, '800') + '; }',
-            '.zifra-acf-faq-answer { color: ' + cssRaw(answer.textColor, '#475569') + '; font-size: ' + cssPx(answer.fontSize, 15) + '; padding: 0 ' + cssPx(answer.paddingX, 20) + ' ' + cssPx(answer.paddingBottom, 18) + '; }',
+            '.zifra-acf-faq-answer { color: ' + cssRaw(answer.textColor, '#475569') + '; font-size: ' + cssPx(answer.fontSize, 15) + '; line-height: ' + cssPercent(answer.lineHeight, 165) + '; padding: 0 ' + cssPx(answer.paddingX, 20) + ' ' + cssPx(answer.paddingBottom, 18) + '; }',
             '.zifra-acf-layout { background: ' + cssRaw(layout.bgColor, '#fff') + '; padding: ' + cssPx(layout.padding, 22) + '; border-radius: ' + cssPx(layout.radius, 16) + '; border-color: ' + cssRaw(layout.borderColor, '#e5e7eb') + '; }',
             '.zifra-acf-avatar { width: ' + cssPx(avatar.size, 64) + '; height: ' + cssPx(avatar.size, 64) + '; background: ' + cssRaw(avatar.bgColor, '#14b8a6') + '; color: ' + cssRaw(avatar.textColor, '#fff') + '; border-radius: ' + cssRaw(avatar.radius, '50') + '%; }',
             '.zifra-acf-rating { color: ' + cssRaw(rating.color, '#f59e0b') + '; font-size: ' + cssPx(rating.fontSize, 16) + '; }'
