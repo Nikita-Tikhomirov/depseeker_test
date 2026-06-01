@@ -44,4 +44,16 @@ for (const page of [
   assert(Number(row[1]) >= 90, `${page} must have enough production SEO depth, got ${row[1]}`);
 }
 
+for (const page of [
+  'migx-catalog.html',
+  'migx-configs.html',
+  'migx-errors.html',
+  'migx-examples.html',
+  'migx-faq.html'
+]) {
+  const row = report.match(new RegExp(`\\| \`${page}\` \\| landing \\|(?: published \\|)? (\\d+)`, 'i'));
+  assert(row, `${page} must be present in the audit tables`);
+  assert(Number(row[1]) >= 90, `${page} must have enough production SEO depth, got ${row[1]}`);
+}
+
 console.log('content audit smoke passed');
