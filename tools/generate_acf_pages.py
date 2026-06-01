@@ -216,6 +216,22 @@ PRESET_MAP_RESULTS = {
 }
 
 
+HUB_CARD_CTA = {
+    "acf-php-generator": "Собрать PHP export",
+    "acf-json-generator": "Подготовить ACF JSON",
+    "acf-repeater-generator": "Настроить repeater",
+    "acf-flexible-content-generator": "Собрать flexible layouts",
+    "acf-field-group-generator": "Собрать field group",
+    "acf-seo-fields": "Настроить SEO-поля",
+    "acf-faq-fields": "Собрать FAQ-блок",
+    "acf-hero-section": "Собрать hero-поля",
+    "acf-team-repeater": "Собрать блок команды",
+    "acf-testimonials-repeater": "Собрать отзывы",
+    "acf-page-builder": "Собрать page builder",
+    "acf-woocommerce-product-fields": "Расширить товар WooCommerce",
+}
+
+
 DELIVERABLES_COPY = {
     "acf-php-generator": ["Группа Content Fields", "PHP registration array", "Location rules и стабильные field keys"],
     "acf-json-generator": ["Группа Content Fields", "JSON export tab", "Стабильные field keys"],
@@ -741,7 +757,7 @@ def render_hub() -> str:
             <span>{esc(p["query"])}</span>
             <h3><a href="{esc(p["slug"])}.html">{esc(p["h1"])}</a></h3>
             <p>{esc(p["description"])}</p>
-            <a href="{esc(p["slug"])}.html">Открыть страницу</a>
+            <a href="{esc(p["slug"])}.html">{esc(HUB_CARD_CTA[str(p["slug"])])}</a>
         </article>"""
         for p in PAGES
     )
@@ -819,8 +835,8 @@ def render_hub() -> str:
     <section class="acf-section">
         <div class="acf-container">
             <div class="acf-section-head">
-                <span class="acf-section-label">Карта пресетов</span>
-                <h2>Как SEO-страницы связаны с генератором</h2>
+                <span class="acf-section-label">Интент и preset</span>
+                <h2>Как запросы связаны с генератором</h2>
                 <p>Каждая посадочная ведет в генератор с готовым набором полей и контекстной подсказкой, чтобы пользователь не начинал с пустого экрана.</p>
             </div>
             <div class="acf-preset-map" aria-label="Карта ACF-пресетов">
@@ -873,7 +889,7 @@ def render_hub() -> str:
 
     <section class="acf-final-cta">
         <div class="acf-container">
-            <h2>Готовая связка: SEO-страница → предустановка → экспорт</h2>
+            <h2>Готовая связка: запрос, предустановка и экспорт</h2>
             <p>Переходите в генератор и собирайте первую группу полей.</p>
             <a class="acf-btn acf-btn--primary" href="acf-generator.html">Запустить ACF генератор</a>
         </div>
