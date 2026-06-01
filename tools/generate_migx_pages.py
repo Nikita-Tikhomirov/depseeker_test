@@ -301,12 +301,12 @@ def asset_head(page: dict[str, object]) -> str:
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="css/base.css">
-    <link rel="stylesheet" href="css/components.css">
-    <link rel="stylesheet" href="css/layout.css">
-    <link rel="stylesheet" href="css/responsive.css">
-    <link rel="stylesheet" href="css/themes.css">
-    <link rel="stylesheet" href="css/acf-content.css">"""
+    <link rel="stylesheet" href="css/base.css?v=prod-shell-20260601-1">
+    <link rel="stylesheet" href="css/components.css?v=prod-shell-20260601-1">
+    <link rel="stylesheet" href="css/layout.css?v=prod-shell-20260601-1">
+    <link rel="stylesheet" href="css/responsive.css?v=prod-shell-20260601-1">
+    <link rel="stylesheet" href="css/themes.css?v=prod-shell-20260601-1">
+    <link rel="stylesheet" href="css/acf-content.css?v=prod-shell-20260601-1">"""
 
 
 def breadcrumb_schema(page: dict[str, object] | None) -> str:
@@ -385,17 +385,27 @@ def hub_faq_section() -> str:
 
 
 def header(active: str = "") -> str:
-    hub_active = ' class="is-active"' if active == "hub" else ""
-    return f"""<header class="acf-header">
-    <div class="acf-container acf-header__inner">
-        <a class="acf-logo" href="index.html" aria-label="Цифра — на главную"><span>◆</span> Цифра</a>
-        <nav class="acf-nav" aria-label="Навигация MIGX">
-            <a href="migx.html"{hub_active}>MIGX</a>
-            <a href="migx-generator.html">Генератор</a>
-            <a href="migx-generator.html?preset=nested&amp;source=nav">Nested</a>
-            <a href="migx-generator.html?preset=validator&amp;source=nav">Валидатор</a>
+    home_active = ' class="is-active"' if active == "home" else ""
+    acf_active = ' class="is-active"' if active == "acf" else ""
+    migx_active = ' class="is-active"' if active in {"migx", "hub"} else ""
+    acf_generator_active = ' class="is-active"' if active == "acf-generator" else ""
+    migx_generator_active = ' class="is-active"' if active == "migx-generator" else ""
+    return f"""<header class="header">
+    <div class="container">
+        <a href="index.html" class="header-logo" aria-label="Цифра — на главную">
+            <span class="logo-icon">◆</span>
+            <span class="logo-text">Цифра</span>
+        </a>
+        <nav aria-label="Основная навигация">
+            <ul class="header-nav">
+                <li><a href="index.html"{home_active}>Главная</a></li>
+                <li><a href="acf.html"{acf_active}>ACF</a></li>
+                <li><a href="migx.html"{migx_active}>MIGX</a></li>
+                <li><a href="acf-generator.html"{acf_generator_active}>ACF генератор</a></li>
+                <li><a href="migx-generator.html"{migx_generator_active}>MIGX генератор</a></li>
+            </ul>
         </nav>
-        <a class="acf-header-cta" href="migx-generator.html">Открыть генератор</a>
+        <button class="hamburger" aria-label="Меню"><span></span><span></span><span></span></button>
     </div>
 </header>"""
 
@@ -405,9 +415,15 @@ def footer() -> str:
     <div class="acf-container acf-footer__inner">
         <div>
             <strong>Цифра</strong>
-            <p>Инструменты для MODX-разработчиков: MIGX, JSON, Form Tabs, Grid Columns и готовые шаблоны.</p>
+            <p>Генераторы и SEO-страницы для WordPress ACF и MODX MIGX.</p>
         </div>
-        <a href="migx-generator.html">Запустить MIGX генератор</a>
+        <div class="acf-footer-links">
+            <a href="index.html">Главная</a>
+            <a href="acf.html">ACF</a>
+            <a href="migx.html">MIGX</a>
+            <a href="acf-generator.html">ACF генератор</a>
+            <a href="migx-generator.html">MIGX генератор</a>
+        </div>
     </div>
 </footer>"""
 
@@ -484,7 +500,7 @@ def render_page(page: dict[str, object]) -> str:
     <script type="application/ld+json">{faq_schema(page)}</script>
 </head>
 <body>
-{header()}
+{header("migx")}
 <main>
     <section class="acf-hero acf-page-hero">
         <div class="acf-container acf-hero__grid">
@@ -525,6 +541,7 @@ def render_page(page: dict[str, object]) -> str:
     <section class="acf-final-cta"><div class="acf-container"><h2>Соберите {esc(page["h1"])} без ручной сборки JSON</h2><p>Откройте preset, проверьте readiness score и заберите конфигурацию, getImageList package или chunk для MODX.</p><a class="acf-btn acf-btn--primary" href="{generator_url(page)}">{esc(page_cta(page))}</a></div></section>
 </main>
 {footer()}
+<script src="js/main.js" defer></script>
 </body>
 </html>
 """
@@ -557,7 +574,7 @@ def render_hub() -> str:
     <script type="application/ld+json">{hub_faq_schema()}</script>
 </head>
 <body>
-{header("hub")}
+{header("migx")}
 <main>
     <section class="acf-hero">
         <div class="acf-container acf-hero__grid">
@@ -576,6 +593,7 @@ def render_hub() -> str:
     <section class="acf-final-cta"><div class="acf-container"><h2>Откройте MIGX генератор</h2><p>Выберите шаблон, проверьте ошибки и экспортируйте JSON или chunk.</p><a class="acf-btn acf-btn--primary" href="migx-generator.html">Запустить</a></div></section>
 </main>
 {footer()}
+<script src="js/main.js" defer></script>
 </body>
 </html>
 """
@@ -596,6 +614,12 @@ def update_sitemap() -> None:
         loc = url.find("{*}loc")
         if loc is None or not loc.text:
             continue
+        if not (
+            loc.text == f"{SITE}/"
+            or loc.text.startswith(f"{SITE}/acf")
+            or loc.text.startswith(f"{SITE}/migx")
+        ):
+            continue
         lastmod = url.find("{*}lastmod")
         changefreq = url.find("{*}changefreq")
         priority = url.find("{*}priority")
@@ -604,6 +628,7 @@ def update_sitemap() -> None:
             changefreq.text if changefreq is not None and changefreq.text else "weekly",
             priority.text if priority is not None and priority.text else "0.5",
         )
+    entries[f"{SITE}/"] = ("2026-06-01", "weekly", "1.0")
     entries[f"{SITE}/migx.html"] = (SITEMAP_LASTMOD, "weekly", "0.85")
     entries[f"{SITE}/migx-generator.html"] = (SITEMAP_LASTMOD, "weekly", "0.8")
     for page in PAGES:

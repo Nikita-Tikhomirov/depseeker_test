@@ -1,6 +1,0 @@
-feat: add light/dark mode toggle + 3-color-scheme picker to header across all templates
-
-- Added [data-mode="light"] overrides in themes.css with per-theme light palettes
-- Added mode-toggle button (☀️/🌙) next to theme dots in index.html header
-- Updated JS: combined theme (color) + mode (light/dark) switching with localStorage
-- Added matching demo header + theme JS to hero-v1..v4 standalone pages

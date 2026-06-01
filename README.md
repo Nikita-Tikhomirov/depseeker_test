@@ -9,6 +9,7 @@ Run the lightweight regression checks after changes to generator pages, SEO page
 ```powershell
 node tests/acf-smoke.mjs
 node tests/migx-smoke.mjs
+node tests/production-home-smoke.mjs
 node tests/site-links-smoke.mjs
 ```
 
@@ -16,6 +17,7 @@ The checks cover:
 
 - ACF category routes, landing CTAs, generator preset routing, production export, visual editor guards, and conversion tracking.
 - MIGX hub, 21 landing pages, sitemap entries, generator wiring, validation/audit/share features, and conversion tracking.
+- Production homepage positioning and shared navigation without marketplace/header leftovers.
 - Local `href`/`src` links inside the ACF/MIGX clusters.
 
 ## Local Preview

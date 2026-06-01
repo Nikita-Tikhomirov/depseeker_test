@@ -19,12 +19,12 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="css/base.css">
-    <link rel="stylesheet" href="css/components.css">
-    <link rel="stylesheet" href="css/layout.css">
-    <link rel="stylesheet" href="css/responsive.css">
-    <link rel="stylesheet" href="css/themes.css">
-    <link rel="stylesheet" href="css/acf-content.css">
+    <link rel="stylesheet" href="css/base.css?v=prod-shell-20260601-1">
+    <link rel="stylesheet" href="css/components.css?v=prod-shell-20260601-1">
+    <link rel="stylesheet" href="css/layout.css?v=prod-shell-20260601-1">
+    <link rel="stylesheet" href="css/responsive.css?v=prod-shell-20260601-1">
+    <link rel="stylesheet" href="css/themes.css?v=prod-shell-20260601-1">
+    <link rel="stylesheet" href="css/acf-content.css?v=prod-shell-20260601-1">
     <script type="application/ld+json">{
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
@@ -81,16 +81,22 @@
 }</script>
 </head>
 <body>
-<header class="acf-header">
-    <div class="acf-container acf-header__inner">
-        <a class="acf-logo" href="index.html" aria-label="Цифра — на главную"><span>◆</span> Цифра</a>
-        <nav class="acf-nav" aria-label="Навигация MIGX">
-            <a href="migx.html">MIGX</a>
-            <a href="migx-generator.html">Генератор</a>
-            <a href="migx-generator.html?preset=nested&amp;source=nav">Nested</a>
-            <a href="migx-generator.html?preset=validator&amp;source=nav">Валидатор</a>
+<header class="header">
+    <div class="container">
+        <a href="index.html" class="header-logo" aria-label="Цифра — на главную">
+            <span class="logo-icon">◆</span>
+            <span class="logo-text">Цифра</span>
+        </a>
+        <nav aria-label="Основная навигация">
+            <ul class="header-nav">
+                <li><a href="index.html">Главная</a></li>
+                <li><a href="acf.html">ACF</a></li>
+                <li><a href="migx.html" class="is-active">MIGX</a></li>
+                <li><a href="acf-generator.html">ACF генератор</a></li>
+                <li><a href="migx-generator.html">MIGX генератор</a></li>
+            </ul>
         </nav>
-        <a class="acf-header-cta" href="migx-generator.html">Открыть генератор</a>
+        <button class="hamburger" aria-label="Меню"><span></span><span></span><span></span></button>
     </div>
 </header>
 <main>
@@ -160,10 +166,17 @@
     <div class="acf-container acf-footer__inner">
         <div>
             <strong>Цифра</strong>
-            <p>Инструменты для MODX-разработчиков: MIGX, JSON, Form Tabs, Grid Columns и готовые шаблоны.</p>
+            <p>Генераторы и SEO-страницы для WordPress ACF и MODX MIGX.</p>
         </div>
-        <a href="migx-generator.html">Запустить MIGX генератор</a>
+        <div class="acf-footer-links">
+            <a href="index.html">Главная</a>
+            <a href="acf.html">ACF</a>
+            <a href="migx.html">MIGX</a>
+            <a href="acf-generator.html">ACF генератор</a>
+            <a href="migx-generator.html">MIGX генератор</a>
+        </div>
     </div>
 </footer>
+<script src="js/main.js" defer></script>
 </body>
 </html>

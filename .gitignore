@@ -1,1 +1,13 @@
 .superpowers/
+.deepseek/
+vision/
+harness/
+%SystemDrive%/
+__pycache__/
+*.pyc
+_*.py
+_*.ps1
+hello_world*
+test.html
+test-no-cdata.html
+acf-generator-test.html

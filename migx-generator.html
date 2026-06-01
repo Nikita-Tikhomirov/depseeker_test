@@ -66,11 +66,11 @@
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,400,0,0&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 
-    <link rel="stylesheet" href="css/base.css">
-    <link rel="stylesheet" href="css/components.css">
-    <link rel="stylesheet" href="css/layout.css">
-    <link rel="stylesheet" href="css/responsive.css">
-    <link rel="stylesheet" href="css/themes.css">
+    <link rel="stylesheet" href="css/base.css?v=prod-shell-20260601-1">
+    <link rel="stylesheet" href="css/components.css?v=prod-shell-20260601-1">
+    <link rel="stylesheet" href="css/layout.css?v=prod-shell-20260601-1">
+    <link rel="stylesheet" href="css/responsive.css?v=prod-shell-20260601-1">
+    <link rel="stylesheet" href="css/themes.css?v=prod-shell-20260601-1">
 
     <style>
         :root { --font-mono: 'JetBrains Mono', 'Cascadia Code', 'Fira Code', monospace; }
@@ -274,25 +274,19 @@
 <!-- ==================== HEADER ==================== -->
 <header class="header">
     <div class="container">
-        <a href="/" class="header-logo" aria-label="Цифра — на главную">
+        <a href="index.html" class="header-logo" aria-label="Цифра — на главную">
             <span class="logo-icon">◆</span>
             <span class="logo-text">Цифра</span>
         </a>
         <nav aria-label="Основная навигация">
             <ul class="header-nav">
-                <li><a href="#" class="mega-trigger">Каталог ▾</a></li>
-                <li><a href="/#popular">Популярное</a></li>
-                <li><a href="/#new">Новинки</a></li>
-                <li><a href="/#how">Как это работает</a></li>
-                <li><a href="#">Цены</a></li>
+                <li><a href="index.html">Главная</a></li>
+                <li><a href="acf.html">ACF</a></li>
+                <li><a href="migx.html">MIGX</a></li>
+                <li><a href="acf-generator.html">ACF генератор</a></li>
+                <li><a href="migx-generator.html" class="is-active">MIGX генератор</a></li>
             </ul>
         </nav>
-        <div class="header-actions">
-            <div class="header-search" role="search"><span class="search-icon">🔍</span><input type="search" placeholder="Поиск товаров..." aria-label="Поиск по сайту"></div>
-            <button class="header-icon-btn" aria-label="Избранное">♡</button>
-            <button class="header-icon-btn" aria-label="Корзина">🛒 <span class="cart-count">3</span></button>
-            <button class="btn btn-outline" style="padding:8px 18px; font-size:0.85rem;">Войти</button>
-        </div>
         <button class="hamburger" aria-label="Меню"><span></span><span></span><span></span></button>
     </div>
 </header>
@@ -302,8 +296,8 @@
 <!-- ==================== BREADCRUMBS ==================== -->
 <nav class="breadcrumbs" aria-label="Хлебные крошки">
     <div class="container">
-        <a href="/">Главная</a> <span class="breadcrumb-sep">/</span>
-        <a href="#">Инструменты</a> <span class="breadcrumb-sep">/</span>
+        <a href="index.html">Главная</a> <span class="breadcrumb-sep">/</span>
+        <a href="migx.html">MIGX</a> <span class="breadcrumb-sep">/</span>
         <span>Генератор MIGX для MODX</span>
     </div>
 </nav>
@@ -495,6 +489,7 @@
 <!-- Toast -->
 <div class="toast" id="toast"></div>
 
+<script src="js/main.js" defer></script>
 <script src="js/conversion-events.js?v=launch-analytics-20260531-1" defer></script>
 <script src="js/migx-generator.js?v=migx-seo-20260531-4" defer></script>
 

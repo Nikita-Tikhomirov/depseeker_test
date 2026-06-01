@@ -26,10 +26,9 @@ function targetPath(value) {
 }
 
 function pageFiles() {
-  return readdirSync(root)
+  return ['index.html', ...readdirSync(root)
     .filter((file) => /^(acf|migx).*\.html$/.test(file))
-    .filter((file) => file !== 'acf-generator-test.html')
-    .sort();
+    .sort()];
 }
 
 function localRefs(html) {

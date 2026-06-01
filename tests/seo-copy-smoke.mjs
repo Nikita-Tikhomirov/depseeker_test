@@ -3,7 +3,7 @@ import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const root = dirname(dirname(fileURLToPath(import.meta.url)));
-const appShellPages = new Set(['acf-generator.html', 'acf-generator-test.html', 'migx-generator.html']);
+const appShellPages = new Set(['acf-generator.html', 'migx-generator.html']);
 const pageFiles = readdirSync(root)
   .filter((file) => /^(acf|migx).*\.html$/.test(file))
   .filter((file) => !appShellPages.has(file))
@@ -106,7 +106,9 @@ function testAcfHubReadsLikePublicSeoPage() {
   const html = read('acf.html');
   const visibleText = stripTechnicalBlocks(html);
 
-  assert(!/migx/i.test(html), 'acf.html must stay focused on the ACF category and not link to MIGX pages');
+  for (const href of ['index.html', 'acf.html', 'migx.html', 'acf-generator.html', 'migx-generator.html']) {
+    assert(html.includes(`href="${href}"`), `acf.html must include the production navigation link ${href}`);
+  }
 
   for (const pattern of bannedAcfHubCopy) {
     assert(!pattern.test(visibleText), `acf.html must not expose internal planning copy matching ${pattern}`);

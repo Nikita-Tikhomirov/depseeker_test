@@ -238,7 +238,8 @@ function testInternalEntryLinks() {
   const acf = read('acf.html');
   assert(countMatches(index, /href="migx\.html"/g) >= 3, 'index.html must link to the MIGX hub from multiple entry points');
   assert(countMatches(index, /href="acf\.html"/g) >= 3, 'index.html must keep ACF hub entry links');
-  assert(!/migx/i.test(acf), 'acf.html must stay focused on the ACF category');
+  assert(acf.includes('href="migx.html"'), 'acf.html must expose the shared production navigation to MIGX');
+  assert(acf.includes('href="acf-generator.html"'), 'acf.html must expose the shared production navigation to the ACF generator');
 }
 
 function testMigxPageGeneratorMatchesCheckedInPages() {

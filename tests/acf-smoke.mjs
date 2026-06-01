@@ -78,7 +78,8 @@ function testCategoryPresetMap() {
 
   assert(countMatches(category, /class="acf-preset-row"/g) === expectedRoutes.length, 'acf.html must expose 12 preset rows');
   assert(generatorSource.includes('def preset_map()'), 'tools/generate_acf_pages.py must preserve the ACF preset map section');
-  assert(!generatorSource.includes('MIGX для MODX'), 'tools/generate_acf_pages.py must keep the ACF hub focused on ACF only');
+  assert(category.includes('href="migx.html"'), 'acf.html must include the shared production navigation to MIGX');
+  assert(generatorSource.includes('href="migx.html"'), 'tools/generate_acf_pages.py must render shared production navigation');
   assert(generatorSource.includes('.acf-preset-map'), 'tools/generate_acf_pages.py must preserve preset map CSS');
 
   for (const route of expectedRoutes) {

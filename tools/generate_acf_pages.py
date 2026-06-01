@@ -453,26 +453,36 @@ def asset_head(page: dict[str, object]) -> str:
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="css/base.css">
-    <link rel="stylesheet" href="css/components.css">
-    <link rel="stylesheet" href="css/layout.css">
-    <link rel="stylesheet" href="css/responsive.css">
-    <link rel="stylesheet" href="css/themes.css">
-    <link rel="stylesheet" href="css/acf-content.css">"""
+    <link rel="stylesheet" href="css/base.css?v=prod-shell-20260601-1">
+    <link rel="stylesheet" href="css/components.css?v=prod-shell-20260601-1">
+    <link rel="stylesheet" href="css/layout.css?v=prod-shell-20260601-1">
+    <link rel="stylesheet" href="css/responsive.css?v=prod-shell-20260601-1">
+    <link rel="stylesheet" href="css/themes.css?v=prod-shell-20260601-1">
+    <link rel="stylesheet" href="css/acf-content.css?v=prod-shell-20260601-1">"""
 
 
 def header(active: str = "") -> str:
-    hub_active = ' class="is-active"' if active == "hub" else ""
-    return f"""<header class="acf-header">
-    <div class="acf-container acf-header__inner">
-        <a class="acf-logo" href="index.html" aria-label="Цифра — на главную"><span>◆</span> Цифра</a>
-        <nav class="acf-nav" aria-label="Навигация ACF">
-            <a href="acf.html"{hub_active}>ACF</a>
-            <a href="acf-generator.html">Генератор</a>
-            <a href="acf-repeater-generator.html">Repeater</a>
-            <a href="acf-flexible-content-generator.html">Flexible</a>
+    home_active = ' class="is-active"' if active == "home" else ""
+    acf_active = ' class="is-active"' if active in {"acf", "hub"} else ""
+    migx_active = ' class="is-active"' if active == "migx" else ""
+    acf_generator_active = ' class="is-active"' if active == "acf-generator" else ""
+    migx_generator_active = ' class="is-active"' if active == "migx-generator" else ""
+    return f"""<header class="header">
+    <div class="container">
+        <a href="index.html" class="header-logo" aria-label="Цифра — на главную">
+            <span class="logo-icon">◆</span>
+            <span class="logo-text">Цифра</span>
+        </a>
+        <nav aria-label="Основная навигация">
+            <ul class="header-nav">
+                <li><a href="index.html"{home_active}>Главная</a></li>
+                <li><a href="acf.html"{acf_active}>ACF</a></li>
+                <li><a href="migx.html"{migx_active}>MIGX</a></li>
+                <li><a href="acf-generator.html"{acf_generator_active}>ACF генератор</a></li>
+                <li><a href="migx-generator.html"{migx_generator_active}>MIGX генератор</a></li>
+            </ul>
         </nav>
-        <a class="acf-header-cta" href="acf-generator.html">Открыть генератор</a>
+        <button class="hamburger" aria-label="Меню"><span></span><span></span><span></span></button>
     </div>
 </header>"""
 
@@ -482,9 +492,15 @@ def footer() -> str:
     <div class="acf-container acf-footer__inner">
         <div>
             <strong>Цифра</strong>
-            <p>Инструменты для WordPress-разработчиков: ACF, шаблоны, структуры и готовые блоки.</p>
+            <p>Генераторы и SEO-страницы для WordPress ACF и MODX MIGX.</p>
         </div>
-        <a href="acf-generator.html">Запустить генератор</a>
+        <div class="acf-footer-links">
+            <a href="index.html">Главная</a>
+            <a href="acf.html">ACF</a>
+            <a href="migx.html">MIGX</a>
+            <a href="acf-generator.html">ACF генератор</a>
+            <a href="migx-generator.html">MIGX генератор</a>
+        </div>
     </div>
 </footer>"""
 
@@ -625,7 +641,7 @@ def render_page(page: dict[str, object]) -> str:
     </script>
 </head>
 <body>
-{header()}
+{header("acf")}
 <main>
     <section class="acf-hero acf-page-hero">
         <div class="acf-container acf-hero__grid">
@@ -726,6 +742,7 @@ def render_page(page: dict[str, object]) -> str:
     </section>
 </main>
 {footer()}
+<script src="js/main.js" defer></script>
 </body>
 </html>
 """
@@ -767,7 +784,7 @@ def render_hub() -> str:
     </script>
 </head>
 <body>
-{header("hub")}
+{header("acf")}
 <main>
     <section class="acf-hero">
         <div class="acf-container acf-hero__grid">
@@ -857,6 +874,7 @@ def render_hub() -> str:
     </section>
 </main>
 {footer()}
+<script src="js/main.js" defer></script>
 </body>
 </html>
 """
@@ -995,6 +1013,12 @@ def update_sitemap() -> None:
         loc = url.find("{*}loc")
         if loc is None or not loc.text:
             continue
+        if not (
+            loc.text == f"{SITE}/"
+            or loc.text.startswith(f"{SITE}/acf")
+            or loc.text.startswith(f"{SITE}/migx")
+        ):
+            continue
         lastmod = url.find("{*}lastmod")
         changefreq = url.find("{*}changefreq")
         priority = url.find("{*}priority")
@@ -1004,6 +1028,7 @@ def update_sitemap() -> None:
             priority.text if priority is not None and priority.text else "0.5",
         )
 
+    entries[f"{SITE}/"] = ("2026-06-01", "weekly", "1.0")
     urls = ["acf.html", "acf-generator.html"] + [f"{p['slug']}.html" for p in PAGES]
     for path in urls:
         loc = f"{SITE}/{path}"

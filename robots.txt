@@ -1,7 +1,3 @@
 User-agent: *
 Allow: /
-Disallow: /cart
-Disallow: /checkout
-Disallow: /account
-Disallow: /admin
 Sitemap: https://zifra.example.com/sitemap.xml
