@@ -79,7 +79,14 @@
         grid-template-columns: 1fr;
     }
     .hamburger { display: flex; }
-    .home-hero { padding: 62px 0 52px; }
+    .home-hero { padding: 48px 0 42px; }
+    .home-hero h1 {
+        font-size: 2rem;
+        line-height: 1.12;
+    }
+    .home-hero p {
+        font-size: 0.96rem;
+    }
     .home-step-grid,
     .home-faq-grid {
         grid-template-columns: 1fr;
