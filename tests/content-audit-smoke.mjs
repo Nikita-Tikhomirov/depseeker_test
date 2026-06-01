@@ -26,4 +26,10 @@ assert(report.includes('acf.html'), 'report must include ACF category page');
 assert(report.includes('migx.html'), 'report must include MIGX category page');
 assert(!/lorem ipsum|заглушк|тестовый текст/i.test(report), 'report must not contain placeholder copy');
 
+for (const page of ['acf-generator.html', 'migx-generator.html']) {
+  const row = report.match(new RegExp(`\\| \`${page}\` \\| utility \\|(?: published \\|)? (\\d+)`, 'i'));
+  assert(row, `${page} must be present in the audit tables`);
+  assert(Number(row[1]) >= 90, `${page} must be strong enough for production SEO, got ${row[1]}`);
+}
+
 console.log('content audit smoke passed');

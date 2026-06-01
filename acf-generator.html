@@ -762,6 +762,29 @@
     </div>
 </section>
 
+<section class="tool-seo-section" aria-labelledby="acf-generator-workflow-title">
+    <div class="container">
+        <div class="tool-seo-grid">
+            <div class="tool-seo-block">
+                <h2 id="acf-generator-workflow-title">Когда нужен ACF генератор</h2>
+                <p>Генератор ACF полезен, когда нужно быстро описать структуру кастомных полей для WordPress и не держать схему в черновиках, таблицах или разрозненных заметках. Разработчик собирает поля визуально, проверяет порядок, типы, ключи и вложенность, а затем переносит готовый результат в тему, плагин или локальный JSON Advanced Custom Fields.</p>
+                <p>Такой подход особенно удобен для типовых блоков: hero-секции, FAQ, команды, отзывов, SEO-полей, карточек WooCommerce и простых page builder-секций. Вместо ручного набора массива PHP можно сначала собрать понятную структуру, посмотреть экспорт и только потом доработать код под конкретный проект.</p>
+                <div class="tool-seo-links" aria-label="Связанные ACF страницы">
+                    <a href="acf-php-generator.html">ACF PHP export</a>
+                    <a href="acf-json-generator.html">ACF JSON export</a>
+                    <a href="acf-repeater-generator.html">ACF Repeater</a>
+                    <a href="acf-flexible-content-generator.html">Flexible Content</a>
+                </div>
+            </div>
+            <div class="tool-seo-block">
+                <h2>Что получается на выходе</h2>
+                <p>На выходе формируется структура полей, которую можно использовать как основу для регистрации field group в ACF. PHP-экспорт подходит для проектов, где поля должны жить в коде и проходить через git вместе с темой. JSON-экспорт удобен для синхронизации между окружениями, передачи конфигурации другому разработчику и быстрого восстановления группы полей.</p>
+                <p>Перед вставкой в проект стоит проверить названия, machine keys, правила отображения и реальные шаблоны вывода. Для повторителей и гибкого контента лучше сразу продумать, какие поля будут обязательными, какие попадут в шаблон страницы, а какие нужны только редактору для удобного заполнения. После этого генератор становится не финальной магией, а нормальным рабочим шагом между ТЗ и чистой реализацией в WordPress.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
 </main>
 
 <input type="file" id="json-import-input" accept=".json" style="display:none;">

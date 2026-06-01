@@ -283,6 +283,52 @@ body.ads-enabled .ad-slot {
 .acf-roadmap > .ad-slot {
     grid-column: 1 / -1;
 }
+.tool-seo-section {
+    padding: 56px 0 70px;
+    background: var(--bg);
+}
+.tool-seo-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 28px;
+}
+.tool-seo-block {
+    min-width: 0;
+}
+.tool-seo-block h2 {
+    margin: 0 0 16px;
+    color: var(--text);
+    font-size: clamp(1.35rem, 2vw, 1.9rem);
+    line-height: 1.2;
+}
+.tool-seo-block p {
+    margin: 0 0 14px;
+    color: var(--text-2);
+    line-height: 1.7;
+}
+.tool-seo-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 18px;
+}
+.tool-seo-links a {
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 9px 12px;
+    color: var(--text);
+    background: var(--surface);
+    text-decoration: none;
+}
+.tool-seo-links a:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+}
+@media (max-width: 860px) {
+    .tool-seo-grid {
+        grid-template-columns: 1fr;
+    }
+}
 
 /* ==================== PRODUCTION HOME ==================== */
 .home-hero {

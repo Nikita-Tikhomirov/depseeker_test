@@ -6,15 +6,13 @@
 
 - Проверено страниц: 37
 - Опубликованных страниц: 37
-- Средний балл опубликованных страниц: 84/100
-- Страниц с задачами на усиление: 31
+- Средний балл опубликованных страниц: 86/100
+- Страниц с задачами на усиление: 29
 
 ## Priority Queue
 
 | Страница | Тип | Балл | Слова | H2 | Ссылки | FAQ | Примеры | Что исправить |
 | --- | --- | ---: | ---: | ---: | ---: | --- | --- | --- |
-| `acf-generator.html` | utility | 64 | 329 | 0 | 12 | да | да | мало полезного текста: 329/360 слов; мало H2-блоков: 0/2 |
-| `migx-generator.html` | utility | 64 | 254 | 0 | 13 | да | да | мало полезного текста: 254/360 слов; мало H2-блоков: 0/2 |
 | `acf-faq-fields.html` | landing | 82 | 365 | 8 | 18 | да | да | мало полезного текста: 365/520 слов |
 | `acf-field-group-generator.html` | landing | 82 | 411 | 8 | 18 | да | да | мало полезного текста: 411/520 слов |
 | `acf-hero-section.html` | landing | 82 | 365 | 8 | 18 | да | да | мало полезного текста: 365/520 слов |
@@ -33,6 +31,8 @@
 | `migx-gallery.html` | landing | 82 | 304 | 6 | 20 | да | да | мало полезного текста: 304/520 слов |
 | `migx-getimagelist.html` | utility | 82 | 300 | 6 | 19 | да | да | мало полезного текста: 300/360 слов |
 | `migx-grid-columns-generator.html` | utility | 82 | 320 | 6 | 20 | да | да | мало полезного текста: 320/360 слов |
+| `migx-image-field.html` | landing | 82 | 313 | 6 | 20 | да | да | мало полезного текста: 313/520 слов |
+| `migx-import-json.html` | landing | 82 | 312 | 6 | 20 | да | да | мало полезного текста: 312/520 слов |
 
 ## All Registered Pages
 
@@ -41,7 +41,7 @@
 | `acf-faq-fields.html` | landing | published | 82 |
 | `acf-field-group-generator.html` | landing | published | 82 |
 | `acf-flexible-content-generator.html` | utility | published | 100 |
-| `acf-generator.html` | utility | published | 64 |
+| `acf-generator.html` | utility | published | 100 |
 | `acf-hero-section.html` | landing | published | 82 |
 | `acf-json-generator.html` | utility | published | 100 |
 | `acf-page-builder.html` | landing | published | 82 |
@@ -60,7 +60,7 @@
 | `migx-fenom-chunk.html` | landing | published | 82 |
 | `migx-formtabs-generator.html` | utility | published | 82 |
 | `migx-gallery.html` | landing | published | 82 |
-| `migx-generator.html` | utility | published | 64 |
+| `migx-generator.html` | utility | published | 100 |
 | `migx-getimagelist.html` | utility | published | 82 |
 | `migx-grid-columns-generator.html` | utility | published | 82 |
 | `migx-image-field.html` | landing | published | 82 |
