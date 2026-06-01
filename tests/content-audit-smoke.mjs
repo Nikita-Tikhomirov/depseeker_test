@@ -32,4 +32,16 @@ for (const page of ['acf-generator.html', 'migx-generator.html']) {
   assert(Number(row[1]) >= 90, `${page} must be strong enough for production SEO, got ${row[1]}`);
 }
 
+for (const page of [
+  'acf-faq-fields.html',
+  'acf-field-group-generator.html',
+  'acf-hero-section.html',
+  'acf-page-builder.html',
+  'acf-seo-fields.html'
+]) {
+  const row = report.match(new RegExp(`\\| \`${page}\` \\| landing \\|(?: published \\|)? (\\d+)`, 'i'));
+  assert(row, `${page} must be present in the audit tables`);
+  assert(Number(row[1]) >= 90, `${page} must have enough production SEO depth, got ${row[1]}`);
+}
+
 console.log('content audit smoke passed');

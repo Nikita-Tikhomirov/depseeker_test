@@ -602,6 +602,28 @@ def structure_copy(page: dict[str, object]) -> tuple[str, str]:
     return STRUCTURE_COPY.get(str(page["slug"]), fallback)
 
 
+def practical_copy(page: dict[str, object]) -> tuple[str, str]:
+    deliverables = ", ".join(str(item) for item in page_deliverables(page))
+    return (
+        (
+            f"{page['h1']} стоит использовать как рабочую схему перед переносом в тему WordPress. "
+            "Сначала проверьте, какие данные реально нужны редактору, какие поля будут обязательными "
+            f"и как блок будет выводиться в шаблоне. Для аудитории «{page['audience']}» это снижает "
+            "риск собрать лишнюю структуру, которую потом сложно поддерживать на живом сайте."
+        ),
+        (
+            f"После генерации проверьте состав результата: {deliverables}. Названия field name лучше "
+            "сразу привести к понятному формату, ключи не менять без причины, а location rules сверить "
+            "с реальным типом записи или шаблоном страницы. Если конфигурация пойдет в продакшн, "
+            "сохраните PHP или JSON в репозитории и протестируйте вывод на черновой записи перед публикацией. "
+            "Отдельно пройдите редакторский сценарий: создайте тестовую запись, заполните поля разными "
+            "значениями, проверьте пустые состояния и убедитесь, что шаблон не ломается при длинном тексте, "
+            "отсутствующей картинке или измененном порядке элементов. Такой контроль особенно важен для "
+            "страниц, которые будут стабильно получать поисковый трафик и монетизироваться рекламой."
+        ),
+    )
+
+
 def hub_chooser() -> str:
     choices = [
         ("Нужен код в тему", "PHP/JSON экспорт для Git, code review и локальной регистрации ACF.", "acf-php-generator.html", "PHP и JSON"),
@@ -655,6 +677,7 @@ def render_page(page: dict[str, object]) -> str:
     )
     related = related_links(str(page["slug"]))
     structure_heading, structure_text = structure_copy(page)
+    practical_intro, practical_checks = practical_copy(page)
     group_key_example = esc(str(page["slug"]).replace("-", "_"))
     sample = code_sample(page, group_key_example)
     return f"""<!DOCTYPE html>
@@ -724,6 +747,19 @@ def render_page(page: dict[str, object]) -> str:
             <article class="acf-code-card" aria-label="Пример структуры">
                 <pre><code>{sample}</code></pre>
             </article>
+        </div>
+    </section>
+
+    <section class="acf-section">
+        <div class="acf-container acf-two-col">
+            <div>
+                <span class="acf-section-label">Практика</span>
+                <h2>Как довести структуру до рабочего WordPress-блока</h2>
+                <p>{esc(practical_intro)}</p>
+            </div>
+            <div>
+                <p>{esc(practical_checks)}</p>
+            </div>
         </div>
     </section>
 

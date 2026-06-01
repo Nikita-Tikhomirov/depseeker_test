@@ -6,21 +6,15 @@
 
 - Проверено страниц: 37
 - Опубликованных страниц: 37
-- Средний балл опубликованных страниц: 86/100
-- Страниц с задачами на усиление: 29
+- Средний балл опубликованных страниц: 89/100
+- Страниц с задачами на усиление: 23
 
 ## Priority Queue
 
 | Страница | Тип | Балл | Слова | H2 | Ссылки | FAQ | Примеры | Что исправить |
 | --- | --- | ---: | ---: | ---: | ---: | --- | --- | --- |
-| `acf-faq-fields.html` | landing | 82 | 365 | 8 | 18 | да | да | мало полезного текста: 365/520 слов |
-| `acf-field-group-generator.html` | landing | 82 | 411 | 8 | 18 | да | да | мало полезного текста: 411/520 слов |
-| `acf-hero-section.html` | landing | 82 | 365 | 8 | 18 | да | да | мало полезного текста: 365/520 слов |
-| `acf-page-builder.html` | landing | 82 | 367 | 8 | 18 | да | да | мало полезного текста: 367/520 слов |
-| `acf-seo-fields.html` | landing | 82 | 357 | 8 | 18 | да | да | мало полезного текста: 357/520 слов |
-| `acf-team-repeater.html` | landing | 82 | 348 | 8 | 18 | да | да | мало полезного текста: 348/520 слов |
-| `acf-testimonials-repeater.html` | landing | 82 | 359 | 8 | 18 | да | да | мало полезного текста: 359/520 слов |
-| `acf-woocommerce-product-fields.html` | landing | 82 | 369 | 8 | 18 | да | да | мало полезного текста: 369/520 слов |
+| `acf-team-repeater.html` | landing | 82 | 508 | 9 | 18 | да | да | мало полезного текста: 508/520 слов |
+| `acf-testimonials-repeater.html` | landing | 82 | 517 | 9 | 18 | да | да | мало полезного текста: 517/520 слов |
 | `migx-catalog.html` | landing | 82 | 307 | 6 | 20 | да | да | мало полезного текста: 307/520 слов |
 | `migx-configs.html` | landing | 82 | 305 | 6 | 20 | да | да | мало полезного текста: 305/520 слов |
 | `migx-errors.html` | landing | 82 | 321 | 6 | 20 | да | да | мало полезного текста: 321/520 слов |
@@ -33,24 +27,30 @@
 | `migx-grid-columns-generator.html` | utility | 82 | 320 | 6 | 20 | да | да | мало полезного текста: 320/360 слов |
 | `migx-image-field.html` | landing | 82 | 313 | 6 | 20 | да | да | мало полезного текста: 313/520 слов |
 | `migx-import-json.html` | landing | 82 | 312 | 6 | 20 | да | да | мало полезного текста: 312/520 слов |
+| `migx-json-generator.html` | utility | 82 | 324 | 6 | 20 | да | да | мало полезного текста: 324/360 слов |
+| `migx-nested-generator.html` | landing | 82 | 315 | 6 | 20 | да | да | мало полезного текста: 315/520 слов |
+| `migx-reviews.html` | landing | 82 | 302 | 6 | 20 | да | да | мало полезного текста: 302/520 слов |
+| `migx-richtext-field.html` | landing | 82 | 310 | 6 | 20 | да | да | мало полезного текста: 310/520 слов |
+| `migx-slider.html` | landing | 82 | 300 | 6 | 20 | да | да | мало полезного текста: 300/520 слов |
+| `migx-tabs-generator.html` | landing | 82 | 307 | 6 | 20 | да | да | мало полезного текста: 307/520 слов |
 
 ## All Registered Pages
 
 | Страница | Тип | Статус | Балл |
 | --- | --- | --- | ---: |
-| `acf-faq-fields.html` | landing | published | 82 |
-| `acf-field-group-generator.html` | landing | published | 82 |
+| `acf-faq-fields.html` | landing | published | 100 |
+| `acf-field-group-generator.html` | landing | published | 100 |
 | `acf-flexible-content-generator.html` | utility | published | 100 |
 | `acf-generator.html` | utility | published | 100 |
-| `acf-hero-section.html` | landing | published | 82 |
+| `acf-hero-section.html` | landing | published | 100 |
 | `acf-json-generator.html` | utility | published | 100 |
-| `acf-page-builder.html` | landing | published | 82 |
+| `acf-page-builder.html` | landing | published | 100 |
 | `acf-php-generator.html` | utility | published | 100 |
 | `acf-repeater-generator.html` | utility | published | 100 |
-| `acf-seo-fields.html` | landing | published | 82 |
+| `acf-seo-fields.html` | landing | published | 100 |
 | `acf-team-repeater.html` | landing | published | 82 |
 | `acf-testimonials-repeater.html` | landing | published | 82 |
-| `acf-woocommerce-product-fields.html` | landing | published | 82 |
+| `acf-woocommerce-product-fields.html` | landing | published | 100 |
 | `acf.html` | category | published | 100 |
 | `migx-catalog.html` | landing | published | 82 |
 | `migx-configs.html` | landing | published | 82 |
