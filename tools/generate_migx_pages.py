@@ -551,6 +551,7 @@ def render_page(page: dict[str, object]) -> str:
     </section>
     <section class="acf-section" id="example">
         <div class="acf-container acf-use-grid">
+            <div class="ad-slot" data-ad-slot="migx-landing-after-hero" aria-label="Рекламный блок после первого экрана"></div>
             <article>
                 <span class="acf-section-label">Что входит</span>
                 <h2>Готовая структура под запрос</h2>
@@ -562,6 +563,7 @@ def render_page(page: dict[str, object]) -> str:
     {practical_section(page)}
     <section class="acf-section">
         <div class="acf-container">
+            <div class="ad-slot" data-ad-slot="migx-landing-before-related" aria-label="Рекламный блок перед связанными страницами"></div>
             <div class="acf-section-head"><span class="acf-section-label">Связанные страницы</span><h2>Продолжить по MIGX-кластеру</h2></div>
             <div class="acf-related-grid">{related_links(str(page["slug"]))}</div>
         </div>
@@ -615,7 +617,7 @@ def render_hub() -> str:
             <aside class="acf-plan-card"><h2>Карта категории</h2><ul><li>Базовые MIGX JSON и TV.</li><li>Form Tabs и Grid Columns.</li><li>Галерея, слайдер, FAQ, каталог, команда и отзывы.</li><li>Валидатор, импорт, ошибки и вывод через getImageList/Fenom.</li></ul></aside>
         </div>
     </section>
-    <section class="acf-section" id="pages"><div class="acf-container"><div class="acf-section-head"><span class="acf-section-label">MIGX-разделы</span><h2>Практические страницы под MIGX-запросы</h2><p>Каждая страница закрывает отдельный интент: от MIGX JSON и Form Tabs до nested MIGX, getImageList, Fenom chunk и ошибок конфигурации.</p></div><div class="acf-topic-grid">{cards}</div></div></section>
+    <section class="acf-section" id="pages"><div class="acf-container"><div class="ad-slot" data-ad-slot="migx-hub-after-hero" aria-label="Рекламный блок после первого экрана"></div><div class="acf-section-head"><span class="acf-section-label">MIGX-разделы</span><h2>Практические страницы под MIGX-запросы</h2><p>Каждая страница закрывает отдельный интент: от MIGX JSON и Form Tabs до nested MIGX, getImageList, Fenom chunk и ошибок конфигурации.</p></div><div class="acf-topic-grid">{cards}</div></div></section>
     <section class="acf-section acf-section--muted"><div class="acf-container"><div class="acf-section-head"><span class="acf-section-label">Выбор инструмента</span><h2>Какой MIGX-инструмент выбрать под задачу MODX</h2><p>Если нужен JSON для TV, открывайте базовый генератор. Для фронтенда используйте getImageList package или Fenom chunk. Для сложных блоков выбирайте nested MIGX, tabs и configs.</p></div><div class="acf-preset-map" aria-label="Подбор MIGX-инструмента по задаче">{preset_rows()}</div></div></section>
     {hub_faq_section()}
     <section class="acf-final-cta"><div class="acf-container"><h2>Откройте MIGX генератор</h2><p>Выберите шаблон, проверьте ошибки и экспортируйте JSON или chunk.</p><a class="acf-btn acf-btn--primary" href="migx-generator.html">Запустить</a></div></section>

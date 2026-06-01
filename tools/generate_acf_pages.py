@@ -699,6 +699,7 @@ def render_page(page: dict[str, object]) -> str:
 
     <section class="acf-section" id="structure">
         <div class="acf-container acf-two-col">
+            <div class="ad-slot" data-ad-slot="acf-landing-after-hero" aria-label="Рекламный блок после первого экрана"></div>
             <div>
                 <span class="acf-section-label">Что входит</span>
                 <h2>{esc(structure_heading)}</h2>
@@ -742,6 +743,7 @@ def render_page(page: dict[str, object]) -> str:
 
     <section class="acf-section acf-section--muted">
         <div class="acf-container acf-faq">
+            <div class="ad-slot" data-ad-slot="acf-landing-before-faq" aria-label="Рекламный блок перед FAQ"></div>
             <h2>Вопросы по {esc(page["h1"])}</h2>
             <details open><summary>Для чего нужен этот генератор?</summary><p>{esc(page["intent"])}</p></details>
             <details><summary>Что получится на выходе?</summary><p>{esc(faq_output_copy(page))}</p></details>
@@ -839,6 +841,7 @@ def render_hub() -> str:
 
     <section class="acf-section" id="pages">
         <div class="acf-container">
+            <div class="ad-slot" data-ad-slot="acf-hub-after-hero" aria-label="Рекламный блок после первого экрана"></div>
             <div class="acf-section-head">
                 <span class="acf-section-label">Для WordPress-разработчиков</span>
                 <h2>Выберите ACF-инструмент под задачу</h2>

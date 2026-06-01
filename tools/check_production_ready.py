@@ -6,7 +6,7 @@ import sys
 import xml.etree.ElementTree as ET
 
 from site_config import PLACEHOLDER_ORIGIN, ROOT, assert_launch_origin, is_production, load_config, route_url
-from catalog_registry import validate_registry
+from catalog_registry import load_registry, validate_registry
 
 
 HTML_RE = re.compile(r"<html\b", re.IGNORECASE)
@@ -79,6 +79,38 @@ def check_catalog_registry(root: Path) -> None:
         fail("catalog registry errors:\n" + "\n".join(f"- {error}" for error in errors))
 
 
+def check_ad_slots(root: Path, config: dict) -> None:
+    if not config.get("adsEnabled", False):
+        offenders = []
+        for path in html_pages(root):
+            if 'class="ads-enabled"' in path.read_text(encoding="utf-8"):
+                offenders.append(path.name)
+        if offenders:
+            fail(f"ads are disabled, but ads-enabled class is present: {', '.join(offenders)}")
+
+    registry = load_registry(root)
+    required = {"index.html"}
+    for category in registry.get("categories", []):
+        if category.get("status") == "draft":
+            continue
+        required.add(str(category["path"]))
+        primary = str(category.get("primaryUtility", ""))
+        for item in category.get("items", []):
+            if item.get("status") == "draft":
+                continue
+            item_path = str(item["path"])
+            if item_path != primary:
+                required.add(item_path)
+
+    missing = []
+    for page in sorted(required):
+        html = (root / page).read_text(encoding="utf-8")
+        if 'class="ad-slot"' not in html:
+            missing.append(page)
+    if missing:
+        fail(f"published content pages missing ad slots: {', '.join(missing)}")
+
+
 def main() -> int:
     try:
         config = load_config(ROOT)
@@ -87,6 +119,7 @@ def main() -> int:
         check_sitemap(ROOT)
         check_robots(ROOT)
         check_catalog_registry(ROOT)
+        check_ad_slots(ROOT, config)
         check_production_origin(ROOT)
     except Exception as error:
         print(f"production readiness failed: {error}", file=sys.stderr)

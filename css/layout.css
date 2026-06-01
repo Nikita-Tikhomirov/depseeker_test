@@ -264,10 +264,24 @@
 body.ads-enabled .ad-slot {
     display: block;
     min-height: 120px;
+    margin: 0;
+    padding: 18px;
     border: 1px dashed var(--border-hover);
     border-radius: 8px;
     color: var(--text-dim);
     background: rgba(255,255,255,0.025);
+}
+.ad-slot::before {
+    content: attr(aria-label);
+    display: block;
+    font-size: 0.78rem;
+    line-height: 1.5;
+    text-align: center;
+}
+.acf-two-col > .ad-slot,
+.acf-use-grid > .ad-slot,
+.acf-roadmap > .ad-slot {
+    grid-column: 1 / -1;
 }
 
 /* ==================== PRODUCTION HOME ==================== */

@@ -28,6 +28,7 @@ python tools/check_production_ready.py
 Public catalog structure lives in `catalog.registry.json`. It lists categories, their primary utilities, pages, and nav-visible items. Use it as the source checklist when adding new categories or tools.
 
 Detailed workflow: `docs/catalog-expansion.md`.
+Ad placement notes: `docs/monetization.md`.
 
 Draft scaffolding examples:
 
