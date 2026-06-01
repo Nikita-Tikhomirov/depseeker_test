@@ -1,0 +1,60 @@
+{
+  "schemaVersion": 1,
+  "categories": [
+    {
+      "slug": "acf",
+      "title": "ACF / WordPress",
+      "path": "acf.html",
+      "status": "published",
+      "description": "Инструменты и SEO-страницы для Advanced Custom Fields в WordPress.",
+      "primaryUtility": "acf-generator.html",
+      "items": [
+        {"path": "acf-generator.html", "title": "ACF генератор", "type": "utility", "nav": true},
+        {"path": "acf-php-generator.html", "title": "ACF PHP export", "type": "utility", "nav": true},
+        {"path": "acf-json-generator.html", "title": "ACF JSON export", "type": "utility", "nav": true},
+        {"path": "acf-repeater-generator.html", "title": "ACF Repeater", "type": "utility", "nav": true},
+        {"path": "acf-flexible-content-generator.html", "title": "ACF Flexible Content", "type": "utility", "nav": true},
+        {"path": "acf-field-group-generator.html", "title": "ACF Field Group", "type": "landing"},
+        {"path": "acf-seo-fields.html", "title": "ACF SEO fields", "type": "landing"},
+        {"path": "acf-faq-fields.html", "title": "ACF FAQ fields", "type": "landing"},
+        {"path": "acf-hero-section.html", "title": "ACF Hero section", "type": "landing"},
+        {"path": "acf-team-repeater.html", "title": "ACF Team repeater", "type": "landing"},
+        {"path": "acf-testimonials-repeater.html", "title": "ACF Testimonials", "type": "landing"},
+        {"path": "acf-page-builder.html", "title": "ACF Page Builder", "type": "landing"},
+        {"path": "acf-woocommerce-product-fields.html", "title": "ACF WooCommerce fields", "type": "landing"}
+      ]
+    },
+    {
+      "slug": "migx",
+      "title": "MODX / MIGX",
+      "path": "migx.html",
+      "status": "published",
+      "description": "Инструменты и SEO-страницы для MIGX и MODX Revolution.",
+      "primaryUtility": "migx-generator.html",
+      "items": [
+        {"path": "migx-generator.html", "title": "MIGX генератор", "type": "utility", "nav": true},
+        {"path": "migx-json-generator.html", "title": "MIGX JSON", "type": "utility", "nav": true},
+        {"path": "migx-formtabs-generator.html", "title": "MIGX Form Tabs", "type": "utility", "nav": true},
+        {"path": "migx-grid-columns-generator.html", "title": "MIGX Grid Columns", "type": "utility", "nav": true},
+        {"path": "migx-getimagelist.html", "title": "getImageList", "type": "utility", "nav": true},
+        {"path": "migx-tv-generator.html", "title": "MIGX TV", "type": "landing"},
+        {"path": "migx-nested-generator.html", "title": "Nested MIGX", "type": "landing"},
+        {"path": "migx-tabs-generator.html", "title": "MIGX tabs", "type": "landing"},
+        {"path": "migx-gallery.html", "title": "MIGX gallery", "type": "landing"},
+        {"path": "migx-slider.html", "title": "MIGX slider", "type": "landing"},
+        {"path": "migx-faq.html", "title": "MIGX FAQ", "type": "landing"},
+        {"path": "migx-catalog.html", "title": "MIGX catalog", "type": "landing"},
+        {"path": "migx-team.html", "title": "MIGX team", "type": "landing"},
+        {"path": "migx-reviews.html", "title": "MIGX reviews", "type": "landing"},
+        {"path": "migx-fenom-chunk.html", "title": "MIGX Fenom chunk", "type": "landing"},
+        {"path": "migx-configs.html", "title": "MIGX configs", "type": "landing"},
+        {"path": "migx-image-field.html", "title": "MIGX image field", "type": "landing"},
+        {"path": "migx-richtext-field.html", "title": "MIGX richtext field", "type": "landing"},
+        {"path": "migx-validator.html", "title": "MIGX validator", "type": "landing"},
+        {"path": "migx-import-json.html", "title": "MIGX import JSON", "type": "landing"},
+        {"path": "migx-errors.html", "title": "MIGX errors", "type": "landing"},
+        {"path": "migx-examples.html", "title": "MIGX examples", "type": "landing"}
+      ]
+    }
+  ]
+}

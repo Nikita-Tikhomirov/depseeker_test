@@ -6,6 +6,7 @@ import sys
 import xml.etree.ElementTree as ET
 
 from site_config import PLACEHOLDER_ORIGIN, ROOT, assert_launch_origin, is_production, load_config, route_url
+from catalog_registry import validate_registry
 
 
 HTML_RE = re.compile(r"<html\b", re.IGNORECASE)
@@ -72,6 +73,12 @@ def check_production_origin(root: Path) -> None:
         fail(f"placeholder origin remains in production files: {', '.join(offenders)}")
 
 
+def check_catalog_registry(root: Path) -> None:
+    errors = validate_registry(root)
+    if errors:
+        fail("catalog registry errors:\n" + "\n".join(f"- {error}" for error in errors))
+
+
 def main() -> int:
     try:
         config = load_config(ROOT)
@@ -79,6 +86,7 @@ def main() -> int:
         check_page_basics(ROOT)
         check_sitemap(ROOT)
         check_robots(ROOT)
+        check_catalog_registry(ROOT)
         check_production_origin(ROOT)
     except Exception as error:
         print(f"production readiness failed: {error}", file=sys.stderr)

@@ -14,6 +14,7 @@ Regenerate sitemap and robots after adding pages:
 
 ```powershell
 python tools/build_site_metadata.py
+python tools/check_catalog_registry.py
 ```
 
 Check production readiness:
@@ -21,6 +22,12 @@ Check production readiness:
 ```powershell
 python tools/check_production_ready.py
 ```
+
+## Catalog Registry
+
+Public catalog structure lives in `catalog.registry.json`. It lists categories, their primary utilities, pages, and nav-visible items. Use it as the source checklist when adding new categories or tools.
+
+Detailed workflow: `docs/catalog-expansion.md`.
 
 ## Smoke Checks
 
@@ -31,6 +38,7 @@ node tests/acf-smoke.mjs
 node tests/migx-smoke.mjs
 node tests/production-home-smoke.mjs
 node tests/site-links-smoke.mjs
+python tools/check_catalog_registry.py
 python tools/check_production_ready.py
 ```
 
@@ -40,6 +48,7 @@ The checks cover:
 - MIGX hub, 21 landing pages, sitemap entries, generator wiring, validation/audit/share features, and conversion tracking.
 - Production homepage positioning and shared navigation without marketplace/header leftovers.
 - Local `href`/`src` links across all HTML pages.
+- Registered catalog categories and utilities in `catalog.registry.json`.
 - Production foundation: service pages, sitemap coverage, robots sitemap URL, clean query parameters, one H1 per page, canonical and descriptions.
 
 ## Local Preview
@@ -64,6 +73,7 @@ Before publishing, replace the placeholder origin in canonical URLs, sitemap ent
 python tools/set_site_domain.py https://your-domain.example --dry-run
 python tools/set_site_domain.py https://your-domain.example
 python tools/build_site_metadata.py
+python tools/check_catalog_registry.py
 python tools/check_production_ready.py
 ```
 
