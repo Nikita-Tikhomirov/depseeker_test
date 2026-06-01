@@ -9,6 +9,77 @@
     var hamburger = document.querySelector('.hamburger');
     var dropdownToggles = document.querySelectorAll('.nav-dropdown-toggle');
 
+    function isProductionConfig(config) {
+        return config && String(config.mode || '').toLowerCase() === 'production';
+    }
+
+    function injectYandexMetrika(counterId) {
+        if (!/^\d+$/.test(String(counterId || ''))) return;
+        if (window.ym) return;
+
+        window.ym = window.ym || function () {
+            (window.ym.a = window.ym.a || []).push(arguments);
+        };
+        window.ym.l = 1 * new Date();
+
+        var script = document.createElement('script');
+        script.async = true;
+        script.src = 'https://mc.yandex.ru/metrika/tag.js';
+        var firstScript = document.getElementsByTagName('script')[0];
+        firstScript.parentNode.insertBefore(script, firstScript);
+
+        window.ym(Number(counterId), 'init', {
+            clickmap: true,
+            trackLinks: true,
+            accurateTrackBounce: true,
+            webvisor: false
+        });
+    }
+
+    function applySiteConfig(config) {
+        if (!isProductionConfig(config)) return;
+
+        if (config.adsEnabled === true) {
+            document.body.classList.add('ads-enabled');
+        }
+
+        if (config.yandexMetrikaId) {
+            injectYandexMetrika(config.yandexMetrikaId);
+        }
+    }
+
+    function requestSiteConfig(onSuccess) {
+        if (window.fetch) {
+            window.fetch('site.config.json', { cache: 'no-store' })
+                .then(function (response) {
+                    if (!response.ok) throw new Error('site config unavailable');
+                    return response.json();
+                })
+                .then(onSuccess)
+                .catch(function () {
+                    // Keep local/static preview silent when config is unavailable.
+                });
+            return;
+        }
+
+        if (!window.XMLHttpRequest) return;
+        var request = new XMLHttpRequest();
+        request.open('GET', 'site.config.json', true);
+        request.onreadystatechange = function () {
+            if (request.readyState !== 4 || request.status !== 200) return;
+            try {
+                onSuccess(JSON.parse(request.responseText));
+            } catch (error) {
+                // Keep local/static preview silent when config is invalid.
+            }
+        };
+        request.send();
+    }
+
+    function loadSiteConfig() {
+        requestSiteConfig(applySiteConfig);
+    }
+
     function closeDropdowns(exceptDropdown) {
         document.querySelectorAll('.nav-dropdown.open').forEach(function (dropdown) {
             if (dropdown === exceptDropdown) return;
@@ -71,4 +142,6 @@
             observer.observe(element);
         });
     }
+
+    loadSiteConfig();
 })();

@@ -9,6 +9,7 @@ Shared launch settings live in `site.config.json`.
 - `mode=local` is the current pre-launch mode and may use `https://zifra.example.com`.
 - `mode=production` must use the real HTTPS origin before publishing.
 - `cleanParams` is used when generating `robots.txt` for local query parameters such as `qa`, `preset`, and `source`.
+- `adsEnabled` and `yandexMetrikaId` are applied by `js/main.js` only in production mode.
 
 Regenerate sitemap and robots after adding pages:
 
@@ -46,6 +47,7 @@ node tests/acf-smoke.mjs
 node tests/migx-smoke.mjs
 node tests/production-home-smoke.mjs
 node tests/site-links-smoke.mjs
+node tests/site-runtime-smoke.mjs
 node tests/scaffold-catalog-smoke.mjs
 python tools/check_catalog_registry.py
 python tools/check_production_ready.py
@@ -59,6 +61,7 @@ The checks cover:
 - Local `href`/`src` links across all HTML pages.
 - Registered catalog categories and utilities in `catalog.registry.json`.
 - Draft category and utility scaffolding.
+- Runtime config loading for advertising and Yandex Metrika.
 - Production foundation: service pages, sitemap coverage, robots sitemap URL, clean query parameters, one H1 per page, canonical and descriptions.
 
 ## Local Preview

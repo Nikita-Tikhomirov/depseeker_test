@@ -26,6 +26,17 @@ def check_service_pages(root: Path, config: dict) -> None:
         fail(f"missing service pages: {', '.join(missing)}")
 
 
+def check_runtime_config(config: dict) -> None:
+    mode = str(config.get("mode", "local")).lower()
+    metrika_id = str(config.get("yandexMetrikaId", "")).strip()
+    if mode not in {"local", "production"}:
+        fail("site.config.json mode must be local or production")
+    if metrika_id and not re.fullmatch(r"\d+", metrika_id):
+        fail("yandexMetrikaId must be empty or numeric")
+    if config.get("adsEnabled") is True and mode != "production":
+        fail("adsEnabled can be true only in production mode")
+
+
 def check_page_basics(root: Path) -> None:
     for path in html_pages(root):
         html = path.read_text(encoding="utf-8")
@@ -114,6 +125,7 @@ def check_ad_slots(root: Path, config: dict) -> None:
 def main() -> int:
     try:
         config = load_config(ROOT)
+        check_runtime_config(config)
         check_service_pages(ROOT, config)
         check_page_basics(ROOT)
         check_sitemap(ROOT)
