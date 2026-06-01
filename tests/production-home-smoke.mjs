@@ -69,9 +69,9 @@ function testHomepageProductionCopy() {
   const text = visibleText(html);
 
   assertProductionHeader('index.html', html);
-  assert(text.includes('Каталог цифровых продуктов и веб-утилит'), 'index.html must position the site as a broad digital product catalog');
-  assert(text.includes('ACF и MIGX — первые опубликованные категории'), 'index.html must present ACF/MIGX as current catalog categories, not the whole site');
-  assert(text.includes('Никаких ссылок на корзину, кабинет, поиск или пустые разделы'), 'index.html must explicitly guard against empty marketplace navigation');
+  assert(text.includes('Цифровые продукты для сайтов, CMS и разработки'), 'index.html must position the site as a broad digital product catalog');
+  assert(text.includes('ACF и MIGX размещены как отдельные CMS-разделы каталога'), 'index.html must present ACF/MIGX as catalog sections, not the whole site');
+  assert(text.includes('Все карточки ведут на существующие страницы каталога'), 'index.html must keep homepage links tied to real catalog routes');
 
   for (const forbidden of [
     /Маркетплейс цифровых товаров/,
