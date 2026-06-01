@@ -97,3 +97,11 @@ python tools/check_production_ready.py
 The tool accepts only an HTTPS origin and keeps unrelated domains untouched.
 
 Before final deployment, switch `site.config.json` to `mode=production`, set the real `origin`, fill the real contacts in `contacts.html`, and add the actual Yandex Metrika ID if analytics is enabled.
+
+Run the external-input check after the real domain and owner details are known:
+
+```powershell
+python tools/check_launch_inputs.py
+```
+
+In the local workspace this command is expected to fail until the real domain, contacts, owner/legal details, and analytics decision are provided.

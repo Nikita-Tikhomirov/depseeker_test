@@ -6,33 +6,33 @@
 
 - Проверено страниц: 37
 - Опубликованных страниц: 37
-- Средний балл опубликованных страниц: 98/100
-- Страниц с задачами на усиление: 4
+- Средний балл опубликованных страниц: 100/100
+- Страниц с задачами на усиление: 0
 
 ## Priority Queue
 
 | Страница | Тип | Балл | Слова | H2 | Ссылки | FAQ | Примеры | Что исправить |
 | --- | --- | ---: | ---: | ---: | ---: | --- | --- | --- |
-| `acf-team-repeater.html` | landing | 82 | 508 | 9 | 18 | да | да | мало полезного текста: 508/520 слов |
-| `acf-testimonials-repeater.html` | landing | 82 | 517 | 9 | 18 | да | да | мало полезного текста: 517/520 слов |
-| `migx-slider.html` | landing | 82 | 518 | 6 | 20 | да | да | мало полезного текста: 518/520 слов |
-| `migx-team.html` | landing | 82 | 518 | 6 | 20 | да | да | мало полезного текста: 518/520 слов |
-| `acf-faq-fields.html` | landing | 100 | 522 | 9 | 18 | да | да | готова к базовой публикации |
-| `acf-field-group-generator.html` | landing | 100 | 582 | 9 | 18 | да | да | готова к базовой публикации |
-| `acf-flexible-content-generator.html` | utility | 100 | 526 | 9 | 18 | да | да | готова к базовой публикации |
+| `acf-faq-fields.html` | landing | 100 | 543 | 9 | 18 | да | да | готова к базовой публикации |
+| `acf-field-group-generator.html` | landing | 100 | 603 | 9 | 18 | да | да | готова к базовой публикации |
+| `acf-flexible-content-generator.html` | utility | 100 | 547 | 9 | 18 | да | да | готова к базовой публикации |
 | `acf-generator.html` | utility | 100 | 537 | 2 | 12 | да | да | готова к базовой публикации |
-| `acf-hero-section.html` | landing | 100 | 522 | 9 | 18 | да | да | готова к базовой публикации |
-| `acf-json-generator.html` | utility | 100 | 553 | 9 | 18 | да | да | готова к базовой публикации |
-| `acf-page-builder.html` | landing | 100 | 526 | 9 | 18 | да | да | готова к базовой публикации |
-| `acf-php-generator.html` | utility | 100 | 560 | 9 | 18 | да | да | готова к базовой публикации |
-| `acf-repeater-generator.html` | utility | 100 | 519 | 9 | 18 | да | да | готова к базовой публикации |
-| `acf-seo-fields.html` | landing | 100 | 520 | 9 | 18 | да | да | готова к базовой публикации |
-| `acf-woocommerce-product-fields.html` | landing | 100 | 530 | 9 | 18 | да | да | готова к базовой публикации |
+| `acf-hero-section.html` | landing | 100 | 543 | 9 | 18 | да | да | готова к базовой публикации |
+| `acf-json-generator.html` | utility | 100 | 574 | 9 | 18 | да | да | готова к базовой публикации |
+| `acf-page-builder.html` | landing | 100 | 547 | 9 | 18 | да | да | готова к базовой публикации |
+| `acf-php-generator.html` | utility | 100 | 581 | 9 | 18 | да | да | готова к базовой публикации |
+| `acf-repeater-generator.html` | utility | 100 | 540 | 9 | 18 | да | да | готова к базовой публикации |
+| `acf-seo-fields.html` | landing | 100 | 541 | 9 | 18 | да | да | готова к базовой публикации |
+| `acf-team-repeater.html` | landing | 100 | 529 | 9 | 18 | да | да | готова к базовой публикации |
+| `acf-testimonials-repeater.html` | landing | 100 | 538 | 9 | 18 | да | да | готова к базовой публикации |
+| `acf-woocommerce-product-fields.html` | landing | 100 | 551 | 9 | 18 | да | да | готова к базовой публикации |
 | `acf.html` | category | 100 | 822 | 6 | 24 | да | да | готова к базовой публикации |
-| `migx-catalog.html` | landing | 100 | 525 | 6 | 20 | да | да | готова к базовой публикации |
-| `migx-configs.html` | landing | 100 | 523 | 6 | 20 | да | да | готова к базовой публикации |
-| `migx-errors.html` | landing | 100 | 540 | 6 | 20 | да | да | готова к базовой публикации |
-| `migx-examples.html` | landing | 100 | 520 | 6 | 20 | да | да | готова к базовой публикации |
+| `migx-catalog.html` | landing | 100 | 534 | 6 | 20 | да | да | готова к базовой публикации |
+| `migx-configs.html` | landing | 100 | 532 | 6 | 20 | да | да | готова к базовой публикации |
+| `migx-errors.html` | landing | 100 | 549 | 6 | 20 | да | да | готова к базовой публикации |
+| `migx-examples.html` | landing | 100 | 529 | 6 | 20 | да | да | готова к базовой публикации |
+| `migx-faq.html` | landing | 100 | 529 | 6 | 20 | да | да | готова к базовой публикации |
+| `migx-fenom-chunk.html` | landing | 100 | 530 | 6 | 20 | да | да | готова к базовой публикации |
 
 ## All Registered Pages
 
@@ -48,8 +48,8 @@
 | `acf-php-generator.html` | utility | published | 100 |
 | `acf-repeater-generator.html` | utility | published | 100 |
 | `acf-seo-fields.html` | landing | published | 100 |
-| `acf-team-repeater.html` | landing | published | 82 |
-| `acf-testimonials-repeater.html` | landing | published | 82 |
+| `acf-team-repeater.html` | landing | published | 100 |
+| `acf-testimonials-repeater.html` | landing | published | 100 |
 | `acf-woocommerce-product-fields.html` | landing | published | 100 |
 | `acf.html` | category | published | 100 |
 | `migx-catalog.html` | landing | published | 100 |
@@ -69,9 +69,9 @@
 | `migx-nested-generator.html` | landing | published | 100 |
 | `migx-reviews.html` | landing | published | 100 |
 | `migx-richtext-field.html` | landing | published | 100 |
-| `migx-slider.html` | landing | published | 82 |
+| `migx-slider.html` | landing | published | 100 |
 | `migx-tabs-generator.html` | landing | published | 100 |
-| `migx-team.html` | landing | published | 82 |
+| `migx-team.html` | landing | published | 100 |
 | `migx-tv-generator.html` | landing | published | 100 |
 | `migx-validator.html` | landing | published | 100 |
 | `migx.html` | category | published | 100 |

@@ -25,6 +25,7 @@ assert(report.includes('## Thresholds'), 'report must document quality threshold
 assert(report.includes('acf.html'), 'report must include ACF category page');
 assert(report.includes('migx.html'), 'report must include MIGX category page');
 assert(!/lorem ipsum|заглушк|тестовый текст/i.test(report), 'report must not contain placeholder copy');
+assert(report.includes('- Страниц с задачами на усиление: 0'), 'all published pages must be clear in the content audit');
 
 for (const page of ['acf-generator.html', 'migx-generator.html']) {
   const row = report.match(new RegExp(`\\| \`${page}\` \\| utility \\|(?: published \\|)? (\\d+)`, 'i'));
