@@ -3,23 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Цифра — каталог цифровых продуктов для сайтов и CMS: генераторы кода, конфиги, шаблоны вывода, пресеты и веб-утилиты для рабочих задач.">
-    <meta name="keywords" content="каталог цифровых продуктов, веб утилиты, генераторы для сайта, ACF генератор, MIGX генератор, шаблоны для CMS">
+    <meta name="description" content="Цифра — каталог веб-инструментов и цифровых продуктов для разработки сайтов: генераторы кода, конфигов, шаблонов вывода, CMS-утилит и готовых рабочих решений.">
+    <meta name="keywords" content="каталог веб инструментов, цифровые продукты для сайта, генераторы кода, генераторы конфигов, CMS утилиты, шаблоны вывода">
     <meta name="robots" content="index, follow">
     <link rel="canonical" href="https://zifra.example.com/">
     <meta name="author" content="Цифра">
 
     <meta property="og:type" content="website">
-    <meta property="og:title" content="Цифра — каталог цифровых продуктов и веб-утилит">
-    <meta property="og:description" content="Генераторы, конфиги, шаблоны вывода и веб-утилиты для разработки сайтов, CMS-структур и контентных разделов.">
+    <meta property="og:title" content="Цифра — каталог веб-инструментов и цифровых продуктов">
+    <meta property="og:description" content="Подборки генераторов, CMS-утилит, конфигов и шаблонов вывода для разработки, администрирования и запуска сайтов.">
     <meta property="og:url" content="https://zifra.example.com/">
     <meta property="og:locale" content="ru_RU">
 
     <meta name="twitter:card" content="summary">
-    <meta name="twitter:title" content="Цифра — каталог цифровых продуктов">
-    <meta name="twitter:description" content="Каталог генераторов, конфигов, шаблонов вывода и веб-утилит для рабочих интернет-проектов.">
+    <meta name="twitter:title" content="Цифра — каталог веб-инструментов">
+    <meta name="twitter:description" content="Генераторы кода, конфиги, CMS-утилиты и шаблоны вывода для рабочих интернет-проектов.">
 
-    <title>Цифра — каталог цифровых продуктов и веб-утилит</title>
+    <title>Цифра — каталог веб-инструментов, генераторов и цифровых продуктов</title>
 
     <script type="application/ld+json">
     {
@@ -27,16 +27,26 @@
         "@type": "WebSite",
         "name": "Цифра",
         "url": "https://zifra.example.com/",
-        "description": "Каталог цифровых продуктов, веб-утилит, генераторов и шаблонов для сайтов и CMS.",
+        "description": "Каталог веб-инструментов, генераторов, CMS-утилит, конфигов и шаблонов вывода для разработки сайтов.",
         "hasPart": [
             {
                 "@type": "CollectionPage",
-                "name": "ACF",
+                "name": "CMS-инструменты",
+                "url": "https://zifra.example.com/#catalog"
+            },
+            {
+                "@type": "CollectionPage",
+                "name": "Генераторы кода и конфигов",
+                "url": "https://zifra.example.com/#generators"
+            },
+            {
+                "@type": "CollectionPage",
+                "name": "ACF / WordPress",
                 "url": "https://zifra.example.com/acf.html"
             },
             {
                 "@type": "CollectionPage",
-                "name": "MIGX",
+                "name": "MODX / MIGX",
                 "url": "https://zifra.example.com/migx.html"
             },
             {
@@ -80,8 +90,10 @@
             <ul class="header-nav">
                 <li><a class="is-active" href="index.html">Главная</a></li>
                 <li><a href="index.html#catalog">Каталог</a></li>
+                <li><a href="index.html#generators">Генераторы</a></li>
+                <li><a href="index.html#templates">Шаблоны</a></li>
                 <li class="nav-dropdown">
-                    <button class="nav-dropdown-toggle" type="button" aria-expanded="false" aria-controls="utilities-menu">Утилиты <span class="nav-caret" aria-hidden="true">⌄</span></button>
+                    <button class="nav-dropdown-toggle" type="button" aria-expanded="false" aria-controls="utilities-menu">Продукты <span class="nav-caret" aria-hidden="true">⌄</span></button>
                     <div class="nav-dropdown-menu" id="utilities-menu">
                         <div class="nav-dropdown-grid">
                             <div class="nav-dropdown-group">
@@ -114,26 +126,36 @@
         <div class="container">
             <div class="home-hero-grid">
                 <div>
-                    <h1 id="home-heading">Цифровые продукты для сайтов, CMS и разработки</h1>
-                    <p>Цифра собирает прикладные инструменты для веб-проектов: генераторы кода, готовые конфигурации, шаблоны вывода и пресеты, которые сокращают ручную сборку типовых решений.</p>
+                    <span class="home-kicker">Каталог веб-инструментов</span>
+                    <h1 id="home-heading">Генераторы, CMS-утилиты и шаблоны для разработки сайтов</h1>
+                    <p>Цифра помогает быстрее собирать технические заготовки для интернет-проектов: структуры полей, JSON-конфиги, PHP-экспорт, шаблоны вывода и рабочие пресеты для популярных CMS. Откройте нужный инструмент, задайте параметры и заберите готовый результат без ручной сборки однотипного кода.</p>
                     <div class="home-actions">
-                        <a class="btn btn-primary btn-lg" href="#catalog">Перейти к каталогу</a>
-                        <a class="btn btn-outline btn-lg" href="#utilities">Открыть утилиты</a>
+                        <a class="btn btn-primary btn-lg" href="#catalog">Смотреть каталог</a>
+                        <a class="btn btn-outline btn-lg" href="#generators">Выбрать генератор</a>
                     </div>
                     <div class="home-link-row" aria-label="Доступные разделы">
-                        <a href="acf.html">ACF для WordPress</a>
-                        <a href="migx.html">MIGX для MODX</a>
-                        <a href="acf-generator.html">ACF генератор</a>
-                        <a href="migx-generator.html">MIGX генератор</a>
+                        <a href="#catalog">CMS-разделы</a>
+                        <a href="#generators">Генераторы кода</a>
+                        <a href="#templates">Шаблоны вывода</a>
+                        <a href="#workflow">Как выбрать</a>
                     </div>
                 </div>
-                <aside class="home-panel" aria-label="Статус каталога">
-                    <h2>Что есть в каталоге</h2>
-                    <ul>
-                        <li><strong>Генераторы:</strong> создают код, JSON и конфигурации под конкретную задачу.</li>
-                        <li><strong>Пресеты и шаблоны:</strong> дают готовую структуру, которую можно адаптировать под проект.</li>
-                        <li><strong>Категории:</strong> объединяют продукты по стеку, формату результата и сценарию применения.</li>
-                    </ul>
+                <aside class="home-panel home-search-panel" aria-label="Быстрый подбор инструмента">
+                    <h2>Быстрый подбор</h2>
+                    <p>Начните с результата, который нужен на выходе.</p>
+                    <div class="home-tag-grid">
+                        <a href="acf-php-generator.html">PHP export</a>
+                        <a href="acf-json-generator.html">JSON</a>
+                        <a href="migx-formtabs-generator.html">Form Tabs</a>
+                        <a href="migx-grid-columns-generator.html">Grid Columns</a>
+                        <a href="migx-getimagelist.html">getImageList</a>
+                        <a href="acf-repeater-generator.html">Repeater</a>
+                    </div>
+                    <div class="home-metrics" aria-label="Состояние каталога">
+                        <span><strong>2</strong> CMS-раздела</span>
+                        <span><strong>10+</strong> рабочих входов</span>
+                        <span><strong>40+</strong> SEO-страниц</span>
+                    </div>
                 </aside>
             </div>
         </div>
@@ -143,23 +165,23 @@
         <div class="container">
             <div class="ad-slot" data-ad-slot="home-after-hero" aria-label="Рекламный блок после первого экрана"></div>
             <div class="home-section-head">
-                <h2 id="catalog-heading" class="section-title">Разделы и типы продуктов</h2>
-                <p class="section-sub">Каталог построен вокруг рабочих задач: собрать структуру данных, подготовить конфиг, получить шаблон вывода или быстро открыть нужную CMS-утилиту.</p>
+                <h2 id="catalog-heading" class="section-title">Каталог для задач веб-разработки</h2>
+                <p class="section-sub">Здесь собраны инструменты, которые закрывают повторяющиеся технические операции при создании сайтов: настройку CMS, подготовку структуры данных, генерацию конфигов, экспорт кода и вывод контента на фронтенде.</p>
             </div>
             <div class="home-category-grid">
                 <article class="home-card home-card-featured">
-                    <span>CMS-разделы</span>
-                    <h3>Структуры данных и поля</h3>
-                    <p>Инструменты для настройки полей, повторяемых блоков, контентных моделей и административных форм в CMS.</p>
+                    <span>CMS</span>
+                    <h3>Инструменты для систем управления сайтом</h3>
+                    <p>Разделы для настройки полей, повторяемых элементов, административных форм, таблиц и контентных моделей. Подходят для разработки корпоративных сайтов, каталогов, лендингов, блогов и контентных разделов.</p>
                     <div class="home-card-links">
-                        <a href="acf.html">ACF</a>
-                        <a href="migx.html">MIGX</a>
+                        <a href="acf.html">WordPress / ACF</a>
+                        <a href="migx.html">MODX / MIGX</a>
                     </div>
                 </article>
                 <article class="home-card">
-                    <span>Генераторы</span>
-                    <h3>Код, JSON и конфиги</h3>
-                    <p>Быстрый выпуск рабочих заготовок без ручного набора однотипных структур и параметров.</p>
+                    <span>Код</span>
+                    <h3>Генераторы PHP, JSON и конфигураций</h3>
+                    <p>Помогают получить чистую заготовку под конкретный формат: экспорт для темы, JSON для синхронизации, конфигурацию для админки или набор параметров для вывода данных.</p>
                     <div class="home-card-links">
                         <a href="acf-php-generator.html">ACF PHP</a>
                         <a href="acf-json-generator.html">ACF JSON</a>
@@ -167,9 +189,9 @@
                     </div>
                 </article>
                 <article class="home-card">
-                    <span>Шаблоны вывода</span>
-                    <h3>Фронтенд и чанки</h3>
-                    <p>Материалы для вывода данных на сайте: tpl, wrapperTpl, Fenom-чанки и структуры контентных секций.</p>
+                    <span>Вывод</span>
+                    <h3>Шаблоны для фронтенда и чанков</h3>
+                    <p>Готовые направления для вывода данных на сайте: списки, карточки, галереи, FAQ, команды, отзывы, слайдеры и другие повторяемые блоки с понятной структурой.</p>
                     <div class="home-card-links">
                         <a href="migx-getimagelist.html">getImageList</a>
                         <a href="migx-fenom-chunk.html">Fenom</a>
@@ -178,8 +200,8 @@
                 </article>
                 <article class="home-card">
                     <span>Админка</span>
-                    <h3>Формы, таблицы и блоки</h3>
-                    <p>Пресеты для повторяемых элементов, вкладок, таблиц, галерей и управляемых контентных блоков.</p>
+                    <h3>Формы, таблицы и управляемые блоки</h3>
+                    <p>Инструменты для удобной работы редактора: вкладки, колонки таблиц, повторители, гибкие секции, изображения, richtext-поля и аккуратные интерфейсы управления контентом.</p>
                     <div class="home-card-links">
                         <a href="acf-repeater-generator.html">Repeater</a>
                         <a href="acf-flexible-content-generator.html">Flexible Content</a>
@@ -191,28 +213,28 @@
         </div>
     </section>
 
-    <section class="home-section home-section-muted" id="utilities" aria-labelledby="utilities-heading">
+    <section class="home-section home-section-muted" id="generators" aria-labelledby="generators-heading">
         <div class="container">
             <div class="home-section-head">
-                <h2 id="utilities-heading" class="section-title">Доступные утилиты</h2>
-                <p class="section-sub">ACF и MIGX размещены как отдельные CMS-разделы каталога. Внутри есть обзорные страницы, генераторы и точечные инструменты под разные форматы результата.</p>
+                <h2 id="generators-heading" class="section-title">Генераторы для быстрого старта</h2>
+                <p class="section-sub">Откройте инструмент под нужный формат, заполните поля и получите заготовку, которую можно перенести в проект. Это экономит время на однотипной разметке, повторяющихся ключах, структуре JSON и настройке административных интерфейсов.</p>
             </div>
             <div class="home-tool-grid">
                 <article class="home-card">
                     <span>WordPress</span>
-                    <h3>ACF</h3>
-                    <p>Раздел для WordPress-разработки: field groups, repeater, flexible content, SEO-поля и экспорты PHP/JSON без сборки структуры с нуля.</p>
+                    <h3>ACF-инструменты</h3>
+                    <p>Подборка для WordPress-разработки: группы полей, повторители, flexible content, SEO-поля, блоки первого экрана и экспорт структуры в PHP или JSON.</p>
                     <div class="home-actions">
-                        <a class="btn btn-primary" href="acf.html">Открыть категорию</a>
+                        <a class="btn btn-primary" href="acf.html">Смотреть раздел</a>
                         <a class="btn btn-ghost" href="acf-generator.html">Запустить генератор</a>
                     </div>
                 </article>
                 <article class="home-card">
                     <span>MODX</span>
-                    <h3>MIGX</h3>
-                    <p>Раздел для MODX: конфигурации MIGX TV, Form Tabs, Grid Columns, Fenom-чанки и getImageList для вывода данных на сайте.</p>
+                    <h3>MIGX-инструменты</h3>
+                    <p>Подборка для MODX Revolution: MIGX TV, Form Tabs, Grid Columns, Fenom-чанки, getImageList и типовые структуры для каталогов, галерей, FAQ и отзывов.</p>
                     <div class="home-actions">
-                        <a class="btn btn-primary" href="migx.html">Открыть категорию</a>
+                        <a class="btn btn-primary" href="migx.html">Смотреть раздел</a>
                         <a class="btn btn-ghost" href="migx-generator.html">Запустить генератор</a>
                     </div>
                 </article>
@@ -220,47 +242,67 @@
         </div>
     </section>
 
-    <section class="home-section" aria-labelledby="products-heading">
+    <section class="home-section" id="templates" aria-labelledby="products-heading">
         <div class="container">
             <div class="ad-slot" data-ad-slot="home-before-products" aria-label="Рекламный блок перед быстрым входом"></div>
             <div class="home-section-head">
-                <h2 id="products-heading" class="section-title">Быстрый вход по задаче</h2>
-                <p class="section-sub">Все карточки ведут на существующие страницы каталога: выбирайте CMS, формат результата или конкретный генератор.</p>
+                <h2 id="products-heading" class="section-title">Быстрый вход по результату</h2>
+                <p class="section-sub">Если задача уже понятна, переходите сразу к нужному продукту. Все ссылки ведут на существующие страницы каталога, без пустых разделов и декоративных пунктов меню.</p>
             </div>
             <div class="home-case-grid">
-                <a class="home-card" href="acf-generator.html"><span>Утилита</span><h3>ACF генератор</h3><p>Сборка field groups, repeater, flexible content, SEO-полей и экспорта в PHP/JSON.</p></a>
-                <a class="home-card" href="migx-generator.html"><span>Утилита</span><h3>MIGX генератор</h3><p>Подготовка MODX MIGX-конфигураций: JSON, Form Tabs, Grid Columns, Fenom и getImageList.</p></a>
-                <a class="home-card" href="acf-php-generator.html"><span>ACF</span><h3>ACF PHP</h3><p>PHP-экспорт группы полей для темы, плагина или отдельного подключаемого файла.</p></a>
-                <a class="home-card" href="acf-json-generator.html"><span>ACF</span><h3>ACF JSON</h3><p>Local JSON для переноса и синхронизации структуры полей между WordPress-проектами.</p></a>
-                <a class="home-card" href="migx-json-generator.html"><span>MIGX</span><h3>MIGX JSON</h3><p>Каркас JSON-конфигурации для MIGX TV с понятной структурой полей и настроек.</p></a>
-                <a class="home-card" href="migx-formtabs-generator.html"><span>MIGX</span><h3>Form Tabs</h3><p>Вкладки и группы полей для аккуратной формы редактирования в MODX-менеджере.</p></a>
-                <a class="home-card" href="migx-grid-columns-generator.html"><span>MIGX</span><h3>Grid Columns</h3><p>Колонки таблицы, подписи, сортировка и значения, которые видит редактор в списке.</p></a>
-                <a class="home-card" href="migx-getimagelist.html"><span>MIGX</span><h3>getImageList</h3><p>Шаблон вывода MIGX TV на фронтенде через tpl, wrapperTpl и параметры getImageList.</p></a>
+                <a class="home-card" href="acf-generator.html"><span>Поля</span><h3>Собрать структуру ACF</h3><p>Генератор для групп полей, повторителей, гибких секций и экспорта под WordPress-проект.</p></a>
+                <a class="home-card" href="migx-generator.html"><span>Конфиг</span><h3>Подготовить MIGX TV</h3><p>Инструмент для MODX-конфигураций, таблиц, вкладок и шаблонов вывода через getImageList.</p></a>
+                <a class="home-card" href="acf-php-generator.html"><span>PHP</span><h3>Получить PHP-экспорт</h3><p>Готовый код для подключения группы полей в теме, плагине или отдельном include-файле.</p></a>
+                <a class="home-card" href="acf-json-generator.html"><span>JSON</span><h3>Сохранить Local JSON</h3><p>Формат для синхронизации ACF-структур между окружениями и командной разработкой.</p></a>
+                <a class="home-card" href="migx-json-generator.html"><span>JSON</span><h3>Собрать MIGX JSON</h3><p>Каркас конфигурации MIGX TV с понятной структурой полей, вкладок и колонок.</p></a>
+                <a class="home-card" href="migx-formtabs-generator.html"><span>Форма</span><h3>Настроить Form Tabs</h3><p>Вкладки и группы полей для аккуратной формы редактирования в MODX-менеджере.</p></a>
+                <a class="home-card" href="migx-grid-columns-generator.html"><span>Таблица</span><h3>Описать Grid Columns</h3><p>Колонки списка, подписи, сортировка и значения, которые редактор видит в админке.</p></a>
+                <a class="home-card" href="migx-getimagelist.html"><span>Вывод</span><h3>Подготовить getImageList</h3><p>Шаблоны tpl и wrapperTpl для вывода MIGX TV на фронтенде сайта.</p></a>
             </div>
         </div>
     </section>
 
-    <section class="home-section home-section-muted" aria-labelledby="principles-heading">
+    <section class="home-section home-section-muted" aria-labelledby="seo-heading">
+        <div class="container">
+            <div class="home-copy-grid">
+                <div>
+                    <h2 id="seo-heading" class="section-title">Зачем нужен каталог цифровых продуктов для сайта</h2>
+                    <p>В разработке сайтов много задач, которые повторяются от проекта к проекту: создать набор полей, описать таблицу в админке, подготовить JSON-конфигурацию, собрать шаблон вывода, сделать структуру для FAQ, галереи, команды, отзывов или каталога товаров. Такие операции редко требуют ручной работы с нуля, но часто отнимают время и повышают риск ошибки в ключах, названиях, вложенности и параметрах.</p>
+                    <p>Цифра собирает веб-утилиты, которые превращают эти операции в быстрый рабочий сценарий. Пользователь выбирает тип задачи, задает параметры и получает результат, который можно проверить, адаптировать и перенести в проект. Поэтому каталог полезен разработчикам, веб-мастерам, SEO-специалистам и владельцам сайтов, которым нужно быстрее запускать технические разделы без лишней рутины.</p>
+                </div>
+                <aside class="home-panel">
+                    <h3>Что будет расширяться</h3>
+                    <ul>
+                        <li><strong>Новые CMS:</strong> разделы под разные движки и форматы администрирования.</li>
+                        <li><strong>Новые генераторы:</strong> код, конфиги, схемы, шаблоны, проверки и конвертеры.</li>
+                        <li><strong>Новые подборки:</strong> инструменты по задачам, а не только по названию технологии.</li>
+                    </ul>
+                </aside>
+            </div>
+        </div>
+    </section>
+
+    <section class="home-section" id="workflow" aria-labelledby="principles-heading">
         <div class="container">
             <div class="home-section-head">
-                <h2 id="principles-heading" class="section-title">Как выбрать нужный продукт</h2>
-                <p class="section-sub">Сначала определите задачу, затем выберите стек и формат результата. Так проще открыть нужную страницу без лишних переходов.</p>
+                <h2 id="principles-heading" class="section-title">Как выбрать подходящий инструмент</h2>
+                <p class="section-sub">Каталог удобнее использовать от задачи: сначала определить, что нужно получить, затем выбрать CMS или формат результата.</p>
             </div>
             <div class="home-step-grid">
                 <article class="home-step">
                     <span>01</span>
-                    <h3>Выберите стек</h3>
-                    <p>Откройте раздел под нужную CMS или тип продукта: WordPress ACF, MODX MIGX, шаблоны вывода или генераторы конфигов.</p>
+                    <h3>Определите результат</h3>
+                    <p>Нужен код, JSON, таблица для админки, форма редактирования, шаблон вывода или готовая структура контентного блока.</p>
                 </article>
                 <article class="home-step">
                     <span>02</span>
-                    <h3>Уточните формат</h3>
-                    <p>Выберите, что нужно получить: PHP, JSON, форму для админки, таблицу, повторяемый блок или шаблон фронтенд-вывода.</p>
+                    <h3>Выберите технологию</h3>
+                    <p>Откройте раздел под нужную CMS или стек. Сейчас доступны WordPress/ACF и MODX/MIGX, дальше каталог можно расширять новыми направлениями.</p>
                 </article>
                 <article class="home-step">
                     <span>03</span>
-                    <h3>Соберите результат</h3>
-                    <p>Заполните поля генератора, заберите готовую структуру и перенесите ее в проект без ручного переписывания однотипного кода.</p>
+                    <h3>Соберите заготовку</h3>
+                    <p>Заполните параметры, проверьте результат в генераторе и перенесите готовую структуру в рабочий проект.</p>
                 </article>
             </div>
         </div>
@@ -268,11 +310,11 @@
 
     <section class="home-final">
         <div class="container">
-            <h2>Перейдите в нужный CMS-раздел</h2>
-            <p>ACF и MIGX размещены как отдельные CMS-разделы каталога. Откройте категорию, если нужен обзор, или запускайте генератор, если уже понятно, какой результат нужен.</p>
+            <h2>Начните с готовых разделов каталога</h2>
+            <p>ACF и MIGX — первые опубликованные направления внутри общего каталога цифровых продуктов. Откройте раздел, выберите конкретную задачу и используйте генератор как рабочий инструмент, а не как справочную заглушку.</p>
             <div class="home-actions home-actions-center">
-                <a class="btn btn-primary btn-lg" href="acf.html">Категория ACF</a>
-                <a class="btn btn-outline btn-lg" href="migx.html">Категория MIGX</a>
+                <a class="btn btn-primary btn-lg" href="acf.html">WordPress / ACF</a>
+                <a class="btn btn-outline btn-lg" href="migx.html">MODX / MIGX</a>
             </div>
         </div>
     </section>
@@ -286,21 +328,22 @@
                     <span class="logo-icon">◆</span>
                     <span class="logo-text">Цифра</span>
                 </div>
-                <p>Каталог цифровых продуктов, генераторов, шаблонов и веб-утилит для рабочих интернет-проектов.</p>
+                <p>Каталог веб-инструментов, генераторов, CMS-утилит и шаблонов для разработки сайтов.</p>
             </div>
             <div class="footer-col">
                 <h4>Каталог</h4>
                 <ul>
                     <li><a href="index.html#catalog">Категории</a></li>
-                    <li><a href="index.html#utilities">Утилиты</a></li>
-                    <li><a href="index.html">Главная</a></li>
+                    <li><a href="index.html#generators">Генераторы</a></li>
+                    <li><a href="index.html#templates">Шаблоны</a></li>
+                    <li><a href="index.html#workflow">Как выбрать</a></li>
                 </ul>
             </div>
             <div class="footer-col">
-                <h4>CMS</h4>
+                <h4>Разделы</h4>
                 <ul>
-                    <li><a href="acf.html">ACF</a></li>
-                    <li><a href="migx.html">MIGX</a></li>
+                    <li><a href="acf.html">WordPress / ACF</a></li>
+                    <li><a href="migx.html">MODX / MIGX</a></li>
                     <li><a href="acf-generator.html">ACF генератор</a></li>
                     <li><a href="migx-generator.html">MIGX генератор</a></li>
                 </ul>
@@ -318,7 +361,7 @@
             </div>
         </div>
         <div class="footer-bottom">
-            <p>© 2026 Цифра. Каталог цифровых продуктов и веб-утилит.</p>
+            <p>© 2026 Цифра. Каталог веб-инструментов и цифровых продуктов.</p>
         </div>
     </div>
 </footer>

@@ -402,6 +402,14 @@ body.ads-enabled .ad-slot {
     margin-bottom: 12px;
     font-size: 1.16rem;
 }
+.home-panel h3 {
+    margin-bottom: 12px;
+    font-size: 1.08rem;
+}
+.home-panel p {
+    color: var(--text-2);
+    line-height: 1.65;
+}
 .home-panel ul {
     list-style: none;
     display: grid;
@@ -415,6 +423,47 @@ body.ads-enabled .ad-slot {
 .home-panel li:last-child {
     border-bottom: 0;
     padding-bottom: 0;
+}
+.home-search-panel {
+    align-self: stretch;
+}
+.home-tag-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+    margin-top: 18px;
+}
+.home-tag-grid a {
+    color: var(--text);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: rgba(255,255,255,0.04);
+    padding: 10px 12px;
+    text-decoration: none;
+    font-size: 0.86rem;
+    font-weight: 700;
+}
+.home-tag-grid a:hover {
+    border-color: var(--accent-2);
+    background: rgba(16,185,129,0.1);
+}
+.home-metrics {
+    display: grid;
+    gap: 10px;
+    margin-top: 22px;
+    padding-top: 18px;
+    border-top: 1px solid var(--border);
+}
+.home-metrics span {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    color: var(--text-2);
+    font-size: 0.9rem;
+}
+.home-metrics strong {
+    color: var(--accent-2);
+    font-size: 1.05rem;
 }
 .home-section {
     padding: 76px 0;
@@ -438,6 +487,18 @@ body.ads-enabled .ad-slot {
 .home-case-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
 .home-step-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 .home-faq-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.home-copy-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(300px, 0.48fr);
+    gap: 34px;
+    align-items: start;
+}
+.home-copy-grid p {
+    color: var(--text-2);
+    font-size: 1rem;
+    line-height: 1.82;
+    margin-top: 18px;
+}
 .home-card {
     display: flex;
     flex-direction: column;

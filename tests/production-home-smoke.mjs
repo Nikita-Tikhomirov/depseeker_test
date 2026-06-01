@@ -72,9 +72,10 @@ function testHomepageProductionCopy() {
   assertProductionHeader('index.html', html);
   assert(layoutCss.includes('.nav-dropdown-menu::before'), 'desktop dropdown must keep a hover bridge between trigger and menu');
   assert(layoutCss.includes('top: -32px') && layoutCss.includes('height: 32px'), 'desktop dropdown hover bridge must cover the visual gap');
-  assert(text.includes('Цифровые продукты для сайтов, CMS и разработки'), 'index.html must position the site as a broad digital product catalog');
-  assert(text.includes('ACF и MIGX размещены как отдельные CMS-разделы каталога'), 'index.html must present ACF/MIGX as catalog sections, not the whole site');
-  assert(text.includes('Все карточки ведут на существующие страницы каталога'), 'index.html must keep homepage links tied to real catalog routes');
+  assert(text.includes('Генераторы, CMS-утилиты и шаблоны для разработки сайтов'), 'index.html must position the site as a broad web tools catalog');
+  assert(text.includes('Цифра собирает веб-утилиты'), 'index.html must include useful public SEO copy, not block descriptions');
+  assert(text.includes('ACF и MIGX — первые опубликованные направления внутри общего каталога цифровых продуктов'), 'index.html must present ACF/MIGX as first catalog sections, not the whole site');
+  assert(text.includes('Все ссылки ведут на существующие страницы каталога'), 'index.html must keep homepage links tied to real catalog routes');
 
   for (const forbidden of [
     /Маркетплейс цифровых товаров/,
