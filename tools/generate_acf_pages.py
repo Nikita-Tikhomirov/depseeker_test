@@ -463,7 +463,6 @@ def asset_head(page: dict[str, object]) -> str:
 
 def header(active: str = "") -> str:
     hub_active = ' class="is-active"' if active == "hub" else ""
-    migx_link = '\n            <a href="migx.html">MIGX для MODX</a>' if active == "hub" else ""
     return f"""<header class="acf-header">
     <div class="acf-container acf-header__inner">
         <a class="acf-logo" href="index.html" aria-label="Цифра — на главную"><span>◆</span> Цифра</a>
@@ -471,34 +470,21 @@ def header(active: str = "") -> str:
             <a href="acf.html"{hub_active}>ACF</a>
             <a href="acf-generator.html">Генератор</a>
             <a href="acf-repeater-generator.html">Repeater</a>
-            <a href="acf-flexible-content-generator.html">Flexible</a>{migx_link}
+            <a href="acf-flexible-content-generator.html">Flexible</a>
         </nav>
         <a class="acf-header-cta" href="acf-generator.html">Открыть генератор</a>
     </div>
 </header>"""
 
 
-def footer(include_migx: bool = False) -> str:
-    text = (
-        "Инструменты для CMS-разработчиков: ACF, MIGX, шаблоны, структуры и готовые блоки."
-        if include_migx
-        else "Инструменты для WordPress-разработчиков: ACF, шаблоны, структуры и готовые блоки."
-    )
-    link = (
-        '<div class="acf-footer-links">\n'
-        '            <a href="acf-generator.html">Запустить ACF генератор</a>\n'
-        '            <a href="migx.html">MIGX для MODX</a>\n'
-        '        </div>'
-        if include_migx
-        else '<a href="acf-generator.html">Запустить генератор</a>'
-    )
+def footer() -> str:
     return f"""<footer class="acf-footer">
     <div class="acf-container acf-footer__inner">
         <div>
             <strong>Цифра</strong>
-            <p>{text}</p>
+            <p>Инструменты для WordPress-разработчиков: ACF, шаблоны, структуры и готовые блоки.</p>
         </div>
-        {link}
+        <a href="acf-generator.html">Запустить генератор</a>
     </div>
 </footer>"""
 
@@ -757,7 +743,7 @@ def render_hub() -> str:
             <span>{esc(p["query"])}</span>
             <h3><a href="{esc(p["slug"])}.html">{esc(p["h1"])}</a></h3>
             <p>{esc(p["description"])}</p>
-            <a href="{esc(p["slug"])}.html">{esc(HUB_CARD_CTA[str(p["slug"])])}</a>
+            <a class="acf-card-cta" href="{esc(p["slug"])}.html">{esc(HUB_CARD_CTA[str(p["slug"])])}</a>
         </article>"""
         for p in PAGES
     )
@@ -862,30 +848,6 @@ def render_hub() -> str:
         </div>
     </section>
 
-    <section class="acf-section">
-        <div class="acf-container">
-            <div class="acf-section-head">
-                <span class="acf-section-label">MODX</span>
-                <h2>Похожий генератор для MIGX</h2>
-                <p>Если вы собираете не WordPress-поля, а MODX TV через MIGX, используйте отдельный кластер с JSON, Form Tabs, Grid Columns и готовыми примерами вывода.</p>
-            </div>
-            <div class="acf-related-grid">
-                <a class="acf-related-card" href="migx.html">
-                    <span>migx generator</span>
-                    <strong>MIGX генератор и шаблоны для MODX</strong>
-                </a>
-                <a class="acf-related-card" href="migx-generator.html?preset=gallery&amp;source=acf-related">
-                    <span>migx json</span>
-                    <strong>Открыть MIGX генератор с пресетом галереи</strong>
-                </a>
-                <a class="acf-related-card" href="migx-getimagelist.html">
-                    <span>getImageList</span>
-                    <strong>Примеры вывода MIGX через getImageList</strong>
-                </a>
-            </div>
-        </div>
-    </section>
-
     <section class="acf-final-cta">
         <div class="acf-container">
             <h2>Соберите ACF-поля для WordPress за несколько минут</h2>
@@ -894,7 +856,7 @@ def render_hub() -> str:
         </div>
     </section>
 </main>
-{footer(True)}
+{footer()}
 </body>
 </html>
 """
@@ -932,13 +894,18 @@ def render_css() -> str:
 .acf-section-head { max-width: 790px; margin-bottom: 28px; }
 .acf-section h2 { font-size: clamp(1.8rem, 3vw, 3rem); line-height: 1.08; letter-spacing: 0; margin: 10px 0 14px; }
 .acf-section p { color: #4b5563; line-height: 1.75; font-size: 1rem; }
-.acf-topic-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
-.acf-topic-card, .acf-benefit-grid article, .acf-related-card, .acf-code-card, .acf-checklist { border: 1px solid #dce7e3; border-radius: 8px; background: #fff; padding: 20px; }
-.acf-topic-card span, .acf-related-card span { color: #0f9f7e; font-weight: 900; font-size: 0.76rem; display: block; margin-bottom: 10px; }
-.acf-topic-card h3 { font-size: 1.08rem; line-height: 1.3; margin: 0 0 10px; }
-.acf-topic-card h3, .acf-topic-card > a, .acf-related-card { color: #121821; text-decoration: none; }
-.acf-card-cta { min-height: 42px; display: inline-flex; align-items: center; justify-content: center; margin-top: 12px; padding: 0 14px; border-radius: 8px; background: #22d3a6; color: #07110e; font-weight: 900; text-decoration: none; }
-.acf-card-cta:hover { background: #19bd94; }
+.acf-topic-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; }
+.acf-topic-card, .acf-benefit-grid article, .acf-related-card, .acf-code-card, .acf-checklist { border: 1px solid #dce7e3; border-radius: 8px; background: #fff; padding: 22px; }
+.acf-topic-card { display: flex; min-height: 250px; flex-direction: column; box-shadow: 0 18px 45px rgba(15, 23, 42, 0.04); transition: transform 0.18s, border-color 0.18s, box-shadow 0.18s; }
+.acf-topic-card:hover { transform: translateY(-2px); border-color: #22d3a6; box-shadow: 0 24px 58px rgba(15, 23, 42, 0.08); }
+.acf-topic-card span, .acf-related-card span { align-self: flex-start; color: #0b8f73; background: #e8fbf6; border-radius: 999px; padding: 5px 9px; font-weight: 900; font-size: 0.72rem; line-height: 1; display: inline-flex; margin-bottom: 14px; text-transform: uppercase; }
+.acf-topic-card h3 { font-size: 1.13rem; line-height: 1.28; margin: 0 0 12px; }
+.acf-topic-card h3 a { color: #121821; text-decoration: none; }
+.acf-topic-card h3 a:hover { color: #0f9f7e; }
+.acf-topic-card p { margin: 0; }
+.acf-related-card { color: #121821; text-decoration: none; }
+.acf-card-cta { min-height: 42px; display: inline-flex; align-items: center; justify-content: center; margin-top: auto; padding: 0 16px; border-radius: 8px; background: #121821; color: #fff; font-weight: 900; text-decoration: none; width: fit-content; box-shadow: 0 12px 28px rgba(18, 24, 33, 0.12); }
+.acf-card-cta:hover { background: #22d3a6; color: #07110e; }
 .acf-two-col, .acf-use-grid, .acf-roadmap { display: grid; grid-template-columns: minmax(0, 0.9fr) minmax(300px, 0.7fr); gap: 34px; align-items: start; }
 .acf-checklist ul { margin: 0; padding: 0; list-style: none; display: grid; gap: 12px; }
 .acf-checklist li { padding-left: 30px; position: relative; color: #243142; font-weight: 800; }

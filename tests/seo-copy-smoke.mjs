@@ -106,6 +106,8 @@ function testAcfHubReadsLikePublicSeoPage() {
   const html = read('acf.html');
   const visibleText = stripTechnicalBlocks(html);
 
+  assert(!/migx/i.test(html), 'acf.html must stay focused on the ACF category and not link to MIGX pages');
+
   for (const pattern of bannedAcfHubCopy) {
     assert(!pattern.test(visibleText), `acf.html must not expose internal planning copy matching ${pattern}`);
   }
