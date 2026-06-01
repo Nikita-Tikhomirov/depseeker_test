@@ -66,9 +66,12 @@ function assertProductionHeader(page, html) {
 
 function testHomepageProductionCopy() {
   const html = read('index.html');
+  const layoutCss = read('css/layout.css');
   const text = visibleText(html);
 
   assertProductionHeader('index.html', html);
+  assert(layoutCss.includes('.nav-dropdown-menu::before'), 'desktop dropdown must keep a hover bridge between trigger and menu');
+  assert(layoutCss.includes('top: -32px') && layoutCss.includes('height: 32px'), 'desktop dropdown hover bridge must cover the visual gap');
   assert(text.includes('Цифровые продукты для сайтов, CMS и разработки'), 'index.html must position the site as a broad digital product catalog');
   assert(text.includes('ACF и MIGX размещены как отдельные CMS-разделы каталога'), 'index.html must present ACF/MIGX as catalog sections, not the whole site');
   assert(text.includes('Все карточки ведут на существующие страницы каталога'), 'index.html must keep homepage links tied to real catalog routes');

@@ -109,6 +109,14 @@
     transform: translateY(8px);
     transition: opacity 0.18s var(--ease), transform 0.18s var(--ease), visibility 0.18s;
 }
+.nav-dropdown-menu::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: -32px;
+    height: 32px;
+}
 .nav-dropdown:hover > .nav-dropdown-menu,
 .nav-dropdown:focus-within > .nav-dropdown-menu,
 .nav-dropdown.open > .nav-dropdown-menu {
