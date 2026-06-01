@@ -30,6 +30,7 @@ Public catalog structure lives in `catalog.registry.json`. It lists categories, 
 
 Detailed workflow: `docs/catalog-expansion.md`.
 Ad placement notes: `docs/monetization.md`.
+SEO content audit: `docs/seo-content-audit.md`.
 
 Draft scaffolding examples:
 
@@ -49,6 +50,8 @@ node tests/production-home-smoke.mjs
 node tests/site-links-smoke.mjs
 node tests/site-runtime-smoke.mjs
 node tests/scaffold-catalog-smoke.mjs
+node tests/content-audit-smoke.mjs
+python tools/audit_content_quality.py
 python tools/check_catalog_registry.py
 python tools/check_production_ready.py
 ```
@@ -61,6 +64,7 @@ The checks cover:
 - Local `href`/`src` links across all HTML pages.
 - Registered catalog categories and utilities in `catalog.registry.json`.
 - Draft category and utility scaffolding.
+- SEO content audit report for prioritizing thin pages before traffic growth.
 - Runtime config loading for advertising and Yandex Metrika.
 - Production foundation: service pages, sitemap coverage, robots sitemap URL, clean query parameters, one H1 per page, canonical and descriptions.
 
