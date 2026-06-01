@@ -53,9 +53,14 @@
     gap: 6px;
     list-style: none;
 }
-.header-nav > li > a {
+.header-nav > li {
+    position: relative;
+}
+.header-nav > li > a,
+.nav-dropdown-toggle {
     display: flex;
     align-items: center;
+    gap: 6px;
     text-decoration: none;
     color: var(--text-2);
     font-size: 0.88rem;
@@ -64,10 +69,85 @@
     border-radius: 8px;
     transition: all 0.2s var(--ease);
 }
+.nav-dropdown-toggle {
+    border: 0;
+    background: transparent;
+    font-family: var(--font);
+    cursor: pointer;
+}
 .header-nav > li > a:hover,
-.header-nav > li > a.is-active {
+.header-nav > li > a.is-active,
+.nav-dropdown-toggle:hover,
+.nav-dropdown-toggle.is-active,
+.nav-dropdown.open > .nav-dropdown-toggle {
     color: var(--text);
     background: var(--surface);
+}
+.nav-caret {
+    font-size: 0.78rem;
+    line-height: 1;
+    transition: transform 0.2s var(--ease);
+}
+.nav-dropdown:hover .nav-caret,
+.nav-dropdown:focus-within .nav-caret,
+.nav-dropdown.open .nav-caret {
+    transform: rotate(180deg);
+}
+.nav-dropdown-menu {
+    position: absolute;
+    top: calc(100% + 12px);
+    right: 0;
+    width: min(690px, calc(100vw - 32px));
+    padding: 14px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: rgba(15,15,30,0.98);
+    box-shadow: 0 24px 70px rgba(0,0,0,0.34);
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transform: translateY(8px);
+    transition: opacity 0.18s var(--ease), transform 0.18s var(--ease), visibility 0.18s;
+}
+.nav-dropdown:hover > .nav-dropdown-menu,
+.nav-dropdown:focus-within > .nav-dropdown-menu,
+.nav-dropdown.open > .nav-dropdown-menu {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    transform: translateY(0);
+}
+.nav-dropdown-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(220px, 1fr));
+    gap: 12px;
+}
+.nav-dropdown-group {
+    display: grid;
+    align-content: start;
+    gap: 4px;
+    padding: 8px;
+    border-radius: 8px;
+    background: rgba(255,255,255,0.025);
+}
+.nav-dropdown-group a {
+    color: var(--text-2);
+    text-decoration: none;
+    border-radius: 6px;
+    padding: 8px 10px;
+    font-size: 0.86rem;
+    line-height: 1.25;
+}
+.nav-dropdown-group a:hover,
+.nav-dropdown-group a:focus {
+    color: var(--text);
+    background: var(--surface-2);
+}
+.nav-dropdown-group .nav-dropdown-heading {
+    color: var(--text);
+    background: rgba(16,185,129,0.1);
+    font-weight: 800;
+    margin-bottom: 4px;
 }
 
 /* ==================== BREADCRUMBS ==================== */

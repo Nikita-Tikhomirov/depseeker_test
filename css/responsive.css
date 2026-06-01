@@ -51,6 +51,32 @@
         padding: 16px 24px;
         gap: 4px;
     }
+    .header-nav.open .nav-dropdown {
+        width: 100%;
+    }
+    .header-nav.open .nav-dropdown-toggle {
+        width: 100%;
+        justify-content: space-between;
+    }
+    .header-nav.open .nav-dropdown-menu {
+        display: none;
+        position: static;
+        width: 100%;
+        margin-top: 6px;
+        padding: 10px;
+        opacity: 1;
+        visibility: visible;
+        pointer-events: auto;
+        transform: none;
+        box-shadow: none;
+        background: rgba(255,255,255,0.035);
+    }
+    .header-nav.open .nav-dropdown.open .nav-dropdown-menu {
+        display: block;
+    }
+    .header-nav.open .nav-dropdown-grid {
+        grid-template-columns: 1fr;
+    }
     .hamburger { display: flex; }
     .home-hero { padding: 62px 0 52px; }
     .home-step-grid,

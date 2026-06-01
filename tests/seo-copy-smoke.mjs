@@ -106,9 +106,12 @@ function testAcfHubReadsLikePublicSeoPage() {
   const visibleText = stripTechnicalBlocks(html);
 
   const header = html.match(/<header class="header">[\s\S]*?<\/header>/)?.[0] ?? '';
-  for (const href of ['index.html', 'index.html#catalog', 'index.html#utilities', 'acf.html', 'migx.html']) {
+  for (const href of ['index.html', 'index.html#catalog', 'acf.html', 'migx.html', 'acf-generator.html', 'migx-generator.html']) {
     assert(header.includes(`href="${href}"`), `acf.html must include the catalog navigation link ${href}`);
   }
+  assert(header.includes('aria-controls="utilities-menu"'), 'acf.html must include the utilities dropdown control');
+  assert(header.includes('ACF / WordPress'), 'acf.html must include ACF group in utilities dropdown');
+  assert(header.includes('MODX / MIGX'), 'acf.html must include MODX group in utilities dropdown');
 
   for (const pattern of bannedAcfHubCopy) {
     assert(!pattern.test(visibleText), `acf.html must not expose internal planning copy matching ${pattern}`);

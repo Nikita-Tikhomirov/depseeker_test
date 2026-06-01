@@ -387,9 +387,7 @@ def hub_faq_section() -> str:
 def header(active: str = "") -> str:
     home_active = ' class="is-active"' if active == "home" else ""
     catalog_active = ' class="is-active"' if active == "catalog" else ""
-    utilities_active = ' class="is-active"' if active == "utilities" else ""
-    acf_active = ' class="is-active"' if active == "acf" else ""
-    migx_active = ' class="is-active"' if active in {"migx", "hub"} else ""
+    utilities_active = " is-active" if active in {"utilities", "acf", "hub", "migx", "acf-generator", "migx-generator"} else ""
     return f"""<header class="header">
     <div class="container">
         <a href="index.html" class="header-logo" aria-label="Цифра — на главную">
@@ -400,9 +398,29 @@ def header(active: str = "") -> str:
             <ul class="header-nav">
                 <li><a href="index.html"{home_active}>Главная</a></li>
                 <li><a href="index.html#catalog"{catalog_active}>Каталог</a></li>
-                <li><a href="index.html#utilities"{utilities_active}>Утилиты</a></li>
-                <li><a href="acf.html"{acf_active}>ACF</a></li>
-                <li><a href="migx.html"{migx_active}>MIGX</a></li>
+                <li class="nav-dropdown">
+                    <button class="nav-dropdown-toggle{utilities_active}" type="button" aria-expanded="false" aria-controls="utilities-menu">Утилиты <span class="nav-caret" aria-hidden="true">⌄</span></button>
+                    <div class="nav-dropdown-menu" id="utilities-menu">
+                        <div class="nav-dropdown-grid">
+                            <div class="nav-dropdown-group">
+                                <a class="nav-dropdown-heading" href="acf.html">ACF / WordPress</a>
+                                <a href="acf-generator.html">ACF генератор</a>
+                                <a href="acf-php-generator.html">PHP export</a>
+                                <a href="acf-json-generator.html">JSON export</a>
+                                <a href="acf-repeater-generator.html">Repeater</a>
+                                <a href="acf-flexible-content-generator.html">Flexible Content</a>
+                            </div>
+                            <div class="nav-dropdown-group">
+                                <a class="nav-dropdown-heading" href="migx.html">MODX / MIGX</a>
+                                <a href="migx-generator.html">MIGX генератор</a>
+                                <a href="migx-json-generator.html">MIGX JSON</a>
+                                <a href="migx-formtabs-generator.html">Form Tabs</a>
+                                <a href="migx-grid-columns-generator.html">Grid Columns</a>
+                                <a href="migx-getimagelist.html">getImageList</a>
+                            </div>
+                        </div>
+                    </div>
+                </li>
             </ul>
         </nav>
         <button class="hamburger" aria-label="Меню"><span></span><span></span><span></span></button>

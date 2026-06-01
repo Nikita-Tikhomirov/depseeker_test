@@ -80,10 +80,12 @@ function testCategoryPresetMap() {
   assert(generatorSource.includes('def preset_map()'), 'tools/generate_acf_pages.py must preserve the ACF preset map section');
   assert(category.includes('href="migx.html"'), 'acf.html must include the shared production navigation to MIGX');
   assert(category.includes('href="index.html#catalog"'), 'acf.html must include the shared catalog navigation');
-  assert(category.includes('href="index.html#utilities"'), 'acf.html must include the shared utilities navigation');
+  assert(category.includes('aria-controls="utilities-menu"'), 'acf.html must include the shared utilities dropdown');
+  assert(category.includes('ACF / WordPress'), 'acf.html must show ACF utilities in the dropdown');
+  assert(category.includes('MODX / MIGX'), 'acf.html must show MODX utilities in the dropdown');
   assert(generatorSource.includes('href="migx.html"'), 'tools/generate_acf_pages.py must render shared production navigation');
   assert(generatorSource.includes('href="index.html#catalog"'), 'tools/generate_acf_pages.py must render shared catalog navigation');
-  assert(generatorSource.includes('href="index.html#utilities"'), 'tools/generate_acf_pages.py must render shared utilities navigation');
+  assert(generatorSource.includes('aria-controls="utilities-menu"'), 'tools/generate_acf_pages.py must render shared utilities dropdown');
   assert(generatorSource.includes('.acf-preset-map'), 'tools/generate_acf_pages.py must preserve preset map CSS');
 
   for (const route of expectedRoutes) {

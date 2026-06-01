@@ -23,15 +23,29 @@ function visibleText(html) {
 
 function assertProductionHeader(page, html) {
   const header = html.match(/<header class="header">[\s\S]*?<\/header>/)?.[0] ?? '';
-  for (const href of ['index.html', 'index.html#catalog', 'index.html#utilities', 'acf.html', 'migx.html']) {
+  for (const href of [
+    'index.html',
+    'index.html#catalog',
+    'acf.html',
+    'migx.html',
+    'acf-generator.html',
+    'acf-php-generator.html',
+    'acf-json-generator.html',
+    'migx-generator.html',
+    'migx-json-generator.html',
+    'migx-formtabs-generator.html'
+  ]) {
     assert(html.includes(`href="${href}"`), `${page} must include shared navigation link ${href}`);
     assert(header.includes(`href="${href}"`), `${page} header must include shared navigation link ${href}`);
   }
 
+  assert(header.includes('class="nav-dropdown"'), `${page} header must expose utilities as a dropdown`);
+  assert(header.includes('aria-controls="utilities-menu"'), `${page} utilities dropdown must be accessible`);
+  assert(header.includes('ACF / WordPress'), `${page} utilities dropdown must group ACF tools`);
+  assert(header.includes('MODX / MIGX'), `${page} utilities dropdown must group MODX tools`);
+
   for (const forbidden of [
     /Каталог\s*▾/,
-    /ACF генератор<\/a>/,
-    /MIGX генератор<\/a>/,
   ]) {
     assert(!forbidden.test(header), `${page} header must not expose tool-specific or old dropdown navigation: ${forbidden}`);
   }

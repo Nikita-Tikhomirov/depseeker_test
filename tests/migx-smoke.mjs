@@ -82,6 +82,7 @@ function assertSitemapEntry(sitemap, loc, { lastmod, changefreq, priority }) {
 
 function testHubRoutes() {
   const hub = read('migx.html');
+  const hubMain = hub.match(/<main>[\s\S]*?<\/main>/)?.[0] ?? hub;
   assert(countMatches(hub, /class="acf-preset-row"/g) === expectedRoutes.length, 'migx.html must expose 21 preset rows');
   assert(hub.includes('MIGX генератор и шаблоны для MODX'), 'migx.html must be the MIGX hub');
   assert(!hub.includes('SEO-страница -> пресет генератора'), 'migx.html must not expose internal SEO map placeholder copy');
@@ -93,8 +94,8 @@ function testHubRoutes() {
   assert(countMatches(hub, /class="acf-faq-item"/g) === 4, 'migx.html must expose 4 FAQ items');
   for (const route of expectedRoutes) {
     const topicCardPattern = new RegExp(`<article class="acf-topic-card"[\\s\\S]*?href="${escapeRegex(route.page)}"[\\s\\S]*?</article>`);
-    assert(!topicCardPattern.test(hub), `migx.html topic cards must not send users to intermediate landing ${route.page}`);
-    assert(!hub.includes(`href="${route.page}"`), `migx.html must not show intermediate landing link ${route.page} in user-facing hub cards`);
+    assert(!topicCardPattern.test(hubMain), `migx.html topic cards must not send users to intermediate landing ${route.page}`);
+    assert(!hubMain.includes(`href="${route.page}"`), `migx.html main content must not show intermediate landing link ${route.page} in user-facing hub cards`);
     assert(hub.includes(`href="${landingHref(route)}"`), `migx.html is missing generator route ${landingHref(route)}`);
   }
 }
@@ -240,7 +241,8 @@ function testInternalEntryLinks() {
   assert(countMatches(index, /href="acf\.html"/g) >= 3, 'index.html must keep ACF hub entry links');
   assert(acf.includes('href="migx.html"'), 'acf.html must expose the shared production navigation to MIGX');
   assert(acf.includes('href="index.html#catalog"'), 'acf.html must expose the shared catalog navigation');
-  assert(acf.includes('href="index.html#utilities"'), 'acf.html must expose the shared utilities navigation');
+  assert(acf.includes('aria-controls="utilities-menu"'), 'acf.html must expose the shared utilities dropdown');
+  assert(acf.includes('href="migx-generator.html"'), 'acf.html utilities dropdown must include the MIGX generator link');
 }
 
 function testMigxPageGeneratorMatchesCheckedInPages() {
