@@ -2641,7 +2641,7 @@ function generateVisualHTML(options) {
             g += '</div>';
             body = g;
         } else if (t === 'link') {
-            body = V('<a class="acf-btn" href="#"' + T('button') + '>' + escHtml(f.title || name || 'Перейти') + '</a>');
+            body = V('<a class="acf-btn" href="/"' + T('button') + '>' + escHtml(f.title || name || 'Перейти') + '</a>');
         } else if (t === 'true_false') {
             var tfVal = (f.default_value === 1 || f.default_value === '1');
             body = V('<span class="acf-badge ' + (tfVal ? 'acf-badge--yes' : 'acf-badge--no') + '">' + (tfVal ? '✓ ' + escHtml(f.message || 'Да') : '✗ ' + escHtml(f.message || 'Нет')) + '</span>');

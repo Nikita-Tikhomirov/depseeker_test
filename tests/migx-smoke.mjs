@@ -239,7 +239,8 @@ function testInternalEntryLinks() {
   assert(countMatches(index, /href="migx\.html"/g) >= 3, 'index.html must link to the MIGX hub from multiple entry points');
   assert(countMatches(index, /href="acf\.html"/g) >= 3, 'index.html must keep ACF hub entry links');
   assert(acf.includes('href="migx.html"'), 'acf.html must expose the shared production navigation to MIGX');
-  assert(acf.includes('href="acf-generator.html"'), 'acf.html must expose the shared production navigation to the ACF generator');
+  assert(acf.includes('href="index.html#catalog"'), 'acf.html must expose the shared catalog navigation');
+  assert(acf.includes('href="index.html#utilities"'), 'acf.html must expose the shared utilities navigation');
 }
 
 function testMigxPageGeneratorMatchesCheckedInPages() {

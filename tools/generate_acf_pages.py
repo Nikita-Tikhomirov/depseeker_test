@@ -453,20 +453,20 @@ def asset_head(page: dict[str, object]) -> str:
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="css/base.css?v=prod-shell-20260601-1">
-    <link rel="stylesheet" href="css/components.css?v=prod-shell-20260601-1">
-    <link rel="stylesheet" href="css/layout.css?v=prod-shell-20260601-1">
-    <link rel="stylesheet" href="css/responsive.css?v=prod-shell-20260601-1">
-    <link rel="stylesheet" href="css/themes.css?v=prod-shell-20260601-1">
-    <link rel="stylesheet" href="css/acf-content.css?v=prod-shell-20260601-1">"""
+    <link rel="stylesheet" href="css/base.css?v=catalog-shell-20260601-1">
+    <link rel="stylesheet" href="css/components.css?v=catalog-shell-20260601-1">
+    <link rel="stylesheet" href="css/layout.css?v=catalog-shell-20260601-1">
+    <link rel="stylesheet" href="css/responsive.css?v=catalog-shell-20260601-1">
+    <link rel="stylesheet" href="css/themes.css?v=catalog-shell-20260601-1">
+    <link rel="stylesheet" href="css/acf-content.css?v=catalog-shell-20260601-1">"""
 
 
 def header(active: str = "") -> str:
     home_active = ' class="is-active"' if active == "home" else ""
+    catalog_active = ' class="is-active"' if active == "catalog" else ""
+    utilities_active = ' class="is-active"' if active == "utilities" else ""
     acf_active = ' class="is-active"' if active in {"acf", "hub"} else ""
     migx_active = ' class="is-active"' if active == "migx" else ""
-    acf_generator_active = ' class="is-active"' if active == "acf-generator" else ""
-    migx_generator_active = ' class="is-active"' if active == "migx-generator" else ""
     return f"""<header class="header">
     <div class="container">
         <a href="index.html" class="header-logo" aria-label="Цифра — на главную">
@@ -476,10 +476,10 @@ def header(active: str = "") -> str:
         <nav aria-label="Основная навигация">
             <ul class="header-nav">
                 <li><a href="index.html"{home_active}>Главная</a></li>
+                <li><a href="index.html#catalog"{catalog_active}>Каталог</a></li>
+                <li><a href="index.html#utilities"{utilities_active}>Утилиты</a></li>
                 <li><a href="acf.html"{acf_active}>ACF</a></li>
                 <li><a href="migx.html"{migx_active}>MIGX</a></li>
-                <li><a href="acf-generator.html"{acf_generator_active}>ACF генератор</a></li>
-                <li><a href="migx-generator.html"{migx_generator_active}>MIGX генератор</a></li>
             </ul>
         </nav>
         <button class="hamburger" aria-label="Меню"><span></span><span></span><span></span></button>
@@ -492,14 +492,14 @@ def footer() -> str:
     <div class="acf-container acf-footer__inner">
         <div>
             <strong>Цифра</strong>
-            <p>Генераторы и SEO-страницы для WordPress ACF и MODX MIGX.</p>
+            <p>Каталог цифровых продуктов, генераторов и веб-утилит для рабочих интернет-проектов.</p>
         </div>
         <div class="acf-footer-links">
             <a href="index.html">Главная</a>
+            <a href="index.html#catalog">Каталог</a>
+            <a href="index.html#utilities">Утилиты</a>
             <a href="acf.html">ACF</a>
             <a href="migx.html">MIGX</a>
-            <a href="acf-generator.html">ACF генератор</a>
-            <a href="migx-generator.html">MIGX генератор</a>
         </div>
     </div>
 </footer>"""

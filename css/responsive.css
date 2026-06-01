@@ -21,6 +21,7 @@
         font-size: 0.82rem;
     }
     .home-hero-grid,
+    .home-category-grid,
     .home-tool-grid {
         grid-template-columns: 1fr;
     }

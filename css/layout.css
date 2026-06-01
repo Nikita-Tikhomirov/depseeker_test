@@ -230,6 +230,7 @@
     max-width: 760px;
     margin-bottom: 30px;
 }
+.home-category-grid,
 .home-tool-grid,
 .home-case-grid,
 .home-step-grid,
@@ -237,6 +238,7 @@
     display: grid;
     gap: 18px;
 }
+.home-category-grid { grid-template-columns: 1.25fr repeat(3, minmax(0, 1fr)); }
 .home-tool-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 .home-case-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
 .home-step-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
@@ -258,6 +260,10 @@
     border-color: var(--border-hover);
     background: var(--surface-2);
 }
+.home-card-featured {
+    background: linear-gradient(160deg, rgba(17,17,34,0.98), rgba(26,33,50,0.96));
+    border-color: rgba(16,185,129,0.24);
+}
 .home-card span,
 .home-step span {
     color: var(--accent-2);
@@ -277,6 +283,24 @@
 .home-card .btn {
     margin-top: auto;
     align-self: flex-start;
+}
+.home-card-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: auto;
+}
+.home-card-links a {
+    color: #07110e;
+    background: var(--accent-2);
+    border-radius: 8px;
+    padding: 9px 12px;
+    text-decoration: none;
+    font-size: 0.86rem;
+    font-weight: 800;
+}
+.home-card-links a:hover {
+    filter: brightness(1.06);
 }
 .home-step,
 .home-faq-item {
@@ -300,4 +324,7 @@
     max-width: 680px;
     margin: 0 auto 26px;
     color: var(--text-2);
+}
+.home-actions-center {
+    justify-content: center;
 }

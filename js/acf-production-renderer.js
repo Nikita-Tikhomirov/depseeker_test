@@ -735,7 +735,7 @@
             return '<div class="zifra-acf-media' + productionFieldClass(field) + '" data-production-target="media"' + productionFieldTarget(field) + ' aria-hidden="true"></div>';
         }
         if (field.type === 'link') {
-            return '<a class="zifra-acf-btn' + productionFieldClass(field) + '" data-production-target="button"' + productionFieldTarget(field) + ' href="#">' + h(sampleFor(field)) + '</a>';
+            return '<a class="zifra-acf-btn' + productionFieldClass(field) + '" data-production-target="button"' + productionFieldTarget(field) + ' href="/">' + h(sampleFor(field)) + '</a>';
         }
         var key = attr(fieldName(field));
         return '<div class="zifra-acf-field zifra-acf-field--' + key + '" data-production-field-target="' + key + '"><span class="zifra-acf-label" data-production-target="fieldLabel">' + h(fieldLabel(field)) + '</span><div class="zifra-acf-value" data-production-target="fieldValue">' + h(sampleFor(field)) + '</div></div>';
@@ -762,7 +762,7 @@
             html.push('        <p class="zifra-acf-kicker" data-production-target="kicker">' + h(group.title) + '</p>');
             html.push('        <h2 class="zifra-acf-title' + productionFieldClass(title) + '" data-production-target="title"' + productionFieldTarget(title) + '>' + h(sampleFor(title)) + '</h2>');
             if (lead) html.push('        <p class="zifra-acf-lead' + productionFieldClass(lead) + '" data-production-target="lead"' + productionFieldTarget(lead) + '>' + h(sampleFor(lead)) + '</p>');
-            if (buttonField) html.push('        <div class="zifra-acf-actions"><a class="zifra-acf-btn' + productionFieldClass(buttonField) + '" data-production-target="button"' + productionFieldTarget(buttonField) + ' href="#">' + h(sampleFor(buttonField)) + '</a></div>');
+            if (buttonField) html.push('        <div class="zifra-acf-actions"><a class="zifra-acf-btn' + productionFieldClass(buttonField) + '" data-production-target="button"' + productionFieldTarget(buttonField) + ' href="/">' + h(sampleFor(buttonField)) + '</a></div>');
             html.push('      </div>');
             html.push('      ' + (image ? renderSampleField(image) : '<div class="zifra-acf-media" data-production-target="media" aria-hidden="true"></div>'));
             html.push('    </div>');

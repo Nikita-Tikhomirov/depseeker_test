@@ -22,12 +22,21 @@ function visibleText(html) {
 }
 
 function assertProductionHeader(page, html) {
-  for (const href of ['index.html', 'acf.html', 'migx.html', 'acf-generator.html', 'migx-generator.html']) {
+  const header = html.match(/<header class="header">[\s\S]*?<\/header>/)?.[0] ?? '';
+  for (const href of ['index.html', 'index.html#catalog', 'index.html#utilities', 'acf.html', 'migx.html']) {
     assert(html.includes(`href="${href}"`), `${page} must include shared navigation link ${href}`);
+    assert(header.includes(`href="${href}"`), `${page} header must include shared navigation link ${href}`);
   }
 
   for (const forbidden of [
     /Каталог\s*▾/,
+    /ACF генератор<\/a>/,
+    /MIGX генератор<\/a>/,
+  ]) {
+    assert(!forbidden.test(header), `${page} header must not expose tool-specific or old dropdown navigation: ${forbidden}`);
+  }
+
+  for (const forbidden of [
     /Популярное/,
     /Новинки/,
     /Цены/,
@@ -46,8 +55,9 @@ function testHomepageProductionCopy() {
   const text = visibleText(html);
 
   assertProductionHeader('index.html', html);
-  assert(text.includes('Генераторы ACF и MIGX'), 'index.html must position the site around ACF and MIGX generators');
-  assert(text.includes('Это магазин цифровых товаров? Нет.'), 'index.html must explicitly remove the marketplace positioning');
+  assert(text.includes('Каталог цифровых продуктов и веб-утилит'), 'index.html must position the site as a broad digital product catalog');
+  assert(text.includes('ACF и MIGX — первые опубликованные категории'), 'index.html must present ACF/MIGX as current catalog categories, not the whole site');
+  assert(text.includes('Никаких ссылок на корзину, кабинет, поиск или пустые разделы'), 'index.html must explicitly guard against empty marketplace navigation');
 
   for (const forbidden of [
     /Маркетплейс цифровых товаров/,
@@ -72,4 +82,4 @@ function testSharedGeneratorNavigation() {
 
 testHomepageProductionCopy();
 testSharedGeneratorNavigation();
-console.log('production home smoke ok: homepage and shared navigation are production-focused');
+console.log('production home smoke ok: homepage and shared navigation are catalog-focused');

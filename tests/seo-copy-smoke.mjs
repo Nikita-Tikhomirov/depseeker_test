@@ -35,7 +35,6 @@ const bannedAcfHubCopy = [
   /интент/i,
   /preset/i,
   /предустанов/i,
-  /продукт/i,
   /что доработать/i,
   /production html\/css/i,
   /динамические стили/i,
@@ -106,8 +105,9 @@ function testAcfHubReadsLikePublicSeoPage() {
   const html = read('acf.html');
   const visibleText = stripTechnicalBlocks(html);
 
-  for (const href of ['index.html', 'acf.html', 'migx.html', 'acf-generator.html', 'migx-generator.html']) {
-    assert(html.includes(`href="${href}"`), `acf.html must include the production navigation link ${href}`);
+  const header = html.match(/<header class="header">[\s\S]*?<\/header>/)?.[0] ?? '';
+  for (const href of ['index.html', 'index.html#catalog', 'index.html#utilities', 'acf.html', 'migx.html']) {
+    assert(header.includes(`href="${href}"`), `acf.html must include the catalog navigation link ${href}`);
   }
 
   for (const pattern of bannedAcfHubCopy) {
