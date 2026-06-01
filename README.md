@@ -29,6 +29,13 @@ Public catalog structure lives in `catalog.registry.json`. It lists categories, 
 
 Detailed workflow: `docs/catalog-expansion.md`.
 
+Draft scaffolding examples:
+
+```powershell
+python tools/scaffold_catalog.py category seo "SEO инструменты" "Раздел с SEO-утилитами, генераторами метаданных и практическими материалами для поискового трафика."
+python tools/scaffold_catalog.py item seo schema-generator "Schema.org генератор" "Утилита для генерации структурированных данных, FAQ, breadcrumbs и JSON-LD разметки." --type utility --nav
+```
+
 ## Smoke Checks
 
 Run the lightweight regression checks after changes to generator pages, SEO pages, sitemap, or shared scripts:
@@ -38,6 +45,7 @@ node tests/acf-smoke.mjs
 node tests/migx-smoke.mjs
 node tests/production-home-smoke.mjs
 node tests/site-links-smoke.mjs
+node tests/scaffold-catalog-smoke.mjs
 python tools/check_catalog_registry.py
 python tools/check_production_ready.py
 ```
@@ -49,6 +57,7 @@ The checks cover:
 - Production homepage positioning and shared navigation without marketplace/header leftovers.
 - Local `href`/`src` links across all HTML pages.
 - Registered catalog categories and utilities in `catalog.registry.json`.
+- Draft category and utility scaffolding.
 - Production foundation: service pages, sitemap coverage, robots sitemap URL, clean query parameters, one H1 per page, canonical and descriptions.
 
 ## Local Preview

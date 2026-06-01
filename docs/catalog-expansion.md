@@ -4,6 +4,16 @@
 
 ## Новая категория
 
+Быстрый способ:
+
+```powershell
+python tools/scaffold_catalog.py category seo "SEO инструменты" "Раздел с SEO-утилитами, генераторами метаданных и практическими материалами для поискового трафика."
+```
+
+Скрипт создаст `seo.html`, добавит категорию в `catalog.registry.json`, пересоберет sitemap/robots и оставит страницу в `draft` + `noindex`.
+
+Ручной способ:
+
 1. Добавить объект в `catalog.registry.json`:
    - `slug` латиницей;
    - `title`;
@@ -25,6 +35,16 @@ node tests/site-links-smoke.mjs
 
 ## Новая утилита
 
+Быстрый способ:
+
+```powershell
+python tools/scaffold_catalog.py item seo schema-generator "Schema.org генератор" "Утилита для генерации структурированных данных, FAQ, breadcrumbs и JSON-LD разметки." --type utility --nav
+```
+
+Скрипт создаст `seo-schema-generator.html`, добавит страницу в `items`, пересоберет sitemap/robots и оставит страницу как черновик.
+
+Ручной способ:
+
 1. Добавить HTML-страницу утилиты.
 2. Добавить запись в `items` нужной категории:
    - `type=utility` для интерактивного инструмента;
@@ -32,6 +52,14 @@ node tests/site-links-smoke.mjs
    - `nav=true`, если утилита должна быть в выпадающем меню.
 3. Проверить, что страница имеет один H1, canonical, meta description и внутренние ссылки.
 4. Пересобрать sitemap и пройти гейты.
+
+## Публикация черновика
+
+1. Доработать текст, примеры, FAQ и внутренние ссылки.
+2. Заменить `<meta name="robots" content="noindex, follow">` на `index, follow`.
+3. В `catalog.registry.json` поменять `status` с `draft` на `published`.
+4. Для опубликованной категории добавить минимум две страницы в `items`.
+5. Запустить полный набор проверок.
 
 ## Перед продакшном
 

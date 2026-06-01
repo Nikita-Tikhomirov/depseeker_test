@@ -18,6 +18,20 @@ def load_registry(root: Path = ROOT) -> dict:
     return json.loads((root / "catalog.registry.json").read_text(encoding="utf-8"))
 
 
+def write_registry(registry: dict, root: Path = ROOT) -> None:
+    (root / "catalog.registry.json").write_text(
+        json.dumps(registry, ensure_ascii=False, indent=2) + "\n",
+        encoding="utf-8",
+    )
+
+
+def find_category(registry: dict, slug: str) -> dict | None:
+    for category in registry.get("categories", []):
+        if category.get("slug") == slug:
+            return category
+    return None
+
+
 def sitemap_locs(root: Path = ROOT) -> set[str]:
     sitemap = root / "sitemap.xml"
     if not sitemap.exists():
@@ -72,7 +86,7 @@ def validate_registry(root: Path = ROOT) -> list[str]:
             errors.append(f"{slug}: category page is missing from sitemap: {path}")
         if primary and primary not in [str(item.get("path")) for item in items]:
             errors.append(f"{slug}: primaryUtility must be listed in items")
-        if len(items) < 2:
+        if category.get("status") != "draft" and len(items) < 2:
             errors.append(f"{slug}: category must list at least two catalog items")
 
         nav_count = 0
@@ -92,7 +106,7 @@ def validate_registry(root: Path = ROOT) -> list[str]:
                 errors.append(f"{slug}: item page is missing: {item_path}")
             if route_url(item_path, root) not in locs:
                 errors.append(f"{slug}: item page is missing from sitemap: {item_path}")
-        if nav_count < 2:
+        if category.get("status") != "draft" and nav_count < 2:
             errors.append(f"{slug}: category should expose at least two nav items")
 
     return errors
