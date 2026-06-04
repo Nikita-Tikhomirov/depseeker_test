@@ -247,7 +247,8 @@ function testProductionExportGuards() {
   assert(production.includes("return ['tab', 'message', 'repeater', 'flexible_content'].indexOf(field.type) === -1;"), 'field style panels must include media, file, gallery and link fields');
   assert(production.includes('function productionFieldTarget(field)'), 'production preview must expose field target attributes for semantic blocks');
   assert(production.includes('data-production-field-target'), 'production preview must make generated field elements selectable');
-  assert(production.includes('.zifra-acf-field--\' + key + \'.zifra-acf-title'), 'field style CSS must affect semantic hero title fields');
+  assert(production.includes('function changedFieldStyleProps(style)'), 'field style CSS must detect explicit per-field changes');
+  assert(production.includes("'.zifra-acf-field--' + key + '.zifra-acf-title, .zifra-acf-field--' + key + '.zifra-acf-lead, .zifra-acf-field--' + key + '.zifra-acf-btn"), 'field style CSS must still support semantic hero title/lead/button overrides');
   assert(!production.includes('output.textContent = fullPreviewDoc();'), 'HTML export must not output editor preview document');
   assert(audit.includes('class="audit-handoff"'), 'audit panel must render the export handoff package');
   assert(audit.includes('ACF PHP'), 'handoff package must mention ACF PHP');

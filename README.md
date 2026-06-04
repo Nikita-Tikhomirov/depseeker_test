@@ -54,6 +54,7 @@ node tests/scaffold-catalog-smoke.mjs
 node tests/content-audit-smoke.mjs
 node tests/acf-visual-editor-smoke.mjs
 node tests/acf-css-export-smoke.mjs
+node tests/acf-production-style-cascade-smoke.mjs
 python tools/audit_content_quality.py
 python tools/check_catalog_registry.py
 python tools/check_production_ready.py
@@ -69,6 +70,7 @@ The checks cover:
 - Draft category and utility scaffolding.
 - SEO content audit report for prioritizing thin pages before traffic growth.
 - ACF visual editor typography controls and production CSS parity.
+- ACF production preview style cascade so per-field defaults do not override title, lead, and button controls.
 - ACF WP-template export without CSS by default, with explicit CSS include/copy controls.
 - Runtime config loading for advertising and Yandex Metrika.
 - Production foundation: service pages, sitemap coverage, robots sitemap URL, clean query parameters, one H1 per page, canonical and descriptions.

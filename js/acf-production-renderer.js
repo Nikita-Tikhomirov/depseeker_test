@@ -262,6 +262,16 @@
         return merged;
     }
 
+    function changedFieldStyleProps(style) {
+        var changes = {};
+        var keys = Object.keys(FIELD_STYLE_DEFAULTS);
+        for (var i = 0; i < keys.length; i++) {
+            var key = keys[i];
+            changes[key] = String(style[key] == null ? '' : style[key]).trim() !== String(FIELD_STYLE_DEFAULTS[key]);
+        }
+        return changes;
+    }
+
     function setFieldStyle(fieldKey, prop, value) {
         window.productionFieldStyles = window.productionFieldStyles || {};
         window.productionFieldStyles[fieldKey] = window.productionFieldStyles[fieldKey] || copyStyleObject(FIELD_STYLE_DEFAULTS);
@@ -443,10 +453,23 @@
             if (!key || seen[key]) continue;
             seen[key] = true;
             var s = getFieldStyle(fields[i]);
-            out.push('.zifra-acf-field--' + key + ' { gap: ' + cssPx(s.gap, 7) + '; }');
-            out.push('.zifra-acf-field--' + key + ' .zifra-acf-label { color: ' + cssRaw(s.labelColor, '#64748b') + '; font-size: ' + cssPx(s.labelSize, 12) + '; }');
-            out.push('.zifra-acf-field--' + key + ' .zifra-acf-value { color: ' + cssRaw(s.valueColor, '#111827') + '; font-size: ' + cssPx(s.valueSize, 16) + '; font-weight: ' + cssRaw(s.valueWeight, '400') + '; }');
-            out.push('.zifra-acf-field--' + key + '.zifra-acf-title, .zifra-acf-field--' + key + '.zifra-acf-lead, .zifra-acf-field--' + key + '.zifra-acf-btn, .zifra-acf-field--' + key + '[data-production-target="question"], .zifra-acf-field--' + key + '.zifra-acf-faq-answer { color: ' + cssRaw(s.valueColor, '#111827') + '; font-size: ' + cssPx(s.valueSize, 16) + '; font-weight: ' + cssRaw(s.valueWeight, '400') + '; }');
+            var changes = changedFieldStyleProps(s);
+            if (!changes.gap && !changes.labelColor && !changes.labelSize && !changes.valueColor && !changes.valueSize && !changes.valueWeight) continue;
+            if (changes.gap) out.push('.zifra-acf-field--' + key + ' { gap: ' + cssPx(s.gap, 7) + '; }');
+
+            var labelDecls = [];
+            if (changes.labelColor) labelDecls.push('color: ' + cssRaw(s.labelColor, '#64748b'));
+            if (changes.labelSize) labelDecls.push('font-size: ' + cssPx(s.labelSize, 12));
+            if (labelDecls.length) out.push('.zifra-acf-field--' + key + ' .zifra-acf-label { ' + labelDecls.join('; ') + '; }');
+
+            var valueDecls = [];
+            if (changes.valueColor) valueDecls.push('color: ' + cssRaw(s.valueColor, '#111827'));
+            if (changes.valueSize) valueDecls.push('font-size: ' + cssPx(s.valueSize, 16));
+            if (changes.valueWeight) valueDecls.push('font-weight: ' + cssRaw(s.valueWeight, '400'));
+            if (valueDecls.length) {
+                out.push('.zifra-acf-field--' + key + ' .zifra-acf-value { ' + valueDecls.join('; ') + '; }');
+                out.push('.zifra-acf-field--' + key + '.zifra-acf-title, .zifra-acf-field--' + key + '.zifra-acf-lead, .zifra-acf-field--' + key + '.zifra-acf-btn, .zifra-acf-field--' + key + '[data-production-target="question"], .zifra-acf-field--' + key + '.zifra-acf-faq-answer { ' + valueDecls.join('; ') + '; }');
+            }
         }
         return out.join('\n');
     }
