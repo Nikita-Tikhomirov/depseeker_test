@@ -72,8 +72,8 @@ function testHomepageProductionCopy() {
   assertProductionHeader('index.html', html);
   assert(layoutCss.includes('.nav-dropdown-menu::before'), 'desktop dropdown must keep a hover bridge between trigger and menu');
   assert(layoutCss.includes('top: -32px') && layoutCss.includes('height: 32px'), 'desktop dropdown hover bridge must cover the visual gap');
-  assert(text.includes('Генераторы, CMS-утилиты и шаблоны для разработки сайтов'), 'index.html must keep the broad web tools headline');
-  assert(text.includes('Цифра собирает веб-утилиты и калькуляторы'), 'index.html must include useful public SEO copy, not block descriptions');
+  assert(text.includes('Онлайн-инструменты для повторяющихся задач'), 'index.html must keep the broad practical tools headline');
+  assert(text.includes('Цифра собирает практичные онлайн-инструменты'), 'index.html must include useful public SEO copy, not block descriptions');
   assert(text.includes('ACF, MIGX и кулинарные калькуляторы'), 'index.html must present all published catalog sections');
   assert(text.includes('Все ссылки ведут на существующие страницы каталога'), 'index.html must keep homepage links tied to real catalog routes');
 
