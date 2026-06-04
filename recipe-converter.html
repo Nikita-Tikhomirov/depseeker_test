@@ -1,0 +1,682 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Конвертер рецептов — перевод мер и весов для кулинарии: стаканы, ложки, граммы, миллилитры. Масштабирование ингредиентов по порциям. Таблица мер для муки, сахара, масла и других продуктов.">
+    <meta name="keywords" content="конвертер рецептов, меры и веса, кулинарный конвертер, стакан в граммах, ложка в граммах, масштабирование рецепта, таблица мер продуктов, кулинарный калькулятор">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://zifra.example.com/tools/recipe-converter">
+    <meta name="author" content="Цифра">
+
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Конвертер рецептов — перевод мер, весов и масштабирование ингредиентов | Цифра">
+    <meta property="og:description" content="Бесплатный кулинарный конвертер: стаканы в граммы, ложки в миллилитры, температура духовки, масштабирование рецепта по порциям. Полная таблица мер для российских продуктов.">
+    <meta property="og:url" content="https://zifra.example.com/tools/recipe-converter">
+    <meta property="og:locale" content="ru_RU">
+
+    <title>Конвертер рецептов — меры, веса, масштабирование ингредиентов | Цифра</title>
+
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "SoftwareApplication",
+        "name": "Конвертер рецептов",
+        "applicationCategory": "LifestyleApplication",
+        "operatingSystem": "Web",
+        "offers": {"@type": "Offer", "price": "0", "priceCurrency": "RUB"},
+        "description": "Бесплатный онлайн-конвертер кулинарных мер и весов с масштабированием рецептов."
+    }
+    </script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="css/base.css?v=catalog-shell-20260601-1">
+    <link rel="stylesheet" href="css/components.css?v=catalog-shell-20260601-1">
+    <link rel="stylesheet" href="css/layout.css?v=catalog-shell-20260601-1">
+    <link rel="stylesheet" href="css/responsive.css?v=catalog-shell-20260601-1">
+    <link rel="stylesheet" href="css/themes.css?v=catalog-shell-20260601-1">
+
+    <style>
+        /* ── Page-specific: Recipe Converter ── */
+        :root {
+            --rc-warm: #f59e0b;
+            --rc-warm-dim: rgba(245,158,11,0.12);
+            --rc-warm-glow: rgba(245,158,11,0.25);
+            --rc-green: #10b981;
+            --rc-green-dim: rgba(16,185,129,0.12);
+        }
+
+        html, body { overflow-x: hidden; }
+
+        /* ── Hero ── */
+        .tool-hero {
+            padding: 64px 0 42px;
+            position: relative;
+            overflow: hidden;
+        }
+        .tool-hero::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(ellipse at 30% 20%, rgba(245,158,11,0.15) 0%, transparent 60%),
+                        radial-gradient(ellipse at 70% 80%, rgba(79,70,229,0.10) 0%, transparent 60%);
+            pointer-events: none;
+        }
+        .tool-hero .container { position: relative; }
+        .tool-hero-copy { max-width: 680px; }
+        .tool-hero .tool-icon {
+            font-size: 2.3rem;
+            margin-bottom: 18px;
+            background: rgba(245,158,11,0.16);
+            width: 58px;
+            height: 58px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid rgba(255,255,255,0.08);
+            box-shadow: 0 14px 34px rgba(245,158,11,0.15);
+        }
+        .tool-hero h1 {
+            font-size: clamp(2.25rem, 4.5vw, 3.6rem);
+            font-weight: 850;
+            letter-spacing: -0.04em;
+            line-height: 1.05;
+            margin-bottom: 16px;
+            max-width: 680px;
+        }
+        .tool-hero h1 span {
+            background: linear-gradient(135deg, #f59e0b 0%, #f97316 60%, #ef4444 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .tool-hero p {
+            color: var(--text-2);
+            font-size: 1.1rem;
+            line-height: 1.65;
+            margin-bottom: 24px;
+        }
+        .hero-proof {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            color: var(--text-dim);
+            font-size: 0.86rem;
+        }
+        .hero-proof span {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(255,255,255,0.03);
+            border: 1px solid var(--border);
+            border-radius: 999px;
+            padding: 6px 14px;
+        }
+
+        /* ── Tabs ── */
+        .rc-tabs {
+            display: flex;
+            gap: 0;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 32px;
+        }
+        .rc-tab {
+            padding: 14px 28px;
+            font-size: 0.95rem;
+            font-weight: 650;
+            color: var(--text-2);
+            background: transparent;
+            border: none;
+            border-bottom: 2px solid transparent;
+            cursor: pointer;
+            font-family: var(--font);
+            transition: all 0.2s var(--ease);
+            white-space: nowrap;
+        }
+        .rc-tab:hover { color: var(--text); }
+        .rc-tab.active {
+            color: var(--rc-warm);
+            border-bottom-color: var(--rc-warm);
+        }
+
+        .rc-panel { display: none; }
+        .rc-panel.active { display: block; }
+
+        /* ── Cards ── */
+        .rc-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 28px;
+            margin-bottom: 20px;
+        }
+        .rc-card h3 {
+            font-size: 1.15rem;
+            font-weight: 750;
+            margin-bottom: 6px;
+        }
+        .rc-card .rc-sub {
+            color: var(--text-dim);
+            font-size: 0.84rem;
+            margin-bottom: 20px;
+        }
+
+        /* ── Converter Row ── */
+        .rc-convert-row {
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            gap: 16px;
+            align-items: end;
+        }
+        .rc-convert-row .rc-arrow {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding-bottom: 16px;
+            color: var(--rc-warm);
+            font-size: 1.4rem;
+            font-weight: 700;
+        }
+
+        /* ── Input Group ── */
+        .rc-field { display: flex; flex-direction: column; gap: 6px; }
+        .rc-field label {
+            font-size: 0.78rem;
+            font-weight: 700;
+            color: var(--text-dim);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        .rc-field input,
+        .rc-field select {
+            background: var(--surface-2);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            color: var(--text);
+            font-family: var(--font);
+            font-size: 0.95rem;
+            padding: 12px 16px;
+            transition: border-color 0.2s var(--ease);
+        }
+        .rc-field input:focus,
+        .rc-field select:focus {
+            outline: none;
+            border-color: var(--rc-warm);
+            box-shadow: 0 0 0 3px var(--rc-warm-dim);
+        }
+        .rc-field input {
+            font-size: 1.25rem;
+            font-weight: 600;
+            font-variant-numeric: tabular-nums;
+        }
+        .rc-field select { cursor: pointer; }
+
+        /* ── Result ── */
+        .rc-result {
+            background: linear-gradient(135deg, rgba(245,158,11,0.08), rgba(16,185,129,0.06));
+            border: 1px solid rgba(245,158,11,0.2);
+            border-radius: var(--radius);
+            padding: 20px 24px;
+            margin-top: 24px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+        .rc-result-num {
+            font-size: 2.4rem;
+            font-weight: 850;
+            background: linear-gradient(135deg, #f59e0b, #f97316);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 1;
+        }
+        .rc-result-unit {
+            font-size: 1.15rem;
+            color: var(--text-2);
+            font-weight: 600;
+        }
+        .rc-result eq {
+            color: var(--text-dim);
+            font-size: 0.82rem;
+            margin-left: auto;
+        }
+
+        /* ── Quick presets ── */
+        .rc-presets {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 10px;
+            margin-top: 18px;
+        }
+        .rc-preset {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 14px;
+            border-radius: 10px;
+            border: 1px solid var(--border);
+            background: rgba(255,255,255,0.025);
+            color: var(--text-2);
+            cursor: pointer;
+            font-family: var(--font);
+            font-size: 0.82rem;
+            font-weight: 600;
+            transition: all 0.2s var(--ease);
+        }
+        .rc-preset:hover {
+            border-color: rgba(245,158,11,0.45);
+            color: var(--text);
+            background: rgba(245,158,11,0.08);
+            transform: translateY(-1px);
+        }
+        .rc-preset .preset-icon { font-size: 1.3rem; }
+
+        /* ── Scaler ── */
+        .rc-scaler-top {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+        .rc-ingredient-list { display: flex; flex-direction: column; gap: 10px; }
+        .rc-ingredient-row {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr auto;
+            gap: 10px;
+            align-items: end;
+            background: var(--surface-2);
+            border-radius: var(--radius-sm);
+            padding: 12px 16px;
+            border: 1px solid var(--border);
+        }
+        .rc-ingredient-row .rc-field { gap: 4px; }
+        .rc-ingredient-row .rc-field label { font-size: 0.68rem; }
+        .rc-ingredient-row input,
+        .rc-ingredient-row select {
+            padding: 8px 12px;
+            font-size: 0.88rem;
+        }
+        .rc-row-remove {
+            background: none;
+            border: 1px solid var(--border);
+            color: var(--text-dim);
+            width: 34px;
+            height: 34px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .rc-row-remove:hover {
+            border-color: #ef4444;
+            color: #ef4444;
+            background: rgba(239,68,68,0.08);
+        }
+
+        /* ── Scaler Result ── */
+        .rc-scaled-list { margin-top: 24px; }
+        .rc-scaled-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 14px 18px;
+            border-bottom: 1px solid var(--border);
+        }
+        .rc-scaled-item:last-child { border-bottom: none; }
+        .rc-scaled-name { flex: 1; font-weight: 600; }
+        .rc-scaled-amount {
+            font-size: 1.2rem;
+            font-weight: 750;
+            font-variant-numeric: tabular-nums;
+            color: var(--rc-warm);
+        }
+        .rc-scaled-unit {
+            color: var(--text-dim);
+            font-size: 0.88rem;
+        }
+
+        /* ── Density Table ── */
+        .rc-table-wrap {
+            overflow-x: auto;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+        }
+        .rc-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+        }
+        .rc-table th {
+            background: var(--surface-2);
+            text-align: left;
+            padding: 12px 16px;
+            font-size: 0.72rem;
+            font-weight: 750;
+            color: var(--text-dim);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            border-bottom: 1px solid var(--border);
+        }
+        .rc-table td {
+            padding: 10px 16px;
+            border-bottom: 1px solid var(--border);
+            color: var(--text-2);
+        }
+        .rc-table tr:last-child td { border-bottom: none; }
+        .rc-table tr:hover td {
+            background: rgba(255,255,255,0.02);
+            color: var(--text);
+        }
+        .rc-table .td-name { font-weight: 650; color: var(--text); }
+        .rc-table .td-val {
+            font-variant-numeric: tabular-nums;
+            text-align: right;
+        }
+
+        /* ── Search in table ── */
+        .rc-search {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 16px;
+        }
+        .rc-search input {
+            flex: 1;
+            background: var(--surface-2);
+            border: 1px solid var(--border);
+            border-radius: 999px;
+            color: var(--text);
+            font-family: var(--font);
+            font-size: 0.92rem;
+            padding: 10px 20px;
+        }
+        .rc-search input:focus {
+            outline: none;
+            border-color: var(--rc-warm);
+            box-shadow: 0 0 0 3px var(--rc-warm-dim);
+        }
+
+        /* ── Empty state ── */
+        .rc-empty {
+            text-align: center;
+            padding: 48px 24px;
+            color: var(--text-dim);
+        }
+        .rc-empty .empty-icon { font-size: 3rem; margin-bottom: 12px; opacity: 0.5; }
+
+        /* ── Responsive ── */
+        @media (max-width: 768px) {
+            .rc-convert-row {
+                grid-template-columns: 1fr;
+            }
+            .rc-convert-row .rc-arrow {
+                transform: rotate(90deg);
+                padding: 0;
+            }
+            .rc-scaler-top {
+                grid-template-columns: 1fr 1fr;
+            }
+            .rc-ingredient-row {
+                grid-template-columns: 1fr 1fr;
+            }
+            .rc-tab { padding: 12px 16px; font-size: 0.84rem; }
+            .rc-presets { grid-template-columns: 1fr 1fr; }
+        }
+        @media (max-width: 480px) {
+            .rc-presets { grid-template-columns: 1fr; }
+            .rc-scaler-top { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+<header class="header">
+    <div class="container">
+        <a href="index.html" class="header-logo" aria-label="Цифра — на главную">
+            <span class="logo-icon">◆</span>
+            <span class="logo-text">Цифра</span>
+        </a>
+        <nav aria-label="Основная навигация">
+            <ul class="header-nav">
+                <li><a href="index.html">Главная</a></li>
+                <li><a href="index.html#catalog">Каталог</a></li>
+                <li><a href="index.html#generators">Генераторы</a></li>
+                <li><a class="is-active" href="recipe-converter.html">Конвертер рецептов</a></li>
+            </ul>
+        </nav>
+        <button class="hamburger" aria-label="Меню"><span></span><span></span><span></span></button>
+    </div>
+</header>
+
+<main>
+    <!-- Breadcrumbs -->
+    <nav class="breadcrumbs" aria-label="Хлебные крошки">
+        <div class="container">
+            <a href="index.html">Главная</a><span class="breadcrumb-sep">/</span>
+            <a href="index.html#catalog">Каталог</a><span class="breadcrumb-sep">/</span>
+            <span>Конвертер рецептов</span>
+        </div>
+    </nav>
+
+    <!-- Hero -->
+    <section class="tool-hero">
+        <div class="container">
+            <div class="tool-hero-copy">
+                <div class="tool-icon">🥘</div>
+                <h1>Конвертер <span>рецептов</span></h1>
+                <p>Переводите стаканы в граммы, ложки в миллилитры, масштабируйте ингредиенты под любое количество порций. Встроенная таблица мер для муки, сахара, масла и ещё 20+ продуктов российской кухни.</p>
+                <div class="hero-proof">
+                    <span>📐 30+ единиц измерения</span>
+                    <span>📊 25 ингредиентов в таблице</span>
+                    <span>⚖️ Масштабирование по порциям</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Converter -->
+    <section class="generator-workspace" style="padding: 0 0 80px;">
+        <div class="container">
+
+            <!-- Tabs -->
+            <nav class="rc-tabs" role="tablist" aria-label="Разделы конвертера">
+                <button class="rc-tab active" role="tab" data-tab="convert" aria-selected="true">🔄 Конвертер единиц</button>
+                <button class="rc-tab" role="tab" data-tab="scale" aria-selected="false">⚖️ Масштабирование рецепта</button>
+                <button class="rc-tab" role="tab" data-tab="reference" aria-selected="false">📊 Меры и веса продуктов</button>
+            </nav>
+
+            <!-- ── Tab 1: Converter ── -->
+            <div class="rc-panel active" id="panel-convert" role="tabpanel">
+
+                <!-- Ingredient-aware converter -->
+                <div class="rc-card">
+                    <h3>Перевод единиц измерения</h3>
+                    <p class="rc-sub">Выберите продукт для точного пересчёта объёма в вес или укажите «Без продукта» для перевода только единиц объёма.</p>
+
+                    <div class="rc-field" style="margin-bottom:18px;">
+                        <label>Продукт (для учёта плотности)</label>
+                        <select id="conv-ingredient" aria-label="Выберите продукт">
+                            <option value="">— Без продукта (только единицы объёма) —</option>
+                        </select>
+                    </div>
+
+                    <div class="rc-convert-row">
+                        <div class="rc-field">
+                            <label>Значение</label>
+                            <input type="number" id="conv-from-val" value="1" min="0.001" step="any" aria-label="Исходное значение">
+                        </div>
+                        <div class="rc-field">
+                            <label>Из</label>
+                            <select id="conv-from-unit" aria-label="Исходная единица"></select>
+                        </div>
+                        <div class="rc-arrow">→</div>
+                        <div class="rc-field">
+                            <label>В</label>
+                            <select id="conv-to-unit" aria-label="Целевая единица"></select>
+                        </div>
+                    </div>
+
+                    <div class="rc-result" id="conv-result" style="display:none;">
+                        <span class="rc-result-num" id="conv-result-num"></span>
+                        <span class="rc-result-unit" id="conv-result-unit"></span>
+                        <eq id="conv-result-eq"></eq>
+                    </div>
+
+                    <p style="margin-top:18px; color:var(--text-dim); font-size:0.82rem;">Быстрые переводы:</p>
+                    <div class="rc-presets" id="conv-presets"></div>
+                </div>
+
+                <!-- Temperature -->
+                <div class="rc-card">
+                    <h3>🌡️ Температура духовки</h3>
+                    <p class="rc-sub">Перевод между Цельсием (°C) и Фаренгейтом (°F).</p>
+                    <div class="rc-convert-row">
+                        <div class="rc-field">
+                            <label>Значение</label>
+                            <input type="number" id="temp-val" value="180" min="-273" step="any" aria-label="Температура">
+                        </div>
+                        <div class="rc-field">
+                            <label>Из</label>
+                            <select id="temp-from" aria-label="Исходная шкала">
+                                <option value="C">°C (Цельсий)</option>
+                                <option value="F">°F (Фаренгейт)</option>
+                            </select>
+                        </div>
+                        <div class="rc-arrow">→</div>
+                        <div class="rc-field">
+                            <label>Результат</label>
+                            <input type="text" id="temp-result" readonly aria-label="Результат температуры" style="font-weight:700;color:var(--rc-warm);cursor:default;">
+                        </div>
+                    </div>
+                    <div class="rc-presets" style="margin-top:16px;">
+                        <button class="rc-preset temp-preset" data-c="180"><span class="preset-icon">🔥</span> 180°C (выпечка)</button>
+                        <button class="rc-preset temp-preset" data-c="200"><span class="preset-icon">🔥</span> 200°C (запекание)</button>
+                        <button class="rc-preset temp-preset" data-c="160"><span class="preset-icon">🔥</span> 160°C (томление)</button>
+                        <button class="rc-preset temp-preset" data-c="220"><span class="preset-icon">🔥</span> 220°C (пицца)</button>
+                        <button class="rc-preset temp-preset" data-c="100"><span class="preset-icon">💧</span> 100°C (кипение)</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ── Tab 2: Scaler ── -->
+            <div class="rc-panel" id="panel-scale" role="tabpanel">
+                <div class="rc-card">
+                    <h3>Масштабирование рецепта</h3>
+                    <p class="rc-sub">Укажите исходное и нужное количество порций — все ингредиенты пересчитаются автоматически.</p>
+
+                    <div class="rc-scaler-top">
+                        <div class="rc-field">
+                            <label>Исходно порций</label>
+                            <input type="number" id="scale-from-portions" value="4" min="0.001" step="any" aria-label="Исходное количество порций">
+                        </div>
+                        <div class="rc-field">
+                            <label>Нужно порций</label>
+                            <input type="number" id="scale-to-portions" value="6" min="0.001" step="any" aria-label="Нужное количество порций">
+                        </div>
+                        <div class="rc-field" style="justify-content:flex-end;">
+                            <button class="btn btn-primary" id="scale-apply" style="width:100%;">Пересчитать</button>
+                        </div>
+                        <div class="rc-field" style="justify-content:flex-end;">
+                            <span style="color:var(--text-dim);font-size:0.82rem;align-self:center;">Коэфф: <strong id="scale-factor-display">×1.5</strong></span>
+                        </div>
+                    </div>
+
+                    <div class="rc-ingredient-list" id="scale-ingredients">
+                        <!-- JS-populated -->
+                    </div>
+
+                    <button class="btn btn-outline btn-sm" id="scale-add-row" style="margin-top:12px;">+ Добавить ингредиент</button>
+
+                    <div class="rc-scaled-list rc-card" id="scale-result" style="display:none;margin-top:24px;">
+                        <h3 style="margin-bottom:14px;">Результат пересчёта</h3>
+                        <div id="scale-result-list"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ── Tab 3: Reference Table ── -->
+            <div class="rc-panel" id="panel-reference" role="tabpanel">
+                <div class="rc-card">
+                    <h3>Таблица мер и весов продуктов</h3>
+                    <p class="rc-sub">Вес продукта в граммах для стандартного стакана (250 мл), столовой и чайной ложки. Данные для продуктов комнатной температуры, без горки (кроме соли/сахара — с небольшой горкой).</p>
+
+                    <div class="rc-search">
+                        <input type="text" id="ref-search" placeholder="🔍 Найти продукт…" aria-label="Поиск по таблице">
+                    </div>
+
+                    <div class="rc-table-wrap">
+                        <table class="rc-table">
+                            <thead>
+                                <tr>
+                                    <th>Продукт</th>
+                                    <th>1 стакан (250 мл)</th>
+                                    <th>1 ст. ложка</th>
+                                    <th>1 ч. ложка</th>
+                                </tr>
+                            </thead>
+                            <tbody id="ref-table-body">
+                                <!-- JS-populated -->
+                            </tbody>
+                        </table>
+                    </div>
+                    <p style="margin-top:14px;color:var(--text-dim);font-size:0.76rem;">
+                        * Стакан = 250 мл (гранёный). Столовая ложка = 18 мл. Чайная ложка = 5 мл. Вес указан для продукта без утрамбовки, ложки без горки (соль и сахар — с небольшой горкой).
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+</main>
+
+<footer class="footer">
+    <div class="container">
+        <div class="footer-grid">
+            <div class="footer-brand">
+                <div class="header-logo" aria-label="Цифра">
+                    <span class="logo-icon">◆</span>
+                    <span class="logo-text">Цифра</span>
+                </div>
+                <p>Каталог веб-инструментов, генераторов, CMS-утилит и шаблонов для разработки сайтов.</p>
+            </div>
+            <div class="footer-col">
+                <h4>Каталог</h4>
+                <ul>
+                    <li><a href="index.html#catalog">Категории</a></li>
+                    <li><a href="index.html#generators">Генераторы</a></li>
+                    <li><a href="index.html#templates">Шаблоны</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Инструменты</h4>
+                <ul>
+                    <li><a href="acf-generator.html">ACF генератор</a></li>
+                    <li><a href="migx-generator.html">MIGX генератор</a></li>
+                    <li><a href="recipe-converter.html">Конвертер рецептов</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Служебное</h4>
+                <ul>
+                    <li><a href="about.html">О проекте</a></li>
+                    <li><a href="contacts.html">Контакты</a></li>
+                    <li><a href="privacy.html">Политика</a></li>
+                    <li><a href="terms.html">Соглашение</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>© 2026 Цифра. Каталог веб-инструментов и цифровых продуктов.</p>
+        </div>
+    </div>
+</footer>
+
+<script src="js/main.js" defer></script>
+<script src="js/recipe-converter.js" defer></script>
+</body>
+</html>
