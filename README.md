@@ -1,6 +1,6 @@
 # depseeker_test
 
-Static HTML workspace for the Цифра ACF/MIGX generators and SEO landing-page clusters.
+Static HTML workspace for the Цифра ACF/MIGX generators, recipe calculators, and SEO landing-page clusters.
 
 ## Site Config
 
@@ -29,6 +29,7 @@ python tools/check_production_ready.py
 Public catalog structure lives in `catalog.registry.json`. It lists categories, their primary utilities, pages, and nav-visible items. Use it as the source checklist when adding new categories or tools.
 
 Detailed workflow: `docs/catalog-expansion.md`.
+Recipe converter product spec: `docs/superpowers/specs/2026-06-04-recipe-converter-design.md`.
 Ad placement notes: `docs/monetization.md`.
 SEO content audit: `docs/seo-content-audit.md`.
 Visual editor audit: `docs/visual-editor-audit.md`.
@@ -51,6 +52,7 @@ node tests/production-home-smoke.mjs
 node tests/site-links-smoke.mjs
 node tests/site-runtime-smoke.mjs
 node tests/scaffold-catalog-smoke.mjs
+node tests/recipe-converter-smoke.mjs
 node tests/content-audit-smoke.mjs
 node tests/acf-visual-editor-smoke.mjs
 node tests/acf-css-export-smoke.mjs
@@ -65,6 +67,7 @@ The checks cover:
 - ACF category routes, landing CTAs, generator preset routing, production export, visual editor guards, and conversion tracking.
 - MIGX hub, 21 landing pages, sitemap entries, generator wiring, validation/audit/share features, and conversion tracking.
 - Production homepage positioning and shared navigation without marketplace/header leftovers.
+- Recipe converter category wiring, Russian cooking standards, parser support for fractions/commas, and supporting table page.
 - Local `href`/`src` links across all HTML pages.
 - Registered catalog categories and utilities in `catalog.registry.json`.
 - Draft category and utility scaffolding.

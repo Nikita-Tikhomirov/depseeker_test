@@ -3,19 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Конвертер рецептов — перевод мер и весов для кулинарии: стаканы, ложки, граммы, миллилитры. Масштабирование ингредиентов по порциям. Таблица мер для муки, сахара, масла и других продуктов.">
-    <meta name="keywords" content="конвертер рецептов, меры и веса, кулинарный конвертер, стакан в граммах, ложка в граммах, масштабирование рецепта, таблица мер продуктов, кулинарный калькулятор">
+    <meta name="description" content="Кулинарный конвертер рецептов для русских мер: стаканы 200 и 250 мл, ложки, граммы, миллилитры, пересчет порций, таблица мер и разбор ингредиентов из текста.">
+    <meta name="keywords" content="конвертер рецептов, меры и веса продуктов, стакан муки в граммах, столовая ложка в граммах, пересчет рецепта, кулинарный калькулятор, таблица мер продуктов">
     <meta name="robots" content="index, follow">
-    <link rel="canonical" href="https://zifra.example.com/tools/recipe-converter">
+    <link rel="canonical" href="https://zifra.example.com/recipe-converter.html">
     <meta name="author" content="Цифра">
 
     <meta property="og:type" content="website">
-    <meta property="og:title" content="Конвертер рецептов — перевод мер, весов и масштабирование ингредиентов | Цифра">
-    <meta property="og:description" content="Бесплатный кулинарный конвертер: стаканы в граммы, ложки в миллилитры, температура духовки, масштабирование рецепта по порциям. Полная таблица мер для российских продуктов.">
-    <meta property="og:url" content="https://zifra.example.com/tools/recipe-converter">
+    <meta property="og:title" content="Конвертер рецептов — русские меры, веса и порции | Цифра">
+    <meta property="og:description" content="Переводите стаканы 200/250 мл, ложки, граммы и миллилитры, масштабируйте рецепты и разбирайте ингредиенты из текста.">
+    <meta property="og:url" content="https://zifra.example.com/recipe-converter.html">
     <meta property="og:locale" content="ru_RU">
 
-    <title>Конвертер рецептов — меры, веса, масштабирование ингредиентов | Цифра</title>
+    <title>Конвертер рецептов — стаканы, ложки, граммы и порции | Цифра</title>
 
     <script type="application/ld+json">
     {
@@ -26,6 +26,17 @@
         "operatingSystem": "Web",
         "offers": {"@type": "Offer", "price": "0", "priceCurrency": "RUB"},
         "description": "Бесплатный онлайн-конвертер кулинарных мер и весов с масштабированием рецептов."
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+            {"@type": "ListItem", "position": 1, "name": "Главная", "item": "https://zifra.example.com/"},
+            {"@type": "ListItem", "position": 2, "name": "Кулинарные калькуляторы", "item": "https://zifra.example.com/recipes.html"},
+            {"@type": "ListItem", "position": 3, "name": "Конвертер рецептов", "item": "https://zifra.example.com/recipe-converter.html"}
+        ]
     }
     </script>
 
@@ -66,6 +77,12 @@
             pointer-events: none;
         }
         .tool-hero .container { position: relative; }
+        .tool-hero-grid {
+            display: grid;
+            grid-template-columns: minmax(0, 0.95fr) minmax(320px, 0.58fr);
+            gap: 34px;
+            align-items: center;
+        }
         .tool-hero-copy { max-width: 680px; }
         .tool-hero .tool-icon {
             font-size: 2.3rem;
@@ -116,6 +133,45 @@
             border-radius: 999px;
             padding: 6px 14px;
         }
+        .rc-hero-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin: 24px 0 20px;
+        }
+        .rc-standard-card {
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            background: linear-gradient(160deg, rgba(255,255,255,0.07), rgba(255,255,255,0.025));
+            padding: 24px;
+            box-shadow: 0 22px 58px rgba(0,0,0,0.18);
+        }
+        .rc-standard-card h2 {
+            font-size: 1.15rem;
+            margin: 0 0 14px;
+        }
+        .rc-standard-card dl {
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 10px 16px;
+            margin: 0;
+        }
+        .rc-standard-card dt {
+            color: var(--text-2);
+            font-size: 0.9rem;
+        }
+        .rc-standard-card dd {
+            margin: 0;
+            color: var(--rc-warm);
+            font-weight: 800;
+            white-space: nowrap;
+        }
+        .rc-standard-note {
+            margin-top: 16px;
+            color: var(--text-dim);
+            font-size: 0.82rem;
+            line-height: 1.65;
+        }
 
         /* ── Tabs ── */
         .rc-tabs {
@@ -163,6 +219,12 @@
             color: var(--text-dim);
             font-size: 0.84rem;
             margin-bottom: 20px;
+        }
+        .rc-note {
+            margin-top: 14px;
+            color: var(--text-dim);
+            font-size: 0.8rem;
+            line-height: 1.6;
         }
 
         /* ── Converter Row ── */
@@ -479,6 +541,9 @@
 
         /* ── Responsive ── */
         @media (max-width: 768px) {
+            .tool-hero-grid {
+                grid-template-columns: 1fr;
+            }
             .rc-convert-row {
                 grid-template-columns: 1fr;
             }
@@ -512,8 +577,30 @@
             <ul class="header-nav">
                 <li><a href="index.html">Главная</a></li>
                 <li><a href="index.html#catalog">Каталог</a></li>
-                <li><a href="index.html#generators">Генераторы</a></li>
-                <li><a class="is-active" href="recipe-converter.html">Конвертер рецептов</a></li>
+                <li class="nav-dropdown">
+                    <button class="nav-dropdown-toggle is-active" type="button" aria-expanded="false" aria-controls="utilities-menu">Продукты <span class="nav-caret" aria-hidden="true">⌄</span></button>
+                    <div class="nav-dropdown-menu" id="utilities-menu">
+                        <div class="nav-dropdown-grid">
+                            <div class="nav-dropdown-group">
+                                <a class="nav-dropdown-heading" href="acf.html">ACF / WordPress</a>
+                                <a href="acf-generator.html">ACF генератор</a>
+                                <a href="acf-php-generator.html">PHP export</a>
+                                <a href="acf-json-generator.html">JSON export</a>
+                            </div>
+                            <div class="nav-dropdown-group">
+                                <a class="nav-dropdown-heading" href="migx.html">MODX / MIGX</a>
+                                <a href="migx-generator.html">MIGX генератор</a>
+                                <a href="migx-json-generator.html">MIGX JSON</a>
+                                <a href="migx-formtabs-generator.html">Form Tabs</a>
+                            </div>
+                            <div class="nav-dropdown-group">
+                                <a class="nav-dropdown-heading" href="recipes.html">Кулинарные калькуляторы</a>
+                                <a href="recipe-converter.html">Конвертер рецептов</a>
+                                <a href="recipe-measures-table.html">Таблица мер и весов</a>
+                            </div>
+                        </div>
+                    </div>
+                </li>
             </ul>
         </nav>
         <button class="hamburger" aria-label="Меню"><span></span><span></span><span></span></button>
@@ -526,6 +613,7 @@
         <div class="container">
             <a href="index.html">Главная</a><span class="breadcrumb-sep">/</span>
             <a href="index.html#catalog">Каталог</a><span class="breadcrumb-sep">/</span>
+            <a href="recipes.html">Кулинарные калькуляторы</a><span class="breadcrumb-sep">/</span>
             <span>Конвертер рецептов</span>
         </div>
     </nav>
@@ -533,21 +621,37 @@
     <!-- Hero -->
     <section class="tool-hero">
         <div class="container">
-            <div class="tool-hero-copy">
-                <div class="tool-icon">🥘</div>
-                <h1>Конвертер <span>рецептов</span></h1>
-                <p>Переводите стаканы в граммы, ложки в миллилитры, масштабируйте ингредиенты под любое количество порций. Встроенная таблица мер для муки, сахара, масла и ещё 20+ продуктов российской кухни.</p>
-                <div class="hero-proof">
-                    <span>📐 30+ единиц измерения</span>
-                    <span>📊 25 ингредиентов в таблице</span>
-                    <span>⚖️ Масштабирование по порциям</span>
+            <div class="tool-hero-grid">
+                <div class="tool-hero-copy">
+                    <div class="tool-icon">🥘</div>
+                    <h1>Конвертер <span>рецептов</span></h1>
+                    <p>Переводите русские кухонные меры в граммы и миллилитры, пересчитывайте рецепт на нужное число порций и разбирайте список ингредиентов из текста. Стакан можно считать как 250 мл или как гранёный до риски 200 мл.</p>
+                    <div class="rc-hero-actions">
+                        <a class="btn btn-primary btn-lg" href="#converter">Открыть калькулятор</a>
+                        <a class="btn btn-outline btn-lg" href="recipes.html">Смотреть категорию</a>
+                    </div>
+                    <div class="hero-proof">
+                        <span>30+ направлений пересчёта</span>
+                        <span>25 продуктов в таблице</span>
+                        <span>Парсер дробей и запятых</span>
+                    </div>
                 </div>
+                <aside class="rc-standard-card" aria-label="Стандарты расчетов">
+                    <h2>Как считаем в этой версии</h2>
+                    <dl>
+                        <dt>Полный стакан</dt><dd>250 мл</dd>
+                        <dt>Гранёный до риски</dt><dd>200 мл</dd>
+                        <dt>Столовая ложка</dt><dd>15 мл</dd>
+                        <dt>Чайная ложка</dt><dd>5 мл</dd>
+                    </dl>
+                    <p class="rc-standard-note">Ложки с горкой и утрамбованные продукты могут отличаться. Для выпечки и кондитерки точнее использовать весы, а калькулятор применять как быстрый бытовой пересчёт.</p>
+                </aside>
             </div>
         </div>
     </section>
 
     <!-- Converter -->
-    <section class="generator-workspace" style="padding: 0 0 80px;">
+    <section class="generator-workspace" id="converter" style="padding: 0 0 80px;">
         <div class="container">
 
             <!-- Tabs -->
@@ -564,7 +668,7 @@
                 <!-- Ingredient-aware converter -->
                 <div class="rc-card">
                     <h3>Перевод единиц измерения</h3>
-                    <p class="rc-sub">Выберите продукт для точного пересчёта объёма в вес или укажите «Без продукта» для перевода только единиц объёма.</p>
+                    <p class="rc-sub">Выберите продукт для пересчёта объёма в вес. В списке единиц есть полный стакан 250 мл и гранёный стакан до риски 200 мл.</p>
 
                     <div class="rc-field" style="margin-bottom:18px;">
                         <label>Продукт (для учёта плотности)</label>
@@ -597,6 +701,7 @@
 
                     <p style="margin-top:18px; color:var(--text-dim); font-size:0.82rem;">Быстрые переводы:</p>
                     <div class="rc-presets" id="conv-presets"></div>
+                    <p class="rc-note">Переводы объёма в граммы считаются по плотности продукта. Для ложек используется мерный объём без горки: столовая 15 мл, чайная 5 мл.</p>
                 </div>
 
                 <!-- Temperature -->
@@ -671,7 +776,7 @@
             <div class="rc-panel" id="panel-reference" role="tabpanel">
                 <div class="rc-card">
                     <h3>Таблица мер и весов продуктов</h3>
-                    <p class="rc-sub">Вес продукта в граммах для стандартного стакана (250 мл), столовой и чайной ложки. Данные для продуктов комнатной температуры, без горки (кроме соли/сахара — с небольшой горкой).</p>
+                    <p class="rc-sub">Вес продукта в граммах для полного стакана 250 мл, гранёного стакана до риски 200 мл, столовой ложки 15 мл и чайной ложки 5 мл.</p>
 
                     <div class="rc-search">
                         <input type="text" id="ref-search" placeholder="🔍 Найти продукт…" aria-label="Поиск по таблице">
@@ -682,9 +787,10 @@
                             <thead>
                                 <tr>
                                     <th>Продукт</th>
-                                    <th>1 стакан (250 мл)</th>
-                                    <th>1 ст. ложка</th>
-                                    <th>1 ч. ложка</th>
+                                    <th>Стакан 250 мл</th>
+                                    <th>Стакан 200 мл</th>
+                                    <th>Ст. ложка 15 мл</th>
+                                    <th>Ч. ложка 5 мл</th>
                                 </tr>
                             </thead>
                             <tbody id="ref-table-body">
@@ -693,7 +799,7 @@
                         </table>
                     </div>
                     <p style="margin-top:14px;color:var(--text-dim);font-size:0.76rem;">
-                        * Стакан = 250 мл (гранёный). Столовая ложка = 18 мл. Чайная ложка = 5 мл. Вес указан для продукта без утрамбовки, ложки без горки (соль и сахар — с небольшой горкой).
+                        * Значения округлены и рассчитаны для продукта без утрамбовки. Ложка с горкой может быть тяжелее в 1,5–2 раза, поэтому для точной выпечки лучше сверять вес на кухонных весах.
                     </p>
                 </div>
             </div>
@@ -715,7 +821,8 @@
 Например:
 Ингредиенты:
 • 300 г муки
-• 200 мл молока
+• 1,5 стакана молока
+• 1/2 стакана сахара
 • 2 ст. ложки сахара
 • 1 ч. ложка соли
 • 3 яйца
@@ -735,6 +842,31 @@
             </div>
         </div>
     </section>
+
+    <section class="tool-seo-section" aria-labelledby="recipe-workflow-title">
+        <div class="container tool-seo-grid">
+            <div class="tool-seo-block">
+                <h2 id="recipe-workflow-title">Когда нужен конвертер рецептов</h2>
+                <p>Кулинарный конвертер помогает, когда рецепт найден в старой книге, блоге, видео или семейной заметке, а меры указаны не так, как удобно готовить сейчас. В одном рецепте могут встретиться стаканы, ложки, граммы, миллилитры, штуки и фразы вроде "по вкусу". Без пересчета легко ошибиться в муке, сахаре, масле или молоке, особенно если нужно приготовить не на 4 порции, а на 2, 6 или 10.</p>
+                <p>Для русскоязычных рецептов особенно важен стандарт стакана. Полный стакан обычно считают как 250 мл, а гранёный до риски — как 200 мл. Поэтому в калькуляторе эти варианты разведены отдельно: пользователь сам выбирает, какой стакан имел в виду автор рецепта.</p>
+                <div class="tool-seo-links" aria-label="Связанные кулинарные страницы">
+                    <a href="recipes.html">Кулинарные калькуляторы</a>
+                    <a href="recipe-measures-table.html">Таблица мер и весов</a>
+                    <a href="index.html#catalog">Каталог инструментов</a>
+                </div>
+            </div>
+            <div class="tool-seo-block">
+                <h2>Как получить более точный результат</h2>
+                <p>Для жидкостей перевод объема в миллилитры обычно прямой: вода, молоко и кефир близки к привычным значениям. Для сыпучих продуктов нужен учет плотности: стакан муки и стакан сахара весят по-разному, а ложка с горкой может заметно отличаться от мерной ложки без горки.</p>
+                <p>Если рецепт чувствителен к точности, например бисквит, безе, макаронс или хлеб на закваске, лучше использовать кухонные весы. Конвертер закрывает бытовые задачи: быстро понять порядок величин, пересчитать порции и привести рецепт к удобным граммам, миллилитрам, стаканам или ложкам.</p>
+                <div class="tool-seo-links" aria-label="Другие разделы Цифры">
+                    <a href="acf.html">ACF / WordPress</a>
+                    <a href="migx.html">MODX / MIGX</a>
+                    <a href="about.html">О проекте</a>
+                </div>
+            </div>
+        </div>
+    </section>
 </main>
 
 <footer class="footer">
@@ -745,13 +877,14 @@
                     <span class="logo-icon">◆</span>
                     <span class="logo-text">Цифра</span>
                 </div>
-                <p>Каталог веб-инструментов, генераторов, CMS-утилит и шаблонов для разработки сайтов.</p>
+                <p>Каталог веб-инструментов, CMS-утилит и практичных калькуляторов для рабочих задач.</p>
             </div>
             <div class="footer-col">
                 <h4>Каталог</h4>
                 <ul>
                     <li><a href="index.html#catalog">Категории</a></li>
                     <li><a href="index.html#generators">Генераторы</a></li>
+                    <li><a href="recipes.html">Кулинарные калькуляторы</a></li>
                     <li><a href="index.html#templates">Шаблоны</a></li>
                 </ul>
             </div>
@@ -761,6 +894,7 @@
                     <li><a href="acf-generator.html">ACF генератор</a></li>
                     <li><a href="migx-generator.html">MIGX генератор</a></li>
                     <li><a href="recipe-converter.html">Конвертер рецептов</a></li>
+                    <li><a href="recipe-measures-table.html">Таблица мер и весов</a></li>
                 </ul>
             </div>
             <div class="footer-col">

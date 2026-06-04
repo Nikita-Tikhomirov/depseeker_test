@@ -4,8 +4,8 @@
 
 ## Summary
 
-- Проверено страниц: 37
-- Опубликованных страниц: 37
+- Проверено страниц: 40
+- Опубликованных страниц: 40
 - Средний балл опубликованных страниц: 100/100
 - Страниц с задачами на усиление: 0
 
@@ -75,6 +75,9 @@
 | `migx-tv-generator.html` | landing | published | 100 |
 | `migx-validator.html` | landing | published | 100 |
 | `migx.html` | category | published | 100 |
+| `recipe-converter.html` | utility | published | 100 |
+| `recipe-measures-table.html` | landing | published | 100 |
+| `recipes.html` | category | published | 100 |
 
 ## Thresholds
 

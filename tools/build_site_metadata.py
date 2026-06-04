@@ -13,9 +13,9 @@ SITEMAP_NS = "http://www.sitemaps.org/schemas/sitemap/0.9"
 def page_priority(path: str) -> str:
     if path == "index.html":
         return "1.0"
-    if path in {"acf.html", "migx.html"}:
+    if path in {"acf.html", "migx.html", "recipes.html"}:
         return "0.85"
-    if path in {"acf-generator.html", "migx-generator.html"}:
+    if path in {"acf-generator.html", "migx-generator.html", "recipe-converter.html"}:
         return "0.8"
     if path in {"about.html", "contacts.html", "privacy.html", "terms.html"}:
         return "0.35"

@@ -9,18 +9,20 @@
      *  DATA
      * ================================================================ */
 
-    /** Стандартный стакан в мл */
+    /** Российские бытовые стандарты: полный стакан и граненый до риски. */
     var CUP_ML = 250;
-    var TBSP_ML = 18;
+    var FACETED_CUP_ML = 200;
+    var TBSP_ML = 15;
     var TSP_ML = 5;
 
     /** Единицы измерения */
     var UNITS = [
         { id: 'ml',    name: 'миллилитры (мл)',  kind: 'volume', factor: 1 },
         { id: 'l',     name: 'литры (л)',         kind: 'volume', factor: 1000 },
-        { id: 'cup',   name: 'стаканы (250 мл)',  kind: 'volume', factor: CUP_ML },
-        { id: 'tbsp',  name: 'столовые ложки',    kind: 'volume', factor: TBSP_ML },
-        { id: 'tsp',   name: 'чайные ложки',      kind: 'volume', factor: TSP_ML },
+        { id: 'cup',    name: 'стаканы полные (250 мл)', kind: 'volume', factor: CUP_ML },
+        { id: 'cup200', name: 'стаканы до риски (200 мл)', kind: 'volume', factor: FACETED_CUP_ML },
+        { id: 'tbsp',   name: 'столовые ложки (15 мл)', kind: 'volume', factor: TBSP_ML },
+        { id: 'tsp',    name: 'чайные ложки (5 мл)', kind: 'volume', factor: TSP_ML },
         { id: 'g',     name: 'граммы (г)',         kind: 'weight', factor: 1 },
         { id: 'kg',    name: 'килограммы (кг)',    kind: 'weight', factor: 1000 },
     ];
@@ -98,8 +100,9 @@
 
     /** Быстрые пресеты для конвертера */
     var PRESETS = [
-        { label: '1 стакан муки → граммы',      from: 1, fromU: 'cup', toU: 'g', ingr: 'Мука пшеничная' },
-        { label: '1 стакан сахара → граммы',     from: 1, fromU: 'cup', toU: 'g', ingr: 'Сахар-песок' },
+        { label: '1 стакан 250 мл муки → граммы', from: 1, fromU: 'cup', toU: 'g', ingr: 'Мука пшеничная' },
+        { label: '1 стакан 200 мл муки → граммы', from: 1, fromU: 'cup200', toU: 'g', ingr: 'Мука пшеничная' },
+        { label: '1 стакан сахара → граммы',      from: 1, fromU: 'cup', toU: 'g', ingr: 'Сахар-песок' },
         { label: '200 г муки → стаканы',         from: 200, fromU: 'g', toU: 'cup', ingr: 'Мука пшеничная' },
         { label: '100 мл молока → ст. ложки',    from: 100, fromU: 'ml', toU: 'tbsp', ingr: '' },
         { label: '3 ст. ложки масла → граммы',   from: 3, fromU: 'tbsp', toU: 'g', ingr: 'Масло растительное' },
@@ -112,9 +115,10 @@
         { id: 'kg', name: 'кг' },
         { id: 'ml', name: 'мл' },
         { id: 'l',  name: 'л' },
-        { id: 'cup',   name: 'стакан(ов)' },
-        { id: 'tbsp',  name: 'ст. ложек' },
-        { id: 'tsp',   name: 'ч. ложек' },
+        { id: 'cup',    name: 'стакан(ов) 250 мл' },
+        { id: 'cup200', name: 'стакан(ов) 200 мл' },
+        { id: 'tbsp',   name: 'ст. ложек' },
+        { id: 'tsp',    name: 'ч. ложек' },
         { id: 'pcs',   name: 'шт.' },
         { id: 'pinch', name: 'щепоток' },
         { id: 'taste', name: 'по вкусу' },
@@ -198,6 +202,10 @@
         if (Math.abs(n) < 1) return parseFloat(n.toFixed(3)).toString();
         if (Math.abs(n) < 100) return parseFloat(n.toFixed(2)).toString();
         return parseFloat(n.toFixed(1)).toString();
+    }
+
+    function gramsForVolume(ingredient, ml) {
+        return Math.round(ingredient.density * ml);
     }
 
     /* ================================================================
@@ -365,10 +373,11 @@
         return id;
     }
 
-    function scaleUnitOptions() {
+    function scaleUnitOptions(selectedUnit) {
         var html = '';
         for (var i = 0; i < SCALE_UNITS.length; i++) {
-            html += '<option value="' + SCALE_UNITS[i].id + '">' + SCALE_UNITS[i].name + '</option>';
+            var selected = SCALE_UNITS[i].id === selectedUnit ? ' selected' : '';
+            html += '<option value="' + SCALE_UNITS[i].id + '"' + selected + '>' + SCALE_UNITS[i].name + '</option>';
         }
         return html;
     }
@@ -383,14 +392,14 @@
             + '</div>'
             + '<div class="rc-field"><label>Ед.</label>'
             + '<select class="scale-unit" aria-label="Единица измерения">'
-            + scaleUnitOptions()
+            + scaleUnitOptions(ingredient.unit)
             + '</select></div>'
             + '<button class="rc-row-remove" title="Удалить" aria-label="Удалить ингредиент">&times;</button>'
             + '</div>';
     }
 
     function escAttr(s) {
-        return s.replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        return String(s || '').replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
     }
 
     function renderScaleIngredients() {
@@ -426,8 +435,15 @@
                 removeBtn.addEventListener('click', function () {
                     this.closest('.rc-ingredient-row').remove();
                     renderScaleIngredients();
+                    doScale();
                 });
             }
+            rows[i].querySelectorAll('input, select').forEach(function (field) {
+                if (field._boundScaleInput) return;
+                field._boundScaleInput = true;
+                field.addEventListener('input', doScale);
+                field.addEventListener('change', doScale);
+            });
         }
     }
 
@@ -516,12 +532,13 @@
             if (filter && ing.name.toLowerCase().indexOf(filter) === -1) continue;
             html += '<tr>'
                 + '<td class="td-name">' + ing.name + '</td>'
-                + '<td class="td-val">' + ing.cup + ' г</td>'
-                + '<td class="td-val">' + ing.tbsp + ' г</td>'
-                + '<td class="td-val">' + ing.tsp + ' г</td>'
+                + '<td class="td-val">' + gramsForVolume(ing, CUP_ML) + ' г</td>'
+                + '<td class="td-val">' + gramsForVolume(ing, FACETED_CUP_ML) + ' г</td>'
+                + '<td class="td-val">' + gramsForVolume(ing, TBSP_ML) + ' г</td>'
+                + '<td class="td-val">' + gramsForVolume(ing, TSP_ML) + ' г</td>'
                 + '</tr>';
         }
-        elRefTable.innerHTML = html || '<tr><td colspan="4" style="text-align:center;padding:32px;color:var(--text-dim);">Ничего не найдено</td></tr>';
+        elRefTable.innerHTML = html || '<tr><td colspan="5" style="text-align:center;padding:32px;color:var(--text-dim);">Ничего не найдено</td></tr>';
     }
 
     /* ================================================================
@@ -535,6 +552,7 @@
         'мл': 'ml', 'миллилитр': 'ml', 'миллилитра': 'ml', 'миллилитров': 'ml',
         'л': 'l', 'литр': 'l', 'литра': 'l',
         'стакан': 'cup', 'стакана': 'cup', 'стаканов': 'cup', 'ст': 'cup',
+        'граненый стакан': 'cup200', 'гранёный стакан': 'cup200', 'стакан до риски': 'cup200',
         'ст.': 'tbsp', 'ст л': 'tbsp', 'ст.л': 'tbsp', 'ст. л': 'tbsp', 'ст.л.': 'tbsp',
         'ст ложка': 'tbsp', 'ст ложки': 'tbsp', 'ст ложек': 'tbsp', 'столовых ложки': 'tbsp', 'столовых ложек': 'tbsp', 'столовая ложка': 'tbsp', 'столовые ложки': 'tbsp', 'столовой ложки': 'tbsp',
         'ч.': 'tsp', 'ч л': 'tsp', 'ч.л': 'tsp', 'ч. л': 'tsp', 'ч.л.': 'tsp',
@@ -542,7 +560,7 @@
     };
 
     /** Единицы, которые всегда объём (даже без ингредиента) */
-    var ALWAYS_VOLUME = { ml: true, l: true, cup: true, tbsp: true, tsp: true };
+    var ALWAYS_VOLUME = { ml: true, l: true, cup: true, cup200: true, tbsp: true, tsp: true };
 
     /** Поиск ингредиента по тексту после числа+единицы */
     function matchIngredient(textAfter) {
@@ -569,6 +587,29 @@
         return active ? active.getAttribute('data-mode') : 'metric';
     }
 
+    function parseAmountText(text) {
+        var normalized = String(text || '').trim().replace(',', '.').replace(/\s+/g, ' ');
+        var vulgar = { '¼': 0.25, '½': 0.5, '¾': 0.75 };
+        if (vulgar[normalized] !== undefined) return vulgar[normalized];
+
+        var mixed = normalized.match(/^(\d+)\s+(\d+)\/(\d+)$/);
+        if (mixed) {
+            var whole = parseInt(mixed[1], 10);
+            var numerator = parseInt(mixed[2], 10);
+            var denominator = parseInt(mixed[3], 10);
+            return denominator ? whole + numerator / denominator : NaN;
+        }
+
+        var fraction = normalized.match(/^(\d+)\/(\d+)$/);
+        if (fraction) {
+            var num = parseInt(fraction[1], 10);
+            var den = parseInt(fraction[2], 10);
+            return den ? num / den : NaN;
+        }
+
+        return parseFloat(normalized);
+    }
+
     function parseRecipe(text) {
         if (!text || !text.trim()) return { ingredients: [], unknownLines: [] };
 
@@ -576,24 +617,25 @@
         var ingredients = [];
         var unknownLines = [];
 
-        // Универсальный regex: число + единица измерения
-        // Шаблон: "200 г муки", "2 стакана сахара", "3 ст. ложки масла", "1/2 ч.л. соли"
-        var re = /(\d+(?:[\/\.]\d+)?)\s*(гр?а?м?м?[ао]?в?\b\.?|кг|килограмм[а]?\b|мл|миллилитр[ао]?в?\b\.?|л|литр[а]?\b|стакан[ао]?в?\b\.?|ст\.?\s*л\.?\s*о?ж?к?[аиек]?\b\.?|ч\.?\s*л\.?\s*о?ж?к?[аиек]?\b\.?|столов[аы][яйе]\s*лож[к][аиек]\b\.?|чайны[ейх]\s*лож[к][аиек]\b\.?)\s+(.+)/i;
-
-        // Также: дробные вида "1/2 стакана"
-        var reFrac = /(\d+)\/(\d+)\s*(стакан[ао]?в?\b\.?|ст\.?\s*л\.?\s*о?ж?к?[аиек]?\b\.?|ч\.?\s*л\.?\s*о?ж?к?[аиек]?\b\.?|столов[аы][яйе]\s*лож[к][аиек]\b\.?|чайны[ейх]\s*лож[к][аиек]\b\.?)\s+(.+)/i;
+        var numberPattern = '(\\d+\\s+\\d+\\/\\d+|\\d+\\/\\d+|\\d+(?:[\\.,]\\d+)?|[¼½¾])';
+        var unitPattern = '(гр?а?м?м?[ао]?в?\\.?|кг|килограмм[а]?|мл|миллилитр[ао]?в?\\.?|л|литр[а]?|стакан[ао]?в?\\.?|ст\\.?\\s*л\\.?\\s*о?ж?к?[аиек]?\\.?|ч\\.?\\s*л\\.?\\s*о?ж?к?[аиек]?\\.?|столов[аы][яйе]\\s*лож[к][аиек]\\.?|чайны[ейх]\\s*лож[к][аиек]\\.?)';
+        var re = new RegExp(numberPattern + '\\s*' + unitPattern + '\\s+(.+)', 'i');
 
         for (var i = 0; i < lines.length; i++) {
             var line = lines[i].trim();
             if (!line) continue;
 
             var match = line.match(re);
-            var fracMatch = line.match(reFrac);
 
             if (match) {
-                var amount = parseFloat(match[1].replace(',', '.'));
+                var amount = parseAmountText(match[1]);
                 var unitText = match[2].toLowerCase().replace(/\.$/, '').replace(/\s+/g, ' ');
                 var rest = match[3];
+
+                if (isNaN(amount) || amount <= 0) {
+                    unknownLines.push(line);
+                    continue;
+                }
 
                 var unitId = resolveUnit(unitText);
                 if (!unitId) {
@@ -609,27 +651,6 @@
                     ingredient: ingrName,
                     rest: rest
                 });
-            } else if (fracMatch) {
-                var num = parseInt(fracMatch[1], 10);
-                var den = parseInt(fracMatch[2], 10);
-                var amountFrac = num / den;
-                var unitTextF = fracMatch[3].toLowerCase().replace(/\.$/, '').replace(/\s+/g, ' ');
-                var restF = fracMatch[4];
-
-                var unitIdF = resolveUnit(unitTextF);
-                if (!unitIdF) {
-                    unknownLines.push(line);
-                    continue;
-                }
-
-                var ingrNameF = matchIngredient(restF);
-                ingredients.push({
-                    original: line,
-                    amount: amountFrac,
-                    unitId: unitIdF,
-                    ingredient: ingrNameF,
-                    rest: restF
-                });
             }
             // else: не похоже на строку с ингредиентом — просто пропускаем (не добавляем в unknownLines)
         }
@@ -641,7 +662,7 @@
         // Прямой поиск
         if (UNIT_TEXT_MAP[text]) return UNIT_TEXT_MAP[text];
         // Поиск по началу
-        var keys = Object.keys(UNIT_TEXT_MAP);
+        var keys = Object.keys(UNIT_TEXT_MAP).sort(function (a, b) { return b.length - a.length; });
         for (var i = 0; i < keys.length; i++) {
             if (text.indexOf(keys[i]) === 0) return UNIT_TEXT_MAP[keys[i]];
         }
@@ -723,7 +744,7 @@
 
     function convertToKitchen(item, unit) {
         // Если уже в кухонных единицах — оставляем
-        if (unit.id === 'cup' || unit.id === 'tbsp' || unit.id === 'tsp') {
+        if (unit.id === 'cup' || unit.id === 'cup200' || unit.id === 'tbsp' || unit.id === 'tsp') {
             return {
                 original: item.original,
                 amount: item.amount,
@@ -769,7 +790,7 @@
     }
 
     function toKitchenVolume(ml) {
-        // Стакан = 250 мл, ст.л. = 18 мл, ч.л. = 5 мл
+        // Стакан = 250 мл, ст.л. = 15 мл, ч.л. = 5 мл
         if (ml >= CUP_ML * 0.65) {
             return { amount: ml / CUP_ML, unitName: 'стакан(ов)' };
         }
@@ -779,15 +800,23 @@
         return { amount: ml / TSP_ML, unitName: 'ч. ложек' };
     }
 
-    function renderParseResults(results, mode) {
+    function renderParseResults(results, mode, unknownLines) {
         var html = '';
-        for (var i = 0; i < results.length; i++) {
-            var r = results[i];
-            html += '<div class="rc-scaled-item">'
-                + '<span class="rc-scaled-name">' + escAttr(r.rest || r.original) + '</span>'
-                + '<span class="rc-scaled-amount">' + formatNum(r.amount) + '</span>'
-                + '<span class="rc-scaled-unit">' + r.unitName + '</span>'
-                + '</div>';
+        if (!results.length) {
+            html = '<div class="rc-empty"><div class="empty-icon">?</div><p>Не удалось найти строки вида «200 г муки», «1/2 стакана сахара» или «2 ст. ложки масла». Оставьте каждый ингредиент на отдельной строке и попробуйте снова.</p></div>';
+        } else {
+            for (var i = 0; i < results.length; i++) {
+                var r = results[i];
+                var hasAmount = typeof r.amount === 'number' && isFinite(r.amount);
+                html += '<div class="rc-scaled-item">'
+                    + '<span class="rc-scaled-name">' + escAttr(r.rest || r.original) + '</span>'
+                    + '<span class="rc-scaled-amount">' + (hasAmount ? formatNum(r.amount) : '—') + '</span>'
+                    + '<span class="rc-scaled-unit">' + escAttr(r.unitName || 'не распознано') + '</span>'
+                    + '</div>';
+            }
+        }
+        if (unknownLines && unknownLines.length) {
+            html += '<div class="rc-parsed-skipped">Не удалось разобрать: ' + escAttr(unknownLines.slice(0, 4).join('; ')) + '</div>';
         }
         elParseResultList.innerHTML = html;
         elParseModeLabel.textContent = mode === 'metric'
@@ -806,7 +835,7 @@
         var mode = getParseMode();
         var parsed = parseRecipe(text);
         var results = convertParsed(parsed, mode);
-        renderParseResults(results, mode);
+        renderParseResults(results, mode, parsed.unknownLines);
     }
 
     /* ================================================================

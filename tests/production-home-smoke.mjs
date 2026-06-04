@@ -72,10 +72,15 @@ function testHomepageProductionCopy() {
   assertProductionHeader('index.html', html);
   assert(layoutCss.includes('.nav-dropdown-menu::before'), 'desktop dropdown must keep a hover bridge between trigger and menu');
   assert(layoutCss.includes('top: -32px') && layoutCss.includes('height: 32px'), 'desktop dropdown hover bridge must cover the visual gap');
-  assert(text.includes('Генераторы, CMS-утилиты и шаблоны для разработки сайтов'), 'index.html must position the site as a broad web tools catalog');
-  assert(text.includes('Цифра собирает веб-утилиты'), 'index.html must include useful public SEO copy, not block descriptions');
-  assert(text.includes('ACF и MIGX — первые опубликованные направления внутри общего каталога цифровых продуктов'), 'index.html must present ACF/MIGX as first catalog sections, not the whole site');
+  assert(text.includes('Генераторы, CMS-утилиты и шаблоны для разработки сайтов'), 'index.html must keep the broad web tools headline');
+  assert(text.includes('Цифра собирает веб-утилиты и калькуляторы'), 'index.html must include useful public SEO copy, not block descriptions');
+  assert(text.includes('ACF, MIGX и кулинарные калькуляторы'), 'index.html must present all published catalog sections');
   assert(text.includes('Все ссылки ведут на существующие страницы каталога'), 'index.html must keep homepage links tied to real catalog routes');
+
+  const header = html.match(/<header class="header">[\s\S]*?<\/header>/)?.[0] ?? '';
+  for (const href of ['recipes.html', 'recipe-converter.html', 'recipe-measures-table.html']) {
+    assert(header.includes(`href="${href}"`), `index.html header must expose recipe category link ${href}`);
+  }
 
   for (const forbidden of [
     /Маркетплейс цифровых товаров/,

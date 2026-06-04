@@ -24,11 +24,18 @@ assert(report.includes('## Priority Queue'), 'report must include a priority que
 assert(report.includes('## Thresholds'), 'report must document quality thresholds');
 assert(report.includes('acf.html'), 'report must include ACF category page');
 assert(report.includes('migx.html'), 'report must include MIGX category page');
+assert(report.includes('recipes.html'), 'report must include recipe calculators category page');
 assert(!/lorem ipsum|заглушк|тестовый текст/i.test(report), 'report must not contain placeholder copy');
 assert(report.includes('- Страниц с задачами на усиление: 0'), 'all published pages must be clear in the content audit');
 
 for (const page of ['acf-generator.html', 'migx-generator.html']) {
   const row = report.match(new RegExp(`\\| \`${page}\` \\| utility \\|(?: published \\|)? (\\d+)`, 'i'));
+  assert(row, `${page} must be present in the audit tables`);
+  assert(Number(row[1]) >= 90, `${page} must be strong enough for production SEO, got ${row[1]}`);
+}
+
+for (const page of ['recipe-converter.html', 'recipe-measures-table.html']) {
+  const row = report.match(new RegExp(`\\| \`${page}\` \\| (?:utility|landing) \\|(?: published \\|)? (\\d+)`, 'i'));
   assert(row, `${page} must be present in the audit tables`);
   assert(Number(row[1]) >= 90, `${page} must be strong enough for production SEO, got ${row[1]}`);
 }

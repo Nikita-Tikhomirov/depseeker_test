@@ -16,6 +16,7 @@
   ],
   "categories": [
     {"slug": "acf", "title": "ACF / WordPress", "path": "acf.html"},
-    {"slug": "migx", "title": "MODX / MIGX", "path": "migx.html"}
+    {"slug": "migx", "title": "MODX / MIGX", "path": "migx.html"},
+    {"slug": "recipes", "title": "Кулинарные калькуляторы", "path": "recipes.html"}
   ]
 }

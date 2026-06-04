@@ -55,6 +55,18 @@
         {"path": "migx-errors.html", "title": "MIGX errors", "type": "landing"},
         {"path": "migx-examples.html", "title": "MIGX examples", "type": "landing"}
       ]
+    },
+    {
+      "slug": "recipes",
+      "title": "Кулинарные калькуляторы",
+      "path": "recipes.html",
+      "status": "published",
+      "description": "Конвертеры и справочные страницы для пересчета рецептов, русских кухонных мер, граммов, миллилитров и порций.",
+      "primaryUtility": "recipe-converter.html",
+      "items": [
+        {"path": "recipe-converter.html", "title": "Конвертер рецептов", "type": "utility", "nav": true},
+        {"path": "recipe-measures-table.html", "title": "Таблица мер и весов", "type": "landing", "nav": true}
+      ]
     }
   ]
 }

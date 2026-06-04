@@ -50,6 +50,11 @@
                 "url": "https://zifra.example.com/migx.html"
             },
             {
+                "@type": "CollectionPage",
+                "name": "Кулинарные калькуляторы",
+                "url": "https://zifra.example.com/recipes.html"
+            },
+            {
                 "@type": "SoftwareApplication",
                 "name": "ACF генератор",
                 "applicationCategory": "DeveloperApplication",
@@ -63,6 +68,14 @@
                 "applicationCategory": "DeveloperApplication",
                 "operatingSystem": "Web",
                 "url": "https://zifra.example.com/migx-generator.html",
+                "isAccessibleForFree": true
+            },
+            {
+                "@type": "SoftwareApplication",
+                "name": "Конвертер рецептов",
+                "applicationCategory": "LifestyleApplication",
+                "operatingSystem": "Web",
+                "url": "https://zifra.example.com/recipe-converter.html",
                 "isAccessibleForFree": true
             }
         ]
@@ -112,6 +125,11 @@
                                 <a href="migx-grid-columns-generator.html">Grid Columns</a>
                                 <a href="migx-getimagelist.html">getImageList</a>
                             </div>
+                            <div class="nav-dropdown-group">
+                                <a class="nav-dropdown-heading" href="recipes.html">Кулинарные калькуляторы</a>
+                                <a href="recipe-converter.html">Конвертер рецептов</a>
+                                <a href="recipe-measures-table.html">Таблица мер и весов</a>
+                            </div>
                         </div>
                     </div>
                 </li>
@@ -151,11 +169,12 @@
                         <a href="acf-json-generator.html"><strong>JSON-конфиг</strong><span>структуры для переноса и синхронизации</span></a>
                         <a href="migx-formtabs-generator.html"><strong>Форма в админке</strong><span>вкладки, поля и таблицы</span></a>
                         <a href="migx-getimagelist.html"><strong>Шаблон вывода</strong><span>tpl, wrapperTpl и списки на сайте</span></a>
+                        <a href="recipe-converter.html"><strong>Пересчет рецепта</strong><span>стаканы, ложки, граммы и порции</span></a>
                     </div>
                     <div class="home-metrics" aria-label="Состояние каталога">
-                        <span><strong>2</strong> CMS-раздела</span>
-                        <span><strong>10+</strong> рабочих входов</span>
-                        <span><strong>40+</strong> SEO-страниц</span>
+                        <span><strong>3</strong> опубликованных раздела</span>
+                        <span><strong>12+</strong> рабочих входов</span>
+                        <span><strong>40+</strong> SEO-страниц и утилит</span>
                     </div>
                 </aside>
             </div>
@@ -166,8 +185,8 @@
         <div class="container">
             <div class="ad-slot" data-ad-slot="home-after-hero" aria-label="Рекламный блок после первого экрана"></div>
             <div class="home-section-head">
-                <h2 id="catalog-heading" class="section-title">Каталог для задач веб-разработки</h2>
-                <p class="section-sub">Здесь собраны инструменты, которые закрывают повторяющиеся технические операции при создании сайтов: настройку CMS, подготовку структуры данных, генерацию конфигов, экспорт кода и вывод контента на фронтенде.</p>
+                <h2 id="catalog-heading" class="section-title">Каталог для повторяющихся цифровых задач</h2>
+                <p class="section-sub">Здесь собраны инструменты, которые закрывают практические операции: настройку CMS, подготовку структуры данных, генерацию конфигов, экспорт кода, вывод контента и бытовые калькуляторы с понятными правилами расчета.</p>
             </div>
             <div class="home-category-grid">
                 <article class="home-card home-card-featured">
@@ -210,6 +229,16 @@
                         <a href="migx-grid-columns-generator.html">Grid Columns</a>
                     </div>
                 </article>
+                <article class="home-card">
+                    <span>Калькуляторы</span>
+                    <h3>Кулинарные меры, веса и порции</h3>
+                    <p>Раздел для русских рецептов: стаканы 200 и 250 мл, ложки, граммы, миллилитры, таблица мер продуктов и пересчет ингредиентов под нужное число порций.</p>
+                    <div class="home-card-links">
+                        <a href="recipes.html">Раздел рецептов</a>
+                        <a href="recipe-converter.html">Конвертер</a>
+                        <a href="recipe-measures-table.html">Таблица мер</a>
+                    </div>
+                </article>
             </div>
         </div>
     </section>
@@ -239,6 +268,15 @@
                         <a class="btn btn-ghost" href="migx-generator.html">Запустить генератор</a>
                     </div>
                 </article>
+                <article class="home-card">
+                    <span>Рецепты</span>
+                    <h3>Кулинарные калькуляторы</h3>
+                    <p>Подборка для бытовых пересчетов: стаканы 200/250 мл, ложки, граммы, миллилитры, порции и таблица мер для продуктов, которые часто встречаются в русских рецептах.</p>
+                    <div class="home-actions">
+                        <a class="btn btn-primary" href="recipes.html">Смотреть раздел</a>
+                        <a class="btn btn-ghost" href="recipe-converter.html">Запустить конвертер</a>
+                    </div>
+                </article>
             </div>
         </div>
     </section>
@@ -259,6 +297,8 @@
                 <a class="home-card" href="migx-formtabs-generator.html"><span>Форма</span><h3>Настроить Form Tabs</h3><p>Вкладки и группы полей для аккуратной формы редактирования в MODX-менеджере.</p></a>
                 <a class="home-card" href="migx-grid-columns-generator.html"><span>Таблица</span><h3>Описать Grid Columns</h3><p>Колонки списка, подписи, сортировка и значения, которые редактор видит в админке.</p></a>
                 <a class="home-card" href="migx-getimagelist.html"><span>Вывод</span><h3>Подготовить getImageList</h3><p>Шаблоны tpl и wrapperTpl для вывода MIGX TV на фронтенде сайта.</p></a>
+                <a class="home-card" href="recipe-converter.html"><span>Рецепт</span><h3>Пересчитать меры и порции</h3><p>Стаканы 200/250 мл, ложки, граммы, миллилитры и автоматический пересчет ингредиентов.</p></a>
+                <a class="home-card" href="recipe-measures-table.html"><span>Меры</span><h3>Посмотреть таблицу весов</h3><p>Сколько граммов в стакане муки, сахара, молока, масла и других популярных продуктов.</p></a>
             </div>
         </div>
     </section>
@@ -268,14 +308,15 @@
             <div class="home-copy-grid">
                 <div>
                     <h2 id="seo-heading" class="section-title">Зачем нужен каталог цифровых продуктов для сайта</h2>
-                    <p>В разработке сайтов много задач, которые повторяются от проекта к проекту: создать набор полей, описать таблицу в админке, подготовить JSON-конфигурацию, собрать шаблон вывода, сделать структуру для FAQ, галереи, команды, отзывов или каталога товаров. Такие операции редко требуют ручной работы с нуля, но часто отнимают время и повышают риск ошибки в ключах, названиях, вложенности и параметрах.</p>
-                    <p>Цифра собирает веб-утилиты, которые превращают эти операции в быстрый рабочий сценарий. Пользователь выбирает тип задачи, задает параметры и получает результат, который можно проверить, адаптировать и перенести в проект. Поэтому каталог полезен разработчикам, веб-мастерам, SEO-специалистам и владельцам сайтов, которым нужно быстрее запускать технические разделы без лишней рутины.</p>
+                    <p>Во многих цифровых задачах есть повторяемая механика: создать набор полей, описать таблицу в админке, подготовить JSON-конфигурацию, собрать шаблон вывода, пересчитать меру или привести данные к понятному формату. Такие операции редко требуют ручной работы с нуля, но часто отнимают время и повышают риск ошибки в ключах, названиях, вложенности, единицах измерения и параметрах.</p>
+                    <p>Цифра собирает веб-утилиты и калькуляторы, которые превращают эти операции в быстрый рабочий сценарий. Пользователь выбирает тип задачи, задает параметры и получает результат, который можно проверить, адаптировать и перенести в проект или использовать в быту. Поэтому каталог полезен разработчикам, веб-мастерам, SEO-специалистам и пользователям, которым нужен аккуратный инструмент без лишнего интерфейсного шума.</p>
                 </div>
                 <aside class="home-panel">
                     <h3>Что будет расширяться</h3>
                     <ul>
                         <li><strong>Новые CMS:</strong> разделы под разные движки и форматы администрирования.</li>
                         <li><strong>Новые генераторы:</strong> код, конфиги, схемы, шаблоны, проверки и конвертеры.</li>
+                        <li><strong>Новые калькуляторы:</strong> бытовые и профессиональные пересчеты с понятными допущениями.</li>
                         <li><strong>Новые подборки:</strong> инструменты по задачам, а не только по названию технологии.</li>
                     </ul>
                 </aside>
@@ -312,10 +353,11 @@
     <section class="home-final">
         <div class="container">
             <h2>Начните с готовых разделов каталога</h2>
-            <p>ACF и MIGX — первые опубликованные направления внутри общего каталога цифровых продуктов. Откройте раздел, выберите конкретную задачу и используйте генератор как рабочий инструмент, а не как справочную заглушку.</p>
+            <p>ACF, MIGX и кулинарные калькуляторы — первые опубликованные направления внутри общего каталога цифровых продуктов. Откройте раздел, выберите конкретную задачу и используйте инструмент как рабочий сценарий, а не как справочную заглушку.</p>
             <div class="home-actions home-actions-center">
                 <a class="btn btn-primary btn-lg" href="acf.html">WordPress / ACF</a>
                 <a class="btn btn-outline btn-lg" href="migx.html">MODX / MIGX</a>
+                <a class="btn btn-outline btn-lg" href="recipes.html">Кулинарные калькуляторы</a>
             </div>
         </div>
     </section>
@@ -329,7 +371,7 @@
                     <span class="logo-icon">◆</span>
                     <span class="logo-text">Цифра</span>
                 </div>
-                <p>Каталог веб-инструментов, генераторов, CMS-утилит и шаблонов для разработки сайтов.</p>
+                <p>Каталог веб-инструментов, генераторов, CMS-утилит и практичных калькуляторов.</p>
             </div>
             <div class="footer-col">
                 <h4>Каталог</h4>
@@ -345,6 +387,7 @@
                 <ul>
                     <li><a href="acf.html">WordPress / ACF</a></li>
                     <li><a href="migx.html">MODX / MIGX</a></li>
+                    <li><a href="recipes.html">Кулинарные калькуляторы</a></li>
                     <li><a href="acf-generator.html">ACF генератор</a></li>
                     <li><a href="migx-generator.html">MIGX генератор</a></li>
                 </ul>

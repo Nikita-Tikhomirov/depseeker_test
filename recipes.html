@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Кулинарные калькуляторы Цифры: конвертер рецептов, таблица мер и весов, пересчет стаканов, ложек, граммов, миллилитров и порций.">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://zifra.example.com/recipes.html">
+    <meta name="author" content="Цифра">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Кулинарные калькуляторы и таблицы мер | Цифра">
+    <meta property="og:description" content="Раздел для пересчета рецептов: стаканы 200/250 мл, ложки, граммы, миллилитры, порции и справочные таблицы продуктов.">
+    <meta property="og:url" content="https://zifra.example.com/recipes.html">
+    <meta property="og:locale" content="ru_RU">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Кулинарные калькуляторы и таблицы мер | Цифра">
+    <meta name="twitter:description" content="Конвертер рецептов, таблица мер и весов, пересчет порций и русских кухонных мер.">
+    <title>Кулинарные калькуляторы и таблицы мер | Цифра</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/base.css?v=catalog-shell-20260601-1">
+    <link rel="stylesheet" href="css/components.css?v=catalog-shell-20260601-1">
+    <link rel="stylesheet" href="css/layout.css?v=catalog-shell-20260601-1">
+    <link rel="stylesheet" href="css/responsive.css?v=catalog-shell-20260601-1">
+    <link rel="stylesheet" href="css/themes.css?v=catalog-shell-20260601-1">
+    <link rel="stylesheet" href="css/acf-content.css?v=catalog-shell-20260601-1">
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+            {"@type": "ListItem", "position": 1, "name": "Главная", "item": "https://zifra.example.com/"},
+            {"@type": "ListItem", "position": 2, "name": "Кулинарные калькуляторы", "item": "https://zifra.example.com/recipes.html"}
+        ]
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "ItemList",
+        "itemListElement": [
+            {"@type": "ListItem", "position": 1, "url": "https://zifra.example.com/recipe-converter.html", "name": "Конвертер рецептов"},
+            {"@type": "ListItem", "position": 2, "url": "https://zifra.example.com/recipe-measures-table.html", "name": "Таблица мер и весов продуктов"}
+        ]
+    }
+    </script>
+</head>
+<body>
+<header class="header">
+    <div class="container">
+        <a href="index.html" class="header-logo" aria-label="Цифра — на главную">
+            <span class="logo-icon">◆</span>
+            <span class="logo-text">Цифра</span>
+        </a>
+        <nav aria-label="Основная навигация">
+            <ul class="header-nav">
+                <li><a href="index.html">Главная</a></li>
+                <li><a href="index.html#catalog">Каталог</a></li>
+                <li class="nav-dropdown">
+                    <button class="nav-dropdown-toggle is-active" type="button" aria-expanded="false" aria-controls="utilities-menu">Продукты <span class="nav-caret" aria-hidden="true">⌄</span></button>
+                    <div class="nav-dropdown-menu" id="utilities-menu">
+                        <div class="nav-dropdown-grid">
+                            <div class="nav-dropdown-group">
+                                <a class="nav-dropdown-heading" href="acf.html">ACF / WordPress</a>
+                                <a href="acf-generator.html">ACF генератор</a>
+                                <a href="acf-php-generator.html">PHP export</a>
+                                <a href="acf-json-generator.html">JSON export</a>
+                            </div>
+                            <div class="nav-dropdown-group">
+                                <a class="nav-dropdown-heading" href="migx.html">MODX / MIGX</a>
+                                <a href="migx-generator.html">MIGX генератор</a>
+                                <a href="migx-json-generator.html">MIGX JSON</a>
+                                <a href="migx-formtabs-generator.html">Form Tabs</a>
+                            </div>
+                            <div class="nav-dropdown-group">
+                                <a class="nav-dropdown-heading" href="recipes.html">Кулинарные калькуляторы</a>
+                                <a href="recipe-converter.html">Конвертер рецептов</a>
+                                <a href="recipe-measures-table.html">Таблица мер и весов</a>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </nav>
+        <button class="hamburger" aria-label="Меню"><span></span><span></span><span></span></button>
+    </div>
+</header>
+<main>
+    <section class="acf-hero">
+        <div class="acf-container acf-hero__grid">
+            <div class="acf-hero__copy">
+                <span class="acf-kicker">Кулинарные меры</span>
+                <h1>Кулинарные калькуляторы и таблицы мер</h1>
+                <p>Раздел для быстрых бытовых пересчетов: стаканы в граммы, ложки в миллилитры, рецепт на другое число порций и справочные таблицы для продуктов, которые часто встречаются в русских рецептах.</p>
+                <div class="acf-actions">
+                    <a class="acf-btn acf-btn--primary" href="recipe-converter.html">Открыть конвертер</a>
+                    <a class="acf-btn acf-btn--ghost" href="recipe-measures-table.html">Смотреть таблицу</a>
+                </div>
+            </div>
+            <aside class="acf-plan-card">
+                <h2>Зачем выделять раздел</h2>
+                <ul>
+                    <li>Русские рецепты часто используют разные стаканы: 250 мл и 200 мл до риски.</li>
+                    <li>Ложки, стаканы и "по вкусу" нужно объяснять до пересчета, иначе цифрам не доверяют.</li>
+                    <li>Один рабочий конвертер может усиливаться страницами под муку, сахар, масло и порции.</li>
+                    <li>Категория собирает утилиты без пустых ссылок на неготовые страницы.</li>
+                </ul>
+            </aside>
+        </div>
+    </section>
+
+    <section class="acf-section" id="pages">
+        <div class="acf-container">
+            <div class="ad-slot" data-ad-slot="recipes-hub-after-hero" aria-label="Рекламный блок после первого экрана"></div>
+            <div class="acf-section-head">
+                <span class="acf-section-label">Инструменты раздела</span>
+                <h2>Что уже можно использовать</h2>
+                <p>В первой версии категория не превращается в кулинарный журнал. Здесь собраны практичные калькуляторы: пользователь приходит с конкретной мерой или рецептом и получает пересчитанное значение.</p>
+            </div>
+            <div class="acf-topic-grid">
+                <article class="acf-topic-card">
+                    <span>recipe converter</span>
+                    <h3><a href="recipe-converter.html">Конвертер рецептов</a></h3>
+                    <p>Переводит стаканы, ложки, граммы и миллилитры, масштабирует ингредиенты по порциям и разбирает строки рецепта из текста.</p>
+                    <a class="acf-card-cta" href="recipe-converter.html">Запустить конвертер</a>
+                </article>
+                <article class="acf-topic-card">
+                    <span>measures table</span>
+                    <h3><a href="recipe-measures-table.html">Таблица мер и весов</a></h3>
+                    <p>Объясняет, сколько граммов в стакане 250 мл, стакане 200 мл, столовой ложке и чайной ложке для популярных продуктов.</p>
+                    <a class="acf-card-cta" href="recipe-measures-table.html">Открыть таблицу</a>
+                </article>
+                <article class="acf-topic-card">
+                    <span>catalog</span>
+                    <h3><a href="index.html#catalog">Каталог Цифры</a></h3>
+                    <p>Кулинарные калькуляторы становятся третьим направлением рядом с техническими разделами ACF и MIGX, но остаются в общей модели рабочих инструментов.</p>
+                    <a class="acf-card-cta" href="index.html#catalog">Смотреть каталог</a>
+                </article>
+            </div>
+        </div>
+    </section>
+
+    <section class="acf-section acf-section--muted">
+        <div class="acf-container acf-two-col">
+            <div>
+                <span class="acf-section-label">Расчетная политика</span>
+                <h2>Какие стандарты используются</h2>
+                <p>Для бытового пересчета важно не скрывать допущения. В конвертере полный стакан равен 250 мл, гранёный стакан до риски — 200 мл, столовая ложка — 15 мл, чайная ложка — 5 мл. Эти значения подходят для быстрых домашних расчетов и понятны большинству русскоязычных пользователей.</p>
+                <p>При переводе объема в граммы используется плотность продукта. Поэтому стакан воды и стакан муки дают разные значения. Если продукт утрамбован, просеян, влажный или взят с горкой, результат может отличаться. Для чувствительной выпечки калькулятор стоит использовать как ориентир, а финально проверять весами.</p>
+            </div>
+            <aside class="acf-code-card" aria-label="Пример пересчета">
+                <pre><code>1 стакан муки 250 мл = примерно 160 г
+1 стакан муки 200 мл = примерно 128 г
+1 ст. ложка воды = 15 мл
+4 порции -> 6 порций = коэффициент 1,5</code></pre>
+            </aside>
+        </div>
+    </section>
+
+    <section class="acf-section">
+        <div class="acf-container">
+            <div class="acf-section-head">
+                <span class="acf-section-label">Рост категории</span>
+                <h2>Какие страницы добавлять дальше</h2>
+                <p>Следующие страницы стоит выпускать не как пустые посадочные, а как полезные разборы с таблицей, примером и переходом в основной конвертер. Так кластер будет расти вокруг реального продукта.</p>
+            </div>
+            <div class="acf-choice-grid">
+                <a class="acf-choice-card" href="recipe-converter.html">
+                    <span>Порции</span>
+                    <strong>Пересчет рецепта</strong>
+                    <p>Отдельная страница под запросы про увеличение или уменьшение рецепта.</p>
+                </a>
+                <a class="acf-choice-card" href="recipe-measures-table.html">
+                    <span>Таблицы</span>
+                    <strong>Меры и веса</strong>
+                    <p>База для страниц про муку, сахар, масло, молоко и крупы.</p>
+                </a>
+                <a class="acf-choice-card" href="recipe-converter.html">
+                    <span>Духовка</span>
+                    <strong>Температура</strong>
+                    <p>Цельсий, Фаренгейт и частые режимы выпечки без отдельного приложения.</p>
+                </a>
+                <a class="acf-choice-card" href="recipe-converter.html">
+                    <span>Текст</span>
+                    <strong>Разбор рецепта</strong>
+                    <p>Парсер ингредиентов из текста, дробей, запятых и бытовых обозначений.</p>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <section class="acf-section acf-section--muted" id="faq">
+        <div class="acf-container acf-faq">
+            <h2>Вопросы по кулинарным калькуляторам</h2>
+            <details class="acf-faq-item" open><summary>Почему не сделать сразу много страниц про каждый продукт?</summary><p>Пустые страницы не помогают ни пользователю, ни поиску. Сначала нужен рабочий калькулятор и базовая таблица, затем можно выпускать страницы про муку, сахар, масло, молоко и крупы с конкретными примерами, FAQ и переходом в конвертер.</p></details>
+            <details class="acf-faq-item"><summary>Как понять, какой стакан выбрать в рецепте?</summary><p>Если источник явно пишет "гранёный до риски", выбирайте 200 мл. Если указан полный стакан, мерный стакан или современный рецепт без уточнения, чаще подходит 250 мл. Когда точность важна, лучше пересчитать оба варианта и проверить весами.</p></details>
+            <details class="acf-faq-item"><summary>Для каких рецептов калькулятор особенно полезен?</summary><p>Он помогает быстро пересчитать блины, каши, соусы, маринады, домашнюю выпечку и заготовки, когда нужно изменить число порций или перевести бытовые меры в граммы и миллилитры перед готовкой.</p></details>
+        </div>
+    </section>
+
+    <section class="acf-final-cta">
+        <div class="acf-container">
+            <h2>Пересчитайте рецепт перед готовкой</h2>
+            <p>Откройте конвертер, выберите продукт и единицы, проверьте порции и сохраните результат в удобных мерах.</p>
+            <a class="acf-btn acf-btn--primary" href="recipe-converter.html">Запустить конвертер рецептов</a>
+        </div>
+    </section>
+</main>
+<footer class="acf-footer">
+    <div class="acf-container acf-footer__inner">
+        <div>
+            <strong>Цифра</strong>
+            <p>Каталог цифровых продуктов, генераторов и практичных калькуляторов для рабочих интернет-задач.</p>
+        </div>
+        <div class="acf-footer-links">
+            <a href="index.html">Главная</a>
+            <a href="index.html#catalog">Каталог</a>
+            <a href="recipes.html">Кулинарные калькуляторы</a>
+            <a href="recipe-converter.html">Конвертер рецептов</a>
+            <a href="recipe-measures-table.html">Таблица мер</a>
+            <a href="acf.html">ACF</a>
+            <a href="migx.html">MIGX</a>
+            <a href="about.html">О проекте</a>
+        </div>
+    </div>
+</footer>
+<script src="js/main.js" defer></script>
+</body>
+</html>
