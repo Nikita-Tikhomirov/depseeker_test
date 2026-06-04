@@ -223,12 +223,14 @@ function testProductionExportGuards() {
   assert(generatorHtml.includes('js/acf-generator.js?v=acf-ui-20260531-10'), 'acf-generator.html must load the current generator cache-buster');
   assert(generatorHtml.includes('js/acf-production-renderer.js?v=acf-ui-20260531-5'), 'acf-generator.html must load the current production renderer cache-buster');
   assert(generatorHtml.includes('js/acf-generator-audit.js?v=acf-ui-20260531-3'), 'acf-generator.html must load the current audit cache-buster');
-  assert(generatorHtml.includes('WP-шаблон+CSS'), 'HTML export tab must be labeled as a WP template');
+  assert(generatorHtml.includes('data-tab="html" data-action="switch-tab">WP-шаблон</button>'), 'HTML export tab must be labeled as a clean WP template');
+  assert(generatorHtml.includes('id="include-template-css"'), 'HTML export must expose an explicit CSS include toggle');
+  assert(generatorHtml.includes('data-action="copy-production-css"'), 'HTML export must allow copying CSS separately');
   assert(generatorHtml.includes('.audit-handoff'), 'generator UI must style the export handoff package');
   assert(generatorHtml.includes('class="gen-btn gen-btn-primary visual-editor-back-btn"'), 'visual editor must have a dedicated header back button');
-  assert(generator.includes('generateVisualHTML({ fullDocument: false })'), 'fallback HTML export must use snippet mode');
+  assert(generator.includes('includeCSS: isTemplateCSSExportEnabled()'), 'fallback HTML export must use the explicit CSS toggle');
   assert(generator.includes("return fullDocument ? ' data-style-target=\"' + key + '\"' : '';"), 'fallback editor markers must be gated by fullDocument');
-  assert(generator.includes('code = window.renderProductionPHP();'), 'HTML download fallback must use production WP template');
+  assert(generator.includes('code = window.renderProductionPHP({ includeCSS: isTemplateCSSExportEnabled() });'), 'HTML download fallback must use production WP template with explicit CSS mode');
   assert(generator.includes("ext = 'php'; mime = 'text/x-php';"), 'HTML download fallback must save WP template as PHP');
   assert(generator.includes("trackGeneratorEvent('acf_template_loaded'"), 'ACF template loads must be tracked');
   assert(generator.includes("trackGeneratorEvent('acf_code_copied'"), 'ACF copy action must be tracked');
@@ -237,7 +239,8 @@ function testProductionExportGuards() {
   assert(production.includes("trackGeneratorEvent('acf_preview_toggled'"), 'ACF visual preview toggles must be tracked');
   assert(!generator.includes('code = generateVisualHTML({ fullDocument: false });'), 'HTML download fallback must not download editor preview snippets');
   assert(production.includes('window.generateHTML = function()'), 'production renderer must own HTML export');
-  assert(production.includes('output.textContent = renderProductionPHP();'), 'HTML export must render production PHP template');
+  assert(production.includes('output.textContent = renderProductionPHP({ includeCSS: templateCSSExportEnabled() });'), 'HTML export must render production PHP template with explicit CSS mode');
+  assert(production.includes("out.push('<style>');") && production.includes('if (includeCSS)'), 'production WP template must include CSS only behind the export flag');
   assert(production.includes('.zifra-acf-block, .zifra-acf-block * { box-sizing: border-box; }'), 'production CSS must be scoped to zifra-acf-block');
   assert(!production.includes('headerActions.appendChild(btn)'), 'production renderer must not move the hidden preview toggle into the visual editor header');
   assert(!production.includes("if (kind === 'hero' || kind === 'faq') return [];"), 'style editor must build field panels for hero and FAQ fields');
@@ -248,7 +251,7 @@ function testProductionExportGuards() {
   assert(!production.includes('output.textContent = fullPreviewDoc();'), 'HTML export must not output editor preview document');
   assert(audit.includes('class="audit-handoff"'), 'audit panel must render the export handoff package');
   assert(audit.includes('ACF PHP'), 'handoff package must mention ACF PHP');
-  assert(audit.includes('WP-шаблон+CSS'), 'handoff package must mention WP template and CSS');
+  assert(audit.includes('WP-шаблон'), 'handoff package must mention WP template');
   assert(audit.includes('JSON snapshot'), 'handoff package must mention JSON snapshot');
   assert(audit.includes('Скачать пакет'), 'handoff action must be labeled as a downloadable package');
   assert(audit.includes('-handoff.json'), 'handoff package filename must reflect the handoff payload');

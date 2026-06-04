@@ -15,17 +15,17 @@
 | --- | --- | ---: | ---: | ---: | ---: | --- | --- | --- |
 | `acf-faq-fields.html` | landing | 100 | 543 | 9 | 18 | да | да | готова к базовой публикации |
 | `acf-field-group-generator.html` | landing | 100 | 603 | 9 | 18 | да | да | готова к базовой публикации |
-| `acf-flexible-content-generator.html` | utility | 100 | 547 | 9 | 18 | да | да | готова к базовой публикации |
-| `acf-generator.html` | utility | 100 | 537 | 2 | 12 | да | да | готова к базовой публикации |
-| `acf-hero-section.html` | landing | 100 | 543 | 9 | 18 | да | да | готова к базовой публикации |
+| `acf-flexible-content-generator.html` | utility | 100 | 548 | 9 | 18 | да | да | готова к базовой публикации |
+| `acf-generator.html` | utility | 100 | 548 | 2 | 12 | да | да | готова к базовой публикации |
+| `acf-hero-section.html` | landing | 100 | 544 | 9 | 18 | да | да | готова к базовой публикации |
 | `acf-json-generator.html` | utility | 100 | 574 | 9 | 18 | да | да | готова к базовой публикации |
 | `acf-page-builder.html` | landing | 100 | 547 | 9 | 18 | да | да | готова к базовой публикации |
 | `acf-php-generator.html` | utility | 100 | 581 | 9 | 18 | да | да | готова к базовой публикации |
 | `acf-repeater-generator.html` | utility | 100 | 540 | 9 | 18 | да | да | готова к базовой публикации |
 | `acf-seo-fields.html` | landing | 100 | 541 | 9 | 18 | да | да | готова к базовой публикации |
-| `acf-team-repeater.html` | landing | 100 | 529 | 9 | 18 | да | да | готова к базовой публикации |
+| `acf-team-repeater.html` | landing | 100 | 530 | 9 | 18 | да | да | готова к базовой публикации |
 | `acf-testimonials-repeater.html` | landing | 100 | 538 | 9 | 18 | да | да | готова к базовой публикации |
-| `acf-woocommerce-product-fields.html` | landing | 100 | 551 | 9 | 18 | да | да | готова к базовой публикации |
+| `acf-woocommerce-product-fields.html` | landing | 100 | 553 | 9 | 18 | да | да | готова к базовой публикации |
 | `acf.html` | category | 100 | 822 | 6 | 24 | да | да | готова к базовой публикации |
 | `migx-catalog.html` | landing | 100 | 534 | 6 | 20 | да | да | готова к базовой публикации |
 | `migx-configs.html` | landing | 100 | 532 | 6 | 20 | да | да | готова к базовой публикации |

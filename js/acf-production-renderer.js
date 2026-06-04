@@ -672,7 +672,9 @@
         return out;
     }
 
-    function renderProductionPHP() {
+    function renderProductionPHP(options) {
+        options = options || {};
+        var includeCSS = options.includeCSS !== undefined ? !!options.includeCSS : templateCSSExportEnabled();
         var fields = getFields();
         var group = getGroup();
         var kind = inferBlock(fields);
@@ -680,12 +682,14 @@
         out.push('<?php');
         out.push('/**');
         out.push(' * Production ACF template: ' + h(group.title));
-        out.push(' * Move the CSS below to style.css if you do not want inline styles.');
+        out.push(includeCSS ? ' * CSS included by export option. Move it to style.css if needed.' : ' * CSS is not included. Enable CSS export or copy generated CSS separately.');
         out.push(' */');
         out.push('?>');
-        out.push('<style>');
-        out.push(productionCSS());
-        out.push('</style>');
+        if (includeCSS) {
+            out.push('<style>');
+            out.push(productionCSS());
+            out.push('</style>');
+        }
         out.push('<section class="zifra-acf-block zifra-acf-block--' + attr(group.key) + '">');
         out.push('    <div class="zifra-acf-wrap">');
         if (!fields.length) {
@@ -890,7 +894,7 @@
         if (!force && styleEditorSignature === sig) return;
         styleEditorSignature = sig;
         var keys = activeStyleKeys();
-        var html = ['<p class="se-dynamic-note">Редактируются реальные элементы текущего превью. Эти же значения попадают в HTML/CSS export.</p>'];
+        var html = ['<p class="se-dynamic-note">Редактируются реальные элементы текущего превью. CSS попадет в WP-шаблон только при включенном переключателе экспорта.</p>'];
         for (var i = 0; i < keys.length; i++) {
             var panel = STYLE_PANELS[keys[i]];
             if (!panel) continue;
@@ -962,6 +966,7 @@
         var key = target.getAttribute('data-element');
         var prop = target.getAttribute('data-prop');
         if (!key || !prop) return;
+        markTemplateCSSNeeded('CSS включен: вы изменили стили в визуальном редакторе.');
         var value = target.value;
         setElementStyle(key, prop, value);
         if (target.type === 'color') {
@@ -977,6 +982,7 @@
         var key = target.getAttribute('data-field-key');
         var prop = target.getAttribute('data-prop');
         if (!key || !prop) return;
+        markTemplateCSSNeeded('CSS включен: вы изменили стили поля в визуальном редакторе.');
         setFieldStyle(key, prop, target.value);
         var row = target.closest('.se-row');
         if (!row) return;
@@ -1019,6 +1025,9 @@
         if (!workspace) return;
 
         window.previewModeActive = !!active;
+        if (active) {
+            markTemplateCSSNeeded('CSS включен: вы открыли live preview и визуальное редактирование.');
+        }
         workspace.classList.toggle('preview-mode', !!active);
         moveToggleButton(!!active);
         if (btn) {
@@ -1061,6 +1070,31 @@
         URL.revokeObjectURL(url);
     }
 
+    function templateCSSExportEnabled() {
+        if (typeof window.isTemplateCSSExportEnabled === 'function') return window.isTemplateCSSExportEnabled();
+        var el = document.getElementById('include-template-css');
+        return !!(el && el.checked);
+    }
+
+    function setTemplateCSSExport(enabled, message) {
+        if (typeof window.setTemplateCSSExport === 'function') {
+            window.setTemplateCSSExport(enabled, message);
+            return;
+        }
+        var el = document.getElementById('include-template-css');
+        if (el) el.checked = !!enabled;
+        var status = document.getElementById('template-css-status');
+        if (status) status.textContent = message || (enabled
+            ? 'CSS будет добавлен в WP-шаблон.'
+            : 'CSS выключен: WP-шаблон экспортируется без style-блока.');
+    }
+
+    function markTemplateCSSNeeded(message) {
+        if (!templateCSSExportEnabled()) {
+            setTemplateCSSExport(true, message || 'CSS включен, потому что вы начали визуальное редактирование.');
+        }
+    }
+
     function downloadProductionCode() {
         var output = document.getElementById('code-output');
         var tab = activeCodeTab();
@@ -1075,7 +1109,7 @@
             ext = 'json';
             mime = 'application/json';
         } else if (tab === 'html') {
-            code = renderProductionPHP();
+            code = renderProductionPHP({ includeCSS: templateCSSExportEnabled() });
             if (output) output.textContent = code;
         } else {
             if (typeof window.generatePHP === 'function') window.generatePHP();
@@ -1119,7 +1153,7 @@
     window.downloadCode = downloadProductionCode;
     window.generateHTML = function() {
         var output = document.getElementById('code-output');
-        if (output) output.textContent = renderProductionPHP();
+        if (output) output.textContent = renderProductionPHP({ includeCSS: templateCSSExportEnabled() });
     };
 
     document.addEventListener('DOMContentLoaded', function() {

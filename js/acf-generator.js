@@ -1199,12 +1199,46 @@ function liveUpdate() {
 // ==================== CODE GENERATION ====================
 var currentCodeTab = 'php';
 
+function isTemplateCSSExportEnabled() {
+    var el = document.getElementById('include-template-css');
+    return !!(el && el.checked);
+}
+
+function updateTemplateCSSStatus(message) {
+    var status = document.getElementById('template-css-status');
+    if (!status) return;
+    status.textContent = message || (isTemplateCSSExportEnabled()
+        ? 'CSS будет добавлен в WP-шаблон. Можно отключить, если стили уже есть в теме.'
+        : 'По умолчанию код экспортируется без CSS. Включите, если нужен готовый style-блок.');
+}
+
+function setTemplateCSSExport(enabled, message) {
+    var el = document.getElementById('include-template-css');
+    if (el) el.checked = !!enabled;
+    updateTemplateCSSStatus(message);
+    updateCodeExportNote(currentCodeTab);
+    if (currentCodeTab === 'html' && typeof window.generateHTML === 'function') window.generateHTML();
+}
+
+function markTemplateCSSNeeded(message) {
+    if (!isTemplateCSSExportEnabled()) {
+        setTemplateCSSExport(true, message || 'CSS включен, потому что вы начали визуальное редактирование.');
+    } else {
+        updateTemplateCSSStatus(message);
+    }
+}
+
 function updateCodeExportNote(tab) {
     var note = document.getElementById('code-export-note');
     if (!note) return;
+    var options = document.getElementById('template-css-options');
+    if (options) options.classList.toggle('visible', tab === 'html');
     var text = 'Регистрация ACF: вставьте код в functions.php или отдельный include.';
     if (tab === 'html') {
-        text = 'WordPress-шаблон + scoped CSS: без editor-маркеров, готов для переноса в тему.';
+        text = isTemplateCSSExportEnabled()
+            ? 'WP-шаблон с CSS: style-блок добавлен явно, без editor-маркеров.'
+            : 'WP-шаблон без CSS: чистая разметка/PHP для темы. CSS можно включить переключателем ниже.';
+        updateTemplateCSSStatus();
     } else if (tab === 'json') {
         text = 'ACF JSON: сохраните файл в acf-json или используйте для миграции между проектами.';
     }
@@ -1459,10 +1493,15 @@ function generatePHP() {
 
 // ==================== GENERATE HTML TEMPLATE ====================
 function generateHTML() {
-    document.getElementById('code-output').textContent = generateVisualHTML({ fullDocument: false });
+    document.getElementById('code-output').textContent = generateVisualHTML({
+        fullDocument: false,
+        includeCSS: isTemplateCSSExportEnabled()
+    });
 }
 
-function generateWordPressTemplateHTML() {
+function generateWordPressTemplateHTML(options) {
+    options = options || {};
+    var includeCSS = options.includeCSS !== undefined ? !!options.includeCSS : isTemplateCSSExportEnabled();
     var config = buildACFConfig();
     var out = [];
 
@@ -1470,14 +1509,14 @@ function generateWordPressTemplateHTML() {
     out.push('/**');
     out.push(' * HTML-шаблон для группы полей: ' + escPHPSingle(config.title));
     out.push(' * Вставьте этот код в шаблон темы (page.php, single.php и т.д.)');
-    out.push(' *');
-    out.push(' * Рекомендуемые стили — добавьте в style.css или в <style>:');
-    var cssOut = generatePreviewCSS().split('\n');
-    for (var ci = 0; ci < cssOut.length; ci++) {
-        out.push(' * ' + cssOut[ci]);
-    }
+    out.push(includeCSS ? ' * CSS добавлен явно по настройке экспорта.' : ' * CSS не включен: стили можно добавить отдельно в style.css.');
     out.push(' */');
     out.push('?>');
+    if (includeCSS) {
+        out.push('<style>');
+        out.push(generatePreviewCSS());
+        out.push('</style>');
+    }
     out.push('<section class="acf-section acf-' + escAttr(config.key) + '">');
 
     function renderFieldHTML(f, indent, prefix) {
@@ -2181,6 +2220,7 @@ function applyStyleChange(id, value) {
     };
     var key = map[id];
     if (key) {
+        markTemplateCSSNeeded('CSS включен: вы изменили визуальные стили блока.');
         blockStyles[key] = value;
         syncStyleTextFields();
         if (currentCodeTab === 'html') generateHTML();
@@ -2199,6 +2239,7 @@ function applyStyleColor(id, value) {
     var key = map[id];
     var textId = id + '-text';
     if (key) {
+        markTemplateCSSNeeded('CSS включен: вы изменили визуальные стили блока.');
         blockStyles[key] = value;
         var textEl = document.getElementById(textId);
         if (textEl) textEl.value = value;
@@ -2344,7 +2385,7 @@ function renderDynamicStyleControls() {
         ]));
     }
 
-    container.innerHTML = '<p class="se-dynamic-note">Эти контролы собираются из текущих полей и меняют те же элементы, которые видны в превью и HTML+CSS экспорте.</p>' + groups.join('');
+    container.innerHTML = '<p class="se-dynamic-note">Эти контролы собираются из текущих полей. CSS попадет в WP-шаблон только при включенном переключателе экспорта.</p>' + groups.join('');
     if (selectedStyleTarget) setActiveStyleGroup(selectedStyleTarget, false);
 }
 
@@ -2358,6 +2399,7 @@ function applyElementStyleChange(el) {
     var styleKey = el.getAttribute('data-style-key');
     var prop = el.getAttribute('data-style-prop');
     if (!styleKey || !prop) return;
+    markTemplateCSSNeeded('CSS включен: вы изменили стили элемента в визуальном редакторе.');
     var styles = ensureElementStyles();
     if (!styles[styleKey]) styles[styleKey] = {};
     styles[styleKey][prop] = el.value;
@@ -2493,6 +2535,7 @@ function togglePreviewMode() {
     var btn = document.getElementById('toggle-preview-btn');
 
     if (previewModeActive) {
+        markTemplateCSSNeeded('CSS включен: вы открыли live preview и визуальное редактирование.');
         ws.classList.add('preview-mode');
         if (btn) {
             btn.classList.add('active');
@@ -2538,6 +2581,7 @@ function getPlaceholderSVG() {
 function generateVisualHTML(options) {
     var opts = options || {};
     var fullDocument = opts.fullDocument !== false;
+    var includeCSS = fullDocument || opts.includeCSS !== false;
     var styles = blockStyles;
     var elementStyles = styles.elements || ensureElementStyles();
     var e = elementStyles;
@@ -2800,7 +2844,7 @@ function generateVisualHTML(options) {
     if (isFAQ) {
         html += '\n<script>(function(){document.addEventListener("click",function(e){var q=e.target.closest(".acf-faq-question");if(q)q.parentElement.classList.toggle("open");});})();</' + 'script>';
     }
-    return '<style>\n' + css + '\n</style>\n' + html;
+    return includeCSS ? '<style>\n' + css + '\n</style>\n' + html : html;
 }
 
 function renderVisualEditor() {
@@ -2845,6 +2889,35 @@ function copyCode() {
     });
 }
 
+function copyProductionCSS() {
+    var css = typeof window.generateProductionCSS === 'function' ? window.generateProductionCSS() : generatePreviewCSS();
+    if (!css) {
+        showToast('CSS пока не сформирован', true);
+        return;
+    }
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(css).then(function() {
+            showToast('CSS скопирован отдельно');
+        }).catch(function() {
+            copyTextFallback(css, 'CSS скопирован отдельно');
+        });
+    } else {
+        copyTextFallback(css, 'CSS скопирован отдельно');
+    }
+}
+
+function copyTextFallback(text, message) {
+    var ta = document.createElement('textarea');
+    ta.value = text;
+    ta.style.position = 'fixed';
+    ta.style.opacity = '0';
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand('copy');
+    document.body.removeChild(ta);
+    showToast(message || 'Скопировано');
+}
+
 function downloadCode() {
     var code = document.getElementById('code-output').textContent;
     if (!code || code === 'Добавьте поля — код появится здесь') {
@@ -2857,9 +2930,9 @@ function downloadCode() {
     } else if (currentCodeTab === 'html') {
         ext = 'php'; mime = 'text/x-php';
         if (typeof window.renderProductionPHP === 'function') {
-            code = window.renderProductionPHP();
+            code = window.renderProductionPHP({ includeCSS: isTemplateCSSExportEnabled() });
         } else {
-            code = generateWordPressTemplateHTML();
+            code = generateWordPressTemplateHTML({ includeCSS: isTemplateCSSExportEnabled() });
         }
     } else if (currentCodeTab === 'preview') {
         ext = 'html'; mime = 'text/html';
@@ -3232,7 +3305,7 @@ function landingContextCopy(source, preset, template) {
         },
         'acf-flexible-content-generator': {
             title: 'ACF Flexible Content: layouts загружены',
-            text: 'Настройте flexible content, layouts и секции страницы, затем заберите WP-шаблон+CSS.',
+            text: 'Настройте flexible content, layouts и секции страницы, затем заберите WP-шаблон. CSS можно включить отдельным переключателем.',
             primaryTab: 'html'
         },
         'acf-page-builder': {
@@ -3359,6 +3432,9 @@ document.addEventListener('click', function(e) {
         case 'copy-code':
             copyCode();
             break;
+        case 'copy-production-css':
+            copyProductionCSS();
+            break;
         case 'download-code':
             downloadCode();
             break;
@@ -3445,6 +3521,11 @@ document.addEventListener('change', function(e) {
     switch (action) {
         case 'update-field-checkbox':
             updateField(parseInt(el.getAttribute('data-field-id')), el.getAttribute('data-key'), el.checked);
+            break;
+        case 'toggle-template-css':
+            setTemplateCSSExport(el.checked, el.checked
+                ? 'CSS будет добавлен в WP-шаблон.'
+                : 'CSS выключен: WP-шаблон снова экспортируется чистым.');
             break;
         case 'update-field-checkbox-array':
             toggleFieldArray(parseInt(el.getAttribute('data-field-id')), el.getAttribute('data-key'), el.getAttribute('data-value'), el.checked);

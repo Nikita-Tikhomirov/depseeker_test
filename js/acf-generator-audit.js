@@ -78,7 +78,7 @@
         var kind = inferExportKind(fields);
         var ready = hardIssues === 0 && fields.length > 0;
         var nextText = ready
-            ? 'Готовый пакет: регистрация ACF, JSON snapshot и чистый PHP-шаблон с CSS без editor-маркеров.'
+            ? 'Готовый пакет: регистрация ACF, JSON snapshot, чистый WP-шаблон и CSS как отдельный payload.'
             : 'Сначала закройте критичные пункты выше, затем проверьте preview и скачайте код.';
         var action = ready
             ? '<button class="gen-btn gen-btn-sm gen-btn-primary" data-action="switch-tab" data-tab="html"><span class="material-symbols-outlined">integration_instructions</span> Открыть шаблон</button>'
@@ -94,7 +94,7 @@
             '  <div class="audit-export-next"><span class="material-symbols-outlined">' + (ready ? 'task_alt' : 'rule') + '</span><span>' + esc(nextText) + '</span></div>',
             '  <div class="audit-handoff">',
             '    <div class="audit-handoff-item"><strong>ACF PHP</strong><span>регистрация группы полей</span></div>',
-            '    <div class="audit-handoff-item"><strong>WP-шаблон+CSS</strong><span>чистая верстка блока</span></div>',
+            '    <div class="audit-handoff-item"><strong>WP-шаблон</strong><span>чистая верстка блока</span></div>',
             '    <div class="audit-handoff-item"><strong>JSON snapshot</strong><span>снимок структуры проекта</span></div>',
             '  </div>',
             '  <div class="audit-actions">',
