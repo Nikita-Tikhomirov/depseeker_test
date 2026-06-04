@@ -54,6 +54,48 @@
         { name: 'Уксус столовый',        cup: 250, tbsp: 15, tsp: 5,  density: 1.00 },
     ];
 
+    /** Маппинг словоформ ингредиентов → каноническое название */
+    var INGREDIENT_FORMS = {
+        // Мука
+        'мука': 'Мука пшеничная', 'муки': 'Мука пшеничная', 'муку': 'Мука пшеничная', 'мукой': 'Мука пшеничная',
+        'ржаная мука': 'Мука ржаная', 'ржаной муки': 'Мука ржаная',
+        // Сахар
+        'сахар': 'Сахар-песок', 'сахара': 'Сахар-песок', 'сахару': 'Сахар-песок', 'сахаром': 'Сахар-песок',
+        'сахарный песок': 'Сахар-песок', 'сахарного песка': 'Сахар-песок',
+        'сахарная пудра': 'Сахарная пудра', 'сахарной пудры': 'Сахарная пудра', 'пудра': 'Сахарная пудра', 'пудры': 'Сахарная пудра',
+        // Соль
+        'соль': 'Соль', 'соли': 'Соль',
+        // Масло
+        'масло': 'Масло растительное', 'масла': 'Масло растительное',
+        'сливочное масло': 'Масло сливочное (растопл.)', 'сливочного масла': 'Масло сливочное (растопл.)',
+        'растительное масло': 'Масло растительное', 'растительного масла': 'Масло растительное',
+        'подсолнечное масло': 'Масло растительное', 'подсолнечного масла': 'Масло растительное',
+        'оливковое масло': 'Масло растительное', 'оливкового масла': 'Масло растительное',
+        // Мёд
+        'мёд': 'Мёд', 'мёда': 'Мёд', 'мед': 'Мёд', 'меда': 'Мёд',
+        // Молочные продукты
+        'молоко': 'Молоко', 'молока': 'Молоко',
+        'сметана': 'Сметана 20%', 'сметаны': 'Сметана 20%',
+        'кефир': 'Кефир', 'кефира': 'Кефир',
+        'творог': 'Творог', 'творога': 'Творог',
+        // Вода
+        'вода': 'Вода', 'воды': 'Вода',
+        // Крупы
+        'рис': 'Рис', 'риса': 'Рис',
+        'гречка': 'Гречка (ядрица)', 'гречки': 'Гречка (ядрица)', 'гречневая крупа': 'Гречка (ядрица)',
+        'манка': 'Манная крупа', 'манки': 'Манная крупа', 'манная крупа': 'Манная крупа', 'манной крупы': 'Манная крупа',
+        'овсянка': 'Овсяные хлопья', 'овсянки': 'Овсяные хлопья', 'овсяные хлопья': 'Овсяные хлопья', 'овсяных хлопьев': 'Овсяные хлопья', 'хлопья': 'Овсяные хлопья',
+        // Прочее
+        'какао': 'Какао-порошок',
+        'крахмал': 'Крахмал картофельный', 'крахмала': 'Крахмал картофельный',
+        'разрыхлитель': 'Разрыхлитель', 'разрыхлителя': 'Разрыхлитель',
+        'сода': 'Сода пищевая', 'соды': 'Сода пищевая',
+        'желатин': 'Желатин (порошок)', 'желатина': 'Желатин (порошок)',
+        'орехи': 'Орехи молотые', 'орехов': 'Орехи молотые', 'молотые орехи': 'Орехи молотые',
+        'сухари': 'Панировочные сухари', 'сухарей': 'Панировочные сухари', 'панировочные сухари': 'Панировочные сухари',
+        'уксус': 'Уксус столовый', 'уксуса': 'Уксус столовый',
+    };
+
     /** Быстрые пресеты для конвертера */
     var PRESETS = [
         { label: '1 стакан муки → граммы',      from: 1, fromU: 'cup', toU: 'g', ingr: 'Мука пшеничная' },
@@ -123,6 +165,14 @@
     // Tab 3: Reference
     var elRefSearch  = $('ref-search');
     var elRefTable   = $('ref-table-body');
+
+    // Tab 4: Parse
+    var elParseInput    = $('parse-input');
+    var elParseRun      = $('parse-run');
+    var elParseResult   = $('parse-result');
+    var elParseResultList = $('parse-result-list');
+    var elParseModeLabel  = $('parse-mode-label');
+    var elModeBtns      = document.querySelectorAll('.rc-mode-btn');
 
     /* ================================================================
      *  HELPERS
@@ -475,6 +525,291 @@
     }
 
     /* ================================================================
+     *  TAB 4: RECIPE PARSER
+     * ================================================================ */
+
+    /** Маппинг единиц из текста → id */
+    var UNIT_TEXT_MAP = {
+        'г': 'g', 'гр': 'g', 'грамм': 'g', 'грамма': 'g', 'граммов': 'g',
+        'кг': 'kg', 'килограмм': 'kg', 'килограмма': 'kg',
+        'мл': 'ml', 'миллилитр': 'ml', 'миллилитра': 'ml', 'миллилитров': 'ml',
+        'л': 'l', 'литр': 'l', 'литра': 'l',
+        'стакан': 'cup', 'стакана': 'cup', 'стаканов': 'cup', 'ст': 'cup',
+        'ст.': 'tbsp', 'ст л': 'tbsp', 'ст.л': 'tbsp', 'ст. л': 'tbsp', 'ст.л.': 'tbsp',
+        'ст ложка': 'tbsp', 'ст ложки': 'tbsp', 'ст ложек': 'tbsp', 'столовых ложки': 'tbsp', 'столовых ложек': 'tbsp', 'столовая ложка': 'tbsp', 'столовые ложки': 'tbsp', 'столовой ложки': 'tbsp',
+        'ч.': 'tsp', 'ч л': 'tsp', 'ч.л': 'tsp', 'ч. л': 'tsp', 'ч.л.': 'tsp',
+        'ч ложка': 'tsp', 'ч ложки': 'tsp', 'ч ложек': 'tsp', 'чайная ложка': 'tsp', 'чайные ложки': 'tsp', 'чайной ложки': 'tsp', 'чайных ложек': 'tsp',
+    };
+
+    /** Единицы, которые всегда объём (даже без ингредиента) */
+    var ALWAYS_VOLUME = { ml: true, l: true, cup: true, tbsp: true, tsp: true };
+
+    /** Поиск ингредиента по тексту после числа+единицы */
+    function matchIngredient(textAfter) {
+        // Убираем пунктуацию, приводим к нижнему регистру
+        var cleaned = textAfter.replace(/[.,;:!?()«»""'']/g, ' ').replace(/\s+/g, ' ').trim().toLowerCase();
+        // Пробуем точное совпадение
+        if (INGREDIENT_FORMS[cleaned]) return INGREDIENT_FORMS[cleaned];
+        // Пробуем совпадение по началу (убираем хвосты типа "просеянная", "тёплое")
+        var words = cleaned.split(' ');
+        for (var w = words.length; w >= 1; w--) {
+            var prefix = words.slice(0, w).join(' ');
+            if (INGREDIENT_FORMS[prefix]) return INGREDIENT_FORMS[prefix];
+        }
+        // Для коротких текстов пробуем поиск подстроки
+        var keys = Object.keys(INGREDIENT_FORMS);
+        for (var k = 0; k < keys.length; k++) {
+            if (cleaned.indexOf(keys[k]) === 0) return INGREDIENT_FORMS[keys[k]];
+        }
+        return null;
+    }
+
+    function getParseMode() {
+        var active = document.querySelector('.rc-mode-btn.active');
+        return active ? active.getAttribute('data-mode') : 'metric';
+    }
+
+    function parseRecipe(text) {
+        if (!text || !text.trim()) return { ingredients: [], unknownLines: [] };
+
+        var lines = text.split(/\n/);
+        var ingredients = [];
+        var unknownLines = [];
+
+        // Универсальный regex: число + единица измерения
+        // Шаблон: "200 г муки", "2 стакана сахара", "3 ст. ложки масла", "1/2 ч.л. соли"
+        var re = /(\d+(?:[\/\.]\d+)?)\s*(гр?а?м?м?[ао]?в?\b\.?|кг|килограмм[а]?\b|мл|миллилитр[ао]?в?\b\.?|л|литр[а]?\b|стакан[ао]?в?\b\.?|ст\.?\s*л\.?\s*о?ж?к?[аиек]?\b\.?|ч\.?\s*л\.?\s*о?ж?к?[аиек]?\b\.?|столов[аы][яйе]\s*лож[к][аиек]\b\.?|чайны[ейх]\s*лож[к][аиек]\b\.?)\s+(.+)/i;
+
+        // Также: дробные вида "1/2 стакана"
+        var reFrac = /(\d+)\/(\d+)\s*(стакан[ао]?в?\b\.?|ст\.?\s*л\.?\s*о?ж?к?[аиек]?\b\.?|ч\.?\s*л\.?\s*о?ж?к?[аиек]?\b\.?|столов[аы][яйе]\s*лож[к][аиек]\b\.?|чайны[ейх]\s*лож[к][аиек]\b\.?)\s+(.+)/i;
+
+        for (var i = 0; i < lines.length; i++) {
+            var line = lines[i].trim();
+            if (!line) continue;
+
+            var match = line.match(re);
+            var fracMatch = line.match(reFrac);
+
+            if (match) {
+                var amount = parseFloat(match[1].replace(',', '.'));
+                var unitText = match[2].toLowerCase().replace(/\.$/, '').replace(/\s+/g, ' ');
+                var rest = match[3];
+
+                var unitId = resolveUnit(unitText);
+                if (!unitId) {
+                    unknownLines.push(line);
+                    continue;
+                }
+
+                var ingrName = matchIngredient(rest);
+                ingredients.push({
+                    original: line,
+                    amount: amount,
+                    unitId: unitId,
+                    ingredient: ingrName,
+                    rest: rest
+                });
+            } else if (fracMatch) {
+                var num = parseInt(fracMatch[1], 10);
+                var den = parseInt(fracMatch[2], 10);
+                var amountFrac = num / den;
+                var unitTextF = fracMatch[3].toLowerCase().replace(/\.$/, '').replace(/\s+/g, ' ');
+                var restF = fracMatch[4];
+
+                var unitIdF = resolveUnit(unitTextF);
+                if (!unitIdF) {
+                    unknownLines.push(line);
+                    continue;
+                }
+
+                var ingrNameF = matchIngredient(restF);
+                ingredients.push({
+                    original: line,
+                    amount: amountFrac,
+                    unitId: unitIdF,
+                    ingredient: ingrNameF,
+                    rest: restF
+                });
+            }
+            // else: не похоже на строку с ингредиентом — просто пропускаем (не добавляем в unknownLines)
+        }
+
+        return { ingredients: ingredients, unknownLines: unknownLines };
+    }
+
+    function resolveUnit(text) {
+        // Прямой поиск
+        if (UNIT_TEXT_MAP[text]) return UNIT_TEXT_MAP[text];
+        // Поиск по началу
+        var keys = Object.keys(UNIT_TEXT_MAP);
+        for (var i = 0; i < keys.length; i++) {
+            if (text.indexOf(keys[i]) === 0) return UNIT_TEXT_MAP[keys[i]];
+        }
+        return null;
+    }
+
+    function convertParsed(parsed, mode) {
+        var results = [];
+        for (var i = 0; i < parsed.ingredients.length; i++) {
+            var item = parsed.ingredients[i];
+            var unit = findUnit(item.unitId);
+            if (!unit) {
+                results.push({ original: item.original, converted: null, reason: 'unit' });
+                continue;
+            }
+
+            if (mode === 'metric') {
+                // Режим «граммы и мл»: всё приводим к г или мл
+                results.push(convertToMetric(item, unit));
+            } else {
+                // Режим «ложки и стаканы»
+                results.push(convertToKitchen(item, unit));
+            }
+        }
+        return results;
+    }
+
+    function convertToMetric(item, unit) {
+        // Если уже в граммах или мл — оставляем
+        if (unit.id === 'g' || unit.id === 'kg' || unit.id === 'ml' || unit.id === 'l') {
+            var val = item.amount * unit.factor;
+            var targetUnit = (unit.kind === 'weight') ? 'g' : 'ml';
+            if (unit.id === 'kg') targetUnit = 'g';
+            if (unit.id === 'l') targetUnit = 'ml';
+            // Для кг/л — уже в базовых через factor
+            if (unit.id === 'kg' || unit.id === 'l') {
+                // val уже в базовых единицах (factor = 1000)
+            } else {
+                val = item.amount;
+            }
+            return {
+                original: item.original,
+                amount: val,
+                unitName: targetUnit === 'g' ? 'г' : 'мл',
+                ingredient: item.ingredient,
+                rest: item.rest
+            };
+        }
+
+        // Объёмные единицы — нужен ингредиент для перевода в вес
+        if (ALWAYS_VOLUME[unit.id]) {
+            if (item.ingredient) {
+                var ingr = findIngredient(item.ingredient);
+                if (ingr) {
+                    var ml = item.amount * unit.factor;
+                    var grams = ml * ingr.density;
+                    return {
+                        original: item.original,
+                        amount: grams,
+                        unitName: 'г',
+                        ingredient: item.ingredient,
+                        rest: item.rest
+                    };
+                }
+            }
+            // Без ингредиента — оставляем в мл
+            var mlVal = item.amount * unit.factor;
+            return {
+                original: item.original,
+                amount: mlVal,
+                unitName: 'мл',
+                ingredient: item.ingredient,
+                rest: item.rest
+            };
+        }
+
+        return { original: item.original, converted: null, reason: 'unknown' };
+    }
+
+    function convertToKitchen(item, unit) {
+        // Если уже в кухонных единицах — оставляем
+        if (unit.id === 'cup' || unit.id === 'tbsp' || unit.id === 'tsp') {
+            return {
+                original: item.original,
+                amount: item.amount,
+                unitName: unit.name,
+                ingredient: item.ingredient,
+                rest: item.rest
+            };
+        }
+
+        // Весовые единицы → объём через плотность
+        if (unit.kind === 'weight' && item.ingredient) {
+            var ingr = findIngredient(item.ingredient);
+            if (ingr) {
+                var gramsVal = item.amount * unit.factor;
+                var mlEq = gramsVal / ingr.density;
+
+                // Выбираем самую крупную кухонную единицу
+                var result = toKitchenVolume(mlEq);
+                return {
+                    original: item.original,
+                    amount: result.amount,
+                    unitName: result.unitName,
+                    ingredient: item.ingredient,
+                    rest: item.rest
+                };
+            }
+        }
+
+        // мл/л → кухонные
+        if (unit.id === 'ml' || unit.id === 'l') {
+            var mlTotal = item.amount * unit.factor;
+            var result = toKitchenVolume(mlTotal);
+            return {
+                original: item.original,
+                amount: result.amount,
+                unitName: result.unitName,
+                ingredient: item.ingredient,
+                rest: item.rest
+            };
+        }
+
+        return { original: item.original, converted: null, reason: 'unknown' };
+    }
+
+    function toKitchenVolume(ml) {
+        // Стакан = 250 мл, ст.л. = 18 мл, ч.л. = 5 мл
+        if (ml >= CUP_ML * 0.65) {
+            return { amount: ml / CUP_ML, unitName: 'стакан(ов)' };
+        }
+        if (ml >= TBSP_ML * 0.8) {
+            return { amount: ml / TBSP_ML, unitName: 'ст. ложек' };
+        }
+        return { amount: ml / TSP_ML, unitName: 'ч. ложек' };
+    }
+
+    function renderParseResults(results, mode) {
+        var html = '';
+        for (var i = 0; i < results.length; i++) {
+            var r = results[i];
+            html += '<div class="rc-scaled-item">'
+                + '<span class="rc-scaled-name">' + escAttr(r.rest || r.original) + '</span>'
+                + '<span class="rc-scaled-amount">' + formatNum(r.amount) + '</span>'
+                + '<span class="rc-scaled-unit">' + r.unitName + '</span>'
+                + '</div>';
+        }
+        elParseResultList.innerHTML = html;
+        elParseModeLabel.textContent = mode === 'metric'
+            ? 'Все значения переведены в граммы и миллилитры'
+            : 'Все значения переведены в стаканы, столовые и чайные ложки';
+        elParseResult.style.display = 'block';
+    }
+
+    function doParse() {
+        var text = elParseInput.value;
+        if (!text.trim()) {
+            elParseResult.style.display = 'none';
+            return;
+        }
+
+        var mode = getParseMode();
+        var parsed = parseRecipe(text);
+        var results = convertParsed(parsed, mode);
+        renderParseResults(results, mode);
+    }
+
+    /* ================================================================
      *  INIT
      * ================================================================ */
 
@@ -541,6 +876,29 @@
         elRefSearch.addEventListener('input', function () {
             renderRefTable(this.value);
         });
+
+        // Event listeners — Recipe parser
+        elParseRun.addEventListener('click', doParse);
+        elParseInput.addEventListener('keydown', function (e) {
+            if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+                e.preventDefault();
+                doParse();
+            }
+        });
+
+        // Mode toggle buttons
+        for (var m = 0; m < elModeBtns.length; m++) {
+            elModeBtns[m].addEventListener('click', function () {
+                for (var j = 0; j < elModeBtns.length; j++) {
+                    elModeBtns[j].classList.remove('active');
+                }
+                this.classList.add('active');
+                // Автопересчёт при смене режима, если есть текст
+                if (elParseInput.value.trim()) {
+                    doParse();
+                }
+            });
+        }
 
         // Hamburger menu
         var hamburger = document.querySelector('.hamburger');

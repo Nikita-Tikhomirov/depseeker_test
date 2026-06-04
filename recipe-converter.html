@@ -411,6 +411,72 @@
         }
         .rc-empty .empty-icon { font-size: 3rem; margin-bottom: 12px; opacity: 0.5; }
 
+        /* ── Recipe Parser Tab ── */
+        .rc-parse-mode {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 18px;
+        }
+        .rc-parse-mode-label {
+            color: var(--text-dim);
+            font-size: 0.84rem;
+            font-weight: 600;
+        }
+        .rc-mode-btn {
+            padding: 9px 20px;
+            border-radius: 999px;
+            border: 1px solid var(--border);
+            background: var(--surface-2);
+            color: var(--text-2);
+            cursor: pointer;
+            font-family: var(--font);
+            font-size: 0.86rem;
+            font-weight: 600;
+            transition: all 0.2s var(--ease);
+        }
+        .rc-mode-btn:hover {
+            border-color: var(--rc-warm);
+            color: var(--text);
+        }
+        .rc-mode-btn.active {
+            background: var(--rc-warm-dim);
+            border-color: var(--rc-warm);
+            color: var(--rc-warm);
+        }
+        .rc-parse-textarea {
+            width: 100%;
+            min-height: 220px;
+            background: var(--surface-2);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            color: var(--text);
+            font-family: var(--font);
+            font-size: 0.92rem;
+            line-height: 1.65;
+            padding: 16px 20px;
+            resize: vertical;
+            transition: border-color 0.2s var(--ease);
+        }
+        .rc-parse-textarea:focus {
+            outline: none;
+            border-color: var(--rc-warm);
+            box-shadow: 0 0 0 3px var(--rc-warm-dim);
+        }
+        .rc-parse-textarea::placeholder {
+            color: var(--text-dim);
+            opacity: 0.55;
+        }
+        .rc-parsed-skipped {
+            color: var(--text-dim);
+            font-size: 0.8rem;
+            margin-top: 10px;
+            padding: 10px 16px;
+            background: rgba(255,255,255,0.02);
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border);
+        }
+
         /* ── Responsive ── */
         @media (max-width: 768px) {
             .rc-convert-row {
@@ -489,6 +555,7 @@
                 <button class="rc-tab active" role="tab" data-tab="convert" aria-selected="true">🔄 Конвертер единиц</button>
                 <button class="rc-tab" role="tab" data-tab="scale" aria-selected="false">⚖️ Масштабирование рецепта</button>
                 <button class="rc-tab" role="tab" data-tab="reference" aria-selected="false">📊 Меры и веса продуктов</button>
+                <button class="rc-tab" role="tab" data-tab="parse" aria-selected="false">📝 Разбор рецепта</button>
             </nav>
 
             <!-- ── Tab 1: Converter ── -->
@@ -628,6 +695,42 @@
                     <p style="margin-top:14px;color:var(--text-dim);font-size:0.76rem;">
                         * Стакан = 250 мл (гранёный). Столовая ложка = 18 мл. Чайная ложка = 5 мл. Вес указан для продукта без утрамбовки, ложки без горки (соль и сахар — с небольшой горкой).
                     </p>
+                </div>
+            </div>
+
+            <!-- ── Tab 4: Recipe Parser ── -->
+            <div class="rc-panel" id="panel-parse" role="tabpanel">
+                <div class="rc-card">
+                    <h3>Разбор рецепта</h3>
+                    <p class="rc-sub">Вставьте текст рецепта целиком — ингредиенты будут автоматически распознаны и пересчитаны в выбранные единицы измерения.</p>
+
+                    <div class="rc-parse-mode">
+                        <span class="rc-parse-mode-label">Вывод в:</span>
+                        <button class="rc-mode-btn active" data-mode="metric">Граммы и мл</button>
+                        <button class="rc-mode-btn" data-mode="kitchen">Ложки и стаканы</button>
+                    </div>
+
+                    <textarea id="parse-input" class="rc-parse-textarea" placeholder="Вставьте сюда текст рецепта…
+
+Например:
+Ингредиенты:
+• 300 г муки
+• 200 мл молока
+• 2 ст. ложки сахара
+• 1 ч. ложка соли
+• 3 яйца
+• 100 г сливочного масла
+
+Приготовление:
+1. Смешайте муку с сахаром и солью…" aria-label="Текст рецепта"></textarea>
+
+                    <button class="btn btn-primary" id="parse-run" style="margin-top:16px;width:100%;">🔍 Разобрать и пересчитать</button>
+
+                    <div class="rc-scaled-list rc-card" id="parse-result" style="display:none;margin-top:24px;">
+                        <h3 style="margin-bottom:6px;">Результат разбора</h3>
+                        <p class="rc-sub" id="parse-mode-label"></p>
+                        <div id="parse-result-list"></div>
+                    </div>
                 </div>
             </div>
         </div>
